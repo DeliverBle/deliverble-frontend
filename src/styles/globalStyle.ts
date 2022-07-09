@@ -1,5 +1,6 @@
 import { createGlobalStyle } from 'styled-components';
 import reset from 'styled-reset';
+import { COLOR } from './color';
 
 const GlobalStyle = createGlobalStyle`
   ${reset};
@@ -36,7 +37,7 @@ const GlobalStyle = createGlobalStyle`
 
   a, a:visited {
     text-decoration: none;
-    color: black;
+    color: ${COLOR.BLACK};
   }
 `;
 
