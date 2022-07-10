@@ -26,6 +26,16 @@ const GlobalStyle = createGlobalStyle`
   body, button {
     font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
   }
+
+  body {
+    @media (max-width: 1919px) {
+    zoom: 67%;
+  }
+
+    @media (min-width: 1920px) {
+      zoom: 100%;
+    }
+  }
   
   button {
     cursor: pointer;
