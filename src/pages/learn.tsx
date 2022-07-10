@@ -20,7 +20,10 @@ function learn() {
 export default learn;
 
 const StLearn = styled.div`
-  zoom: 67%;
+  @media only screen and (min-width: 992px) {
+    zoom: 67%;
+  }
+
   margin: auto 16rem;
 
   & > button {
