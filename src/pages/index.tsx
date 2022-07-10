@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import GlobalStyle from 'styles/globalStyle';
+import GlobalStyle from '@src/styles/globalStyle';
 
 function Home() {
   return (
