@@ -1,5 +1,4 @@
 import Head from 'next/head';
-import GlobalStyle from '@src/styles/globalStyle';
 
 function Home() {
   return (
@@ -8,10 +7,7 @@ function Home() {
         <title>DeliverBle</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <>
-        <GlobalStyle />
-        <div>Home</div>
-      </>
+      <div>Home</div>
     </div>
   );
 }
