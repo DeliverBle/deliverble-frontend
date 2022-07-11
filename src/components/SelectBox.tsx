@@ -1,7 +1,7 @@
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { icArrow, icCheckedBox, icEmptyBox } from 'public/assets/icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import ImageDiv from './common/ImageDiv';
 
@@ -15,6 +15,16 @@ function SelectBox(props: SelectBoxProps) {
   const [selection, setSelection] = useState(['전체']);
   const [isClicked, setIsClicked] = useState(false);
 
+  const handleClick = (selectionItem: string) => {
+    selection.indexOf(selectionItem) !== -1
+      ? setSelection(selection.filter((item) => item !== selectionItem))
+      : setSelection(Array.from(new Set([...selection, selectionItem])));
+  };
+
+  if (!selection.length) {
+    setSelection([...selection, '전체']);
+  }
+
   return (
     <StSelectBox isClicked={isClicked}>
       <span>{categoryName}</span>
@@ -26,14 +36,7 @@ function SelectBox(props: SelectBoxProps) {
         <ul>
           {selectionList.map((selectionItem) => {
             return (
-              <li
-                key={selectionItem}
-                onClick={() => {
-                  const index = selection.indexOf(selectionItem);
-                  index !== -1
-                    ? setSelection(selection.filter((item) => item !== selectionItem))
-                    : setSelection(Array.from(new Set([...selection, selectionItem])));
-                }}>
+              <li key={selectionItem} onClick={() => handleClick(selectionItem)}>
                 <ImageDiv className="checkbox" src={selection.includes(selectionItem) ? icCheckedBox : icEmptyBox} />
                 {selectionItem}
               </li>
