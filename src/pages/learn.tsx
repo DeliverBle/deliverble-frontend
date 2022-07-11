@@ -1,15 +1,15 @@
-import Image from 'next/image';
 import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { icSearch } from 'public/assets/icons';
 import SelectionBox from '@src/components/SelectionBox';
+import ImageDiv from '@src/components/common/ImageDiv';
 
 function learn() {
   return (
     <StLearn>
       <StTitle>
-        <Image src={icSearch} width={48} height={48} alt="" />
+        <ImageDiv src={icSearch} className="search" layout="fill" alt="" />
         <h1>원하는 영상을 찾아 쉐도잉 해보세요!</h1>
       </StTitle>
       <StSearch>
@@ -37,6 +37,12 @@ const StTitle = styled.div`
   margin-top: 16rem;
   margin-bottom: 4.8rem;
 
+  .search {
+    position: relative;
+    width: 4.8rem;
+    height: 4.8rem;
+  }
+
   & > h1 {
     ${FONT_STYLES.SB_32_HEADLINE};
     color: ${COLOR.BLACK};
@@ -45,6 +51,7 @@ const StTitle = styled.div`
 
 const StSearch = styled.div`
   display: flex;
+  align-items: flex-end;
   margin-bottom: 8rem;
 
   & > button {
@@ -54,6 +61,7 @@ const StSearch = styled.div`
     padding: 1.4rem 4rem 1.4rem 3.9rem;
     border-radius: 1.4rem;
     margin-left: 4rem;
+    height: 5.6rem;
   }
 `;
 
