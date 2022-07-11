@@ -2,23 +2,28 @@ import Head from 'next/head';
 import Lottie from 'lottie-react';
 import { lottie } from 'public/assets/lottie';
 import styled from 'styled-components';
+import SliderContainer from '@src/components/landing/SliderContainer';
+import Nav from '@src/components/landing/Nav';
 
 function Landing() {
   return (
-    <div>
+    <StLanding>
       <Head>
         <title>DeliverBle</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div>Landing</div>
+      <Nav />
+      <SliderContainer />
       <StLottieWrapper>
         <Lottie animationData={lottie} autoPlay loop />
       </StLottieWrapper>
-    </div>
+    </StLanding>
   );
 }
 
 export default Landing;
+
+const StLanding = styled.div``;
 
 const StLottieWrapper = styled.div`
   width: 50rem;
