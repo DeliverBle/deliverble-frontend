@@ -12,21 +12,26 @@ interface SelectBoxProps {
 
 function SelectBox(props: SelectBoxProps) {
   const { categoryName, selectionList } = props;
-  const [selection, setSelection] = useState('전체');
+  const [selection, setSelection] = useState(['전체']);
   const [isClicked, setIsClicked] = useState(false);
 
   return (
     <StSelectBox isClicked={isClicked}>
       <span>{categoryName}</span>
       <button onClick={() => setIsClicked((prev) => !prev)}>
-        {selection} <ImageDiv src={icArrow} className="arrow" layout="fill" alt="" />
+        {selection.join(', ')} <ImageDiv src={icArrow} className="arrow" layout="fill" alt="" />
       </button>
       {isClicked && (
         <ul>
           {selectionList.map((selectionItem) => {
             return (
-              <li key={selectionItem} onClick={() => setSelection(selectionItem)}>
-                <ImageDiv className="checkbox" src={selection === selectionItem ? icCheckedBox : icEmptyBox} />
+              <li
+                key={selectionItem}
+                onClick={() => {
+                  setSelection(Array.from(new Set([...selection, selectionItem])));
+                  console.log('click');
+                }}>
+                <ImageDiv className="checkbox" src={selection.includes(selectionItem) ? icCheckedBox : icEmptyBox} />
                 {selectionItem}
               </li>
             );
@@ -59,6 +64,9 @@ const StSelectBox = styled.div<{ isClicked: boolean }>`
     border: 0.2rem solid ${({ isClicked }) => (isClicked ? COLOR.MAIN_BLUE : COLOR.GRAY_5)};
     box-shadow: 0.4rem 0.4rem 2rem rgba(22, 15, 53, 0.05);
     border-radius: 1.4rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   & > button:hover {
@@ -82,13 +90,14 @@ const StSelectBox = styled.div<{ isClicked: boolean }>`
 
   ul {
     width: 17.6rem;
-    padding: 0.8rem 1.6rem;
+    padding: 0.8rem;
     border: 0.1rem solid ${COLOR.GRAY_5};
     box-shadow: 0.4rem 0.4rem 2rem rgba(22, 15, 53, 0.05);
     border-radius: 1.4rem;
     margin-top: 1.2rem;
     position: absolute;
     z-index: 1;
+    background-color: ${COLOR.WHITE};
 
     li {
       display: flex;
@@ -100,10 +109,16 @@ const StSelectBox = styled.div<{ isClicked: boolean }>`
       cursor: pointer;
     }
 
+    li:hover {
+      background-color: ${COLOR.SUB_BLUE_15};
+      border-radius: 1rem;
+    }
+
     .checkbox {
       position: relative;
       width: 2.4rem;
       height: 2.4rem;
+      margin-left: 0.8rem;
     }
   }
 `;
