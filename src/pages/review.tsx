@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import HeadlineContainer from '@src/components/review/HeadlineContainer';
+import VideoContainer from '@src/components/review/VideoContainer';
 import { COLOR } from 'src/styles/color';
 import { FONT_STYLES } from 'src/styles/fontStyle';
 import { useState, useEffect } from 'react';
@@ -25,6 +26,7 @@ function Review() {
           </StButton>
         </StTab>
       </nav>
+      <VideoContainer tab={tab} />
     </StReview>
   );
 }
