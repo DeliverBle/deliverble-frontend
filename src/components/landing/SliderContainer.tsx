@@ -208,9 +208,14 @@ const StThirdSlider = styled.section`
 
 const StFourthSlider = styled.section`
   .fourth-text-wrapper {
+    width: 51.3rem;
+    height: 34.8rem;
+
     margin-top: 35rem;
     margin-left: 29.8rem;
     margin-bottom: 38.2rem;
+
+    text-align: right;
   }
   .step {
     color: ${COLOR.MAIN_BLUE};
