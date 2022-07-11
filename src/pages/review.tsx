@@ -14,19 +14,17 @@ function Review() {
   return (
     <StReview>
       <HeadlineContainer />
-      <StTab>
-        <StButton
-          type="button"
-          className="bookmarked"
-          isActive={tab === 'bookmarked'}
-          onClick={() => setTab('bookmarked')}>
-          내 즐겨찾기 기록
-        </StButton>
-        <span> | </span>
-        <StButton type="button" className="learned" isActive={tab === 'learned'} onClick={() => setTab('learned')}>
-          내 학습기록
-        </StButton>
-      </StTab>
+      <nav>
+        <StTab>
+          <StButton className="bookmarked" isActive={tab === 'bookmarked'} onClick={() => setTab('bookmarked')}>
+            내 즐겨찾기 기록
+          </StButton>
+          <span> | </span>
+          <StButton className="learned" isActive={tab === 'learned'} onClick={() => setTab('learned')}>
+            내 학습기록
+          </StButton>
+        </StTab>
+      </nav>
     </StReview>
   );
 }
@@ -36,13 +34,16 @@ const StReview = styled.div`
   widith: 100%;
 `;
 
-const StTab = styled.section`
+const StTab = styled.ul`
+  display: flex;
+  gap: 2.4rem;
   margin: 16rem;
   ${FONT_STYLES.SB_28_HEADLINE};
   color: ${COLOR.GRAY_30};
 `;
 
-const StButton = styled.button<{ isActive: boolean }>`
+const StButton = styled.li<{ isActive: boolean }>`
+  cursor: pointer;
   color: ${(props) => (props.isActive ? COLOR.BLACK : COLOR.GRAY_30)};
   ${FONT_STYLES.SB_28_HEADLINE}
 `;
