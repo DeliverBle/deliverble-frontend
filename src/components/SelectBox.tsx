@@ -2,7 +2,7 @@ import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { icArrow, icCheckedBox, icEmptyBox } from 'public/assets/icons';
 import { useState } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import ImageDiv from './common/ImageDiv';
 
 interface SelectBoxProps {
@@ -16,7 +16,7 @@ function SelectBox(props: SelectBoxProps) {
   const [isClicked, setIsClicked] = useState(false);
 
   return (
-    <StSelectBox>
+    <StSelectBox isClicked={isClicked}>
       <span>{categoryName}</span>
       <button onClick={() => setIsClicked((prev) => !prev)}>
         {selection} <ImageDiv src={icArrow} className="arrow" layout="fill" alt="" />
@@ -39,7 +39,7 @@ function SelectBox(props: SelectBoxProps) {
 
 export default SelectBox;
 
-const StSelectBox = styled.div`
+const StSelectBox = styled.div<{ isClicked: boolean }>`
   & > span {
     color: ${COLOR.GRAY_30};
     ${FONT_STYLES.SB_16_CAPTION};
@@ -69,7 +69,16 @@ const StSelectBox = styled.div`
     position: relative;
     width: 0.8rem;
     height: 0.4rem;
+    transition: 0.3s all ease;
   }
+
+  ${({ isClicked }) =>
+    isClicked &&
+    css`
+      .arrow {
+        transform: rotate(180deg);
+      }
+    `}
 
   ul {
     width: 17.6rem;
@@ -88,6 +97,7 @@ const StSelectBox = styled.div`
       padding: 1rem 0;
       ${FONT_STYLES.M_18_CAPTION};
       color: ${COLOR.BLACK};
+      cursor: pointer;
     }
 
     .checkbox {
