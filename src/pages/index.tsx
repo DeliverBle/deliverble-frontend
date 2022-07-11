@@ -1,7 +1,9 @@
 import Head from 'next/head';
-import NavigationBar from '@src/components/NavigationBar';
+import Lottie from 'lottie-react';
+import { lottie } from 'public/assets/lottie';
+import styled from 'styled-components';
 
-function Home() {
+function Landing() {
   return (
     <div>
       <Head>
@@ -9,9 +11,17 @@ function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>Home</div>
-      <NavigationBar />
+      <div>Landing</div>
+      <StLottieWrapper>
+        <Lottie animationData={lottie} autoPlay loop />
+      </StLottieWrapper>
     </div>
   );
 }
 
-export default Home;
+export default Landing;
+
+const StLottieWrapper = styled.div`
+  width: 50rem;
+  height: 50rem;
+`;

@@ -4,21 +4,30 @@ import { FONT_STYLES } from '@src/styles/fontStyle';
 import { imgLogo } from 'public/assets/images';
 import ImageDiv from 'src/components/common/ImageDiv';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 function NavigationBar() {
+  const router = useRouter();
+
   return (
     <StNavigationBar>
-      <ImageDiv className="logo" src={imgLogo} layout="fill" alt="" />
+      <ImageDiv className="logo" src={imgLogo} priority={true} layout="fill" alt="" />
       <nav>
         <StTabList>
           <StTab>
-            <Link href="/home">홈</Link>
+            <Link href="/home">
+              <a style={{ color: router.pathname === '/home' ? 'red' : 'blue' }}>홈</a>
+            </Link>
           </StTab>
           <StTab>
-            <Link href="/learn">학습하기</Link>
+            <Link href="/learn">
+              <a>학습하기</a>
+            </Link>
           </StTab>
           <StTab>
-            <Link href="/review">복습하기</Link>
+            <Link href="/review">
+              <a>복습하기</a>
+            </Link>
           </StTab>
         </StTabList>
       </nav>
