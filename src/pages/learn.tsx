@@ -2,10 +2,14 @@ import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { icSearch } from 'public/assets/icons';
-import SelectionBox from '@src/components/SelectionBox';
+import SelectBox from '@src/components/SelectBox';
 import ImageDiv from '@src/components/common/ImageDiv';
 
 function learn() {
+  const channelList = ['전체', 'SBS', 'KBS', 'MBC', '기타'];
+  const categoryList = ['전체', '정치', '경제', '사회', '세계', '연예', '기타'];
+  const speakerList = ['전체', '여성', '남성'];
+
   return (
     <StLearn>
       <StTitle>
@@ -14,9 +18,9 @@ function learn() {
       </StTitle>
       <StSearch>
         <StSelectBoxContainer>
-          <SelectionBox categoryName="방송사" />
-          <SelectionBox categoryName="분야" />
-          <SelectionBox categoryName="발화자" />
+          <SelectBox categoryName="방송사" selectionList={channelList} />
+          <SelectBox categoryName="분야" selectionList={categoryList} />
+          <SelectBox categoryName="발화자" selectionList={speakerList} />
         </StSelectBoxContainer>
         <button>검색하기</button>
       </StSearch>
@@ -61,6 +65,7 @@ const StSearch = styled.div`
     padding: 1.4rem 4rem 1.4rem 3.9rem;
     border-radius: 1.4rem;
     margin-left: 4rem;
+    min-width: fit-content;
     height: 5.6rem;
   }
 `;
