@@ -190,13 +190,8 @@ const StThirdSlider = styled.section`
 
   .step {
     color: ${COLOR.MAIN_BLUE};
-
+    ${FONT_STYLES.B_100_LANDING};
     font-family: 'Dongle';
-    font-style: normal;
-    font-weight: 700;
-    font-size: 100px;
-    line-height: 140px;
-    letter-spacing: -0.01em;
   }
   .medium-body-wrapper {
     color: ${COLOR.BLACK};
@@ -219,13 +214,8 @@ const StFourthSlider = styled.section`
   }
   .step {
     color: ${COLOR.MAIN_BLUE};
-
+    ${FONT_STYLES.B_100_LANDING};
     font-family: 'Dongle';
-    font-style: normal;
-    font-weight: 700;
-    font-size: 100px;
-    line-height: 140px;
-    letter-spacing: -0.01em;
   }
   .medium-body-wrapper {
     color: ${COLOR.BLACK};
@@ -249,13 +239,8 @@ const StFifthSlider = styled.section`
 
   .step {
     color: ${COLOR.MAIN_BLUE};
-
+    ${FONT_STYLES.B_100_LANDING};
     font-family: 'Dongle';
-    font-style: normal;
-    font-weight: 700;
-    font-size: 100px;
-    line-height: 140px;
-    letter-spacing: -0.01em;
   }
   .medium-body-wrapper {
     color: ${COLOR.BLACK};

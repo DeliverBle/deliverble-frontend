@@ -23,7 +23,12 @@ function Landing() {
 
 export default Landing;
 
-const StLanding = styled.div``;
+const StLanding = styled.div`
+  @font-face {
+    font-family: 'Dongle';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108_2@1.0/Dongle-Bold.woff') format('woff');
+  }
+`;
 
 const StLottieWrapper = styled.div`
   width: 50rem;
