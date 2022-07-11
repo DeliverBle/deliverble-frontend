@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import HeadlineContainer from '@src/components/Review/HeadlineContainer';
+import HeadlineContainer from '@src/components/review/HeadlineContainer';
 
 function Review() {
   return (

@@ -2,12 +2,12 @@ import styled from 'styled-components';
 import { icScript } from 'public/assets/icons/index';
 import { COLOR } from 'src/styles/color';
 import { FONT_STYLES } from 'src/styles/fontStyle';
-import Image from 'next/image';
+import ImageDiv from '../common/ImageDiv';
 
 function HeadlineContainer() {
   return (
     <StHeadlineContainer>
-      <Image src={icScript} width={48} height={48} alt="script" />
+      <ImageDiv src={icScript} className="script" layout="fill" alt="" />
       <StHeadLineWrapper>
         <p>한번으로 끝내지 마세요!</p>
         <p>복습으로 매력적인 목소리를 만들어요!</p>
@@ -24,6 +24,14 @@ const StHeadlineContainer = styled.section`
   margin-top: 16rem;
   margin-left: 16rem;
   margin-bottom: 14.8rem;
+
+  gap: 1.2rem;
+
+  .script {
+    position: relative;
+    width: 4.8rem;
+    height: 4.8rem;
+  }
 `;
 
 const StHeadLineWrapper = styled.section`
@@ -32,7 +40,3 @@ const StHeadLineWrapper = styled.section`
   color: ${COLOR.BLACK};
   ${FONT_STYLES.SB_32_HEADLINE};
 `;
-
-// const StImage = styled.img`
-//   margin-right: 1.2rem;
-// `;
