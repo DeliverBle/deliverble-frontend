@@ -29,8 +29,10 @@ function SelectBox(props: SelectBoxProps) {
               <li
                 key={selectionItem}
                 onClick={() => {
-                  setSelection(Array.from(new Set([...selection, selectionItem])));
-                  console.log('click');
+                  const index = selection.indexOf(selectionItem);
+                  index !== -1
+                    ? setSelection(selection.filter((item) => item !== selectionItem))
+                    : setSelection(Array.from(new Set([...selection, selectionItem])));
                 }}>
                 <ImageDiv className="checkbox" src={selection.includes(selectionItem) ? icCheckedBox : icEmptyBox} />
                 {selectionItem}
