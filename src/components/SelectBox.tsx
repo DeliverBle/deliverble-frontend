@@ -18,9 +18,10 @@ function SelectBox(props: SelectBoxProps) {
   return (
     <StSelectBox isClicked={isClicked}>
       <span>{categoryName}</span>
-      <button onClick={() => setIsClicked((prev) => !prev)}>
-        {selection.join(', ')} <ImageDiv src={icArrow} className="arrow" layout="fill" alt="" />
-      </button>
+      <StCategoryButton onClick={() => setIsClicked((prev) => !prev)}>
+        <div>{selection.join(', ')}</div>
+        <ImageDiv src={icArrow} className="arrow" layout="fill" alt="" />
+      </StCategoryButton>
       {isClicked && (
         <ul>
           {selectionList.map((selectionItem) => {
@@ -50,27 +51,6 @@ const StSelectBox = styled.div<{ isClicked: boolean }>`
     ${FONT_STYLES.SB_16_CAPTION};
     margin-left: 1.2rem;
     margin-bottom: 1rem;
-  }
-
-  & > button {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 17.6rem;
-    height: 5.6rem;
-    padding: 1.6rem;
-    color: ${COLOR.BLACK};
-    ${FONT_STYLES.SB_18_CAPTION};
-    border: 0.2rem solid ${({ isClicked }) => (isClicked ? COLOR.MAIN_BLUE : COLOR.GRAY_5)};
-    box-shadow: 0.4rem 0.4rem 2rem rgba(22, 15, 53, 0.05);
-    border-radius: 1.4rem;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  & > button:hover {
-    border: 0.2rem solid ${COLOR.MAIN_BLUE};
   }
 
   .arrow {
@@ -120,5 +100,31 @@ const StSelectBox = styled.div<{ isClicked: boolean }>`
       height: 2.4rem;
       margin-left: 0.8rem;
     }
+  }
+`;
+
+const StCategoryButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 17.6rem;
+  height: 5.6rem;
+  padding: 1.6rem;
+  color: ${COLOR.BLACK};
+  ${FONT_STYLES.SB_18_CAPTION};
+  border: 0.2rem solid ${({ isClicked }) => (isClicked ? COLOR.MAIN_BLUE : COLOR.GRAY_5)};
+  box-shadow: 0.4rem 0.4rem 2rem rgba(22, 15, 53, 0.05);
+  border-radius: 1.4rem;
+  gap: 0.8rem;
+  overflow: hidden;
+
+  &:hover {
+    border: 0.2rem solid ${COLOR.MAIN_BLUE};
+  }
+
+  & > div {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 `;
