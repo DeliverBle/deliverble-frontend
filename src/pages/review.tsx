@@ -46,6 +46,6 @@ const StTab = styled.ul`
 
 const StButton = styled.li<{ isActive: boolean }>`
   cursor: pointer;
-  color: ${(props) => (props.isActive ? COLOR.BLACK : COLOR.GRAY_30)};
+  color: ${({ isActive }) => (isActive ? COLOR.BLACK : COLOR.GRAY_30)};
   ${FONT_STYLES.SB_28_HEADLINE}
 `;
