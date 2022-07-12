@@ -23,7 +23,9 @@ function Home() {
         </StBanner>
         <StNews>
           <h3>딜리버블의 추천 뉴스를 만나보세요.</h3>
-          <NewsList />
+          <div>
+            <NewsList />
+          </div>
         </StNews>
       </StHome>
     </>
@@ -38,11 +40,13 @@ const StBanner = styled.div`
   display: flex;
   align-items: center;
 
-  margin-top: 4.8rem;
   width: 100%;
-  height: 68.8rem;
+  height: 73rem; // 68.8rem
+  margin-top: 4.8rem;
 
-  background: no-repeat center/cover url('/assets/images/img_banner.svg');
+  background: no-repeat url('/assets/images/img_banner.svg');
+  background-size: cover;
+  background-position: center;
 `;
 
 const StBannerText = styled.div`
@@ -64,9 +68,15 @@ const StBannerText = styled.div`
 `;
 
 const StNews = styled.div`
-  margin: 16rem 16.4rem 22rem 16rem;
+  padding: 0 16rem 16rem 16.4rem;
+
+  & > div {
+    width: 159.6rem;
+    margin: 0 auto;
+  }
 
   & > h3 {
+    padding-top: 16rem;
     margin-bottom: 2.8rem;
 
     ${FONT_STYLES.SB_32_HEADLINE}

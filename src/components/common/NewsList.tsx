@@ -20,7 +20,6 @@ function NewsList() {
   const fetchNewsList = async () => {
     try {
       const { data } = await axios.get('https://5bf61531-1c07-442d-b743-28471f964f44.mock.pstmn.io/recommend_news');
-
       setVideoList(() => data.data.videoList);
     } catch (e) {
       console.log(e);
@@ -53,8 +52,6 @@ const StNewsList = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 2rem;
-
-  width: 15.96rem;
 `;
 
 const StNewsWrapper = styled.div`
