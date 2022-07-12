@@ -1,32 +1,38 @@
 import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import { imgLogo } from 'public/assets/images';
-import ImageDiv from 'src/components/common/ImageDiv';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import ImageDiv from './ImageDiv';
+import { imgLogo } from 'public/assets/images';
 
 function NavigationBar() {
   const router = useRouter();
 
   return (
     <StNavigationBar>
-      <ImageDiv className="logo" src={imgLogo} priority={true} layout="fill" alt="" />
+      <ImageDiv className="logo" priority src={imgLogo} layout="fill" alt="" />
       <nav>
         <StTabList>
           <StTab>
-            <Link href="/home">
-              <a style={{ color: router.pathname === '/home' ? 'red' : 'blue' }}>홈</a>
+            <Link href="/">
+              <a
+                style={{
+                  color: router.pathname === '/' ? `${COLOR.BLACK}` : `${COLOR.GRAY_30}`,
+                }}>
+                홈
+                <StUnderline />
+              </a>
             </Link>
           </StTab>
           <StTab>
             <Link href="/learn">
-              <a>학습하기</a>
+              <a style={{ color: router.pathname === '/learn' ? `${COLOR.BLACK}` : `${COLOR.GRAY_30}` }}>학습하기</a>
             </Link>
           </StTab>
           <StTab>
             <Link href="/review">
-              <a>복습하기</a>
+              <a style={{ color: router.pathname === '/review' ? `${COLOR.BLACK}` : `${COLOR.GRAY_30}` }}>복습하기</a>
             </Link>
           </StTab>
         </StTabList>
@@ -39,6 +45,7 @@ function NavigationBar() {
 export default NavigationBar;
 
 const StNavigationBar = styled.div`
+  position: relative;
   display: flex;
   align-items: center;
   width: 100%;
@@ -63,11 +70,22 @@ const StTabList = styled.ul`
 const StTab = styled.li`
   & > a {
     color: ${COLOR.GRAY_30};
+    display: block;
   }
 `;
 
-const StLogin = styled.button`
+const StUnderline = styled.div`
+  background: linear-gradient(45deg, ${COLOR.SUB_PURPLE}, ${COLOR.MAIN_BLUE});
+  //홈 글자의 너비만큼 하려면?
+  //display: inline-block;
+  width: 4rem;
+  height: 0.3rem;
   position: absolute;
+  bottom: 0;
+`;
+
+const StLogin = styled.button`
+  position: fixed;
   right: 6.4rem;
   color: ${COLOR.MAIN_BLUE};
   ${FONT_STYLES.B_20_BODY};
