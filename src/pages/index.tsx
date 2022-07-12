@@ -5,10 +5,12 @@ import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import SliderContainer from '@src/components/landing/SliderContainer';
 import Nav from '@src/components/landing/Nav';
+import ScrollControl from '@src/components/landing/ScrollControl';
 
 function Landing() {
   const [isFirstScrolled, setIsFirstScrolled] = useState<boolean>(false);
   const [isSecondScrolled, setIsSecondScrolled] = useState<boolean>(false);
+  const [slideNumber, setSlideNumber] = useState(1);
 
   const scrollListener = () => {
     setIsFirstScrolled(window.scrollY > 423);
@@ -27,8 +29,9 @@ function Landing() {
         <title>DeliverBle</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <ScrollControl slideNumber={slideNumber} setSlideNumber={setSlideNumber} />
       <Nav isFirstScrolled={isFirstScrolled} isSecondScrolled={isSecondScrolled} />
-      <SliderContainer />
+      <SliderContainer slideNumber={slideNumber} />
       <StLottieWrapper>
         <Lottie animationData={lottie} autoPlay loop />
       </StLottieWrapper>

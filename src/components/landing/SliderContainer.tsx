@@ -1,9 +1,19 @@
 import styled from 'styled-components';
+import { useEffect } from 'react';
 import { imgLandingBackground } from 'public/assets/images/index';
 import { COLOR } from 'src/styles/color';
 import { FONT_STYLES } from 'src/styles/fontStyle';
 
-function SliderContainer() {
+interface SliderContainerProps {
+  slideNumber: number;
+}
+function SliderContainer(props: SliderContainerProps) {
+  const { slideNumber } = props;
+
+  useEffect(() => {
+    console.log(slideNumber);
+  }, []);
+
   return (
     <StSliderContainer>
       <div className="first-slide">
