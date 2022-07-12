@@ -12,7 +12,7 @@ function Custom404() {
           <br />
           입력한 주소가 맞는지 확인하신 후, 딜리버블과 다시 함께 해요!
         </StText>
-        <Link href="/">
+        <Link href="/home">
           <a>
             <StHomeButton>홈으로 돌아가기</StHomeButton>
           </a>
