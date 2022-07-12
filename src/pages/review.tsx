@@ -3,25 +3,21 @@ import HeadlineContainer from '@src/components/review/HeadlineContainer';
 import VideoContainer from '@src/components/review/VideoContainer';
 import { COLOR } from 'src/styles/color';
 import { FONT_STYLES } from 'src/styles/fontStyle';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 function Review() {
-  const [tab, setTab] = useState('bookmarked');
-
-  useEffect(() => {
-    console.log(tab);
-  }, [tab]);
+  const [tab, setTab] = useState('isLiked');
 
   return (
     <StReview>
       <HeadlineContainer />
       <nav>
         <StTab>
-          <StButton className="bookmarked" isActive={tab === 'bookmarked'} onClick={() => setTab('bookmarked')}>
+          <StButton isActive={tab === 'isLiked'} onClick={() => setTab('isLliked')}>
             내 즐겨찾기 기록
           </StButton>
           <span> | </span>
-          <StButton className="learned" isActive={tab === 'learned'} onClick={() => setTab('learned')}>
+          <StButton isActive={tab === 'isLearned'} onClick={() => setTab('isLearned')}>
             내 학습기록
           </StButton>
         </StTab>
@@ -32,9 +28,7 @@ function Review() {
 }
 
 export default Review;
-const StReview = styled.div`
-  widith: 100%;
-`;
+const StReview = styled.div``;
 
 const StTab = styled.ul`
   display: flex;

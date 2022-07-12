@@ -33,7 +33,7 @@ function VideoContainer(props: VideoContainerProps) {
         <p>영상</p>
       </StCountVideo>
       <StVideoWrapper>
-        {tab === 'bookmarked' ? <p>bookmarked</p> : <p>learned</p>}
+        {tab === 'isLiked' ? <p>isLiked</p> : <p>isLearned</p>}
         {/* {videoList ? videoList.map(item:VideoList,idx :number)=>{
         const {id, videoId, title, channel, category, data}=item;
       }):"novideo"} */}
