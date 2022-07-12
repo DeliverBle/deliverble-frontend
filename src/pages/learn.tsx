@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { icSearch } from 'public/assets/icons';
-import SelectBox from '@src/components/SelectBox';
+import SelectBox from '@src/components/learn/SelectBox';
 import ImageDiv from '@src/components/common/ImageDiv';
 
 function learn() {

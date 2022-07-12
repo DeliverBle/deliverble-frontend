@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import styled, { css } from 'styled-components';
-import ImageDiv from './common/ImageDiv';
+import ImageDiv from '../common/ImageDiv';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { icArrow, icCheckedBox, icEmptyBox } from 'public/assets/icons';
