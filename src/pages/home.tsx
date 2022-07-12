@@ -3,8 +3,36 @@ import Head from 'next/head';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import NewsList from '@src/components/common/NewsList';
 import { COLOR } from '@src/styles/color';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+
+export interface videoType {
+  id: number;
+  title: string;
+  channel: string;
+  category: string;
+  date: string;
+  thumbnail: string;
+  isLiked: boolean;
+}
 
 function Home() {
+  const [videoList, setVideoList] = useState<videoType[]>([]);
+
+  const fetchVideoList = async () => {
+    try {
+      const { data } = await axios.get('https://5bf61531-1c07-442d-b743-28471f964f44.mock.pstmn.io/recommend_news');
+      setVideoList(() => data.data.videoList);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    fetchVideoList();
+  }, [videoList]);
+
+  if (!videoList) return null;
   return (
     <>
       <Head>
@@ -24,7 +52,7 @@ function Home() {
         <StNews>
           <h3>딜리버블의 추천 뉴스를 만나보세요.</h3>
           <div>
-            <NewsList />
+            <NewsList newsList={videoList} />
           </div>
         </StNews>
       </StHome>

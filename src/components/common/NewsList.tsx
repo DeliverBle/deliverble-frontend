@@ -1,44 +1,21 @@
+import { videoType } from '@src/pages/home';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-interface videoType {
-  id: number;
-  title: string;
-  channel: string;
-  category: string;
-  date: string;
-  thumbnail: string;
-  isLiked: boolean;
+interface NewsListProps {
+  newsList: videoType[];
 }
 
-function NewsList() {
-  const [videoList, setVideoList] = useState<videoType[]>();
-
-  const fetchNewsList = async () => {
-    try {
-      const { data } = await axios.get('https://5bf61531-1c07-442d-b743-28471f964f44.mock.pstmn.io/recommend_news');
-      setVideoList(() => data.data.videoList);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  useEffect(() => {
-    fetchNewsList();
-  }, []);
-
-  if (!videoList) return null;
+function NewsList({ newsList }: NewsListProps) {
   return (
     <StNewsList>
-      {videoList.map((video) => (
-        <StNewsWrapper key={video.id}>
+      {newsList.map((news: videoType) => (
+        <StNewsWrapper key={news.id}>
           <StThumbnail />
-          <StTitle>{video.title}</StTitle>
+          <StTitle>{news.title}</StTitle>
           <StInfo>
-            {video.channel} | {video.category} | {video.date}
+            {news.channel} | {news.category} | {news.date}
           </StInfo>
         </StNewsWrapper>
       ))}
