@@ -6,9 +6,9 @@ import SelectBox from '@src/components/SelectBox';
 import ImageDiv from '@src/components/common/ImageDiv';
 
 function learn() {
-  const channelList = ['전체', 'SBS', 'KBS', 'MBC', '기타'];
-  const categoryList = ['전체', '정치', '경제', '사회', '세계', '연예', '기타'];
-  const speakerList = ['전체', '여성', '남성'];
+  const channelList = ['SBS', 'KBS', 'MBC', '기타'];
+  const categoryList = ['정치', '경제', '사회', '세계', '연예', '기타'];
+  const speakerList = ['여성', '남성'];
 
   return (
     <StLearn>

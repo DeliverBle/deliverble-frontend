@@ -1,7 +1,7 @@
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { icArrow, icCheckedBox, icEmptyBox } from 'public/assets/icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import ImageDiv from './common/ImageDiv';
 
@@ -12,8 +12,9 @@ interface SelectBoxProps {
 
 function SelectBox(props: SelectBoxProps) {
   const { categoryName, selectionList } = props;
-  const [selection, setSelection] = useState(['전체']);
+  const [selection, setSelection] = useState(selectionList);
   const [isClicked, setIsClicked] = useState(false);
+  const [isAllClicked, setIsAllClicked] = useState(true);
 
   const handleClick = (selectionItem: string) => {
     selection.indexOf(selectionItem) !== -1
@@ -21,19 +22,38 @@ function SelectBox(props: SelectBoxProps) {
       : setSelection(Array.from(new Set([...selection, selectionItem])));
   };
 
-  if (!selection.length) {
-    setSelection([...selection, '전체']);
-  }
+  const handleAllClick = () => {
+    // 전체 선택/해제 관련
+    isAllClicked ? setSelection([]) : setSelection([...selectionList]);
+    setIsAllClicked((prev) => !prev);
+  };
+
+  useEffect(() => {
+    if (isAllClicked && selection.length !== selectionList.length) {
+      // 전체 버튼이 선택된 상태에서 다른 조건 눌렀을 때 전체 버튼에 있는 체크 없애기
+      setIsAllClicked(false);
+    }
+
+    if (!isAllClicked && selection.length === selectionList.length) {
+      // 전체 버튼이 선택되지 않은 상태에서 모든 조건 눌렀을 때 전체 버튼에 체크하기
+      setSelection(selectionList);
+      setIsAllClicked(true);
+    }
+  }, [selection, selectionList, isAllClicked]);
 
   return (
     <StSelectBox isClicked={isClicked}>
       <span>{categoryName}</span>
       <StCategoryButton onClick={() => setIsClicked((prev) => !prev)}>
-        <div>{selection.join(', ')}</div>
+        <div>{isAllClicked ? '전체' : selection.join(', ')}</div>
         <ImageDiv src={icArrow} className="arrow" layout="fill" alt="" />
       </StCategoryButton>
       {isClicked && (
         <ul>
+          <li onClick={() => handleAllClick()}>
+            <ImageDiv className="checkbox" src={isAllClicked ? icCheckedBox : icEmptyBox} />
+            전체
+          </li>
           {selectionList.map((selectionItem) => {
             return (
               <li key={selectionItem} onClick={() => handleClick(selectionItem)}>
