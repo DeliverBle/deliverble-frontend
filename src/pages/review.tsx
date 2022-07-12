@@ -9,7 +9,7 @@ function Review() {
   const [tab, setTab] = useState('isLiked');
 
   return (
-    <StReview>
+    <>
       <HeadlineContainer />
       <nav>
         <StTab>
@@ -23,12 +23,11 @@ function Review() {
         </StTab>
       </nav>
       <VideoContainer tab={tab} />
-    </StReview>
+    </>
   );
 }
 
 export default Review;
-const StReview = styled.div``;
 
 const StTab = styled.ul`
   display: flex;
