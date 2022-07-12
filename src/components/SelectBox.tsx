@@ -93,7 +93,7 @@ const StSelectBox = styled.div<{ isClicked: boolean }>`
       }
 
       button {
-        border: 0.2rem solid ${({ isClicked }) => (isClicked ? COLOR.MAIN_BLUE : COLOR.GRAY_5)};
+        border: 0.2rem solid ${isClicked ? COLOR.MAIN_BLUE : COLOR.GRAY_5};
       }
     `}
 
