@@ -94,6 +94,7 @@ const StTab = styled.li`
 const StLogin = styled.button`
   position: fixed;
   right: 6.4rem;
+
   color: ${COLOR.MAIN_BLUE};
   ${FONT_STYLES.B_20_BODY};
 `;
