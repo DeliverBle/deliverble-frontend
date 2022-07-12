@@ -35,11 +35,13 @@
 ┣ 📂public
 ┃ ┣ 📂assets
 ┃ ┃ ┣ 📂icons
-┃ ┃ ┗ 📂images
+┃ ┃ ┣ 📂images
+┃ ┃ ┗ 📂lottie
 ┣ 📂src
 ┃ ┣ 📂components
 ┃ ┣ 📂hooks
 ┃ ┣ 📂pages
+┃ ┣ 📂services
 ┃ ┣ 📂stores
 ┃ ┗ 📂styles
 ┗ 📜etc (setting files)
