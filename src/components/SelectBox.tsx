@@ -91,6 +91,10 @@ const StSelectBox = styled.div<{ isClicked: boolean }>`
       .arrow {
         transform: rotate(180deg);
       }
+
+      button {
+        border: 0.2rem solid ${({ isClicked }) => (isClicked ? COLOR.MAIN_BLUE : COLOR.GRAY_5)};
+      }
     `}
 
   ul {
@@ -137,7 +141,6 @@ const StCategoryButton = styled.button`
   padding: 1.6rem;
   color: ${COLOR.BLACK};
   ${FONT_STYLES.SB_18_CAPTION};
-  border: 0.2rem solid ${({ isClicked }) => (isClicked ? COLOR.MAIN_BLUE : COLOR.GRAY_5)};
   box-shadow: 0.4rem 0.4rem 2rem rgba(22, 15, 53, 0.05);
   border-radius: 1.4rem;
   gap: 0.8rem;
