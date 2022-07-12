@@ -13,7 +13,7 @@ function NavigationBar() {
     <StNavigationBar>
       <ImageDiv className="logo" priority src={imgLogo} layout="fill" alt="" />
       <nav>
-        <StTabArea>
+        <StTabList>
           <StTab>
             <Link href="/">
               <a className={router.pathname === '/' ? 'clicked' : ''}>홈</a>
@@ -29,7 +29,7 @@ function NavigationBar() {
               <a className={router.pathname === '/review' ? 'clicked' : ''}>복습하기</a>
             </Link>
           </StTab>
-        </StTabArea>
+        </StTabList>
       </nav>
       <StLogin>로그인</StLogin>
     </StNavigationBar>
@@ -58,7 +58,7 @@ const StNavigationBar = styled.div`
   }
 `;
 
-const StTabArea = styled.ul`
+const StTabList = styled.ul`
   display: flex;
   gap: 4rem;
   ${FONT_STYLES.M_24_HEADLINE};
