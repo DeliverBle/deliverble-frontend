@@ -53,6 +53,8 @@ const StNewsList = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 2rem;
+
+  width: 15.96rem;
 `;
 
 const StNewsWrapper = styled.div`

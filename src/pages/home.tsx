@@ -38,7 +38,7 @@ const StBanner = styled.div`
   display: flex;
   align-items: center;
 
-  margin-top: 13.6rem;
+  margin-top: 4.8rem;
   width: 100%;
   height: 68.8rem;
 
