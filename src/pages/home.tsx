@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import Head from 'next/head';
 import { FONT_STYLES } from '@src/styles/fontStyle';
+import NewsList from '@src/components/common/NewsList';
+import { COLOR } from '@src/styles/color';
 
 function Home() {
   return (
@@ -21,6 +23,7 @@ function Home() {
         </StBanner>
         <StNews>
           <h3>딜리버블의 추천 뉴스를 만나보세요.</h3>
+          <NewsList />
         </StNews>
       </StHome>
     </>
@@ -65,6 +68,8 @@ const StNews = styled.div`
 
   & > h3 {
     margin-bottom: 2.8rem;
+
     ${FONT_STYLES.SB_32_HEADLINE}
+    color: ${COLOR.BLACK};
   }
 `;
