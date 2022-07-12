@@ -6,3 +6,4 @@ export { default as icGuide } from './ic_guide.svg';
 export { default as icGuideHighlight } from './ic_guide_highlight.svg';
 export { default as icGuideSpacing } from './ic_guide_spacing.svg';
 export { default as icXButton } from './ic_x_button.svg';
+export { default as icScript } from './ic_script.svg';
