@@ -13,7 +13,7 @@ function Review() {
       <HeadlineContainer />
       <nav>
         <StTab>
-          <StButton isActive={tab === 'isLiked'} onClick={() => setTab('isLliked')}>
+          <StButton isActive={tab === 'isLiked'} onClick={() => setTab('isLiked')}>
             내 즐겨찾기 기록
           </StButton>
           <span> | </span>
