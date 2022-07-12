@@ -45,7 +45,7 @@ const GlobalStyle = createGlobalStyle`
     -webkit-tap-highlight-color : transparent;
   }
 
-  a, a:visited {
+  a {
     text-decoration: none;
     color: ${COLOR.BLACK};
   }
