@@ -1,16 +1,30 @@
-import styled from 'styled-components';
-import { icDeliverble } from 'public/assets/icons';
+import styled, { css } from 'styled-components';
+import { icDeliverbleBlue, icDeliverbleWhite } from 'public/assets/icons';
 import { COLOR } from 'src/styles/color';
 import { FONT_STYLES } from 'src/styles/fontStyle';
 import ImageDiv from '../common/ImageDiv';
 import Link from 'next/link';
 
-function Nav() {
+interface NavProps {
+  isFirstScrolled?: boolean;
+  isSecondScrolled?: boolean;
+}
+
+function Nav(props: NavProps) {
+  const { isFirstScrolled = false, isSecondScrolled = false } = props;
+
   return (
-    <StNav>
-      <ImageDiv src={icDeliverble} className="logo" layout="fill" alt="" />
+    <StNav isSecondScrolled={isSecondScrolled}>
+      {isFirstScrolled ? (
+        <ImageDiv src={icDeliverbleBlue} className="logo" layout="fill" alt="" />
+      ) : (
+        <ImageDiv src={icDeliverbleWhite} className="logo" layout="fill" alt="" />
+      )}
+
       <Link href="/login">
-        <StLogin>로그인</StLogin>
+        <StLogin isFirstScrolled={isFirstScrolled}>
+          <a>로그인</a>
+        </StLogin>
       </Link>
     </StNav>
   );
@@ -18,12 +32,20 @@ function Nav() {
 
 export default Nav;
 
-const StNav = styled.nav`
+const StNav = styled.nav<{ isSecondScrolled: boolean }>`
   display: flex;
-  height: 8.8rem;
   gap: 160rem;
-  background-color: rgba(0, 0, 0, 0);
   position: fixed;
+
+  width: 100%;
+  height: 8.8rem;
+
+  background-color: ${({ isSecondScrolled }) =>
+    isSecondScrolled
+      ? css`
+          white
+        `
+      : css`rgba(0, 0, 0, 0)`};
 
   .logo {
     position: relative;
@@ -35,13 +57,20 @@ const StNav = styled.nav`
   }
 `;
 
-const StLogin = styled.a`
+const StLogin = styled.button<{ isFirstScrolled: boolean }>`
   position: fixed;
   margin-top: 2.9rem;
   right: 6.4rem;
 
-  color: ${COLOR.MAIN_BLUE};
-  ${FONT_STYLES.SB_20_BODY};
-
-  cursor: pointer;
+  & > a {
+    ${FONT_STYLES.SB_20_BODY};
+    color: ${({ isFirstScrolled }) =>
+      isFirstScrolled
+        ? css`
+            ${COLOR.MAIN_BLUE}
+          `
+        : css`
+            ${COLOR.WHITE}
+          `};
+  }
 `;

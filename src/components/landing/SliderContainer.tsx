@@ -88,13 +88,12 @@ export default SliderContainer;
 const StSliderContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
   height: 100%;
-  padding: 0;
-  margin: 0;
 
   .first-slide {
-    display: flex;
+    width: 100%;
+    height: 100vh;
+    min-height: 108rem;
 
     background-image: url(${imgLandingBackground.src});
     background-repeat: no-repeat;
@@ -114,7 +113,7 @@ const StFirstSlider = styled.section`
     color: ${COLOR.BLACK};
     ${FONT_STYLES.M_44_HEADLINE};
 
-    margin-top: 41.5rem;
+    padding-top: 41.5rem;
     margin-left: 16rem;
   }
 
