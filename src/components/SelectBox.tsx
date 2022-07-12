@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import styled, { css } from 'styled-components';
 import ImageDiv from './common/ImageDiv';
 import { COLOR } from '@src/styles/color';
@@ -13,44 +13,38 @@ interface SelectBoxProps {
 function SelectBox(props: SelectBoxProps) {
   const { optionName, optionList } = props;
   const [isClicked, setIsClicked] = useState(false);
-  const [isAllChecked, setIsAllChecked] = useState(true);
-  const [checkedList, setCheckedList] = useState(optionList);
+  const [checkedList, setCheckedList] = useState(['전체']);
 
   const handleCheck = (checkedItem: string) => {
-    checkedList.indexOf(checkedItem) !== -1
+    checkedList.includes(checkedItem)
       ? setCheckedList(checkedList.filter((item) => item !== checkedItem))
-      : setCheckedList(Array.from(new Set([...checkedList, checkedItem])));
+      : setCheckedList([...checkedList, checkedItem]);
   };
 
-  const handleAllClick = () => {
-    isAllChecked ? setCheckedList([]) : setCheckedList([...optionList]);
-    setIsAllChecked((prev) => !prev);
-  };
+  // 모두 해제되면 전체 선택
+  if (!checkedList.length) {
+    setCheckedList(['전체']);
+  }
 
-  useEffect(() => {
-    if (isAllChecked && checkedList.length !== optionList.length) {
-      setIsAllChecked(false);
-    }
+  // 조건을 하나라도 선택하면 전체 부분에 있는 체크는 해제되어야 함
+  if (checkedList.includes('전체') && checkedList.length >= 2 && checkedList.length < optionList.length) {
+    setCheckedList(checkedList.filter((item) => item !== '전체'));
+  }
 
-    if (!isAllChecked && checkedList.length === optionList.length) {
-      setCheckedList(optionList);
-      setIsAllChecked(true);
-    }
-  }, [checkedList, optionList, isAllChecked]);
+  // 6번 요구사항 : 다시 전체를 선택하면 전체에만 체크
+  if (checkedList.includes('전체') && checkedList.length >= optionList.length) {
+    setCheckedList(['전체']);
+  }
 
   return (
     <StSelectBox isClicked={isClicked}>
       <span>{optionName}</span>
       <StCategoryButton onClick={() => setIsClicked((prev) => !prev)}>
-        <div>{isAllChecked ? '전체' : checkedList.join(', ')}</div>
+        <div>{checkedList.join(', ')}</div>
         <ImageDiv src={icArrow} className="arrow" layout="fill" alt="" />
       </StCategoryButton>
       {isClicked && (
         <ul>
-          <li onClick={() => handleAllClick()}>
-            <ImageDiv className="checkbox" src={isAllChecked ? icCheckedBox : icEmptyBox} />
-            전체
-          </li>
           {optionList.map((checkedItem) => {
             return (
               <li key={checkedItem} onClick={() => handleCheck(checkedItem)}>
