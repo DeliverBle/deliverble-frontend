@@ -17,20 +17,93 @@ export interface videoType {
 }
 
 function Home() {
-  const [videoList, setVideoList] = useState<videoType[]>([]);
+  const [videoList, setVideoList] = useState<videoType[]>([
+    {
+      id: 1,
+      title: '비트코인, 한때 1만 8천 달러 붕괴',
+      channel: 'SBS 뉴스',
+      category: '사회',
+      date: '2022.06.19',
+      thumbnail: 'https://이미지링크',
+      isLiked: true,
+    },
+    {
+      id: 2,
+      title: '비트코인, 한때 1만 8천 달러 붕괴',
+      channel: 'SBS 뉴스',
+      category: '사회',
+      date: '2022.06.19',
+      thumbnail: 'https://이미지링크',
+      isLiked: false,
+    },
+    {
+      id: 3,
+      title: '비트코인, 한때 1만 8천 달러 붕괴',
+      channel: 'SBS 뉴스',
+      category: '사회',
+      date: '2022.06.19',
+      thumbnail: 'https://이미지링크',
+      isLiked: false,
+    },
+    {
+      id: 4,
+      title: '비트코인, 한때 1만 8천 달러 붕괴',
+      channel: 'SBS 뉴스',
+      category: '사회',
+      date: '2022.06.19',
+      thumbnail: 'https://이미지링크',
+      isLiked: false,
+    },
+    {
+      id: 5,
+      title: '비트코인, 한때 1만 8천 달러 붕괴',
+      channel: 'SBS 뉴스',
+      category: '사회',
+      date: '2022.06.19',
+      thumbnail: 'https://이미지링크',
+      isLiked: false,
+    },
+    {
+      id: 6,
+      title: '비트코인, 한때 1만 8천 달러 붕괴',
+      channel: 'SBS 뉴스',
+      category: '사회',
+      date: '2022.06.19',
+      thumbnail: 'https://이미지링크',
+      isLiked: false,
+    },
+    {
+      id: 7,
+      title: '비트코인, 한때 1만 8천 달러 붕괴',
+      channel: 'SBS 뉴스',
+      category: '사회',
+      date: '2022.06.19',
+      thumbnail: 'https://이미지링크',
+      isLiked: false,
+    },
+    {
+      id: 8,
+      title: '비트코인, 한때 1만 8천 달러 붕괴',
+      channel: 'SBS 뉴스',
+      category: '사회',
+      date: '2022.06.19',
+      thumbnail: 'https://이미지링크',
+      isLiked: false,
+    },
+  ]);
 
-  const fetchVideoList = async () => {
-    try {
-      const { data } = await axios.get('https://5bf61531-1c07-442d-b743-28471f964f44.mock.pstmn.io/recommend_news');
-      setVideoList(() => data.data.videoList);
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  // const fetchVideoList = async () => {
+  //   try {
+  //     const { data } = await axios.get('https://5bf61531-1c07-442d-b743-28471f964f44.mock.pstmn.io/recommend_news');
+  //     setVideoList(() => data.data.videoList);
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchVideoList();
-  }, [videoList]);
+  // useEffect(() => {
+  //   fetchVideoList();
+  // }, [videoList]);
 
   if (!videoList) return null;
   return (
@@ -99,7 +172,6 @@ const StNews = styled.div`
   padding: 0 16rem 16rem 16.4rem;
 
   & > div {
-    width: 159.6rem;
     margin: 0 auto;
   }
 

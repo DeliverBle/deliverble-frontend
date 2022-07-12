@@ -28,7 +28,8 @@ export default NewsList;
 const StNewsList = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 2rem;
+  grid-row-gap: 11.2rem;
+  grid-column-gap: 2rem;
 `;
 
 const StNewsWrapper = styled.div`
@@ -36,13 +37,16 @@ const StNewsWrapper = styled.div`
   flex-direction: column;
   gap: 1.6rem;
 
-  width: 38.4rem;
-  height: 33.1rem;
+  width: 100%;
+  height: 100%;
 `;
 
 const StThumbnail = styled.div`
-  width: 38.4rem;
-  height: 21.6rem;
+  width: inherit;
+
+  min-width: 38.4rem;
+  /* min-height: 21.6rem; */
+  padding-top: 58%;
 
   border-radius: 1rem;
   background-color: ${COLOR.GRAY_10};
