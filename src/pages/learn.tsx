@@ -18,9 +18,9 @@ function learn() {
       </StTitle>
       <StSearch>
         <StSelectBoxContainer>
-          <SelectBox categoryName="방송사" selectionList={channelList} />
-          <SelectBox categoryName="분야" selectionList={categoryList} />
-          <SelectBox categoryName="발화자" selectionList={speakerList} />
+          <SelectBox optionName="방송사" optionList={channelList} />
+          <SelectBox optionName="분야" optionList={categoryList} />
+          <SelectBox optionName="발화자" optionList={speakerList} />
         </StSelectBoxContainer>
         <button>검색하기</button>
       </StSearch>
