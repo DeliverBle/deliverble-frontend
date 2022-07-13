@@ -23,15 +23,15 @@ function SelectBox(props: SelectBoxProps) {
     if (checkedItem === '전체') setCheckedList(['전체']);
   };
 
-  // 조건 모두 해제되면 '전체' 선택
   if (!checkedList.length) setCheckedList(['전체']);
 
-  // 조건을 하나라도 선택하면 '전체' 부분에 있는 체크는 해제되어야 함
-  if (checkedList.includes('전체') && checkedList.length >= 2 && checkedList.length < optionList.length)
-    setCheckedList(checkedList.filter((item) => item !== '전체'));
-
-  // 다시 '전체'를 선택하면 '전체'에만 체크되도록
-  if (checkedList.includes('전체') && checkedList.length >= optionList.length) setCheckedList(['전체']);
+  if (checkedList.includes('전체')) {
+    if (checkedList.length >= 2 && checkedList.length < optionList.length) {
+      setCheckedList(checkedList.filter((item) => item !== '전체'));
+    } else if (checkedList.includes('전체') && checkedList.length >= optionList.length) {
+      setCheckedList(['전체']);
+    }
+  }
 
   return (
     <StSelectBox isClicked={isClicked}>
