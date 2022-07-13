@@ -1,15 +1,22 @@
+import { useState } from 'react';
+import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import ImageDiv from '../../components/common/ImageDiv';
+import GuideModal from '@src/components/learnDetail/GuideModal';
 import { icCloseButton, icGuide } from 'public/assets/icons';
 import { COLOR } from '@src/styles/color';
 
 function LearnDetail() {
+  const router = useRouter();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <StLearnDetail>
-      <ImageDiv src={icCloseButton} className="close" layout="fill" alt="" />
+      <ImageDiv onClick={() => router.back()} src={icCloseButton} className="close" layout="fill" alt="" />
       <StLearnSection>
-        <ImageDiv src={icGuide} className="guide" layout="fill" alt="" />
+        <ImageDiv onClick={() => setIsModalOpen(true)} src={icGuide} className="guide" layout="fill" alt="" />
       </StLearnSection>
+      {isModalOpen && <GuideModal closeModal={() => setIsModalOpen(false)} />}
     </StLearnDetail>
   );
 }
@@ -24,10 +31,10 @@ const StLearnDetail = styled.div`
 
   .close {
     position: fixed;
-    width: 4.8rem;
-    height: 4.8rem;
     top: 2.4rem;
     right: 10rem;
+    width: 4.8rem;
+    height: 4.8rem;
     cursor: pointer;
   }
 
@@ -40,6 +47,7 @@ const StLearnDetail = styled.div`
 `;
 
 const StLearnSection = styled.section`
+  padding: 8rem;
   height: 111.9rem;
   border-radius: 3rem;
   background-color: ${COLOR.WHITE};
