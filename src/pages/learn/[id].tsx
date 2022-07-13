@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import ImageDiv from '../../components/common/ImageDiv';
 import GuideModal from '@src/components/learnDetail/GuideModal';
-import { icCloseButton, icGuide } from 'public/assets/icons';
+import { icXButton, icGuide } from 'public/assets/icons';
 import { COLOR } from '@src/styles/color';
 
 function LearnDetail() {
@@ -12,7 +12,7 @@ function LearnDetail() {
 
   return (
     <StLearnDetail>
-      <ImageDiv onClick={() => router.back()} src={icCloseButton} className="close" layout="fill" alt="" />
+      <ImageDiv onClick={() => router.back()} src={icXButton} className="close" layout="fill" alt="" />
       <StLearnSection>
         <ImageDiv onClick={() => setIsModalOpen(true)} src={icGuide} className="guide" layout="fill" alt="" />
       </StLearnSection>
