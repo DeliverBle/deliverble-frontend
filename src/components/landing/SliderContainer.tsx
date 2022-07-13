@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useEffect } from 'react';
-import { imgLandingBackground } from 'public/assets/images/index';
+import { imgLandingBgFirst } from 'public/assets/images/index';
 import { COLOR } from 'src/styles/color';
 import { FONT_STYLES } from 'src/styles/fontStyle';
 
@@ -105,7 +105,7 @@ const StSliderContainer = styled.div`
     height: 100vh;
     min-height: 108rem;
 
-    background-image: url(${imgLandingBackground.src});
+    background-image: url(${imgLandingBgFirst.src});
     background-repeat: no-repeat;
     background-size: cover;
   }
