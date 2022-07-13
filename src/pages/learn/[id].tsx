@@ -12,9 +12,9 @@ function LearnDetail() {
 
   return (
     <StLearnDetail>
-      <ImageDiv onClick={() => router.back()} src={icXButton} className="close" layout="fill" alt="" />
+      <ImageDiv onClick={() => router.back()} src={icXButton} className="close" layout="fill" alt="x" />
       <StLearnSection>
-        <ImageDiv onClick={() => setIsModalOpen(true)} src={icGuide} className="guide" layout="fill" alt="" />
+        <ImageDiv onClick={() => setIsModalOpen(true)} src={icGuide} className="guide" layout="fill" alt="?" />
       </StLearnSection>
       {isModalOpen && <GuideModal closeModal={() => setIsModalOpen(false)} />}
     </StLearnDetail>

@@ -17,7 +17,7 @@ function GuideModal(props: GuideModalProps) {
       <StGuideModalContent>
         <div>
           <StModalTitle>딜리버블 학습 기능 설명</StModalTitle>
-          <ImageDiv onClick={closeModal} src={icXButton} className="x-button" layout="fill" alt="" />
+          <ImageDiv onClick={closeModal} src={icXButton} className="x-button" layout="fill" alt="x" />
         </div>
         <div>
           <ImageDiv src={icGuideHighlight} className="icon" layout="fill" alt="" />
