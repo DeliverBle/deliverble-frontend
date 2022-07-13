@@ -60,6 +60,7 @@ const StGuideModal = styled.div`
     position: relative;
     width: 2.4rem;
     height: 2.4rem;
+    margin-top: 0.2rem;
   }
 `;
 
