@@ -139,7 +139,7 @@ const StHome = styled.div`
 
   width: 100%;
   height: 73rem; // 68.8rem
-  margin-top: 4.8rem;
+  margin: 4.8rem 0 16rem 0;
 
   background: no-repeat url('/assets/images/img_banner.svg');
   background-size: cover;
@@ -172,7 +172,6 @@ const StNews = styled.div`
   }
 
   & > h3 {
-    padding-top: 16rem;
     margin-bottom: 2.8rem;
 
     ${FONT_STYLES.SB_32_HEADLINE}

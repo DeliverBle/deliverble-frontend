@@ -9,7 +9,7 @@ interface NewsListProps {
 
 function NewsList({ props }: NewsListProps) {
   return (
-    <StNewsList>
+    <StNewsContainer>
       {props.map((news: videoType) => (
         <StNewsWrapper key={news.id}>
           <StThumbnail />
@@ -19,20 +19,20 @@ function NewsList({ props }: NewsListProps) {
           </StInfo>
         </StNewsWrapper>
       ))}
-    </StNewsList>
+    </StNewsContainer>
   );
 }
 
 export default NewsList;
 
-const StNewsList = styled.div`
+const StNewsContainer = styled.section`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-row-gap: 11.2rem;
   grid-column-gap: 2rem;
 `;
 
-const StNewsWrapper = styled.div`
+const StNewsWrapper = styled.article`
   display: flex;
   flex-direction: column;
   gap: 1.6rem;
@@ -45,7 +45,7 @@ const StThumbnail = styled.div`
   width: inherit;
 
   min-width: 38.4rem;
-  /* min-height: 21.6rem; */
+  min-height: 21.6rem;
   padding-top: 58%;
 
   border-radius: 1rem;

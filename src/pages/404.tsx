@@ -8,9 +8,8 @@ function Custom404() {
     <StCustom404>
       <StBackground>
         <StText>
-          찾을 수 없는 페이지입니다.
-          <br />
-          입력한 주소가 맞는지 확인하신 후, 딜리버블과 다시 함께 해요!
+          <p>찾을 수 없는 페이지입니다.</p>
+          <p>입력한 주소가 맞는지 확인하신 후, 딜리버블과 다시 함께 해요!</p>
         </StText>
         <Link href="/home">
           <StHomeButton>홈으로 돌아가기</StHomeButton>
@@ -34,7 +33,7 @@ const StBackground = styled.div`
   background-size: cover;
 `;
 
-const StText = styled.h5`
+const StText = styled.div`
   padding: 53.4rem 0 11rem 0;
 
   text-align: center;
@@ -42,7 +41,7 @@ const StText = styled.h5`
   color: ${COLOR.BLACK};
 `;
 
-const StHomeButton = styled.button`
+const StHomeButton = styled.a`
   width: 26rem;
   height: 7rem;
   padding: 1.8rem 5.5rem;
@@ -51,5 +50,4 @@ const StHomeButton = styled.button`
   background-color: ${COLOR.MAIN_BLUE};
   ${FONT_STYLES.SB_24_HEADLINE};
   color: ${COLOR.WHITE};
-  cursor: pointer;
 `;
