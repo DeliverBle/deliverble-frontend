@@ -15,8 +15,8 @@ function NavigationBar() {
       <nav>
         <StTabList>
           <StTab>
-            <Link href="/">
-              <a className={router.pathname === '/' ? 'clicked' : ''}>홈</a>
+            <Link href="/home">
+              <a className={router.pathname === '/home' ? 'clicked' : ''}>홈</a>
             </Link>
           </StTab>
           <StTab>
@@ -44,12 +44,14 @@ const StNavigationBar = styled.div`
   position: relative;
   position: sticky;
   top: 0;
+  z-index: 10;
 
   width: 100%;
   height: 8.8rem;
   padding: 0 6.4rem;
 
   box-shadow: 0.2rem 0.4rem 4rem 0 rgba(22, 15, 53, 0.1);
+  background-color: ${COLOR.WHITE};
 
   .logo {
     position: relative;
