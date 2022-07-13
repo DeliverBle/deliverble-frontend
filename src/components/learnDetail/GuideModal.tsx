@@ -67,6 +67,7 @@ const StGuideModal = styled.div`
     position: relative;
     width: 4.8rem;
     height: 4.8rem;
+    cursor: pointer;
   }
 
   .icon {
