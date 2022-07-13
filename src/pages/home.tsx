@@ -124,7 +124,7 @@ function Home() {
       <StNews>
         <h3>딜리버블의 추천 뉴스를 만나보세요.</h3>
         <div>
-          <NewsList props={videoList} />
+          <NewsList newsList={videoList} />
         </div>
       </StNews>
     </>
