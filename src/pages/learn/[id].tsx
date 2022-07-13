@@ -40,8 +40,8 @@ const StLearnDetail = styled.div`
 
   .guide {
     position: relative;
-    width: 3.2rem;
-    height: 3.2rem;
+    width: 3.4rem;
+    height: 3.4rem;
     cursor: pointer;
   }
 `;
