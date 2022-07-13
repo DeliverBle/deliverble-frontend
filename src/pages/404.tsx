@@ -13,9 +13,7 @@ function Custom404() {
           입력한 주소가 맞는지 확인하신 후, 딜리버블과 다시 함께 해요!
         </StText>
         <Link href="/home">
-          <a>
-            <StHomeButton>홈으로 돌아가기</StHomeButton>
-          </a>
+          <StHomeButton>홈으로 돌아가기</StHomeButton>
         </Link>
       </StBackground>
     </StCustom404>
@@ -52,5 +50,6 @@ const StHomeButton = styled.button`
   border-radius: 1.4rem;
   background-color: ${COLOR.MAIN_BLUE};
   ${FONT_STYLES.SB_24_HEADLINE};
-  color: white;
+  color: ${COLOR.WHITE};
+  cursor: pointer;
 `;

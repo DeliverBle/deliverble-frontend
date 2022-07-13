@@ -4,13 +4,13 @@ import { FONT_STYLES } from '@src/styles/fontStyle';
 import styled from 'styled-components';
 
 interface NewsListProps {
-  newsList: videoType[];
+  props: videoType[];
 }
 
-function NewsList({ newsList }: NewsListProps) {
+function NewsList({ props }: NewsListProps) {
   return (
     <StNewsList>
-      {newsList.map((news: videoType) => (
+      {props.map((news: videoType) => (
         <StNewsWrapper key={news.id}>
           <StThumbnail />
           <StTitle>{news.title}</StTitle>

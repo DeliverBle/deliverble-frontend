@@ -113,31 +113,27 @@ function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <StHome>
-        <StBanner>
-          <StBannerText>
-            <h1>
-              우리는 말하는 법은 배웠지만,
-              <br />잘 말하는 법은 배우지 못했다!
-            </h1>
-            <p>딜리버블과 함께 잘 말하는 법을 배워봐요!</p>
-          </StBannerText>
-        </StBanner>
-        <StNews>
-          <h3>딜리버블의 추천 뉴스를 만나보세요.</h3>
-          <div>
-            <NewsList newsList={videoList} />
-          </div>
-        </StNews>
+        <StBannerText>
+          <h1>
+            우리는 말하는 법은 배웠지만,
+            <br />잘 말하는 법은 배우지 못했다!
+          </h1>
+          <p>딜리버블과 함께 잘 말하는 법을 배워봐요!</p>
+        </StBannerText>
       </StHome>
+      <StNews>
+        <h3>딜리버블의 추천 뉴스를 만나보세요.</h3>
+        <div>
+          <NewsList props={videoList} />
+        </div>
+      </StNews>
     </>
   );
 }
 
 export default Home;
 
-const StHome = styled.div``;
-
-const StBanner = styled.div`
+const StHome = styled.div`
   display: flex;
   align-items: center;
 
@@ -156,7 +152,7 @@ const StBannerText = styled.div`
   width: fit-content;
   height: fit-content;
 
-  color: white;
+  color: ${COLOR.WHITE};
 
   & > h1 {
     ${FONT_STYLES.M_44_HEADLINE}
@@ -169,7 +165,7 @@ const StBannerText = styled.div`
 `;
 
 const StNews = styled.div`
-  padding: 0 16rem 16rem 16.4rem;
+  padding: 0 16rem 16rem 16rem;
 
   & > div {
     margin: 0 auto;
