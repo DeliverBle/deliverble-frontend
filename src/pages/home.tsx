@@ -3,8 +3,8 @@ import Head from 'next/head';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import NewsList from '@src/components/common/NewsList';
 import { COLOR } from '@src/styles/color';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
+// import axios from 'axios';
 
 export interface videoType {
   id: number;
@@ -101,9 +101,10 @@ function Home() {
   //   }
   // };
 
-  // useEffect(() => {
-  //   fetchVideoList();
-  // }, [videoList]);
+  useEffect(() => {
+    // fetchVideoList();
+    setVideoList(videoList);
+  }, [videoList]);
 
   if (!videoList) return null;
   return (
