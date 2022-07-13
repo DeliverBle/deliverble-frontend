@@ -42,6 +42,8 @@ const StNavigationBar = styled.div`
   display: flex;
   align-items: center;
   position: relative;
+  position: sticky;
+  top: 0;
 
   width: 100%;
   height: 8.8rem;
