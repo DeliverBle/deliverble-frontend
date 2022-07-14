@@ -1,10 +1,11 @@
-import styled from 'styled-components';
+import { useState, useEffect } from 'react';
+// import axios from 'axios';
 import Head from 'next/head';
-import { FONT_STYLES } from '@src/styles/fontStyle';
+import styled from 'styled-components';
+import NavigationBar from '@src/components/common/NavigationBar';
 import NewsList from '@src/components/common/NewsList';
+import { FONT_STYLES } from '@src/styles/fontStyle';
 import { COLOR } from '@src/styles/color';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
 
 export interface videoType {
   id: number;
@@ -101,9 +102,10 @@ function Home() {
   //   }
   // };
 
-  // useEffect(() => {
-  //   fetchVideoList();
-  // }, [videoList]);
+  useEffect(() => {
+    // fetchVideoList();
+    setVideoList(videoList);
+  }, [videoList]);
 
   if (!videoList) return null;
   return (
@@ -112,6 +114,7 @@ function Home() {
         <title>DeliverBle</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <NavigationBar />
       <StHome>
         <StBannerText>
           <h1>
@@ -124,7 +127,7 @@ function Home() {
       <StNews>
         <h3>딜리버블의 추천 뉴스를 만나보세요.</h3>
         <div>
-          <NewsList props={videoList} />
+          <NewsList newsList={videoList} />
         </div>
       </StNews>
     </>

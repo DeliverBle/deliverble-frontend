@@ -52,10 +52,8 @@ const StVideoContainer = styled.div`
 const StCountVideo = styled.article`
   display: flex;
   gap: 0.4rem;
-
   ${FONT_STYLES.M_20_BODY};
   color: ${COLOR.GRAY_30};
-
   & > span {
     color: ${COLOR.MAIN_BLUE};
   }

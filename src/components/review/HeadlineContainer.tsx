@@ -20,10 +20,8 @@ export default HeadlineContainer;
 
 const StHeadlineContainer = styled.section`
   display: flex;
-
   margin: 16rem 0 14.8rem 16rem;
   gap: 1.2rem;
-
   .script {
     position: relative;
     width: 4.8rem;
@@ -34,7 +32,6 @@ const StHeadlineContainer = styled.section`
 const StHeadLineWrapper = styled.section`
   display: flex;
   flex-direction: column;
-
   color: ${COLOR.BLACK};
   ${FONT_STYLES.SB_32_HEADLINE};
 `;

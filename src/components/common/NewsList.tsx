@@ -1,19 +1,23 @@
+import { useRouter } from 'next/router';
+import styled from 'styled-components';
 import { videoType } from '@src/pages/home';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { icLikeDefault, icLikeHover } from 'public/assets/icons';
-import styled from 'styled-components';
 import ImageDiv from './ImageDiv';
 
 interface NewsListProps {
-  props: videoType[];
+  newsList: videoType[];
 }
 
-function NewsList({ props }: NewsListProps) {
+function NewsList(props: NewsListProps) {
+  const { newsList } = props;
+  const router = useRouter();
+
   return (
     <StNewsContainer>
-      {props.map((news: videoType) => (
-        <StNewsWrapper key={news.id}>
+      {newsList.map(({ id, title, channel, category, date }) => (
+        <StNewsWrapper key={id} onClick={() => router.push(`/learn/${id}`)}>
           <StTumbnailContainer>
             <StThumbnail />
             <StLikeButton type="button">
@@ -23,9 +27,9 @@ function NewsList({ props }: NewsListProps) {
               </StImageContainer>
             </StLikeButton>
           </StTumbnailContainer>
-          <StTitle>{news.title}</StTitle>
+          <StTitle>{title}</StTitle>
           <StInfo>
-            {news.channel} | {news.category} | {news.date}
+            {channel} | {category} | {date}
           </StInfo>
         </StNewsWrapper>
       ))}

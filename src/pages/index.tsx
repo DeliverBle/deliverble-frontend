@@ -10,6 +10,7 @@ function Landing() {
         <title>DeliverBle</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <div>Home</div>
       <div>Landing</div>
       <StLottieWrapper>
         <Lottie animationData={lottie} autoPlay loop />
