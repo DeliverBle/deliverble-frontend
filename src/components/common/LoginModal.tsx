@@ -7,12 +7,17 @@ import { icXButton, icKakao, icMicrophone } from 'public/assets/icons';
 import { imgLogo } from 'public/assets/images';
 import { COLOR } from '@src/styles/color';
 
-function LoginModal() {
+interface LoginModalProps {
+  closeModal: () => void;
+}
+
+function LoginModal(props: LoginModalProps) {
+  const { closeModal } = props;
   return (
     <StLoginModal>
       <StLoginModalBackground />
       <StLoginModalContent>
-        <ImageDiv src={icXButton} className="x-button" layout="fill" alt="x" />
+        <ImageDiv onClick={closeModal} src={icXButton} className="x-button" layout="fill" alt="x" />
         <ImageDiv src={imgLogo} className="logo" layout="fill" alt="DeliverBle" />
         <p>로그인하고 더 다양한 기능을 누려보세요.</p>
         <ImageDiv src={icMicrophone} className="microphone" layout="fill" alt="마이크" />
@@ -62,7 +67,7 @@ const StLoginModalBackground = styled.div`
   height: 100%;
   background-color: rgba(0, 0, 0, 0.78);
 
-  z-index: 1;
+  z-index: 2;
 `;
 
 const StLoginModalContent = styled.div`
@@ -73,11 +78,10 @@ const StLoginModalContent = styled.div`
 
   width: 46.2rem;
   height: 58.8rem;
-  border: 0.1rem black solid;
   border-radius: 2rem;
   background-color: white;
 
-  z-index: 2;
+  z-index: 3;
 
   p {
     margin-top: 0.8rem;

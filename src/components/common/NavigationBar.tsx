@@ -1,42 +1,49 @@
 import styled, { css } from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
+import { imgLogo } from 'public/assets/images';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 import ImageDiv from './ImageDiv';
-import { imgLogo } from 'public/assets/images';
+import LoginModal from './LoginModal';
+import { waitForAllSettled } from 'recoil';
 
 function NavigationBar() {
   const router = useRouter();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <StNavigationBar>
-      <Link href="/home">
-        <a>
-          <ImageDiv className="logo" priority src={imgLogo} layout="fill" alt="DeliverBle" />
-        </a>
-      </Link>
-      <nav>
-        <StTabList>
-          <StTab isActive={router.pathname === '/home'}>
-            <Link href="/home">
-              <a>홈</a>
-            </Link>
-          </StTab>
-          <StTab isActive={router.pathname === '/learn'}>
-            <Link href="/learn">
-              <a>학습하기</a>
-            </Link>
-          </StTab>
-          <StTab isActive={router.pathname === '/review'}>
-            <Link href="/review">
-              <a>복습하기</a>
-            </Link>
-          </StTab>
-        </StTabList>
-      </nav>
-      <StLogin>로그인</StLogin>
-    </StNavigationBar>
+    <>
+      <StNavigationBar>
+        <Link href="/home">
+          <a>
+            <ImageDiv className="logo" priority src={imgLogo} layout="fill" alt="DeliverBle" />
+          </a>
+        </Link>
+        <nav>
+          <StTabList>
+            <StTab isActive={router.pathname === '/home'}>
+              <Link href="/home">
+                <a>홈</a>
+              </Link>
+            </StTab>
+            <StTab isActive={router.pathname === '/learn'}>
+              <Link href="/learn">
+                <a>학습하기</a>
+              </Link>
+            </StTab>
+            <StTab isActive={router.pathname === '/review'}>
+              <Link href="/review">
+                <a>복습하기</a>
+              </Link>
+            </StTab>
+          </StTabList>
+        </nav>
+        <StLogin onClick={() => setIsModalOpen(true)}>로그인</StLogin>
+      </StNavigationBar>
+      {isModalOpen && <LoginModal closeModal={() => setIsModalOpen(false)} />}
+    </>
   );
 }
 
@@ -48,7 +55,7 @@ const StNavigationBar = styled.div`
   position: relative;
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 1;
 
   width: 100%;
   height: 8.8rem;
