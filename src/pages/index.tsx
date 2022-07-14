@@ -11,7 +11,6 @@ function Landing() {
         <title>DeliverBle</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <NavigationBar />
       <div>Home</div>
       <div>Landing</div>
       <StLottieWrapper>
@@ -25,5 +24,5 @@ export default Landing;
 
 const StLottieWrapper = styled.div`
   width: 50rem;
-  height: 5000rem;
+  height: 50rem;
 `;

@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import Link from 'next/link';
@@ -11,22 +11,26 @@ function NavigationBar() {
 
   return (
     <StNavigationBar>
-      <ImageDiv className="logo" priority src={imgLogo} layout="fill" alt="" />
+      <Link href="/home">
+        <a>
+          <ImageDiv className="logo" priority src={imgLogo} layout="fill" alt="DeliverBle" />
+        </a>
+      </Link>
       <nav>
         <StTabList>
-          <StTab>
+          <StTab isActive={router.pathname === '/home'}>
             <Link href="/home">
-              <a className={router.pathname === '/home' ? 'clicked' : ''}>홈</a>
+              <a>홈</a>
             </Link>
           </StTab>
-          <StTab>
+          <StTab isActive={router.pathname === '/learn'}>
             <Link href="/learn">
-              <a className={router.pathname === '/learn' ? 'clicked' : ''}>학습하기</a>
+              <a>학습하기</a>
             </Link>
           </StTab>
-          <StTab>
+          <StTab isActive={router.pathname === '/review'}>
             <Link href="/review">
-              <a className={router.pathname === '/review' ? 'clicked' : ''}>복습하기</a>
+              <a>복습하기</a>
             </Link>
           </StTab>
         </StTabList>
@@ -68,7 +72,7 @@ const StTabList = styled.ul`
   ${FONT_STYLES.M_24_HEADLINE};
 `;
 
-const StTab = styled.li`
+const StTab = styled.li<{ isActive: boolean }>`
   width: 9rem;
 
   &:first-of-type {
@@ -86,13 +90,17 @@ const StTab = styled.li`
     }
   }
 
-  .clicked {
-    border-bottom: 0.3rem solid transparent;
-    border-image: linear-gradient(45deg, ${COLOR.SUB_PURPLE}, ${COLOR.MAIN_BLUE});
-    border-image-slice: 1;
-    color: ${COLOR.BLACK};
-    ${FONT_STYLES.SB_24_HEADLINE};
-  }
+  ${({ isActive }) =>
+    isActive &&
+    css`
+      border-bottom: 0.3rem solid transparent;
+      border-image: linear-gradient(45deg, ${COLOR.SUB_PURPLE}, ${COLOR.MAIN_BLUE});
+      border-image-slice: 1;
+      & > a {
+        color: ${COLOR.BLACK};
+        ${FONT_STYLES.SB_24_HEADLINE};
+      }
+    `}
 `;
 
 const StLogin = styled.button`
