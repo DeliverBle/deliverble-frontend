@@ -62,54 +62,54 @@ function SliderContainer(props: SliderContainerProps) {
           <h1>딜리버블이 제안하는</h1>
           <h1>효과적인 말하기 학습 솔루션</h1>
         </div>
-        <div className="third-text-wrapper">
-          <label className="step">STEP 1</label>
+        <StContentContainer className="step1-content">
           <StLottieWrapper className="step1">
             <Lottie animationData={step1Lottie} autoPlay loop />
           </StLottieWrapper>
-          <div className="medium-body-wrapper">
-            <p>무작정 따라하며</p>
-            <p>아나운서의 좋은 발음과 발성 배우기</p>
-          </div>
-          <div className="small-body-wrapper">
-            <p>언제 어디서든 아나운서의 좋은 목소리를 듣고, </p>
-            <p>소리 내서 따라하며 연습해봐요.</p>
-          </div>
-        </div>
+          <StTextWrapper>
+            <h2>STEP 1.</h2>
+            <h3>무작정 따라하며</h3>
+            <h3>아나운서의 좋은 발음과 발성 배우기</h3>
+            <Sth4>
+              <h4>언제 어디서든 아나운서의 좋은 목소리를 듣고, </h4>
+              <h4>소리 내서 따라하며 연습해봐요.</h4>
+            </Sth4>
+          </StTextWrapper>
+        </StContentContainer>
       </StThirdSlider>
 
       <StFourthSlider>
-        <div className="fourth-text-wrapper">
-          <label className="step">STEP 2</label>
+        <StContentContainer className="step2-content">
           <StLottieWrapper className="step2">
             <Lottie animationData={step2Lottie} autoPlay loop />
           </StLottieWrapper>
-          <div className="medium-body-wrapper">
-            <p>끊어 읽기, 하이라이트, 메모 기능으로</p>
-            <p>더 똑똑하게 공부하기</p>
-          </div>
-          <div className="small-body-wrapper">
-            <p>클릭 한 번으로 쉽게 끊어 읽기 표시를 남기고,</p>
-            <p>메모를 추가하여 나만의 피드백도 기록해봐요.</p>
-          </div>
-        </div>
+          <StTextWrapper>
+            <h2>STEP 2.</h2>
+            <h3>끊어 읽기, 하이라이트, 메모 기능으로</h3>
+            <h3>더 똑똑하게 공부하기</h3>
+            <Sth4>
+              <h4>클릭 한 번으로 쉽게 끊어 읽기 표시를 남기고,</h4>
+              <h4>메모를 추가하여 나만의 피드백도 기록해봐요.</h4>
+            </Sth4>
+          </StTextWrapper>
+        </StContentContainer>
       </StFourthSlider>
 
       <StFifthSlider>
-        <div className="fifth-text-wrapper">
-          <label className="step">STEP 3</label>
+        <StContentContainer className="step3-content">
           <StLottieWrapper className="step3">
             <Lottie animationData={step3Lottie} autoPlay loop />
           </StLottieWrapper>
-          <div className="medium-body-wrapper">
-            <p>끊어 읽기, 하이라이트, 메모 기능으로</p>
-            <p>더 똑똑하게 공부하기</p>
-          </div>
-          <div className="small-body-wrapper">
-            <p>클릭 한 번으로 쉽게 끊어 읽기 표시를 남기고,</p>
-            <p>메모를 추가하여 나만의 피드백도 기록해봐요.</p>
-          </div>
-        </div>
+          <StTextWrapper>
+            <h2>STEP 3.</h2>
+            <h3>끊어 읽기, 하이라이트, 메모 기능으로</h3>
+            <h3>더 똑똑하게 공부하기</h3>
+            <Sth4>
+              <h4>클릭 한 번으로 쉽게 끊어 읽기 표시를 남기고,</h4>
+              <h4>메모를 추가하여 나만의 피드백도 기록해봐요.</h4>
+            </Sth4>
+          </StTextWrapper>
+        </StContentContainer>
       </StFifthSlider>
 
       <StSixthSlider>
@@ -125,6 +125,42 @@ function SliderContainer(props: SliderContainerProps) {
 }
 
 export default SliderContainer;
+
+const StContentContainer = styled.section`
+  display: flex;
+
+  &.step1-content {
+    margin-top: 23.6rem;
+  }
+
+  &.step2-content {
+    margin-top: 36.1rem;
+  }
+  &.step3-content {
+    margin-top: 34.2rem;
+  }
+`;
+
+const Sth4 = styled.section`
+  & > h4 {
+    color: ${COLOR.GRAY_60};
+    ${FONT_STYLES.M_24_HEADLINE};
+  }
+  margin-top: 3.2rem;
+`;
+
+const StTextWrapper = styled.section`
+  & > h2 {
+    color: ${COLOR.MAIN_BLUE};
+    ${FONT_STYLES.B_100_LANDING};
+    font-family: 'Dongle';
+  }
+
+  & > h3 {
+    color: ${COLOR.BLACK};
+    ${FONT_STYLES.SB_36_HEADLINE};
+  }
+`;
 
 const StSliderContainer = styled.div`
   display: flex;
@@ -266,28 +302,6 @@ const StThirdSlider = styled.section`
     text-align: center;
     letter-spacing: -0.01em;
   }
-
-  .third-text-wrapper {
-    margin-top: 14.3rem;
-    margin-left: 117.1rem;
-  }
-
-  .step {
-    color: ${COLOR.MAIN_BLUE};
-    ${FONT_STYLES.B_100_LANDING};
-    font-family: 'Dongle';
-  }
-  .medium-body-wrapper {
-    color: ${COLOR.BLACK};
-    ${FONT_STYLES.SB_36_HEADLINE};
-  }
-
-  .small-body-wrapper {
-    margin-top: 4rem;
-    margin-bottom: 29.7rem;
-    color: ${COLOR.GRAY_60};
-    ${FONT_STYLES.M_24_HEADLINE};
-  }
 `;
 
 const StFourthSlider = styled.section`
@@ -301,22 +315,6 @@ const StFourthSlider = styled.section`
 
     text-align: right;
   }
-  .step {
-    color: ${COLOR.MAIN_BLUE};
-    ${FONT_STYLES.B_100_LANDING};
-    font-family: 'Dongle';
-  }
-  .medium-body-wrapper {
-    color: ${COLOR.BLACK};
-    ${FONT_STYLES.SB_36_HEADLINE};
-  }
-
-  .small-body-wrapper {
-    margin-top: 4rem;
-    margin-bottom: 29.7rem;
-    color: ${COLOR.GRAY_60};
-    ${FONT_STYLES.M_24_HEADLINE};
-  }
 `;
 
 const StFifthSlider = styled.section`
@@ -324,23 +322,6 @@ const StFifthSlider = styled.section`
     margin-top: 36.6rem;
     margin-left: 115.7rem;
     margin-bottom: 36.6rem;
-  }
-
-  .step {
-    color: ${COLOR.MAIN_BLUE};
-    ${FONT_STYLES.B_100_LANDING};
-    font-family: 'Dongle';
-  }
-  .medium-body-wrapper {
-    color: ${COLOR.BLACK};
-    ${FONT_STYLES.SB_36_HEADLINE};
-  }
-
-  .small-body-wrapper {
-    margin-top: 4rem;
-    margin-bottom: 29.7rem;
-    color: ${COLOR.GRAY_60};
-    ${FONT_STYLES.M_24_HEADLINE};
   }
 `;
 
@@ -383,18 +364,24 @@ const StSixthSlider = styled.section`
 `;
 
 const StLottieWrapper = styled.div`
-  .step1 {
+  &.step1 {
     width: 57.7rem;
     height: 30.5rem;
+    margin-left: 25.5rem;
+    margin-right: 25.6rem;
   }
 
-  .step2 {
+  &.step2 {
     width: 57.8rem;
     height: 35.9rem;
+    margin-left: 34.9rem;
+    margin-right: 16.1rem;
   }
 
-  .step3 {
+  &.step3 {
     width: 57.7rem;
     height: 39.7rem;
+    margin-left: 31.8rem;
+    margin-right: 19.3rem;
   }
 `;
