@@ -1,9 +1,10 @@
 import styled from 'styled-components';
+import NavigationBar from '@src/components/common/NavigationBar';
+import SelectBox from '@src/components/learn/SelectBox';
+import ImageDiv from '@src/components/common/ImageDiv';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { icSearch } from 'public/assets/icons';
-import SelectBox from '@src/components/learn/SelectBox';
-import ImageDiv from '@src/components/common/ImageDiv';
 
 function learn() {
   const channelList = ['전체', 'SBS', 'KBS', 'MBC', '기타'];
@@ -11,20 +12,23 @@ function learn() {
   const speakerList = ['전체', '여성', '남성'];
 
   return (
-    <StLearn>
-      <StTitle>
-        <ImageDiv src={icSearch} className="search" layout="fill" alt="" />
-        <h1>원하는 영상을 찾아 쉐도잉 해보세요!</h1>
-      </StTitle>
-      <StSearch>
-        <StSelectBoxContainer>
-          <SelectBox optionName="방송사" optionList={channelList} />
-          <SelectBox optionName="분야" optionList={categoryList} />
-          <SelectBox optionName="발화자" optionList={speakerList} />
-        </StSelectBoxContainer>
-        <button>검색하기</button>
-      </StSearch>
-    </StLearn>
+    <>
+      <NavigationBar />
+      <StLearn>
+        <StTitle>
+          <ImageDiv src={icSearch} className="search" layout="fill" alt="" />
+          <h1>원하는 영상을 찾아 쉐도잉 해보세요!</h1>
+        </StTitle>
+        <StSearch>
+          <StSelectBoxContainer>
+            <SelectBox optionName="방송사" optionList={channelList} />
+            <SelectBox optionName="분야" optionList={categoryList} />
+            <SelectBox optionName="발화자" optionList={speakerList} />
+          </StSelectBoxContainer>
+          <button>검색하기</button>
+        </StSearch>
+      </StLearn>
+    </>
   );
 }
 

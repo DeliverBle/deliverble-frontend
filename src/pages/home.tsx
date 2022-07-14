@@ -1,10 +1,11 @@
-import styled from 'styled-components';
-import Head from 'next/head';
-import { FONT_STYLES } from '@src/styles/fontStyle';
-import NewsList from '@src/components/common/NewsList';
-import { COLOR } from '@src/styles/color';
 import { useState, useEffect } from 'react';
 // import axios from 'axios';
+import Head from 'next/head';
+import styled from 'styled-components';
+import NavigationBar from '@src/components/common/NavigationBar';
+import NewsList from '@src/components/common/NewsList';
+import { FONT_STYLES } from '@src/styles/fontStyle';
+import { COLOR } from '@src/styles/color';
 
 export interface videoType {
   id: number;
@@ -113,6 +114,7 @@ function Home() {
         <title>DeliverBle</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <NavigationBar />
       <StHome>
         <StBannerText>
           <h1>
