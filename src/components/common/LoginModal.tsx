@@ -5,20 +5,24 @@ import { KAKAO_AUTH_URL } from 'src/pages/api/OAuth';
 import Link from 'next/link';
 import { icXButton, icKakao, icMicrophone } from 'public/assets/icons';
 import { imgLogo } from 'public/assets/images';
+import { COLOR } from '@src/styles/color';
 
 function LoginModal() {
   return (
     <StLoginModal>
-      <ImageDiv src={icXButton} className="x-button" layout="fill" alt="x" />
-      <ImageDiv src={imgLogo} className="logo" layout="fill" alt="DeliverBle" />
-      <ImageDiv src={icMicrophone} className="microphone" layout="fill" alt="마이크 아이콘" />
-      <span>로그인하고 더 다양한 기능을 누려보세요.</span>
-      <Link href={KAKAO_AUTH_URL}>
-        <StLoginButton>
-          <ImageDiv src={icKakao} className="kakao-button" layout="fill" alt="" />
-          <a>카카오로 3초만에 시작하기</a>
-        </StLoginButton>
-      </Link>
+      <StLoginModalBackground />
+      <StLoginModalContent>
+        <ImageDiv src={icXButton} className="x-button" layout="fill" alt="x" />
+        <ImageDiv src={imgLogo} className="logo" layout="fill" alt="DeliverBle" />
+        <p>로그인하고 더 다양한 기능을 누려보세요.</p>
+        <ImageDiv src={icMicrophone} className="microphone" layout="fill" alt="마이크" />
+        <Link href={KAKAO_AUTH_URL}>
+          <StLoginButton>
+            <ImageDiv src={icKakao} className="kakao-icon" layout="fill" alt="" />
+            <a>카카오로 3초만에 시작하기</a>
+          </StLoginButton>
+        </Link>
+      </StLoginModalContent>
     </StLoginModal>
   );
 }
@@ -26,14 +30,11 @@ function LoginModal() {
 export default LoginModal;
 
 const StLoginModal = styled.div`
-  width: 46.2rem;
-  height: 58.8rem;
-  border: 1px black solid;
-
   .x-button {
     position: relative;
     width: 4.8rem;
     height: 4.8rem;
+    margin: 1.6rem 0 0 39.8rem;
     cursor: pointer;
   }
 
@@ -41,12 +42,48 @@ const StLoginModal = styled.div`
     position: relative;
     width: 15.6rem;
     height: 6rem;
+    margin: 0 auto;
   }
 
   .microphone {
     position: relative;
     width: 24.8rem;
     height: 24.8rem;
+    margin: 3.6rem auto 4rem auto;
+  }
+`;
+
+const StLoginModalBackground = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.78);
+
+  z-index: 1;
+`;
+
+const StLoginModalContent = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 46.2rem;
+  height: 58.8rem;
+  border: 0.1rem black solid;
+  border-radius: 2rem;
+  background-color: white;
+
+  z-index: 2;
+
+  p {
+    margin-top: 0.8rem;
+    text-align: center;
+    color: ${COLOR.MAIN_BLUE};
+    ${FONT_STYLES.SB_20_BODY};
   }
 `;
 
@@ -55,11 +92,12 @@ const StLoginButton = styled.button`
   align-items: center;
   width: 35rem;
   height: 6.4rem;
+  margin: 0 auto;
   border-radius: 1.4rem;
   background-color: #fee500;
   ${FONT_STYLES.M_18_CAPTION};
 
-  .kakao-button {
+  .kakao-icon {
     position: relative;
     width: 2.4rem;
     height: 2.4rem;
