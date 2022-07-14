@@ -1,3 +1,4 @@
+import NavigationBar from '@src/components/common/NavigationBar';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import Link from 'next/link';
@@ -5,17 +6,20 @@ import styled from 'styled-components';
 
 function Custom404() {
   return (
-    <StCustom404>
-      <StBackground>
-        <StText>
-          <p>찾을 수 없는 페이지입니다.</p>
-          <p>입력한 주소가 맞는지 확인하신 후, 딜리버블과 다시 함께 해요!</p>
-        </StText>
-        <Link href="/home">
-          <StHomeButton>홈으로 돌아가기</StHomeButton>
-        </Link>
-      </StBackground>
-    </StCustom404>
+    <>
+      <NavigationBar />
+      <StCustom404>
+        <StBackground>
+          <StText>
+            <p>찾을 수 없는 페이지입니다.</p>
+            <p>입력한 주소가 맞는지 확인하신 후, 딜리버블과 다시 함께 해요!</p>
+          </StText>
+          <Link href="/home">
+            <StHomeButton>홈으로 돌아가기</StHomeButton>
+          </Link>
+        </StBackground>
+      </StCustom404>
+    </>
   );
 }
 
