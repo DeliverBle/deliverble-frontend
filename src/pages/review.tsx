@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import NavigationBar from '@src/components/common/NavigationBar';
 import HeadlineContainer from '@src/components/review/HeadlineContainer';
 import VideoContainer from '@src/components/review/VideoContainer';
 import { COLOR } from 'src/styles/color';
@@ -10,6 +11,7 @@ function Review() {
 
   return (
     <>
+      <NavigationBar />
       <HeadlineContainer />
       <nav>
         <StTab>
