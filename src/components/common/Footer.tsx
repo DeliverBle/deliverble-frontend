@@ -72,10 +72,20 @@ const StInfo = styled.div`
 
 const StService = styled.div`
   padding: 15.1rem 11.7rem 0 0;
+
+  p {
+    line-height: 20px;
+    border-bottom: 2.3px solid ${COLOR.GRAY_60};
+  }
 `;
 
 const StPeople = styled.div`
   padding: 15.1rem 10.1em 0 0;
+
+  p {
+    line-height: 20px;
+    border-bottom: 2.3px solid ${COLOR.GRAY_60};
+  }
 `;
 
 const StContact = styled.div`
