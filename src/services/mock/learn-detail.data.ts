@@ -1,5 +1,5 @@
 export const LEARN_DETAIL_DATA = {
-  VIDEO_INFO: {
+  VIDEO_DATA: {
     id: 1,
     videoId: 'Zc7ilAraCS0',
     startTime: 1391,
