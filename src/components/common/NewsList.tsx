@@ -17,17 +17,17 @@ function NewsList(props: NewsListProps) {
   return (
     <StNewsContainer>
       {newsList.map(({ id, title, channel, category, date }) => (
-        <StNewsWrapper key={id} onClick={() => router.push(`/learn/${id}`)}>
+        <StNewsWrapper key={id}>
           <StTumbnailContainer>
-            <StThumbnail />
-            <StLikeButton type="button">
+            <StThumbnail onClick={() => router.push(`/learn/${id}`)} />
+            <StLikeButton type="button" onClick={() => console.log('test')}>
               <StImageContainer>
                 <ImageDiv className="like" src={icLikeHover} alt="like-hover" />
                 <ImageDiv className="like" src={icLikeDefault} alt="like-default" />
               </StImageContainer>
             </StLikeButton>
           </StTumbnailContainer>
-          <StTitle>{title}</StTitle>
+          <StTitle onClick={() => router.push(`/learn/${id}`)}>{title}</StTitle>
           <StInfo>
             {channel} | {category} | {date}
           </StInfo>
@@ -119,5 +119,4 @@ const StInfo = styled.div`
 
   ${FONT_STYLES.M_18_CAPTION};
   color: ${COLOR.GRAY_30};
-  cursor: pointer;
 `;
