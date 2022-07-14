@@ -1,8 +1,11 @@
 import styled from 'styled-components';
 import { useEffect } from 'react';
-import { imgLandingBgFirst } from 'public/assets/images/index';
+import { imgLandingBgFirst, imgLandingBgSecond, imgLandingBgLast } from 'public/assets/images/index';
+import { imgLandingBubble } from 'public/assets/images/index';
+import { imgLandingEar, imgLandingMic, imgLandingFist } from 'public/assets/images/index';
 import { COLOR } from 'src/styles/color';
 import { FONT_STYLES } from 'src/styles/fontStyle';
+import ImageDiv from '../common/ImageDiv';
 
 interface SliderContainerProps {
   slideNumber: number;
@@ -28,10 +31,25 @@ function SliderContainer(props: SliderContainerProps) {
 
       <StSecondSlider>
         <h1 className="headline">지금보다 더 잘 말하고 싶었던 적 없나요?</h1>
-        <div className="body-text-wrapper">
-          <p>웅얼웅얼 발음 습관을 고치고 싶어요.</p>
-          <p>더 당당하고 자신감 있게 말하고 싶어요.</p>
-          <p>아나운서처럼 시원한 발성을 갖고 싶어요.</p>
+        <div className="body-card-wrapper">
+          <StCard>
+            <ImageDiv src={imgLandingEar} className="ear" layout="fill" alt="" />
+            <h3>웅얼웅얼 발음 습관을</h3>
+            <h3>고치고 싶어요.</h3>
+            <p>27세 아나운서 준비생 김버블씨</p>
+          </StCard>
+          <StCard>
+            <ImageDiv src={imgLandingFist} className="fist" layout="fill" alt="" />
+            <h3>더 당당하고 자신감 있게</h3>
+            <h3>말하고 싶어요.</h3>
+            <p>27세 아나운서 준비생 김버블씨</p>
+          </StCard>
+          <StCard>
+            <ImageDiv src={imgLandingMic} className="mic" layout="fill" alt="" />
+            <h3>아나운서처럼 시원한 발성을</h3>
+            <h3>갖고 싶어요.</h3>
+            <p>27세 아나운서 준비생 김버블씨</p>
+          </StCard>
         </div>
       </StSecondSlider>
 
@@ -105,9 +123,10 @@ const StSliderContainer = styled.div`
     height: 100vh;
     min-height: 108rem;
 
-    background-image: url(${imgLandingBgFirst.src});
+    background-image: url(${imgLandingBubble.src}), url(${imgLandingBgFirst.src});
+    background-position: -60px 96px, 0px 0px;
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: 1906.64px 655px, cover;
   }
 `;
 
@@ -152,8 +171,16 @@ const StSecondSlider = styled.section`
   flex-direction: column;
   justify-content: center;
 
+  width: 100%;
+  height: 100%;
+
+  background-image: url(${imgLandingBgSecond.src});
+  background-position: 0px 18.1rem;
+  background-repeat: no-repeat;
+  background-size: contain;
+
   .headline {
-    margin-top: 18rem;
+    margin-top: 8.8rem;
     color: ${COLOR.BLACK};
     font-family: 'Pretendard';
     font-style: normal;
@@ -164,18 +191,53 @@ const StSecondSlider = styled.section`
     letter-spacing: -0.01em;
   }
 
-  .body-text-wrapper {
+  .body-card-wrapper {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
 
-    margin-top: 61.5rem;
-    margin-bottom: 18rem;
+    width: 192rem;
+    height: 79rem;
 
-    color: ${COLOR.BLACK};
-    ${FONT_STYLES.M_28_HEADLINE}
+    margin-top: 4.3rem;
+    gap: 7rem;
   }
 `;
 
+const StCard = styled.section`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  width: 38.8rem;
+  height: 49rem;
+
+  background: #ffffff;
+  box-shadow: 2rem 2rem 5rem rgba(78, 138, 255, 0.15);
+  border-radius: 4rem;
+
+  margin-top: 17.9rem;
+
+  & > h3 {
+    color: ${COLOR.BLACK};
+    ${FONT_STYLES.M_24_HEADLINE};
+  }
+
+  & > p {
+    color: ${COLOR.GRAY_30};
+    ${FONT_STYLES.SB_18_CAPTION};
+    margin-top: 8.8rem;
+    margin-bottom: 2.3rem;
+  }
+  .ear,
+  .fist,
+  .mic {
+    position: relative;
+    width: 21.7rem;
+    height: 21.7rem;
+
+    margin-top: 6.4rem;
+  }
+`;
 const StThirdSlider = styled.section`
   display: flex;
   flex-direction: column;
@@ -273,6 +335,10 @@ const StSixthSlider = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  background-image: url(${imgLandingBgLast.src});
+  background-repeat: no-repeat;
+  background-size: cover;
 
   .headline-wrapper {
     display: flex;
