@@ -1,6 +1,4 @@
 import Head from 'next/head';
-import Lottie from 'lottie-react';
-import { lottie } from 'public/assets/lottie';
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import SliderContainer from '@src/components/landing/SliderContainer';
@@ -32,9 +30,6 @@ function Landing() {
       <ScrollControl slideNumber={slideNumber} setSlideNumber={setSlideNumber} />
       <Nav isFirstScrolled={isFirstScrolled} isSecondScrolled={isSecondScrolled} />
       <SliderContainer slideNumber={slideNumber} />
-      <StLottieWrapper>
-        <Lottie animationData={lottie} autoPlay loop />
-      </StLottieWrapper>
     </StLanding>
   );
 }
@@ -46,9 +41,4 @@ const StLanding = styled.div`
     font-family: 'Dongle';
     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108_2@1.0/Dongle-Bold.woff') format('woff');
   }
-`;
-
-const StLottieWrapper = styled.div`
-  width: 50rem;
-  height: 50rem;
 `;

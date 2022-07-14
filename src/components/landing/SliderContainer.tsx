@@ -1,5 +1,9 @@
 import styled from 'styled-components';
 import { useEffect } from 'react';
+import Lottie from 'lottie-react';
+import { step1Lottie } from 'public/assets/lottie';
+import { step2Lottie } from 'public/assets/lottie';
+import { step3Lottie } from 'public/assets/lottie';
 import { imgLandingBgFirst, imgLandingBgSecond, imgLandingBgLast } from 'public/assets/images/index';
 import { imgLandingBubble } from 'public/assets/images/index';
 import { imgLandingEar, imgLandingMic, imgLandingFist } from 'public/assets/images/index';
@@ -60,6 +64,9 @@ function SliderContainer(props: SliderContainerProps) {
         </div>
         <div className="third-text-wrapper">
           <label className="step">STEP 1</label>
+          <StLottieWrapper className="step1">
+            <Lottie animationData={step1Lottie} autoPlay loop />
+          </StLottieWrapper>
           <div className="medium-body-wrapper">
             <p>무작정 따라하며</p>
             <p>아나운서의 좋은 발음과 발성 배우기</p>
@@ -74,6 +81,9 @@ function SliderContainer(props: SliderContainerProps) {
       <StFourthSlider>
         <div className="fourth-text-wrapper">
           <label className="step">STEP 2</label>
+          <StLottieWrapper className="step2">
+            <Lottie animationData={step2Lottie} autoPlay loop />
+          </StLottieWrapper>
           <div className="medium-body-wrapper">
             <p>끊어 읽기, 하이라이트, 메모 기능으로</p>
             <p>더 똑똑하게 공부하기</p>
@@ -88,6 +98,9 @@ function SliderContainer(props: SliderContainerProps) {
       <StFifthSlider>
         <div className="fifth-text-wrapper">
           <label className="step">STEP 3</label>
+          <StLottieWrapper className="step3">
+            <Lottie animationData={step3Lottie} autoPlay loop />
+          </StLottieWrapper>
           <div className="medium-body-wrapper">
             <p>끊어 읽기, 하이라이트, 메모 기능으로</p>
             <p>더 똑똑하게 공부하기</p>
@@ -366,5 +379,22 @@ const StSixthSlider = styled.section`
     ${FONT_STYLES.SB_24_HEADLINE};
 
     border-radius: 1.4rem;
+  }
+`;
+
+const StLottieWrapper = styled.div`
+  .step1 {
+    width: 57.7rem;
+    height: 30.5rem;
+  }
+
+  .step2 {
+    width: 57.8rem;
+    height: 35.9rem;
+  }
+
+  .step3 {
+    width: 57.7rem;
+    height: 39.7rem;
   }
 `;
