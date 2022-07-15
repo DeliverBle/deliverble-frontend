@@ -7,20 +7,18 @@ import ImageDiv from './ImageDiv';
 function Footer() {
   return (
     <StFooter>
-      <StLogo>
-        <ImageDiv src={icLogoFooter} alt="logo" />
-      </StLogo>
+      <ImageDiv className="logo" src={icLogoFooter} alt="logo" />
       <StInfo>
         <StService>
           <h6>Service</h6>
           <a target="_blank" href="/" rel="noreferrer">
-            <p>서비스 피드백</p>
+            <StUnderlineText>서비스 피드백</StUnderlineText>
           </a>
         </StService>
         <StPeople>
           <h6>People</h6>
           <a target="_blank" href="/" rel="noreferrer">
-            <p>서비스를 만든 사람들</p>
+            <StUnderlineText>서비스를 만든 사람들</StUnderlineText>
           </a>
         </StPeople>
         <StContact>
@@ -49,6 +47,10 @@ const StFooter = styled.div`
 
   background-color: ${COLOR.GRAY_5};
 
+  .logo {
+    padding: 12.6rem 0 12.6rem 16rem;
+  }
+
   h6 {
     color: ${COLOR.GRAY_30};
     ${FONT_STYLES.SB_24_HEADLINE}
@@ -62,30 +64,21 @@ const StFooter = styled.div`
   }
 `;
 
-const StLogo = styled.div`
-  padding: 12.6rem 0 12.6rem 16rem;
-`;
-
 const StInfo = styled.div`
   display: flex;
 `;
 
+const StUnderlineText = styled.p`
+  line-height: 20px;
+  border-bottom: 2.3px solid ${COLOR.GRAY_60};
+`;
+
 const StService = styled.div`
   padding: 15.1rem 11.7rem 0 0;
-
-  p {
-    line-height: 20px;
-    border-bottom: 2.3px solid ${COLOR.GRAY_60};
-  }
 `;
 
 const StPeople = styled.div`
   padding: 15.1rem 10.1em 0 0;
-
-  p {
-    line-height: 20px;
-    border-bottom: 2.3px solid ${COLOR.GRAY_60};
-  }
 `;
 
 const StContact = styled.div`
