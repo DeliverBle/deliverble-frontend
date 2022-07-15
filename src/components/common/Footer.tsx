@@ -7,26 +7,33 @@ import ImageDiv from './ImageDiv';
 function Footer() {
   return (
     <StFooter>
-      <ImageDiv className="logo" src={icLogoFooter} alt="logo" />
+      <StLogo>
+        <ImageDiv className="logo" src={icLogoFooter} alt="logo" />
+        <h4>
+          언제 어디서나 당당한 당신의 말하기를
+          <br />
+          응원합니다.
+        </h4>
+      </StLogo>
       <StInfo>
         <StService>
-          <h6>Service</h6>
+          <StInfoTitle>Service</StInfoTitle>
           <a target="_blank" href="/" rel="noreferrer">
             <StUnderlineText>서비스 피드백</StUnderlineText>
           </a>
         </StService>
         <StPeople>
-          <h6>People</h6>
+          <StInfoTitle>People</StInfoTitle>
           <a target="_blank" href="/" rel="noreferrer">
             <StUnderlineText>서비스를 만든 사람들</StUnderlineText>
           </a>
         </StPeople>
         <StContact>
-          <h6>Contact Us</h6>
+          <StInfoTitle>Contact Us</StInfoTitle>
           <p>deliverble.team@gmail.com</p>
         </StContact>
         <StSocial>
-          <h6>Social</h6>
+          <StInfoTitle>Social</StInfoTitle>
           <a target="_blank" href="/" rel="noreferrer">
             <ImageDiv className="social-link" src={icSocial} alt="instagram" />
           </a>
@@ -47,21 +54,28 @@ const StFooter = styled.div`
 
   background-color: ${COLOR.GRAY_5};
 
-  .logo {
-    padding: 12.6rem 0 12.6rem 16rem;
-  }
-
-  h6 {
-    color: ${COLOR.GRAY_30};
-    ${FONT_STYLES.SB_24_HEADLINE}
-  }
-
   p {
     margin-top: 1.6rem;
 
     color: ${COLOR.GRAY_60};
     ${FONT_STYLES.M_20_BODY}
   }
+`;
+
+const StLogo = styled.div`
+  padding: 12.6rem 0 12.6rem 16rem;
+
+  & > h4 {
+    margin-top: 1.6rem;
+
+    color: ${COLOR.MAIN_BLUE};
+    ${FONT_STYLES.SB_24_HEADLINE}
+  }
+`;
+
+const StInfoTitle = styled.h6`
+  color: ${COLOR.GRAY_30};
+  ${FONT_STYLES.SB_24_HEADLINE}
 `;
 
 const StInfo = styled.div`
