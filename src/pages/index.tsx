@@ -8,7 +8,7 @@ import ScrollControl from '@src/components/landing/ScrollControl';
 function Landing() {
   const [isFirstScrolled, setIsFirstScrolled] = useState<boolean>(false);
   const [isSecondScrolled, setIsSecondScrolled] = useState<boolean>(false);
-  const [slideNumber, setSlideNumber] = useState(1);
+  const [slideNumber, setSlideNumber] = useState<number>(1);
 
   const scrollListener = () => {
     setIsFirstScrolled(window.scrollY > 423);
@@ -29,7 +29,7 @@ function Landing() {
       </Head>
       <ScrollControl slideNumber={slideNumber} setSlideNumber={setSlideNumber} />
       <Nav isFirstScrolled={isFirstScrolled} isSecondScrolled={isSecondScrolled} />
-      <SliderContainer slideNumber={slideNumber} />
+      <SliderContainer slideNumber={slideNumber} setSlideNumber={setSlideNumber} />
     </StLanding>
   );
 }

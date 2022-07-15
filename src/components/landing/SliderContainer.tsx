@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useEffect } from 'react';
+import { MutableRefObject, useEffect } from 'react';
 import Lottie from 'lottie-react';
 import { step1Lottie } from 'public/assets/lottie';
 import { step2Lottie } from 'public/assets/lottie';
@@ -10,21 +10,56 @@ import { imgLandingEar, imgLandingMic, imgLandingFist } from 'public/assets/imag
 import { COLOR } from 'src/styles/color';
 import { FONT_STYLES } from 'src/styles/fontStyle';
 import ImageDiv from '../common/ImageDiv';
+import { useSlideObserver } from 'src/components/landing/useSlideObserver';
 
 interface SliderContainerProps {
   slideNumber: number;
+  setSlideNumber: (slideNumber: number) => void;
 }
+
 function SliderContainer(props: SliderContainerProps) {
-  const { slideNumber } = props;
+  const { slideNumber, setSlideNumber } = props;
+
+  const firstSlideRef = useSlideObserver(setSlideNumber, 1);
+  const secondSlideRef = useSlideObserver(setSlideNumber, 2);
+  const thirdSlideRef = useSlideObserver(setSlideNumber, 3);
+  const fourthSlideRef = useSlideObserver(setSlideNumber, 4);
+  const fifthSlideRef = useSlideObserver(setSlideNumber, 5);
+  const sixthSlideRef = useSlideObserver(setSlideNumber, 6);
 
   useEffect(() => {
-    console.log(slideNumber);
-  }, []);
+    //slideNumber가 변경 될 때 마다 스크롤 옮겨주기
+    moveToElement(slideNumber);
+  }, [slideNumber]);
+
+  const moveToElement = (slideNumber: number) => {
+    const clickedSlideNum = slideNumber;
+    let clickedSlideRef: MutableRefObject<HTMLElement | null> | undefined;
+    if (clickedSlideNum === 1) {
+      clickedSlideRef = firstSlideRef;
+    } else if (clickedSlideNum === 2) {
+      clickedSlideRef = secondSlideRef;
+    } else if (clickedSlideNum === 3) {
+      clickedSlideRef = thirdSlideRef;
+    } else if (clickedSlideNum === 4) {
+      clickedSlideRef = fourthSlideRef;
+    } else if (clickedSlideNum === 5) {
+      clickedSlideRef = fifthSlideRef;
+    } else if (clickedSlideNum === 6) {
+      clickedSlideRef = sixthSlideRef;
+    }
+    {
+      clickedSlideRef &&
+        clickedSlideRef.current?.scrollIntoView({
+          block: 'start',
+        });
+    }
+  };
 
   return (
     <StSliderContainer>
       <div className="first-slide">
-        <StFirstSlider>
+        <StFirstSlider ref={firstSlideRef}>
           <div className="headline-wrapper">
             <h1>아나운서 쉐도잉으로 키우는</h1>
             <h1>스피치 자신감, 딜리버블</h1>
@@ -33,7 +68,7 @@ function SliderContainer(props: SliderContainerProps) {
         </StFirstSlider>
       </div>
 
-      <StSecondSlider>
+      <StSecondSlider ref={secondSlideRef}>
         <h1 className="headline">지금보다 더 잘 말하고 싶었던 적 없나요?</h1>
         <div className="body-card-wrapper">
           <StCard className="first-card">
@@ -59,7 +94,7 @@ function SliderContainer(props: SliderContainerProps) {
         </div>
       </StSecondSlider>
 
-      <StThirdSlider>
+      <StThirdSlider ref={thirdSlideRef}>
         <div className="headline-wrapper">
           <h1>딜리버블이 제안하는</h1>
           <h1>효과적인 말하기 학습 솔루션</h1>
@@ -80,7 +115,7 @@ function SliderContainer(props: SliderContainerProps) {
         </StContentContainer>
       </StThirdSlider>
 
-      <StFourthSlider>
+      <StFourthSlider ref={fourthSlideRef}>
         <StContentContainer className="step2-content">
           <StLottieWrapper className="step2">
             <Lottie animationData={step2Lottie} autoPlay loop />
@@ -97,7 +132,7 @@ function SliderContainer(props: SliderContainerProps) {
         </StContentContainer>
       </StFourthSlider>
 
-      <StFifthSlider>
+      <StFifthSlider ref={fifthSlideRef}>
         <StContentContainer className="step3-content">
           <StLottieWrapper className="step3">
             <Lottie animationData={step3Lottie} autoPlay loop />
@@ -114,7 +149,7 @@ function SliderContainer(props: SliderContainerProps) {
         </StContentContainer>
       </StFifthSlider>
 
-      <StSixthSlider>
+      <StSixthSlider ref={sixthSlideRef}>
         <div className="headline-wrapper">
           <h1>아나운서 준비생들에게 이미 검증된 스피치 학습법 </h1>
           <h1>아나운서 쉐도잉으로</h1>
