@@ -7,7 +7,6 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import ImageDiv from './ImageDiv';
 import LoginModal from './LoginModal';
-import { waitForAllSettled } from 'recoil';
 
 function NavigationBar() {
   const router = useRouter();
