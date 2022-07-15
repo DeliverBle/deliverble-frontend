@@ -15,7 +15,7 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [player, setPlayer] = useState();
-  const { title, category, channel, reportDate, tags, link, startTime, endTime } = videoData;
+  const { title, category, channel, reportDate, tags, link, startTime, endTime, scripts } = videoData;
 
   console.log(player);
 
@@ -64,7 +64,11 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
             <h2>아나운서의 목소리를 듣고, 스크립트를 보며 따라 말해보세요.</h2>
           </div>
           <article>
-            <div>스크립트 공간</div>
+            <div>
+              {scripts.map(({ id, text }) => (
+                <p key={id}>{text}</p>
+              ))}
+            </div>
             <div>
               <ImageDiv onClick={() => setIsModalOpen(true)} src={icGuide} className="guide" layout="fill" alt="?" />
               <StButtonContainer>
