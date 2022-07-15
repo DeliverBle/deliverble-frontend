@@ -18,10 +18,10 @@ function NewsList(props: NewsListProps) {
     <StNewsContainer>
       {newsList.map(({ id, title, category, channel, thumbnail, reportDate }) => (
         <StNewsWrapper key={id} onClick={() => router.push(`/learn/${id}`)}>
-          <StThumbnailContainer>
+          <StThumbnail>
             <ImageDiv className="thumbnail" src={thumbnail} layout="fill" alt="thumbnail" />
             <Like />
-          </StThumbnailContainer>
+          </StThumbnail>
           <StTitle>{title}</StTitle>
           <StInfo>
             {channel} | {category} | {reportDate}
@@ -50,20 +50,24 @@ const StNewsWrapper = styled.article`
   height: 100%;
 `;
 
-const StThumbnailContainer = styled.div`
+const StThumbnail = styled.div`
   position: relative;
+  border-radius: 1rem;
   cursor: pointer;
+
+  &:hover {
+    transition: 0.5s ease-in-out;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 100%);
+  }
 
   &:hover .like {
     opacity: 1;
   }
-  /* 
-  &:hover > div:first-child {
-    transition: 0.5s ease-in-out;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 100%);
-  } */
 
-  .thumbnail {
+  & > div {
+    position: relative;
+    z-index: -1;
+
     min-width: 38.4rem;
     min-height: 21.6rem;
     padding-top: 56%;
@@ -71,12 +75,6 @@ const StThumbnailContainer = styled.div`
     & img {
       border-radius: 1rem;
       object-fit: cover;
-    }
-
-    & img:hover {
-      filter: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 100%);
-      /* transition: 0.5s ease-in-out;
-      background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 100%); */
     }
   }
 `;
