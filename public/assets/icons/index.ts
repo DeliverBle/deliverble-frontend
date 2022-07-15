@@ -12,3 +12,6 @@ export { default as icMemo } from './ic_memo.svg';
 export { default as icAnnounce } from './ic_announce.svg';
 export { default as icHighlighter } from './ic_highlighter.svg';
 export { default as icSpacing } from './ic_spacing.svg';
+export { default as icLikeClicked } from './ic_like_clicked.svg';
+export { default as icLikeDefault } from './ic_like_default.svg';
+export { default as icLikeHover } from './ic_like_hover.svg';
