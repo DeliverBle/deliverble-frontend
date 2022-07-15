@@ -6,6 +6,7 @@ import NavigationBar from '@src/components/common/NavigationBar';
 import NewsList from '@src/components/common/NewsList';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { COLOR } from '@src/styles/color';
+import Footer from '@src/components/common/Footer';
 
 export interface videoType {
   id: number;
@@ -130,6 +131,7 @@ function Home() {
           <NewsList newsList={videoList} />
         </div>
       </StNews>
+      <Footer />
     </>
   );
 }
