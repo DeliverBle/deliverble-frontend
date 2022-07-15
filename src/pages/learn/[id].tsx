@@ -9,6 +9,7 @@ import { FONT_STYLES } from '@src/styles/fontStyle';
 import { GetServerSidePropsContext } from 'next';
 import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/learn-detail';
+import HighlightModal from '@src/components/learnDetail/HighlightModal';
 
 function LearnDetail({ videoData }: { videoData: VideoData }) {
   const router = useRouter();
@@ -33,6 +34,7 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
         <ImageDiv onClick={() => setIsModalOpen(true)} src={icGuide} className="guide" layout="fill" alt="?" />
       </StLearnSection>
       {isModalOpen && <GuideModal closeModal={() => setIsModalOpen(false)} />}
+      <HighlightModal />
     </StLearnDetail>
   );
 }
