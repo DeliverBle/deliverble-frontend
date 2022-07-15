@@ -13,7 +13,7 @@ import { VideoData } from '@src/services/api/types/learn-detail';
 function LearnDetail({ videoData }: { videoData: VideoData }) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { title, channel, category, date, tagList } = videoData;
+  const { title, category, channel, reportDate, tags } = videoData;
 
   return (
     <StLearnDetail>
@@ -21,12 +21,12 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
       <StLearnSection>
         <StVideoDetail>
           <div>
-            {channel} | {category} | {date}
+            {channel} | {category} | {reportDate}
           </div>
           <h1>{title}</h1>
           <StTagContainer>
-            {tagList.map(({ tagId, tagName }) => (
-              <span key={tagId}>{tagName}</span>
+            {tags.map(({ id, name }) => (
+              <span key={id}>{name}</span>
             ))}
           </StTagContainer>
         </StVideoDetail>
@@ -42,6 +42,11 @@ export default LearnDetail;
 export async function getServerSideProps({ params }: GetServerSidePropsContext) {
   const id = +(params?.id ?? -1);
   const response = await api.learnDetailService.getVideoData(id);
+  if (response.id !== id) {
+    return {
+      notFound: true,
+    };
+  }
   return { props: { videoData: response } };
 }
 
