@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { videoType } from '@src/pages/home';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
+import Like from './Like';
 
 interface NewsListProps {
   newsList: videoType[];
@@ -16,7 +17,10 @@ function NewsList(props: NewsListProps) {
     <StNewsContainer>
       {newsList.map(({ id, title, channel, category, date }) => (
         <StNewsWrapper key={id} onClick={() => router.push(`/learn/${id}`)}>
-          <StThumbnail />
+          <StThumbnailContainer>
+            <StThumbnail />
+            <Like />
+          </StThumbnailContainer>
           <StTitle>{title}</StTitle>
           <StInfo>
             {channel} | {category} | {date}
@@ -45,6 +49,19 @@ const StNewsWrapper = styled.article`
   height: 100%;
 `;
 
+const StThumbnailContainer = styled.div`
+  position: relative;
+
+  &:hover .like {
+    opacity: 1;
+  }
+
+  &:hover > div:first-child {
+    transition: 0.5s ease-in-out;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 100%);
+  }
+`;
+
 const StThumbnail = styled.div`
   width: inherit;
 
@@ -54,14 +71,20 @@ const StThumbnail = styled.div`
 
   border-radius: 1rem;
   background-color: ${COLOR.GRAY_10};
+  cursor: pointer;
 `;
 
 const StTitle = styled.p`
+  width: fit-content;
+
   ${FONT_STYLES.M_21_BODY};
   color: ${COLOR.BLACK};
+  cursor: pointer;
 `;
 
 const StInfo = styled.div`
+  width: fit-content;
+
   ${FONT_STYLES.M_18_CAPTION};
   color: ${COLOR.GRAY_30};
 `;
