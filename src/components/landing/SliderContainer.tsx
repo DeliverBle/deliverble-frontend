@@ -36,23 +36,25 @@ function SliderContainer(props: SliderContainerProps) {
       <StSecondSlider>
         <h1 className="headline">지금보다 더 잘 말하고 싶었던 적 없나요?</h1>
         <div className="body-card-wrapper">
-          <StCard>
+          <StCard className="first-card">
             <ImageDiv src={imgLandingEar} className="ear" layout="fill" alt="" />
-            <h3>웅얼웅얼 발음 습관을</h3>
-            <h3>고치고 싶어요.</h3>
-            <p>27세 아나운서 준비생 김버블씨</p>
+            <h3>“웅얼웅얼 발음을 교정하고 싶은데,</h3>
+            <h3>학원을 다니기엔 금액이 부담돼요”</h3>
+            <p>26살 취준생 김○○</p>
           </StCard>
-          <StCard>
+          <StCard className="second-card">
             <ImageDiv src={imgLandingFist} className="fist" layout="fill" alt="" />
-            <h3>더 당당하고 자신감 있게</h3>
-            <h3>말하고 싶어요.</h3>
-            <p>27세 아나운서 준비생 김버블씨</p>
+            <h3>“떨리고 힘없는 목소리 때문에</h3>
+            <h3>발표에 자신이 없어... 더 당당하게</h3>
+            <h3>말할 수 있는 방법이 없을까?”</h3>
+            <p>23살 대학생 류○○</p>
           </StCard>
-          <StCard>
+          <StCard className="third-card">
             <ImageDiv src={imgLandingMic} className="mic" layout="fill" alt="" />
-            <h3>아나운서처럼 시원한 발성을</h3>
-            <h3>갖고 싶어요.</h3>
-            <p>27세 아나운서 준비생 김버블씨</p>
+            <h3>“아나운서 준비에 관심은 있는데,</h3>
+            <h3>혼자 뉴스 리딩을 어떻게</h3>
+            <h3>연습해야 할지 막막해요”</h3>
+            <p>24살 아나운서 지망생 백○○</p>
           </StCard>
         </div>
       </StSecondSlider>
@@ -119,6 +121,10 @@ function SliderContainer(props: SliderContainerProps) {
           <h1>스피치 자신감을 키워보세요!</h1>
         </div>
         <button className="start-button">딜리버블 시작하기</button>
+        <StContact>
+          <p className="contact">Contact Us</p>
+          <p className="email">DeliverBle@gmail.com</p>
+        </StContact>
       </StSixthSlider>
     </StSliderContainer>
   );
@@ -131,13 +137,16 @@ const StContentContainer = styled.section`
 
   &.step1-content {
     margin-top: 23.6rem;
+    margin-bottom: 21.9rem;
   }
 
   &.step2-content {
     margin-top: 36.1rem;
+    margin-bottom: 36rem;
   }
   &.step3-content {
     margin-top: 34.2rem;
+    margin-bottom: 34.1rem;
   }
 `;
 
@@ -248,6 +257,7 @@ const StSecondSlider = styled.section`
     height: 79rem;
 
     margin-top: 4.3rem;
+    margin-bottom: 12.1rem;
     gap: 7rem;
   }
 `;
@@ -265,6 +275,19 @@ const StCard = styled.section`
   border-radius: 4rem;
 
   margin-top: 17.9rem;
+
+  .first-card {
+    & > h3 {
+      margin-bottom: 8.6rem;
+    }
+  }
+
+  .second-card,
+  third-card {
+    & > h3 {
+      margin-bottom: 6.2rem;
+    }
+  }
 
   & > h3 {
     color: ${COLOR.BLACK};
@@ -291,8 +314,11 @@ const StThirdSlider = styled.section`
   display: flex;
   flex-direction: column;
 
+  width: 100%;
+  height: 100%;
+
   .headline-wrapper {
-    margin-top: 16rem;
+    margin-top: 22rem;
 
     font-family: 'Pretendard';
     font-style: normal;
@@ -305,6 +331,9 @@ const StThirdSlider = styled.section`
 `;
 
 const StFourthSlider = styled.section`
+  width: 100%;
+  height: 100%;
+
   .fourth-text-wrapper {
     width: 51.3rem;
     height: 34.8rem;
@@ -318,6 +347,9 @@ const StFourthSlider = styled.section`
 `;
 
 const StFifthSlider = styled.section`
+  width: 100%;
+  height: 100%;
+
   .fifth-text-wrapper {
     margin-top: 36.6rem;
     margin-left: 115.7rem;
@@ -329,6 +361,9 @@ const StSixthSlider = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  width: 100%;
+  height: 100%;
 
   background-image: url(${imgLandingBgLast.src});
   background-repeat: no-repeat;
@@ -353,13 +388,28 @@ const StSixthSlider = styled.section`
     height: 7rem;
 
     margin-top: 4.8rem;
-    margin-bottom: 40.9rem;
 
     background-color: ${COLOR.MAIN_BLUE};
     color: ${COLOR.WHITE};
     ${FONT_STYLES.SB_24_HEADLINE};
 
     border-radius: 1.4rem;
+  }
+`;
+
+const StContact = styled.div`
+  position: relative;
+  margin-top: 22.9rem;
+  margin-left: 160.9rem;
+  margin-bottom: 6.4rem;
+  color: ${COLOR.MAIN_BLUE};
+
+  .contact {
+    ${FONT_STYLES.SB_24_HEADLINE};
+  }
+
+  .email {
+    ${FONT_STYLES.M_20_BODY};
   }
 `;
 

@@ -34,11 +34,13 @@ const StScrollContainer = styled.ul`
   z-index: 100;
 
   & > .isActive {
-    background-color: blue;
+    background-color: #160f35;
+    opacity: 0.35;
   }
 
   & > .unActive {
-    background-color: lightgray;
+    background-color: #160f35;
+    opacity: 0.05;
   }
 
   & > li {
