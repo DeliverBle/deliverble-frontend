@@ -1,4 +1,4 @@
-import { icLikeClicked, icLikeDefault, icLikeHover } from 'public/assets/icons';
+import { icLikeClicked, icLikeHover, icLikeDefault } from 'public/assets/icons';
 import { useState } from 'react';
 import ImageDiv from './ImageDiv';
 import styled from 'styled-components';
@@ -7,7 +7,12 @@ function Like() {
   const [isLiked, setIsLiked] = useState(false);
 
   return (
-    <StLikeButton type="button" onClick={() => setIsLiked((prev) => !prev)}>
+    <StLikeButton
+      type="button"
+      onClick={(e) => {
+        e.stopPropagation();
+        setIsLiked((prev) => !prev);
+      }}>
       <StImageContainer>
         {isLiked ? (
           <ImageDiv className="like" src={icLikeClicked} alt="like" />

@@ -16,12 +16,12 @@ function NewsList(props: NewsListProps) {
   return (
     <StNewsContainer>
       {newsList.map(({ id, title, channel, category, date }) => (
-        <StNewsWrapper key={id}>
-          <StTumbnailContainer>
-            <StThumbnail onClick={() => router.push(`/learn/${id}`)} />
+        <StNewsWrapper key={id} onClick={() => router.push(`/learn/${id}`)}>
+          <StThumbnailContainer>
+            <StThumbnail />
             <Like />
-          </StTumbnailContainer>
-          <StTitle onClick={() => router.push(`/learn/${id}`)}>{title}</StTitle>
+          </StThumbnailContainer>
+          <StTitle>{title}</StTitle>
           <StInfo>
             {channel} | {category} | {date}
           </StInfo>
@@ -49,7 +49,7 @@ const StNewsWrapper = styled.article`
   height: 100%;
 `;
 
-const StTumbnailContainer = styled.div`
+const StThumbnailContainer = styled.div`
   position: relative;
 
   &:hover .like {
