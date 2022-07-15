@@ -20,15 +20,18 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
   const { title, category, channel, reportDate, tags, link, startTime, endTime, scripts } = videoData;
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentTime(player?.getCurrentTime());
-    }, 1000);
+    if (!player) return;
+
+    const interval =
+      player &&
+      setInterval(() => {
+        setCurrentTime(player.getCurrentTime());
+      }, 1000);
 
     if (videoState === 2 || videoState === 5) {
-      clearInterval(interval);
+      interval && clearInterval(interval);
     }
-
-    return () => clearInterval(interval);
+    return () => interval && clearInterval(interval);
   }, [player, videoState]);
 
   return (
