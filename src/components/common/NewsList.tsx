@@ -1,11 +1,12 @@
 import { useRouter } from 'next/router';
-import styled from 'styled-components';
-import { videoType } from '@src/pages/home';
+import styled, { css } from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
+import { VideoData } from '@src/services/api/types/home';
+import ImageDiv from './ImageDiv';
 
 interface NewsListProps {
-  newsList: videoType[];
+  newsList: VideoData[];
 }
 
 function NewsList(props: NewsListProps) {
@@ -14,12 +15,12 @@ function NewsList(props: NewsListProps) {
 
   return (
     <StNewsContainer>
-      {newsList.map(({ id, title, channel, category, date }) => (
+      {newsList.map(({ id, title, category, channel, thumbnail, reportDate }) => (
         <StNewsWrapper key={id} onClick={() => router.push(`/learn/${id}`)}>
-          <StThumbnail />
+          <ImageDiv className="thumbnail" src={thumbnail} layout="fill" alt="thumbnail" />
           <StTitle>{title}</StTitle>
           <StInfo>
-            {channel} | {category} | {date}
+            {channel} | {category} | {reportDate}
           </StInfo>
         </StNewsWrapper>
       ))}
@@ -43,17 +44,20 @@ const StNewsWrapper = styled.article`
 
   width: 100%;
   height: 100%;
-`;
 
-const StThumbnail = styled.div`
-  width: inherit;
+  .thumbnail {
+    position: relative;
+    object-fit: cover;
+    width: 38.4rem;
+    height: 21.6rem;
+    /* padding-top: 58%; */
 
-  min-width: 38.4rem;
-  min-height: 21.6rem;
-  padding-top: 58%;
-
-  border-radius: 1rem;
-  background-color: ${COLOR.GRAY_10};
+    & img {
+      border-radius: 1rem;
+      object-fit: cover;
+    }
+    background-color: ${COLOR.GRAY_10};
+  }
 `;
 
 const StTitle = styled.p`
