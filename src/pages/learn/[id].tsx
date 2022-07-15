@@ -126,7 +126,7 @@ const StLearnMain = styled.main`
   gap: 4.8rem;
   width: 172rem;
   height: 111.9rem;
-  padding: 8rem;
+  padding: 8rem 8rem 0 8rem;
   border-radius: 3rem;
   background-color: ${COLOR.WHITE};
 `;
@@ -134,6 +134,7 @@ const StLearnMain = styled.main`
 const StLearnSection = styled.section`
   display: flex;
   flex-direction: column;
+  padding-bottom: 8rem;
 
   & > div {
     display: flex;
