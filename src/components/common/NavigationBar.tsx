@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import ImageDiv from './ImageDiv';
-import LoginModal from './LoginModal';
+import LoginModal from '../login/LoginModal';
 
 function NavigationBar() {
   const router = useRouter();
