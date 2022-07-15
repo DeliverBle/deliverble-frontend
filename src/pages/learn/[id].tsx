@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import ImageDiv from '../../components/common/ImageDiv';
 import GuideModal from '@src/components/learnDetail/GuideModal';
-import { icXButton, icGuide, icMemo, icAnnounce, icHighlighter, icSpacing } from 'public/assets/icons';
+import { icXButton, icGuide, icMemo, icAnnounce, icHighlighter, icSpacing, icLikeDefault } from 'public/assets/icons';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { GetServerSidePropsContext } from 'next';
@@ -14,10 +14,22 @@ import YouTube from 'react-youtube';
 function LearnDetail({ videoData }: { videoData: VideoData }) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [player, setPlayer] = useState();
-  const { category, channel, reportDate, title, tags, link, startTime, endTime, scripts } = videoData;
+  const [player, setPlayer] = useState<YT.Player | null>();
+  const [videoState, setVideoState] = useState(-1);
+  const [currentTime, setCurrentTime] = useState(0);
+  const { title, category, channel, reportDate, tags, link, startTime, endTime, scripts } = videoData;
 
-  console.log(player);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(player?.getCurrentTime());
+    }, 1000);
+
+    if (videoState === 2 || videoState === 5) {
+      clearInterval(interval);
+    }
+
+    return () => clearInterval(interval);
+  }, [player, videoState]);
 
   return (
     <StLearnDetail>
@@ -36,7 +48,7 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
             </StTagContainer>
           </StVideoDetail>
           <StVideoWrapper>
-            <button>하트</button>
+            <ImageDiv src={icLikeDefault} className="like-button" layout="fill" />
             <YouTube
               videoId={link}
               opts={{
@@ -50,6 +62,7 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
                 },
               }}
               onReady={(e) => setPlayer(e.target)}
+              onStateChange={(e) => setVideoState(e.target.getPlayerState())}
               onEnd={(e) => e.target.seekTo(startTime)}
             />
           </StVideoWrapper>
@@ -65,8 +78,13 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
           </div>
           <article>
             <div>
-              {scripts.map(({ id, text }) => (
-                <p key={id}>{text}</p>
+              {scripts.map(({ id, text, startTime, endTime }) => (
+                <StScriptText
+                  key={id}
+                  onClick={() => player?.seekTo(startTime, true)}
+                  isActive={startTime <= currentTime && currentTime <= endTime ? true : false}>
+                  {text}
+                </StScriptText>
               ))}
             </div>
             <div>
@@ -207,6 +225,18 @@ const StLearnSection = styled.section`
   }
 `;
 
+const StScriptText = styled.p<{ isActive: boolean }>`
+  font-size: 2.6rem;
+  font-weight: ${({ isActive }) => (isActive ? 600 : 400)};
+  color: ${({ isActive }) => (isActive ? COLOR.MAIN_BLUE : COLOR.BLACK)};
+  cursor: pointer;
+
+  &:hover {
+    color: ${COLOR.MAIN_BLUE};
+    font-weight: 600;
+  }
+`;
+
 const StButtonContainer = styled.div`
   display: flex;
   gap: 0.8rem;
@@ -249,12 +279,13 @@ const StVideoWrapper = styled.div`
   border-radius: 2.4rem;
   overflow: hidden;
 
-  & > button {
+  .like-button {
     position: absolute;
-    top: 20px;
-    right: 20px;
-    z-index: 1;
-    background: white;
+    width: 4.8rem;
+    height: 4.8rem;
+    cursor: pointer;
+    top: 2.4rem;
+    right: 2.4rem;
   }
 
   video {
