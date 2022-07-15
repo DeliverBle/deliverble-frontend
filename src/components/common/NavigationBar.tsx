@@ -110,7 +110,7 @@ const StTab = styled.li<{ isActive: boolean }>`
 `;
 
 const StLogin = styled.button`
-  position: fixed;
+  position: absolute;
   right: 6.4rem;
 
   color: ${COLOR.MAIN_BLUE};
