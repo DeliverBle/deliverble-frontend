@@ -15,7 +15,7 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [player, setPlayer] = useState();
-  const { title, category, channel, reportDate, tags, link, startTime, endTime, scripts } = videoData;
+  const { category, channel, reportDate, title, tags, link, startTime, endTime, scripts } = videoData;
 
   console.log(player);
 
@@ -50,7 +50,7 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
                 },
               }}
               onReady={(e) => setPlayer(e.target)}
-              onEnd={(e) => e.target.seekTo(endTime)}
+              onEnd={(e) => e.target.seekTo(startTime)}
             />
           </StVideoWrapper>
           <StMemoWrapper>
@@ -202,6 +202,7 @@ const StLearnSection = styled.section`
       position: relative;
       width: 4.8rem;
       height: 4.8rem;
+      cursor: pointer;
     }
   }
 `;
