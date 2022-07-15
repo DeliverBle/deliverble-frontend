@@ -1,25 +1,29 @@
 export const LEARN_DETAIL_DATA = {
   VIDEO_DATA: {
-    id: 1,
-    videoId: 'Zc7ilAraCS0',
-    startTime: 1391,
-    endTime: 2000,
-    title: '정부, 감염자 격리 의무 한 달 연장',
-    channel: 'SBS',
+    id: 2,
+    title: '북, 최근 임진강 상류 황강댐 수문 개방',
     category: '사회',
-    date: '2022.05.19',
-    tagList: [
+    channel: 'KBS',
+    link: 'ee-0DeY21rU',
+    reportDate: '2022.06.30',
+    startTime: 0.0,
+    endTime: 36.0,
+    tags: [
       {
-        tagId: 0,
-        tagName: '사회',
+        id: 5,
+        name: '북한',
       },
       {
-        tagId: 1,
-        tagName: '코로나',
+        id: 6,
+        name: '환경',
       },
       {
-        tagId: 2,
-        tagName: '자가격리',
+        id: 7,
+        name: '임진강',
+      },
+      {
+        id: 8,
+        name: '딜리버블 추천',
       },
     ],
   },

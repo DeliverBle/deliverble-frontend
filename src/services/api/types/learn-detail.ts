@@ -1,16 +1,16 @@
 type TagData = {
-  tagId: number;
-  tagName: string;
+  id: number;
+  name: string;
 };
 
 export type VideoData = {
   id: number;
-  videoId: string;
+  title: string;
+  category: string;
+  channel: string;
+  link: string;
+  reportDate: string;
   startTime: number;
   endTime: number;
-  title: string;
-  channel: string;
-  category: string;
-  date: string;
-  tagList: TagData[];
+  tags: TagData[];
 };
