@@ -4,6 +4,7 @@ import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { VideoData } from '@src/services/api/types/home';
 import ImageDiv from './ImageDiv';
+import Like from './Like';
 
 interface NewsListProps {
   newsList: VideoData[];
@@ -17,7 +18,11 @@ function NewsList(props: NewsListProps) {
     <StNewsContainer>
       {newsList.map(({ id, title, category, channel, thumbnail, reportDate }) => (
         <StNewsWrapper key={id} onClick={() => router.push(`/learn/${id}`)}>
-          <ImageDiv className="thumbnail" src={thumbnail} layout="fill" alt="thumbnail" />
+          <StThumbnailContainer>
+            <ImageDiv className="thumbnail" src={thumbnail} layout="fill" alt="thumbnail" />
+            {/* <StThumbnail /> */}
+            <Like />
+          </StThumbnailContainer>
           <StTitle>{title}</StTitle>
           <StInfo>
             {channel} | {category} | {reportDate}
@@ -44,6 +49,21 @@ const StNewsWrapper = styled.article`
 
   width: 100%;
   height: 100%;
+`;
+
+const StThumbnailContainer = styled.div`
+  position: relative;
+
+  cursor: pointer;
+
+  &:hover .like {
+    opacity: 1;
+  }
+
+  &:hover > div:first-child {
+    transition: 0.5s ease-in-out;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 100%);
+  }
 
   .thumbnail {
     position: relative;
@@ -56,16 +76,20 @@ const StNewsWrapper = styled.article`
       border-radius: 1rem;
       object-fit: cover;
     }
-    background-color: ${COLOR.GRAY_10};
   }
 `;
 
 const StTitle = styled.p`
+  width: fit-content;
+
   ${FONT_STYLES.M_21_BODY};
   color: ${COLOR.BLACK};
+  cursor: pointer;
 `;
 
 const StInfo = styled.div`
+  width: fit-content;
+
   ${FONT_STYLES.M_18_CAPTION};
   color: ${COLOR.GRAY_30};
 `;

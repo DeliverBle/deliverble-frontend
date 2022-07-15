@@ -6,6 +6,7 @@ import { FONT_STYLES } from '@src/styles/fontStyle';
 import { COLOR } from '@src/styles/color';
 import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/home';
+import Footer from '@src/components/common/Footer';
 
 function Home({ videoData }: { videoData: VideoData[] }) {
   return (
@@ -30,6 +31,7 @@ function Home({ videoData }: { videoData: VideoData[] }) {
           <NewsList newsList={videoData} />
         </div>
       </StNews>
+      <Footer />
     </>
   );
 }
