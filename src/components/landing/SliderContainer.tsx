@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import Link from 'next/link';
 import { MutableRefObject, useEffect } from 'react';
 import Lottie from 'lottie-react';
 import { step1Lottie } from 'public/assets/lottie';
@@ -64,7 +65,9 @@ function SliderContainer(props: SliderContainerProps) {
             <h1>아나운서 쉐도잉으로 키우는</h1>
             <h1>스피치 자신감, 딜리버블</h1>
           </div>
-          <button className="start-button">딜리버블 시작하기</button>
+          <Link href="/home">
+            <a className="start-button">딜리버블 시작하기</a>
+          </Link>
         </StFirstSlider>
       </div>
 
@@ -155,7 +158,9 @@ function SliderContainer(props: SliderContainerProps) {
           <h1>아나운서 쉐도잉으로</h1>
           <h1>스피치 자신감을 키워보세요!</h1>
         </div>
-        <button className="start-button">딜리버블 시작하기</button>
+        <Link href="/home">
+          <a className="start-button">딜리버블 시작하기</a>
+        </Link>
         <StContact>
           <p className="contact">Contact Us</p>
           <p className="email">DeliverBle@gmail.com</p>
