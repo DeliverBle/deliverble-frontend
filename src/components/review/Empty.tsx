@@ -61,7 +61,6 @@ const StLearnButton = styled.a`
   width: 26rem;
   height: 7rem;
   margin-top: 8rem;
-  margin-bottom: 37.9rem;
 
   background-color: ${COLOR.MAIN_BLUE};
   border-radius: 14rem;
