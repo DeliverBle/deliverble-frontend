@@ -59,7 +59,6 @@ const StLoginModal = styled.div`
 `;
 
 const StLoginModalBackground = styled.div`
-  position: absolute;
   position: fixed;
   top: 50%;
   left: 50%;
