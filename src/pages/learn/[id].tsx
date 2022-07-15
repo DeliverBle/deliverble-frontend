@@ -14,6 +14,8 @@ import HighlightModal from '@src/components/learnDetail/HighlightModal';
 function LearnDetail({ videoData }: { videoData: VideoData }) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  //같은 부분 하이라이트 했을 경우로 로직 변경해야 함.
+  const [highlightAlert, setHighlightAlert] = useState(true);
   const { title, category, channel, reportDate, tags } = videoData;
 
   return (
@@ -34,7 +36,7 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
         <ImageDiv onClick={() => setIsModalOpen(true)} src={icGuide} className="guide" layout="fill" alt="?" />
       </StLearnSection>
       {isModalOpen && <GuideModal closeModal={() => setIsModalOpen(false)} />}
-      <HighlightModal />
+      {highlightAlert && <HighlightModal closeModal={() => setHighlightAlert(false)} />}
     </StLearnDetail>
   );
 }

@@ -5,7 +5,12 @@ import { FONT_STYLES } from '@src/styles/fontStyle';
 import { icAlert, icCheckedBox, icEmptyBox } from 'public/assets/icons';
 import { useState } from 'react';
 
-function HighlightModal() {
+interface HighlightModalProps {
+  closeModal: () => void;
+}
+
+function HighlightModal(props: HighlightModalProps) {
+  const { closeModal } = props;
   const [isClicked, setIsClicked] = useState(false);
   const handleCheck = () => {
     setIsClicked((prev) => !prev);
@@ -16,13 +21,13 @@ function HighlightModal() {
       <p>같은 단어를 하이라이트할 수 없어요!</p>
       <StTodayClose onClick={handleCheck}>
         {isClicked ? (
-          <ImageDiv src={icEmptyBox} className="box empty" />
-        ) : (
           <ImageDiv src={icCheckedBox} className="box checked" />
+        ) : (
+          <ImageDiv src={icEmptyBox} className="box empty" />
         )}
         <span>다시 보지 않기</span>
       </StTodayClose>
-      <StOkayButton>확인</StOkayButton>
+      <StOkayButton onClick={closeModal}>확인</StOkayButton>
     </StHighlightModal>
   );
 }
