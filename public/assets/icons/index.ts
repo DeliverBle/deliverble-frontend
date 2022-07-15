@@ -9,3 +9,6 @@ export { default as icEmptyBox } from './ic_empty_box.svg';
 export { default as icCheckedBox } from './ic_checked_box.svg';
 export { default as icScript } from './ic_script.svg';
 export { default as icMemo } from './ic_memo.svg';
+export { default as icAnnounce } from './ic_announce.svg';
+export { default as icHighlighter } from './ic_highlighter.svg';
+export { default as icSpacing } from './ic_spacing.svg';
