@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { VideoData } from '@src/services/api/types/home';
@@ -20,7 +20,6 @@ function NewsList(props: NewsListProps) {
         <StNewsWrapper key={id} onClick={() => router.push(`/learn/${id}`)}>
           <StThumbnailContainer>
             <ImageDiv className="thumbnail" src={thumbnail} layout="fill" alt="thumbnail" />
-            {/* <StThumbnail /> */}
             <Like />
           </StThumbnailContainer>
           <StTitle>{title}</StTitle>
@@ -53,28 +52,31 @@ const StNewsWrapper = styled.article`
 
 const StThumbnailContainer = styled.div`
   position: relative;
-
   cursor: pointer;
 
   &:hover .like {
     opacity: 1;
   }
-
+  /* 
   &:hover > div:first-child {
     transition: 0.5s ease-in-out;
     background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 100%);
-  }
+  } */
 
   .thumbnail {
-    position: relative;
-    object-fit: cover;
-    width: 38.4rem;
-    height: 21.6rem;
-    /* padding-top: 58%; */
+    min-width: 38.4rem;
+    min-height: 21.6rem;
+    padding-top: 56%;
 
     & img {
       border-radius: 1rem;
       object-fit: cover;
+    }
+
+    & img:hover {
+      filter: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 100%);
+      /* transition: 0.5s ease-in-out;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 100%); */
     }
   }
 `;
