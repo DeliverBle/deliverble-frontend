@@ -6,7 +6,7 @@ import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { icSearch } from 'public/assets/icons';
 
-function learn() {
+function Learn() {
   const channelList = ['전체', 'SBS', 'KBS', 'MBC', '기타'];
   const categoryList = ['전체', '정치', '경제', '사회', '세계', '연예', '기타'];
   const speakerList = ['전체', '여성', '남성'];
@@ -32,7 +32,7 @@ function learn() {
   );
 }
 
-export default learn;
+export default Learn;
 
 const StLearn = styled.div`
   margin: auto 16rem;

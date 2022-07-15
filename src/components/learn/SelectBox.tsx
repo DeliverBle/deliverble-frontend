@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
 import ImageDiv from '../common/ImageDiv';
 import { COLOR } from '@src/styles/color';
@@ -14,6 +14,7 @@ function SelectBox(props: SelectBoxProps) {
   const { optionName, optionList } = props;
   const [isClicked, setIsClicked] = useState(false);
   const [checkedList, setCheckedList] = useState(['전체']);
+  const guideModalRef = useRef<HTMLDivElement>(null);
 
   const handleCheck = (checkedItem: string) => {
     checkedList.includes(checkedItem)
@@ -33,8 +34,22 @@ function SelectBox(props: SelectBoxProps) {
     }
   }
 
+  useEffect(() => {
+    const handleClickOutside = (e: Event) => {
+      const eventTarget = e.target as HTMLElement;
+      if (isClicked && !guideModalRef?.current?.contains(eventTarget)) {
+        setIsClicked(false);
+      }
+    };
+
+    window.addEventListener('click', handleClickOutside);
+    return () => {
+      window.removeEventListener('click', handleClickOutside);
+    };
+  }, [isClicked]);
+
   return (
-    <StSelectBox isClicked={isClicked}>
+    <StSelectBox ref={guideModalRef} isClicked={isClicked}>
       <span>{optionName}</span>
       <StCategoryButton onClick={() => setIsClicked((prev) => !prev)}>
         <div>{checkedList.join(', ')}</div>
