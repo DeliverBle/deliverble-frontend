@@ -64,11 +64,7 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
             <h2>아나운서의 목소리를 듣고, 스크립트를 보며 따라 말해보세요.</h2>
           </div>
           <article>
-            <div>
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Illum necessitatibus natus culpa in illo nostrum
-              atque animi, ducimus, obcaecati repudiandae odit corporis impedit nulla id adipisci! Molestiae voluptates
-              minima reprehenderit!
-            </div>
+            <div>스크립트 공간</div>
             <div>
               <ImageDiv onClick={() => setIsModalOpen(true)} src={icGuide} className="guide" layout="fill" alt="?" />
               <StButtonContainer>
@@ -159,7 +155,7 @@ const StLearnSection = styled.section`
     flex-direction: column;
     width: 84.2rem;
     height: 76rem;
-    padding: 1.8rem 2rem;
+    padding: 1.8rem 1.2rem 1.8rem 2rem;
     border: 0.2rem solid ${COLOR.GRAY_10};
     border-radius: 2.4rem;
     color: ${COLOR.BLACK};
@@ -170,6 +166,22 @@ const StLearnSection = styled.section`
     & > div:first-child {
       flex: 1;
       padding: 0.6rem 1.2rem;
+      height: 62.8rem;
+      overflow-y: scroll;
+
+      &::-webkit-scrollbar {
+        width: 1rem;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background-color: ${COLOR.GRAY_10};
+        border-radius: 1.3rem;
+      }
+
+      &::-webkit-scrollbar-track-piece {
+        height: 13.6rem;
+        max-height: 13.6rem;
+      }
     }
 
     & > div:last-child {
