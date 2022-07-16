@@ -8,6 +8,8 @@ export { default as icXButton } from './ic_x_button.svg';
 export { default as icEmptyBox } from './ic_empty_box.svg';
 export { default as icCheckedBox } from './ic_checked_box.svg';
 export { default as icScript } from './ic_script.svg';
+export { default as icDeliverbleBlue } from './ic_deliverble_blue.svg';
+export { default as icDeliverbleWhite } from './ic_deliverble_white.svg';
 export { default as icMemo } from './ic_memo.svg';
 export { default as icAnnounce } from './ic_announce.svg';
 export { default as icHighlighter } from './ic_highlighter.svg';
