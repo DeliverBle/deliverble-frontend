@@ -30,6 +30,11 @@ function Learn() {
           </StSelectBoxContainer>
           <button>검색하기</button>
         </StSearch>
+        <StResult>
+          <h2>
+            전체 <span>13개</span> 영상
+          </h2>
+        </StResult>
       </StLearn>
       <Footer />
     </>
@@ -81,4 +86,16 @@ const StSearch = styled.div`
 const StSelectBoxContainer = styled.div`
   display: flex;
   gap: 1.6rem;
+`;
+
+const StResult = styled.div`
+  & > h2 {
+    ${FONT_STYLES.SB_20_BODY};
+    color: ${COLOR.GRAY_30};
+    margin-bottom: 2.3rem;
+
+    span {
+      color: ${COLOR.MAIN_BLUE};
+    }
+  }
 `;
