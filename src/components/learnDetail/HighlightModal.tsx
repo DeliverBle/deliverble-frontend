@@ -12,9 +12,8 @@ function HighlightModal(props: HighlightModalProps) {
   const { closeModal } = props;
 
   const handleExpireTime = () => {
-    const now = new Date().getTime();
-    const nowString = JSON.stringify(now);
-    localStorage.setItem('now', nowString);
+    const timeClicked = JSON.stringify(new Date().getTime());
+    localStorage.setItem('timeClicked', timeClicked);
   };
 
   return (
@@ -22,14 +21,14 @@ function HighlightModal(props: HighlightModalProps) {
       <StHighlightModalContent>
         <ImageDiv src={icAlert} className="alert" layout="fill" alt="" />
         <p>같은 단어를 하이라이트할 수 없어요!</p>
-        <StTodayClose
+        <StTimeClosedSet
           onClick={() => {
             closeModal();
             handleExpireTime();
           }}>
           <ImageDiv src={icEmptyBox} className="checkbox" layout="fill" alt="checkbox" />
           <span>3일 동안 보지 않기</span>
-        </StTodayClose>
+        </StTimeClosedSet>
         <StOkayButton onClick={closeModal}>확인</StOkayButton>
       </StHighlightModalContent>
     </StHighlightModal>
@@ -74,7 +73,7 @@ const StHighlightModalContent = styled.div`
   }
 `;
 
-const StTodayClose = styled.div`
+const StTimeClosedSet = styled.div`
   position: absolute;
   left: 2.4rem;
   bottom: 2.3rem;

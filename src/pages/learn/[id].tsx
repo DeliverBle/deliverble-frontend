@@ -18,14 +18,14 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   //같은 부분 하이라이트 했을 경우로 로직 변경해야 함.
+  //useEffect의 빈 배열 -> '하이라이트 경고가 뜰 때 바뀌는 상태'로 바꿔주기.
   const [highlightAlert, setHighlightAlert] = useState(false);
-
   useEffect(() => {
-    const checkTime = new Date().getTime();
-    const timeSaved = localStorage.getItem('now');
+    const now = new Date().getTime();
+    const timeSaved = Number(localStorage.getItem('timeClicked'));
     if (timeSaved) {
-      const gapMinutes = (checkTime - Number(timeSaved)) / 1000 / 60;
-      if (gapMinutes > 3) {
+      const gapHour = (now - timeSaved) / 1000 / 60 / 60;
+      if (gapHour > 72) {
         setHighlightAlert(true);
       }
     } else {
