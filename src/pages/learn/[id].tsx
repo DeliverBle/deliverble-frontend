@@ -3,26 +3,22 @@ import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import ImageDiv from '../../components/common/ImageDiv';
 import GuideModal from '@src/components/learnDetail/GuideModal';
+import HighlightModal from '@src/components/learnDetail/HighlightModal';
 import { icXButton, icGuide, icMemo, icAnnounce, icHighlighter, icSpacing, icLikeDefault } from 'public/assets/icons';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { GetServerSidePropsContext } from 'next';
 import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/learn-detail';
-<<<<<<< HEAD
-import HighlightModal from '@src/components/learnDetail/HighlightModal';
-=======
 import YouTube from 'react-youtube';
->>>>>>> develop
 
 function LearnDetail({ videoData }: { videoData: VideoData }) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
-<<<<<<< HEAD
+
   //같은 부분 하이라이트 했을 경우로 로직 변경해야 함.
   const [highlightAlert, setHighlightAlert] = useState(true);
-  const { title, category, channel, reportDate, tags } = videoData;
-=======
+
   const [player, setPlayer] = useState<YT.Player | null>();
   const [videoState, setVideoState] = useState(-1);
   const [currentTime, setCurrentTime] = useState(0);
@@ -42,7 +38,6 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
     }
     return () => interval && clearInterval(interval);
   }, [player, videoState]);
->>>>>>> develop
 
   return (
     <StLearnDetail>
