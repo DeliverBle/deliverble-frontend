@@ -83,8 +83,7 @@ const StInfo = styled.div`
 `;
 
 const StUnderlineText = styled.p`
-  line-height: 20px;
-  border-bottom: 2.3px solid ${COLOR.GRAY_60};
+  text-decoration-line: underline;
 `;
 
 const StService = styled.div`
