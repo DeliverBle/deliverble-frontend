@@ -24,7 +24,7 @@ function Learn() {
   const [resultList, setResultList] = useState<VideoData[]>([]);
 
   const handleSearch = async () => {
-    const response = await api.learnService.postSearchCondition({
+    const { paging, videoList } = await api.learnService.postSearchCondition({
       channel: selectedChannelList,
       category: selectedCategoryList,
       speaker: selectedSpeakerList,
@@ -32,17 +32,15 @@ function Learn() {
       listSize: LIST_SIZE,
     });
 
-    setTotalCount(response.paging.totalCount);
-    setResultList(response.videoList);
+    setTotalCount(paging.totalCount);
+    setResultList(videoList);
   };
-
-  console.log(selectedChannelList, selectedCategoryList, selectedSpeakerList);
 
   useEffect(() => {
     (async () => {
-      const response = await api.learnService.postSearchCondition({ currentPage: 1, listSize: LIST_SIZE });
-      setTotalCount(response.paging.totalCount);
-      setResultList(response.videoList);
+      const { paging, videoList } = await api.learnService.postSearchCondition({ currentPage: 1, listSize: LIST_SIZE });
+      setTotalCount(paging.totalCount);
+      setResultList(videoList);
     })();
   }, []);
 
