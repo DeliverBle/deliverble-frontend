@@ -21,3 +21,5 @@ export { default as icLikeDefault } from './ic_like_default.svg';
 export { default as icLikeHover } from './ic_like_hover.svg';
 export { default as icLogoFooter } from './ic_logo_footer.svg';
 export { default as icSocial } from './ic_social.svg';
+export { default as icDotDefault } from './ic_dot_default.svg';
+export { default as icDotHover } from './ic_dot_hover.svg';
