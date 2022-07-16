@@ -7,13 +7,13 @@ function Like() {
   const [isLiked, setIsLiked] = useState(false);
 
   return (
-    <StLikeButton
+    <StLike
       type="button"
       onClick={(e) => {
         e.stopPropagation();
         setIsLiked((prev) => !prev);
       }}>
-      <StImageContainer>
+      <StLikeImage>
         {isLiked ? (
           <ImageDiv className="like" src={icLikeClicked} alt="like" />
         ) : (
@@ -22,14 +22,14 @@ function Like() {
             <ImageDiv className="like default" src={icLikeDefault} alt="like" />
           </>
         )}
-      </StImageContainer>
-    </StLikeButton>
+      </StLikeImage>
+    </StLike>
   );
 }
 
 export default Like;
 
-const StLikeButton = styled.button`
+const StLike = styled.button`
   position: absolute;
   top: 1.2rem;
   right: 1.2rem;
@@ -39,7 +39,7 @@ const StLikeButton = styled.button`
   padding: 0;
 `;
 
-const StImageContainer = styled.div`
+const StLikeImage = styled.div`
   position: relative;
 
   .like {
