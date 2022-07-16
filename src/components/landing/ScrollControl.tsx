@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 interface ScrollContainerProps {
   slideNumber: number;
   setSlideNumber: (slideNumber: number) => void;
@@ -12,10 +12,10 @@ function ScrollContainer(props: ScrollContainerProps) {
     <StScrollContainer>
       {slideNumberList.map((number) => {
         return (
-          <li
+          <StListItem
             key={number}
-            className={slideNumber === number ? 'isActive' : 'unActive'}
-            onClick={() => setSlideNumber(number)}></li>
+            isActive={slideNumber === number}
+            onClick={() => setSlideNumber(number)}></StListItem>
         );
       })}
     </StScrollContainer>
@@ -29,25 +29,29 @@ const StScrollContainer = styled.ul`
   margin-top: 42.4rem;
   right: 6.4rem;
 
-  z-index: 100;
-
-  & > .isActive {
-    background-color: #160f35;
-    opacity: 0.35;
+  z-index: 2;
   }
+`;
 
-  & > .unActive {
-    background-color: #160f35;
-    opacity: 0.05;
-  }
+const StListItem = styled.li<{ isActive: boolean }>`
+  width: 2.2rem;
+  height: 2.2rem;
 
-  & > li {
-    width: 2.2rem;
-    height: 2.2rem;
-    border-radius: 50%;
-    margin: 0 0 1.1111111111111112rem;
-    cursor: pointer;
-    margin-bottom: 2rem;
-    opacity: 0.5;
-  }
+  margin: 0 0 1.1111111111111112rem;
+  margin-bottom: 2rem;
+
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: 0.5;
+
+  ${({ isActive }) =>
+    isActive
+      ? css`
+          background-color: #160f35;
+          opacity: 0.35;
+        `
+      : css`
+          background-color: #160f35;
+          opacity: 0.05;
+        `}
 `;

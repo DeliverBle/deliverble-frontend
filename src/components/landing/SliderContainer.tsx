@@ -29,41 +29,36 @@ function SliderContainer(props: SliderContainerProps) {
   const sixthSlideRef = useSlideObserver(setSlideNumber, 6);
 
   useEffect(() => {
-    //slideNumber가 변경 될 때 마다 스크롤 옮겨주기
-    moveToElement(slideNumber);
-  }, [slideNumber]);
-
-  const moveToElement = (slideNumber: number) => {
-    const clickedSlideNum = slideNumber;
-    let clickedSlideRef: MutableRefObject<HTMLElement | null> | undefined;
-
-    switch (clickedSlideNum) {
-      case 1:
-        clickedSlideRef = firstSlideRef;
-        break;
-      case 2:
-        clickedSlideRef = secondSlideRef;
-        break;
-      case 3:
-        clickedSlideRef = thirdSlideRef;
-        break;
-      case 4:
-        clickedSlideRef = fourthSlideRef;
-        break;
-      case 5:
-        clickedSlideRef = fifthSlideRef;
-        break;
-      case 6:
-        clickedSlideRef = sixthSlideRef;
-        break;
-    }
-    {
+    const moveToElement = (slideNumber: number) => {
+      const clickedSlideNum = slideNumber;
+      let clickedSlideRef: MutableRefObject<HTMLElement | null> | undefined;
+      switch (clickedSlideNum) {
+        case 1:
+          clickedSlideRef = firstSlideRef;
+          break;
+        case 2:
+          clickedSlideRef = secondSlideRef;
+          break;
+        case 3:
+          clickedSlideRef = thirdSlideRef;
+          break;
+        case 4:
+          clickedSlideRef = fourthSlideRef;
+          break;
+        case 5:
+          clickedSlideRef = fifthSlideRef;
+          break;
+        case 6:
+          clickedSlideRef = sixthSlideRef;
+          break;
+      }
       clickedSlideRef &&
         clickedSlideRef.current?.scrollIntoView({
           block: 'start',
         });
-    }
-  };
+    };
+    moveToElement(slideNumber);
+  }, [fifthSlideRef, firstSlideRef, fourthSlideRef, secondSlideRef, sixthSlideRef, slideNumber, thirdSlideRef]);
 
   return (
     <StSliderContainer>
@@ -121,10 +116,10 @@ function SliderContainer(props: SliderContainerProps) {
             <h2>STEP 1.</h2>
             <h3>무작정 따라하며</h3>
             <h3>아나운서의 좋은 발음과 발성 배우기</h3>
-            <Sth4>
+            <StH4>
               <h4>언제 어디서든 아나운서의 좋은 목소리를 듣고, </h4>
               <h4>소리 내서 따라하며 연습해봐요.</h4>
-            </Sth4>
+            </StH4>
           </StTextWrapper>
         </StContentContainer>
       </StThirdSlider>
@@ -138,10 +133,10 @@ function SliderContainer(props: SliderContainerProps) {
             <h2>STEP 2.</h2>
             <h3>끊어 읽기, 하이라이트, 메모 기능으로</h3>
             <h3>더 똑똑하게 공부하기</h3>
-            <Sth4>
+            <StH4>
               <h4>클릭 한 번으로 쉽게 끊어 읽기 표시를 남기고,</h4>
               <h4>메모를 추가하여 나만의 피드백도 기록해봐요.</h4>
-            </Sth4>
+            </StH4>
           </StTextWrapper>
         </StContentContainer>
       </StFourthSlider>
@@ -155,10 +150,10 @@ function SliderContainer(props: SliderContainerProps) {
             <h2>STEP 3.</h2>
             <h3>끊어 읽기, 하이라이트, 메모 기능으로</h3>
             <h3>더 똑똑하게 공부하기</h3>
-            <Sth4>
+            <StH4>
               <h4>클릭 한 번으로 쉽게 끊어 읽기 표시를 남기고,</h4>
               <h4>메모를 추가하여 나만의 피드백도 기록해봐요.</h4>
-            </Sth4>
+            </StH4>
           </StTextWrapper>
         </StContentContainer>
       </StFifthSlider>
@@ -201,7 +196,7 @@ const StContentContainer = styled.section`
   }
 `;
 
-const Sth4 = styled.section`
+const StH4 = styled.section`
   & > h4 {
     color: ${COLOR.GRAY_60};
     ${FONT_STYLES.M_24_HEADLINE};
@@ -291,11 +286,7 @@ const StSecondSlider = styled.section`
   & > h2 {
     margin-top: 8.8rem;
     color: ${COLOR.BLACK};
-    font-family: 'Pretendard';
-    font-style: normal;
-    font-weight: 600;
-    font-size: 44px;
-    line-height: 150%;
+    font: normal 600 44px/150% 'Pretendard';
     text-align: center;
     letter-spacing: -0.01em;
   }
@@ -370,11 +361,8 @@ const StThirdSlider = styled.section`
   .headline-wrapper {
     margin-top: 22rem;
 
-    font-family: 'Pretendard';
-    font-style: normal;
-    font-weight: 600;
-    font-size: 44px;
-    line-height: 150%;
+    font: normal 600 44px/150% 'Pretendard';
+
     text-align: center;
     letter-spacing: -0.01em;
   }

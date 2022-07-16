@@ -36,6 +36,7 @@ const StNav = styled.nav<{ isSecondScrolled: boolean }>`
   display: flex;
   gap: 160rem;
   position: fixed;
+  z-index: 1;
 
   width: 100%;
   height: 8.8rem;
