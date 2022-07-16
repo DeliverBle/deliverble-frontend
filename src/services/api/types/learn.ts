@@ -13,9 +13,9 @@ export type Paging = {
 };
 
 export type PostSearchConditionRequestBody = {
-  channel?: string[];
-  category?: string[];
-  speaker?: string;
+  channel?: string[] | [];
+  category?: string[] | [];
+  speaker?: string[] | [];
   currentPage: number;
   listSize: number;
 };

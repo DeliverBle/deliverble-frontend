@@ -8,10 +8,11 @@ import { icArrow, icCheckedBox, icEmptyBox } from 'public/assets/icons';
 interface SelectBoxProps {
   optionName: string;
   optionList: string[];
+  setCondition: (condition: string[]) => void;
 }
 
 function SelectBox(props: SelectBoxProps) {
-  const { optionName, optionList } = props;
+  const { optionName, optionList, setCondition } = props;
   const [isClicked, setIsClicked] = useState(false);
   const [checkedList, setCheckedList] = useState(['전체']);
   const guideModalRef = useRef<HTMLDivElement>(null);
@@ -45,8 +46,9 @@ function SelectBox(props: SelectBoxProps) {
     window.addEventListener('click', handleClickOutside);
     return () => {
       window.removeEventListener('click', handleClickOutside);
+      setCondition(checkedList.includes('전체') ? [] : checkedList);
     };
-  }, [isClicked]);
+  }, [checkedList, isClicked, setCondition]);
 
   return (
     <StSelectBox ref={guideModalRef} isClicked={isClicked}>

@@ -13,15 +13,34 @@ import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/home';
 
 function Learn() {
+  const LIST_SIZE = 12;
   const channelList = ['전체', 'SBS', 'KBS', 'MBC', '기타'];
   const categoryList = ['전체', '정치', '경제', '사회', '세계', '연예', '기타'];
   const speakerList = ['전체', '여성', '남성'];
+  const [selectedChannelList, setSelectedChannelList] = useState<string[] | []>([]);
+  const [selectedCategoryList, setSelectedCategoryList] = useState<string[] | []>([]);
+  const [selectedSpeakerList, setSelectedSpeakerList] = useState<string[] | []>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [resultList, setResultList] = useState<VideoData[]>([]);
 
+  const handleSearch = async () => {
+    const response = await api.learnService.postSearchCondition({
+      channel: selectedChannelList,
+      category: selectedCategoryList,
+      speaker: selectedSpeakerList,
+      currentPage: 1,
+      listSize: LIST_SIZE,
+    });
+
+    setTotalCount(response.paging.totalCount);
+    setResultList(response.videoList);
+  };
+
+  console.log(selectedChannelList, selectedCategoryList, selectedSpeakerList);
+
   useEffect(() => {
     (async () => {
-      const response = await api.learnService.postSearchCondition({ currentPage: 1, listSize: 12 });
+      const response = await api.learnService.postSearchCondition({ currentPage: 1, listSize: LIST_SIZE });
       setTotalCount(response.paging.totalCount);
       setResultList(response.videoList);
     })();
@@ -38,11 +57,11 @@ function Learn() {
         </StTitle>
         <StSearch>
           <StSelectBoxContainer>
-            <SelectBox optionName="방송사" optionList={channelList} />
-            <SelectBox optionName="분야" optionList={categoryList} />
-            <SelectBox optionName="발화자" optionList={speakerList} />
+            <SelectBox optionName="방송사" optionList={channelList} setCondition={setSelectedChannelList} />
+            <SelectBox optionName="분야" optionList={categoryList} setCondition={setSelectedCategoryList} />
+            <SelectBox optionName="발화자" optionList={speakerList} setCondition={setSelectedSpeakerList} />
           </StSelectBoxContainer>
-          <button>검색하기</button>
+          <button onClick={() => handleSearch()}>검색하기</button>
         </StSearch>
         <StResult>
           <h2>
