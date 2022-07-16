@@ -54,4 +54,5 @@ const StHomeButton = styled.a`
   background-color: ${COLOR.MAIN_BLUE};
   ${FONT_STYLES.SB_24_HEADLINE};
   color: ${COLOR.WHITE};
+  cursor: pointer;
 `;

@@ -1,114 +1,14 @@
-import { useState, useEffect } from 'react';
-// import axios from 'axios';
 import Head from 'next/head';
 import styled from 'styled-components';
 import NavigationBar from '@src/components/common/NavigationBar';
 import NewsList from '@src/components/common/NewsList';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { COLOR } from '@src/styles/color';
+import { api } from '@src/services/api';
+import { VideoData } from '@src/services/api/types/home';
 import Footer from '@src/components/common/Footer';
 
-export interface videoType {
-  id: number;
-  title: string;
-  channel: string;
-  category: string;
-  date: string;
-  thumbnail: string;
-  isLiked: boolean;
-}
-
-function Home() {
-  const [videoList, setVideoList] = useState<videoType[]>([
-    {
-      id: 1,
-      title: '비트코인, 한때 1만 8천 달러 붕괴',
-      channel: 'SBS 뉴스',
-      category: '사회',
-      date: '2022.06.19',
-      thumbnail: 'https://이미지링크',
-      isLiked: true,
-    },
-    {
-      id: 2,
-      title: '비트코인, 한때 1만 8천 달러 붕괴',
-      channel: 'SBS 뉴스',
-      category: '사회',
-      date: '2022.06.19',
-      thumbnail: 'https://이미지링크',
-      isLiked: false,
-    },
-    {
-      id: 3,
-      title: '비트코인, 한때 1만 8천 달러 붕괴',
-      channel: 'SBS 뉴스',
-      category: '사회',
-      date: '2022.06.19',
-      thumbnail: 'https://이미지링크',
-      isLiked: false,
-    },
-    {
-      id: 4,
-      title: '비트코인, 한때 1만 8천 달러 붕괴',
-      channel: 'SBS 뉴스',
-      category: '사회',
-      date: '2022.06.19',
-      thumbnail: 'https://이미지링크',
-      isLiked: false,
-    },
-    {
-      id: 5,
-      title: '비트코인, 한때 1만 8천 달러 붕괴',
-      channel: 'SBS 뉴스',
-      category: '사회',
-      date: '2022.06.19',
-      thumbnail: 'https://이미지링크',
-      isLiked: false,
-    },
-    {
-      id: 6,
-      title: '비트코인, 한때 1만 8천 달러 붕괴',
-      channel: 'SBS 뉴스',
-      category: '사회',
-      date: '2022.06.19',
-      thumbnail: 'https://이미지링크',
-      isLiked: false,
-    },
-    {
-      id: 7,
-      title: '비트코인, 한때 1만 8천 달러 붕괴',
-      channel: 'SBS 뉴스',
-      category: '사회',
-      date: '2022.06.19',
-      thumbnail: 'https://이미지링크',
-      isLiked: false,
-    },
-    {
-      id: 8,
-      title: '비트코인, 한때 1만 8천 달러 붕괴',
-      channel: 'SBS 뉴스',
-      category: '사회',
-      date: '2022.06.19',
-      thumbnail: 'https://이미지링크',
-      isLiked: false,
-    },
-  ]);
-
-  // const fetchVideoList = async () => {
-  //   try {
-  //     const { data } = await axios.get('https://5bf61531-1c07-442d-b743-28471f964f44.mock.pstmn.io/recommend_news');
-  //     setVideoList(() => data.data.videoList);
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // };
-
-  useEffect(() => {
-    // fetchVideoList();
-    setVideoList(videoList);
-  }, [videoList]);
-
-  if (!videoList) return null;
+function Home({ videoData }: { videoData: VideoData[] }) {
   return (
     <>
       <Head>
@@ -128,7 +28,7 @@ function Home() {
       <StNews>
         <h3>딜리버블의 추천 뉴스를 만나보세요.</h3>
         <div>
-          <NewsList newsList={videoList} />
+          <NewsList newsList={videoData} />
         </div>
       </StNews>
       <Footer />
@@ -137,6 +37,11 @@ function Home() {
 }
 
 export default Home;
+
+export async function getServerSideProps() {
+  const response = await api.homeService.getVideoData();
+  return { props: { videoData: response } };
+}
 
 const StHome = styled.div`
   display: flex;

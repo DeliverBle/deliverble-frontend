@@ -8,3 +8,4 @@ export { default as imgLandingFist } from './img_landing_fist.svg';
 export { default as imgLandingMic } from './img_landing_mic.svg';
 export { default as imgBanner } from './img_banner.svg';
 export { default as imgBackground } from './img_background.svg';
+export { default as imgReviewEmpty } from './img_review_empty.svg';
