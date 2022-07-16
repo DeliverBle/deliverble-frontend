@@ -36,18 +36,26 @@ function SliderContainer(props: SliderContainerProps) {
   const moveToElement = (slideNumber: number) => {
     const clickedSlideNum = slideNumber;
     let clickedSlideRef: MutableRefObject<HTMLElement | null> | undefined;
-    if (clickedSlideNum === 1) {
-      clickedSlideRef = firstSlideRef;
-    } else if (clickedSlideNum === 2) {
-      clickedSlideRef = secondSlideRef;
-    } else if (clickedSlideNum === 3) {
-      clickedSlideRef = thirdSlideRef;
-    } else if (clickedSlideNum === 4) {
-      clickedSlideRef = fourthSlideRef;
-    } else if (clickedSlideNum === 5) {
-      clickedSlideRef = fifthSlideRef;
-    } else if (clickedSlideNum === 6) {
-      clickedSlideRef = sixthSlideRef;
+
+    switch (clickedSlideNum) {
+      case 1:
+        clickedSlideRef = firstSlideRef;
+        break;
+      case 2:
+        clickedSlideRef = secondSlideRef;
+        break;
+      case 3:
+        clickedSlideRef = thirdSlideRef;
+        break;
+      case 4:
+        clickedSlideRef = fourthSlideRef;
+        break;
+      case 5:
+        clickedSlideRef = fifthSlideRef;
+        break;
+      case 6:
+        clickedSlideRef = sixthSlideRef;
+        break;
     }
     {
       clickedSlideRef &&
@@ -61,7 +69,7 @@ function SliderContainer(props: SliderContainerProps) {
     <StSliderContainer>
       <div className="first-slide">
         <StFirstSlider ref={firstSlideRef}>
-          <div className="headline-wrapper">
+          <div>
             <h1>아나운서 쉐도잉으로 키우는</h1>
             <h1>스피치 자신감, 딜리버블</h1>
           </div>
@@ -72,7 +80,7 @@ function SliderContainer(props: SliderContainerProps) {
       </div>
 
       <StSecondSlider ref={secondSlideRef}>
-        <h1 className="headline">지금보다 더 잘 말하고 싶었던 적 없나요?</h1>
+        <h2>지금보다 더 잘 말하고 싶었던 적 없나요?</h2>
         <div className="body-card-wrapper">
           <StCard className="first-card">
             <ImageDiv src={imgLandingEar} className="ear" layout="fill" alt="" />
@@ -99,8 +107,11 @@ function SliderContainer(props: SliderContainerProps) {
 
       <StThirdSlider ref={thirdSlideRef}>
         <div className="headline-wrapper">
-          <h1>딜리버블이 제안하는</h1>
-          <h1>효과적인 말하기 학습 솔루션</h1>
+          <h1>
+            아나운서 쉐도잉으로 키우는
+            <br />
+            스피치 자신감, 딜리버블
+          </h1>
         </div>
         <StContentContainer className="step1-content">
           <StLottieWrapper className="step1">
@@ -201,7 +212,7 @@ const Sth4 = styled.section`
 const StTextWrapper = styled.section`
   & > h2 {
     color: ${COLOR.MAIN_BLUE};
-    ${FONT_STYLES.B_100_LANDING};
+    ${FONT_STYLES.B_100_CAPTION};
     font-family: 'Dongle';
   }
 
@@ -232,7 +243,7 @@ const StFirstSlider = styled.section`
   width: 100%;
   height: 100%;
 
-  .headline-wrapper {
+  & > div {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -277,7 +288,7 @@ const StSecondSlider = styled.section`
   background-repeat: no-repeat;
   background-size: contain;
 
-  .headline {
+  & > h2 {
     margin-top: 8.8rem;
     color: ${COLOR.BLACK};
     font-family: 'Pretendard';
@@ -293,11 +304,10 @@ const StSecondSlider = styled.section`
     display: flex;
     justify-content: center;
 
-    width: 192rem;
+    width: 100%;
     height: 79rem;
 
-    margin-top: 4.3rem;
-    margin-bottom: 12.1rem;
+    margin: 4.3rem 0 12.1rem 0;
     gap: 7rem;
   }
 `;
@@ -337,8 +347,8 @@ const StCard = styled.section`
   & > p {
     color: ${COLOR.GRAY_30};
     ${FONT_STYLES.SB_18_CAPTION};
-    margin-top: 8.8rem;
-    margin-bottom: 2.3rem;
+
+    margin: 8.8rem 0 2.3rem 0;
   }
   .ear,
   .fist,
@@ -373,28 +383,11 @@ const StThirdSlider = styled.section`
 const StFourthSlider = styled.section`
   width: 100%;
   height: 100%;
-
-  .fourth-text-wrapper {
-    width: 51.3rem;
-    height: 34.8rem;
-
-    margin-top: 35rem;
-    margin-left: 29.8rem;
-    margin-bottom: 38.2rem;
-
-    text-align: right;
-  }
 `;
 
 const StFifthSlider = styled.section`
   width: 100%;
   height: 100%;
-
-  .fifth-text-wrapper {
-    margin-top: 36.6rem;
-    margin-left: 115.7rem;
-    margin-bottom: 36.6rem;
-  }
 `;
 
 const StSixthSlider = styled.section`
@@ -439,9 +432,7 @@ const StSixthSlider = styled.section`
 
 const StContact = styled.div`
   position: relative;
-  margin-top: 22.9rem;
-  margin-left: 160.9rem;
-  margin-bottom: 6.4rem;
+  margin: 22.9rem 0 6.4rem 160.9rem;
   color: ${COLOR.MAIN_BLUE};
 
   .contact {
@@ -457,21 +448,21 @@ const StLottieWrapper = styled.div`
   &.step1 {
     width: 57.7rem;
     height: 30.5rem;
-    margin-left: 25.5rem;
-    margin-right: 25.6rem;
+
+    margin: 0 25.6rem 0 25.6rem;
   }
 
   &.step2 {
     width: 57.8rem;
     height: 35.9rem;
-    margin-left: 34.9rem;
-    margin-right: 16.1rem;
+
+    margin: 0 16.1rem 0 34.9rem;
   }
 
   &.step3 {
     width: 57.7rem;
     height: 39.7rem;
-    margin-left: 31.8rem;
-    margin-right: 19.3rem;
+
+    margin: 0 19.3rem 0 31.8rem;
   }
 `;

@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { useEffect } from 'react';
 interface ScrollContainerProps {
   slideNumber: number;
   setSlideNumber: (slideNumber: number) => void;
@@ -7,19 +6,18 @@ interface ScrollContainerProps {
 
 function ScrollContainer(props: ScrollContainerProps) {
   const { slideNumber, setSlideNumber } = props;
-
-  useEffect(() => {
-    console.log(slideNumber);
-  }, [slideNumber]);
+  const slideNumberList = [1, 2, 3, 4, 5, 6];
 
   return (
     <StScrollContainer>
-      <li className={slideNumber === 1 ? 'isActive' : 'unActive'} onClick={() => setSlideNumber(1)}></li>
-      <li className={slideNumber === 2 ? 'isActive' : 'unActive'} onClick={() => setSlideNumber(2)}></li>
-      <li className={slideNumber === 3 ? 'isActive' : 'unActive'} onClick={() => setSlideNumber(3)}></li>
-      <li className={slideNumber === 4 ? 'isActive' : 'unActive'} onClick={() => setSlideNumber(4)}></li>
-      <li className={slideNumber === 5 ? 'isActive' : 'unActive'} onClick={() => setSlideNumber(5)}></li>
-      <li className={slideNumber === 6 ? 'isActive' : 'unActive'} onClick={() => setSlideNumber(6)}></li>
+      {slideNumberList.map((number) => {
+        return (
+          <li
+            key={number}
+            className={slideNumber === number ? 'isActive' : 'unActive'}
+            onClick={() => setSlideNumber(number)}></li>
+        );
+      })}
     </StScrollContainer>
   );
 }

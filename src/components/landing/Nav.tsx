@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { icDeliverbleBlue, icDeliverbleWhite } from 'public/assets/icons';
 import { COLOR } from 'src/styles/color';
 import { FONT_STYLES } from 'src/styles/fontStyle';
@@ -40,12 +40,7 @@ const StNav = styled.nav<{ isSecondScrolled: boolean }>`
   width: 100%;
   height: 8.8rem;
 
-  background-color: ${({ isSecondScrolled }) =>
-    isSecondScrolled
-      ? css`
-          white
-        `
-      : css`rgba(0, 0, 0, 0)`};
+  background: ${({ isSecondScrolled }) => isSecondScrolled && COLOR.WHITE};
 
   .logo {
     position: relative;
@@ -64,13 +59,6 @@ const StLogin = styled.button<{ isFirstScrolled: boolean }>`
 
   & > a {
     ${FONT_STYLES.SB_20_BODY};
-    color: ${({ isFirstScrolled }) =>
-      isFirstScrolled
-        ? css`
-            ${COLOR.MAIN_BLUE}
-          `
-        : css`
-            ${COLOR.WHITE}
-          `};
+    color: ${({ isFirstScrolled }) => (isFirstScrolled ? COLOR.MAIN_BLUE : COLOR.WHITE)};
   }
 `;
