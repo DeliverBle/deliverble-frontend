@@ -45,13 +45,7 @@ const StLikeImage = styled.div`
   .like {
     position: absolute;
     top: -2rem;
-
     opacity: 0;
-  }
-
-  .like img {
-    width: 10rem;
-    height: 10rem;
   }
 
   &:hover .default img {
