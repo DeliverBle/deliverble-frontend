@@ -11,6 +11,7 @@ import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/learn-detail';
 import YouTube from 'react-youtube';
 import EmptyMemo from '@src/components/learnDetail/EmptyMemo';
+import SEO from '@src/components/common/SEO';
 
 function LearnDetail({ videoData }: { videoData: VideoData }) {
   const router = useRouter();
@@ -36,78 +37,81 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
   }, [player, videoState]);
 
   return (
-    <StLearnDetail>
-      <ImageDiv onClick={() => router.back()} src={icXButton} className="close" layout="fill" alt="x" />
-      <StLearnMain>
-        <aside>
-          <StVideoDetail>
+    <>
+      <SEO title="학습하기 | Deliverble" />
+      <StLearnDetail>
+        <ImageDiv onClick={() => router.back()} src={icXButton} className="close" layout="fill" alt="x" />
+        <StLearnMain>
+          <aside>
+            <StVideoDetail>
+              <div>
+                {channel} | {category} | {reportDate.replaceAll('-', '.')}
+              </div>
+              <h1>{title}</h1>
+              <StTagContainer>
+                {tags.map(({ id, name }) => (
+                  <span key={id}>{name}</span>
+                ))}
+              </StTagContainer>
+            </StVideoDetail>
+            <StVideoWrapper>
+              <ImageDiv src={icLikeDefault} className="like-button" layout="fill" />
+              <YouTube
+                videoId={link}
+                opts={{
+                  width: '670',
+                  height: '376',
+                  playerVars: {
+                    modestbranding: 1,
+                    start: startTime,
+                    end: endTime,
+                    controls: 0,
+                  },
+                }}
+                onReady={(e) => setPlayer(e.target)}
+                onStateChange={(e) => setVideoState(e.target.getPlayerState())}
+                onEnd={(e) => e.target.seekTo(startTime)}
+              />
+            </StVideoWrapper>
+            <StMemoContainer>
+              <StMemoTitle>
+                <ImageDiv src={icMemo} className="memo" layout="fill" />
+                <h2>메모</h2>
+              </StMemoTitle>
+              <StMemoWrapper>
+                <EmptyMemo />
+              </StMemoWrapper>
+            </StMemoContainer>
+          </aside>
+          <StLearnSection>
             <div>
-              {channel} | {category} | {reportDate.replaceAll('-', '.')}
+              <ImageDiv src={icAnnounce} className="announce" layout="fill" />
+              <h2>아나운서의 목소리를 듣고, 스크립트를 보며 따라 말해보세요.</h2>
             </div>
-            <h1>{title}</h1>
-            <StTagContainer>
-              {tags.map(({ id, name }) => (
-                <span key={id}>{name}</span>
-              ))}
-            </StTagContainer>
-          </StVideoDetail>
-          <StVideoWrapper>
-            <ImageDiv src={icLikeDefault} className="like-button" layout="fill" />
-            <YouTube
-              videoId={link}
-              opts={{
-                width: '670',
-                height: '376',
-                playerVars: {
-                  modestbranding: 1,
-                  start: startTime,
-                  end: endTime,
-                  controls: 0,
-                },
-              }}
-              onReady={(e) => setPlayer(e.target)}
-              onStateChange={(e) => setVideoState(e.target.getPlayerState())}
-              onEnd={(e) => e.target.seekTo(startTime)}
-            />
-          </StVideoWrapper>
-          <StMemoContainer>
-            <StMemoTitle>
-              <ImageDiv src={icMemo} className="memo" layout="fill" />
-              <h2>메모</h2>
-            </StMemoTitle>
-            <StMemoWrapper>
-              <EmptyMemo />
-            </StMemoWrapper>
-          </StMemoContainer>
-        </aside>
-        <StLearnSection>
-          <div>
-            <ImageDiv src={icAnnounce} className="announce" layout="fill" />
-            <h2>아나운서의 목소리를 듣고, 스크립트를 보며 따라 말해보세요.</h2>
-          </div>
-          <article>
-            <div>
-              {scripts.map(({ id, text, startTime, endTime }) => (
-                <StScriptText
-                  key={id}
-                  onClick={() => player?.seekTo(startTime, true)}
-                  isActive={startTime <= currentTime && currentTime <= endTime ? true : false}>
-                  {text}
-                </StScriptText>
-              ))}
-            </div>
-            <div>
-              <ImageDiv onClick={() => setIsModalOpen(true)} src={icGuide} className="guide" layout="fill" alt="?" />
-              <StButtonContainer>
-                <ImageDiv src={icHighlighter} className="function-button" layout="fill" alt="하이라이트" />
-                <ImageDiv src={icSpacing} className="function-button" layout="fill" alt="끊어 읽기" />
-              </StButtonContainer>
-            </div>
-          </article>
-        </StLearnSection>
-      </StLearnMain>
-      {isModalOpen && <GuideModal closeModal={() => setIsModalOpen(false)} />}
-    </StLearnDetail>
+            <article>
+              <div>
+                {scripts.map(({ id, text, startTime, endTime }) => (
+                  <StScriptText
+                    key={id}
+                    onClick={() => player?.seekTo(startTime, true)}
+                    isActive={startTime <= currentTime && currentTime <= endTime ? true : false}>
+                    {text}
+                  </StScriptText>
+                ))}
+              </div>
+              <div>
+                <ImageDiv onClick={() => setIsModalOpen(true)} src={icGuide} className="guide" layout="fill" alt="?" />
+                <StButtonContainer>
+                  <ImageDiv src={icHighlighter} className="function-button" layout="fill" alt="하이라이트" />
+                  <ImageDiv src={icSpacing} className="function-button" layout="fill" alt="끊어 읽기" />
+                </StButtonContainer>
+              </div>
+            </article>
+          </StLearnSection>
+        </StLearnMain>
+        {isModalOpen && <GuideModal closeModal={() => setIsModalOpen(false)} />}
+      </StLearnDetail>
+    </>
   );
 }
 

@@ -1,7 +1,7 @@
-import Head from 'next/head';
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import SliderContainer from '@src/components/landing/SliderContainer';
+import SEO from '@src/components/common/SEO';
 import Nav from '@src/components/landing/Nav';
 import ScrollControl from '@src/components/landing/ScrollControl';
 
@@ -23,10 +23,7 @@ function Landing() {
 
   return (
     <StLanding>
-      <Head>
-        <title>DeliverBle</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <SEO title="Deliverble" />
       <ScrollControl slideNumber={slideNumber} setSlideNumber={setSlideNumber} />
       <Nav isFirstScrolled={isFirstScrolled} isSecondScrolled={isSecondScrolled} />
       <SliderContainer slideNumber={slideNumber} setSlideNumber={setSlideNumber} />

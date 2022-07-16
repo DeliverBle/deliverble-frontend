@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import SEO from '@src/components/common/SEO';
 import NavigationBar from '@src/components/common/NavigationBar';
 import SelectBox from '@src/components/learn/SelectBox';
 import ImageDiv from '@src/components/common/ImageDiv';
@@ -13,6 +14,7 @@ function Learn() {
 
   return (
     <>
+      <SEO title="학습하기 | Deliverble" />
       <NavigationBar />
       <StLearn>
         <StTitle>

@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import { COLOR } from 'src/styles/color';
 import { FONT_STYLES } from 'src/styles/fontStyle';
+import SEO from '@src/components/common/SEO';
 import NavigationBar from '@src/components/common/NavigationBar';
 import HeadlineContainer from '@src/components/review/HeadlineContainer';
 import VideoContainer from '@src/components/review/VideoContainer';
@@ -14,6 +15,7 @@ function Review() {
 
   return (
     <>
+      <SEO title="복습하기 | Deliverble" />
       <NavigationBar />
       <HeadlineContainer />
       <nav>
