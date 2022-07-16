@@ -79,22 +79,33 @@ function SliderContainer(props: SliderContainerProps) {
         <div className="body-card-wrapper">
           <StCard className="first-card">
             <ImageDiv src={imgLandingEar} className="ear" layout="fill" alt="" />
-            <h3>“웅얼웅얼 발음을 교정하고 싶은데,</h3>
-            <h3>학원을 다니기엔 금액이 부담돼요”</h3>
+            <h3>
+              “웅얼웅얼 발음을 교정하고 싶은데,
+              <br />
+              학원을 다니기엔 금액이 부담돼요”
+            </h3>
             <p>26살 취준생 김○○</p>
           </StCard>
           <StCard className="second-card">
             <ImageDiv src={imgLandingFist} className="fist" layout="fill" alt="" />
-            <h3>“떨리고 힘없는 목소리 때문에</h3>
-            <h3>발표에 자신이 없어... 더 당당하게</h3>
-            <h3>말할 수 있는 방법이 없을까?”</h3>
+            <h3>
+              “떨리고 힘없는 목소리 때문에
+              <br />
+              발표에 자신이 없어... 더 당당하게
+              <br />
+              말할 수 있는 방법이 없을까?”
+            </h3>
             <p>23살 대학생 류○○</p>
           </StCard>
           <StCard className="third-card">
             <ImageDiv src={imgLandingMic} className="mic" layout="fill" alt="" />
-            <h3>“아나운서 준비에 관심은 있는데,</h3>
-            <h3>혼자 뉴스 리딩을 어떻게</h3>
-            <h3>연습해야 할지 막막해요”</h3>
+            <h3>
+              “아나운서 준비에 관심은 있는데,
+              <br />
+              혼자 뉴스 리딩을 어떻게
+              <br />
+              연습해야 할지 막막해요”
+            </h3>
             <p>24살 아나운서 지망생 백○○</p>
           </StCard>
         </div>
@@ -103,9 +114,9 @@ function SliderContainer(props: SliderContainerProps) {
       <StThirdSlider ref={thirdSlideRef}>
         <div className="headline-wrapper">
           <h1>
-            아나운서 쉐도잉으로 키우는
+            딜리버블이 제안하는
             <br />
-            스피치 자신감, 딜리버블
+            효과적인 말하기 학습 솔루션
           </h1>
         </div>
         <StContentContainer className="step1-content">
@@ -113,12 +124,18 @@ function SliderContainer(props: SliderContainerProps) {
             <Lottie animationData={step1Lottie} autoPlay loop />
           </StLottieWrapper>
           <StTextWrapper>
-            <h2>STEP 1.</h2>
-            <h3>무작정 따라하며</h3>
-            <h3>아나운서의 좋은 발음과 발성 배우기</h3>
+            <h2>Step 1.</h2>
+            <h3>
+              무작정 따라하며
+              <br />
+              아나운서의 좋은 발음과 발성 배우기
+            </h3>
             <StH4>
-              <h4>언제 어디서든 아나운서의 좋은 목소리를 듣고, </h4>
-              <h4>소리 내서 따라하며 연습해봐요.</h4>
+              <h4>
+                언제 어디서든 아나운서의 좋은 목소리를 듣고,
+                <br />
+                소리 내서 따라하며 연습해봐요.
+              </h4>
             </StH4>
           </StTextWrapper>
         </StContentContainer>
@@ -130,12 +147,17 @@ function SliderContainer(props: SliderContainerProps) {
             <Lottie animationData={step2Lottie} autoPlay loop />
           </StLottieWrapper>
           <StTextWrapper>
-            <h2>STEP 2.</h2>
-            <h3>끊어 읽기, 하이라이트, 메모 기능으로</h3>
-            <h3>더 똑똑하게 공부하기</h3>
+            <h2>Step 2.</h2>
+            <h3>
+              끊어 읽기, 하이라이트, 메모 기능으로
+              <br />더 똑똑하게 공부하기
+            </h3>
             <StH4>
-              <h4>클릭 한 번으로 쉽게 끊어 읽기 표시를 남기고,</h4>
-              <h4>메모를 추가하여 나만의 피드백도 기록해봐요.</h4>
+              <h4>
+                클릭 한 번으로 쉽게 끊어 읽기 표시를 남기고,
+                <br />
+                메모를 추가하여 나만의 피드백도 기록해봐요.
+              </h4>
             </StH4>
           </StTextWrapper>
         </StContentContainer>
@@ -147,22 +169,30 @@ function SliderContainer(props: SliderContainerProps) {
             <Lottie animationData={step3Lottie} autoPlay loop />
           </StLottieWrapper>
           <StTextWrapper>
-            <h2>STEP 3.</h2>
-            <h3>끊어 읽기, 하이라이트, 메모 기능으로</h3>
-            <h3>더 똑똑하게 공부하기</h3>
+            <h2>Step 3.</h2>
+            <h3>
+              꾸준한 복습으로
+              <br />
+              스피치 자신감 키우기
+            </h3>
             <StH4>
-              <h4>클릭 한 번으로 쉽게 끊어 읽기 표시를 남기고,</h4>
-              <h4>메모를 추가하여 나만의 피드백도 기록해봐요.</h4>
+              <h4>
+                다시 따라하고 싶은 영상을 즐겨찾기에 저장해
+                <br />
+                꾸준히 복습하고, 더 당당하게 말해봐요.
+              </h4>
             </StH4>
           </StTextWrapper>
         </StContentContainer>
       </StFifthSlider>
 
       <StSixthSlider ref={sixthSlideRef}>
-        <div className="headline-wrapper">
-          <h1>아나운서 준비생들에게 이미 검증된 스피치 학습법 </h1>
-          <h1>아나운서 쉐도잉으로</h1>
-          <h1>스피치 자신감을 키워보세요!</h1>
+        <div>
+          <h2>
+            아나운서 준비생들에게 이미 검증된 스피치 학습법
+            <br />
+            아나운서 쉐도잉으로 스피치 자신감을 키워보세요!
+          </h2>
         </div>
         <Link href="/home">
           <a className="start-button">딜리버블 시작하기</a>
@@ -307,6 +337,7 @@ const StCard = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: center;
 
   width: 38.8rem;
   height: 49rem;
@@ -390,7 +421,7 @@ const StSixthSlider = styled.section`
   background-repeat: no-repeat;
   background-size: cover;
 
-  .headline-wrapper {
+  & > div > h2 {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -408,7 +439,7 @@ const StSixthSlider = styled.section`
     width: 26rem;
     height: 7rem;
 
-    margin-top: 4.8rem;
+    margin-top: 5.6rem;
 
     background-color: ${COLOR.MAIN_BLUE};
     color: ${COLOR.WHITE};
