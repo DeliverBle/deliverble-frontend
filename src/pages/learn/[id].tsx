@@ -10,7 +10,6 @@ import { GetServerSidePropsContext } from 'next';
 import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/learn-detail';
 import YouTube from 'react-youtube';
-import { imgMemoEmpty } from 'public/assets/images';
 import EmptyMemo from '@src/components/learnDetail/EmptyMemo';
 
 function LearnDetail({ videoData }: { videoData: VideoData }) {
