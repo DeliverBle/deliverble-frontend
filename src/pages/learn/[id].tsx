@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import ImageDiv from '../../components/common/ImageDiv';
 import GuideModal from '@src/components/learnDetail/GuideModal';
+import ConfirmModal from '@src/components/learnDetail/ConfirmModal';
 import { icXButton, icGuide, icMemo, icAnnounce, icHighlighter, icSpacing, icLikeDefault } from 'public/assets/icons';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
@@ -101,6 +102,7 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
         </StLearnSection>
       </StLearnMain>
       {isModalOpen && <GuideModal closeModal={() => setIsModalOpen(false)} />}
+      <ConfirmModal />
     </StLearnDetail>
   );
 }
