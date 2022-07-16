@@ -17,17 +17,19 @@ function HighlightModal(props: HighlightModalProps) {
   };
   return (
     <StHighlightModal>
-      <ImageDiv src={icAlert} className="alert" layout="fill" alt="" />
-      <p>같은 단어를 하이라이트할 수 없어요!</p>
-      <StTodayClose onClick={handleCheck}>
-        {isClicked ? (
-          <ImageDiv src={icCheckedBox} className="box checked" />
-        ) : (
-          <ImageDiv src={icEmptyBox} className="box empty" />
-        )}
-        <span>다시 보지 않기</span>
-      </StTodayClose>
-      <StOkayButton onClick={closeModal}>확인</StOkayButton>
+      <StHighlightModalContent>
+        <ImageDiv src={icAlert} className="alert" layout="fill" alt="" />
+        <p>같은 단어를 하이라이트할 수 없어요!</p>
+        <StTodayClose onClick={handleCheck}>
+          {isClicked ? (
+            <ImageDiv src={icCheckedBox} className="box checked" />
+          ) : (
+            <ImageDiv src={icEmptyBox} className="box empty" />
+          )}
+          <span>다시 보지 않기</span>
+        </StTodayClose>
+        <StOkayButton onClick={closeModal}>확인</StOkayButton>
+      </StHighlightModalContent>
     </StHighlightModal>
   );
 }
@@ -35,14 +37,21 @@ function HighlightModal(props: HighlightModalProps) {
 export default HighlightModal;
 
 const StHighlightModal = styled.div`
-  position: relative;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+`;
+
+const StHighlightModalContent = styled.div`
+  position: fixed;
+  transform: translate(-50%, -50%);
   width: 37rem;
   height: 19.2rem;
   border-radius: 1.6rem;
-  background-color: ${COLOR.WHITE};
-  ${FONT_STYLES.SB_20_BODY};
   border: solid 0.2rem ${COLOR.GRAY_10};
+  background-color: ${COLOR.WHITE};
   box-shadow: 0.2rem 0.4rem 4rem 0 rgba(22, 15, 53, 0.15);
+  ${FONT_STYLES.SB_20_BODY};
 
   p {
     text-align: center;

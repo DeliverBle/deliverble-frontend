@@ -94,6 +94,7 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
                   {text}
                 </StScriptText>
               ))}
+              {highlightAlert && <HighlightModal closeModal={() => setHighlightAlert(false)} />}
             </div>
             <div>
               <ImageDiv onClick={() => setIsModalOpen(true)} src={icGuide} className="guide" layout="fill" alt="?" />
@@ -106,7 +107,6 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
         </StLearnSection>
       </StLearnMain>
       {isModalOpen && <GuideModal closeModal={() => setIsModalOpen(false)} />}
-      {highlightAlert && <HighlightModal closeModal={() => setHighlightAlert(false)} />}
     </StLearnDetail>
   );
 }
@@ -196,6 +196,7 @@ const StLearnSection = styled.section`
     word-break: keep-all;
 
     & > div:first-child {
+      position: relative;
       flex: 1;
       padding: 0.6rem 1.2rem;
       height: 62.8rem;
