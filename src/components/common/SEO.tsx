@@ -35,7 +35,7 @@ function SEO(props: SEOProps) {
         property="twitter:description"
         content="뉴스 스크립트, 끊어 읽기, 하이라이트, 메모 남기기 등의 기능과 함께 아나운서의 발성, 발음을 따라하고 말하기 자신감을 키워요!"
       />
-      <meta property="twitter:image" content="/assets/images/img_thumbnail.png" />
+      <meta property="twitter:image" content="/assets/images/img_twitter_thumbnail.png" />
       <meta property="twitter:url" content="https://deliverble.vercel.app/" />
     </Head>
   );
