@@ -24,7 +24,7 @@ function NewsList(props: NewsListProps) {
           </StThumbnail>
           <StTitle>{title}</StTitle>
           <StInfo>
-            {channel} | {category} | {reportDate}
+            {channel} | {category} | {reportDate.replaceAll('-', '.')}
           </StInfo>
         </StNewsWrapper>
       ))}
