@@ -6,6 +6,7 @@ import ImageDiv from '@src/components/common/ImageDiv';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { icSearch } from 'public/assets/icons';
+import Footer from '@src/components/common/Footer';
 
 function Learn() {
   const channelList = ['전체', 'SBS', 'KBS', 'MBC', '기타'];
@@ -30,6 +31,7 @@ function Learn() {
           <button>검색하기</button>
         </StSearch>
       </StLearn>
+      <Footer />
     </>
   );
 }
