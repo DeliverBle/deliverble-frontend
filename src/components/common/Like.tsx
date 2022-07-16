@@ -49,7 +49,12 @@ const StImageContainer = styled.div`
     opacity: 0;
   }
 
-  &:hover .default {
+  .like img {
+    width: 10rem;
+    height: 10rem;
+  }
+
+  &:hover .default img {
     transition: opacity 1s;
     opacity: 0;
   }
