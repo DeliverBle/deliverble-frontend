@@ -1,7 +1,8 @@
 import { homeDataMock } from '../mock/home';
 import { HomeService } from './home';
-import { learnDetailDataMock } from '../mock/learn-detail';
 import { LearnDetailService } from './learn-detail';
+import { LearnDetailDataRemote } from '../remote/learn-detail';
+// import { learnDetailDataMock } from '../mock/learn-detail';
 
 export const api: APIService = getAPIMethod();
 
@@ -10,7 +11,7 @@ function getAPIMethod(): APIService {
 }
 
 function provideMockAPIService(): APIService {
-  const learnDetailService = learnDetailDataMock();
+  const learnDetailService = LearnDetailDataRemote();
   const homeService = homeDataMock();
   return { learnDetailService, homeService };
 }
