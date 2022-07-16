@@ -18,7 +18,20 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   //같은 부분 하이라이트 했을 경우로 로직 변경해야 함.
-  const [highlightAlert, setHighlightAlert] = useState(true);
+  const [highlightAlert, setHighlightAlert] = useState(false);
+
+  useEffect(() => {
+    const checkTime = new Date().getTime();
+    const timeSaved = localStorage.getItem('now');
+    if (timeSaved) {
+      const gapMinutes = (checkTime - Number(timeSaved)) / 1000 / 60;
+      if (gapMinutes > 3) {
+        setHighlightAlert(true);
+      }
+    } else {
+      setHighlightAlert(true);
+    }
+  }, []);
 
   const [player, setPlayer] = useState<YT.Player | null>();
   const [videoState, setVideoState] = useState(-1);

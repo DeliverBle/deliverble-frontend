@@ -2,8 +2,7 @@ import styled from 'styled-components';
 import ImageDiv from '../common/ImageDiv';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import { icAlert, icCheckedBox, icEmptyBox } from 'public/assets/icons';
-import { useState } from 'react';
+import { icAlert, icEmptyBox } from 'public/assets/icons';
 
 interface HighlightModalProps {
   closeModal: () => void;
@@ -11,22 +10,25 @@ interface HighlightModalProps {
 
 function HighlightModal(props: HighlightModalProps) {
   const { closeModal } = props;
-  const [isClicked, setIsClicked] = useState(false);
-  const handleCheck = () => {
-    setIsClicked((prev) => !prev);
+
+  const handleExpireTime = () => {
+    const now = new Date().getTime();
+    const nowString = JSON.stringify(now);
+    localStorage.setItem('now', nowString);
   };
+
   return (
     <StHighlightModal>
       <StHighlightModalContent>
         <ImageDiv src={icAlert} className="alert" layout="fill" alt="" />
         <p>같은 단어를 하이라이트할 수 없어요!</p>
-        <StTodayClose onClick={handleCheck}>
-          {isClicked ? (
-            <ImageDiv src={icCheckedBox} className="box checked" />
-          ) : (
-            <ImageDiv src={icEmptyBox} className="box empty" />
-          )}
-          <span>다시 보지 않기</span>
+        <StTodayClose
+          onClick={() => {
+            closeModal();
+            handleExpireTime();
+          }}>
+          <ImageDiv src={icEmptyBox} className="checkbox" layout="fill" alt="checkbox" />
+          <span>3일 동안 보지 않기</span>
         </StTodayClose>
         <StOkayButton onClick={closeModal}>확인</StOkayButton>
       </StHighlightModalContent>
@@ -65,7 +67,7 @@ const StHighlightModalContent = styled.div`
     margin: 3.2rem auto 0 auto;
   }
 
-  .box {
+  .checkbox {
     position: relative;
     width: 2.4rem;
     height: 2.4rem;
@@ -79,7 +81,7 @@ const StTodayClose = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 12.2rem;
+  width: 14.9rem;
   height: 2.5rem;
   cursor: pointer;
 
