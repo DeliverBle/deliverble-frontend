@@ -55,9 +55,9 @@ function Learn() {
         </StTitle>
         <StSearch>
           <StSelectBoxContainer>
-            <SelectBox optionName="방송사" optionList={channelList} setCondition={setSelectedChannelList} />
-            <SelectBox optionName="분야" optionList={categoryList} setCondition={setSelectedCategoryList} />
-            <SelectBox optionName="발화자" optionList={speakerList} setCondition={setSelectedSpeakerList} />
+            <SelectBox optionName="방송사" optionList={channelList} setConditionList={setSelectedChannelList} />
+            <SelectBox optionName="분야" optionList={categoryList} setConditionList={setSelectedCategoryList} />
+            <SelectBox optionName="발화자" optionList={speakerList} setConditionList={setSelectedSpeakerList} />
           </StSelectBoxContainer>
           <button onClick={() => handleSearch()}>검색하기</button>
         </StSearch>
