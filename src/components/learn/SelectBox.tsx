@@ -46,9 +46,9 @@ function SelectBox(props: SelectBoxProps) {
     window.addEventListener('click', handleClickOutside);
     return () => {
       window.removeEventListener('click', handleClickOutside);
-      setCondition(checkedList.includes('전체') ? [] : checkedList);
+      setCondition(checkedList.includes('전체') || checkedList.length === optionList.length - 1 ? [] : checkedList);
     };
-  }, [checkedList, isClicked, setCondition]);
+  }, [checkedList, isClicked, optionList.length, setCondition]);
 
   return (
     <StSelectBox ref={guideModalRef} isClicked={isClicked}>
