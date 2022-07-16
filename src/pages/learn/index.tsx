@@ -17,9 +17,9 @@ function Learn() {
   const channelList = ['전체', 'SBS', 'KBS', 'MBC', '기타'];
   const categoryList = ['전체', '정치', '경제', '사회', '세계', '연예', '기타'];
   const speakerList = ['전체', '여성', '남성'];
-  const [selectedChannelList, setSelectedChannelList] = useState<string[] | []>([]);
-  const [selectedCategoryList, setSelectedCategoryList] = useState<string[] | []>([]);
-  const [selectedSpeakerList, setSelectedSpeakerList] = useState<string[] | []>([]);
+  const [selectedChannelList, setSelectedChannelList] = useState<string[]>([]);
+  const [selectedCategoryList, setSelectedCategoryList] = useState<string[]>([]);
+  const [selectedSpeakerList, setSelectedSpeakerList] = useState<string[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [resultList, setResultList] = useState<VideoData[]>([]);
 
