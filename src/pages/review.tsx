@@ -1,13 +1,16 @@
 import styled from 'styled-components';
+import { useState } from 'react';
+import { COLOR } from 'src/styles/color';
+import { FONT_STYLES } from 'src/styles/fontStyle';
 import NavigationBar from '@src/components/common/NavigationBar';
 import HeadlineContainer from '@src/components/review/HeadlineContainer';
 import VideoContainer from '@src/components/review/VideoContainer';
-import { COLOR } from 'src/styles/color';
-import { FONT_STYLES } from 'src/styles/fontStyle';
-import { useState } from 'react';
+import Empty from '@src/components/review/Empty';
+import Footer from '@src/components/common/Footer';
 
 function Review() {
   const [tab, setTab] = useState('isLiked');
+  // const [videoData, setVideoData] = useState([]);
 
   return (
     <>
@@ -25,6 +28,8 @@ function Review() {
         </StTab>
       </nav>
       <VideoContainer tab={tab} />
+      <Empty tab={tab} />
+      <Footer />
     </>
   );
 }

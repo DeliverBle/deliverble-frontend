@@ -46,4 +46,5 @@ export const FONT_STYLES = {
   R_17_CAPTION: FONT({ size: 17, weight: 'R', position: 'Caption', height: 150 }),
   SB_16_CAPTION: FONT({ size: 16, weight: 'SB', position: 'Caption', height: 140 }),
   M_16_CAPTION: FONT({ size: 16, weight: 'M', position: 'Caption', height: 140 }),
+  B_100_CAPTION: FONT({ size: 100, weight: 'B', position: 'Caption', height: 140 }),
 };
