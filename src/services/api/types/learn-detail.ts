@@ -22,3 +22,9 @@ export type VideoData = {
   tags: Tag[];
   scripts: Script[];
 };
+
+export type MemoData = {
+  id: number;
+  keyword: string;
+  content: string;
+};
