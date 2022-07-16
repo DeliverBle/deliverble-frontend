@@ -25,7 +25,7 @@ function Footer() {
         <StPeople>
           <StInfoTitle>People</StInfoTitle>
           <a target="_blank" href="/" rel="noreferrer">
-            <StUnderlineText>서비스를 만든 사람들</StUnderlineText>
+            <StUnderlineText>딜리버블을 만든 사람들</StUnderlineText>
           </a>
         </StPeople>
         <StContact>
