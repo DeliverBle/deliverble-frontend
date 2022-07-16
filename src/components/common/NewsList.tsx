@@ -1,12 +1,13 @@
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
-import { videoType } from '@src/pages/home';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
+import { VideoData } from '@src/services/api/types/home';
+import ImageDiv from './ImageDiv';
 import Like from './Like';
 
 interface NewsListProps {
-  newsList: videoType[];
+  newsList: VideoData[];
 }
 
 function NewsList(props: NewsListProps) {
@@ -15,15 +16,15 @@ function NewsList(props: NewsListProps) {
 
   return (
     <StNewsContainer>
-      {newsList.map(({ id, title, channel, category, date }) => (
+      {newsList.map(({ id, title, category, channel, thumbnail, reportDate }) => (
         <StNewsWrapper key={id} onClick={() => router.push(`/learn/${id}`)}>
-          <StThumbnailContainer>
-            <StThumbnail />
+          <StThumbnail>
+            <ImageDiv className="thumbnail" src={thumbnail} layout="fill" alt="" />
             <Like />
-          </StThumbnailContainer>
+          </StThumbnail>
           <StTitle>{title}</StTitle>
           <StInfo>
-            {channel} | {category} | {date}
+            {channel} | {category} | {reportDate.replaceAll('-', '.')}
           </StInfo>
         </StNewsWrapper>
       ))}
@@ -49,29 +50,33 @@ const StNewsWrapper = styled.article`
   height: 100%;
 `;
 
-const StThumbnailContainer = styled.div`
+const StThumbnail = styled.div`
   position: relative;
+  border-radius: 1rem;
+  cursor: pointer;
+
+  &:hover {
+    transition: 0.5s ease-in-out;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 100%);
+  }
 
   &:hover .like {
     opacity: 1;
   }
 
-  &:hover > div:first-child {
-    transition: 0.5s ease-in-out;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 100%);
+  & > div {
+    position: relative;
+    z-index: -1;
+
+    min-width: 38.4rem;
+    min-height: 21.6rem;
+    padding-top: 56%;
+
+    & img {
+      border-radius: 1rem;
+      object-fit: cover;
+    }
   }
-`;
-
-const StThumbnail = styled.div`
-  width: inherit;
-
-  min-width: 38.4rem;
-  min-height: 21.6rem;
-  padding-top: 58%;
-
-  border-radius: 1rem;
-  background-color: ${COLOR.GRAY_10};
-  cursor: pointer;
 `;
 
 const StTitle = styled.p`

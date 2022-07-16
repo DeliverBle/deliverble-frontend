@@ -1,6 +1,13 @@
-type TagData = {
+type Tag = {
   id: number;
   name: string;
+};
+
+type Script = {
+  id: number;
+  text: string;
+  startTime: number;
+  endTime: number;
 };
 
 export type VideoData = {
@@ -12,5 +19,6 @@ export type VideoData = {
   reportDate: string;
   startTime: number;
   endTime: number;
-  tags: TagData[];
+  tags: Tag[];
+  scripts: Script[];
 };
