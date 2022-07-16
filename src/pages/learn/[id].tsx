@@ -10,6 +10,8 @@ import { GetServerSidePropsContext } from 'next';
 import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/learn-detail';
 import YouTube from 'react-youtube';
+import { imgMemoEmpty } from 'public/assets/images';
+import EmptyMemo from '@src/components/learnDetail/EmptyMemo';
 
 function LearnDetail({ videoData }: { videoData: VideoData }) {
   const router = useRouter();
@@ -69,10 +71,15 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
               onEnd={(e) => e.target.seekTo(startTime)}
             />
           </StVideoWrapper>
-          <StMemoWrapper>
-            <ImageDiv src={icMemo} className="memo" layout="fill" />
-            <h2>메모</h2>
-          </StMemoWrapper>
+          <StMemoContainer>
+            <StMemoTitle>
+              <ImageDiv src={icMemo} className="memo" layout="fill" />
+              <h2>메모</h2>
+            </StMemoTitle>
+            <StMemoWrapper>
+              <EmptyMemo />
+            </StMemoWrapper>
+          </StMemoContainer>
         </aside>
         <StLearnSection>
           <div>
@@ -299,7 +306,12 @@ const StVideoWrapper = styled.div`
   }
 `;
 
-const StMemoWrapper = styled.div`
+const StMemoContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const StMemoTitle = styled.div`
   display: flex;
   align-items: center;
   gap: 0.8rem;
@@ -315,4 +327,9 @@ const StMemoWrapper = styled.div`
     width: 3.2rem;
     height: 3.2rem;
   }
+`;
+
+const StMemoWrapper = styled.div`
+  display: flex;
+  justify-content: center;
 `;
