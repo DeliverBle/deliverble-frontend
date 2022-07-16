@@ -23,6 +23,7 @@ function SEO(props: SEOProps) {
       />
       <meta property="og:image" content="/assets/images/img_thumbnail.png" />
       <meta property="og:url" content="https://deliverble.vercel.app/" />
+      <meta property="og:locale" content="ko_KR" />
       <meta
         name="keywords"
         content="뉴스 리딩, 스크립트, 아나운서, 스피치, 말하기 학습, 발성, 끊어 읽기, 쉐도잉, 발음 교정, 발표 목소리"
