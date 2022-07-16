@@ -2,6 +2,7 @@ import { MemoData } from '@src/services/api/types/learn-detail';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import styled from 'styled-components';
+import MemoDotButton from './MemoDotButton';
 
 interface MemoListProps {
   memoList: MemoData[];
@@ -24,6 +25,7 @@ function MemoList(props: MemoListProps) {
             ) : (
               keyword
             )}
+            <MemoDotButton />
           </StMemoContent>
         </StMemoWrapper>
       ))}
@@ -52,6 +54,8 @@ const StMemoList = styled.div`
 `;
 
 const StMemoWrapper = styled.div`
+  position: relative;
+
   margin-right: 0.8rem;
   padding: 2.8rem 3.2rem 2.8rem 3.2rem;
   width: 67rem;
@@ -59,6 +63,10 @@ const StMemoWrapper = styled.div`
 
   background-color: ${COLOR.SUB_BLUE_8};
   border-radius: 2.5rem;
+
+  &:hover .dot {
+    opacity: 1;
+  }
 `;
 
 const StMemoKeyword = styled.h1`
