@@ -8,25 +8,14 @@ export { default as icXButton } from './ic_x_button.svg';
 export { default as icEmptyBox } from './ic_empty_box.svg';
 export { default as icCheckedBox } from './ic_checked_box.svg';
 export { default as icScript } from './ic_script.svg';
-<<<<<<< HEAD
-<<<<<<< HEAD
 export { default as icDeliverbleBlue } from './ic_deliverble_blue.svg';
 export { default as icDeliverbleWhite } from './ic_deliverble_white.svg';
-=======
-=======
-export { default as icDeliverbleBlue } from './ic_deliverble_blue.svg';
-export { default as icDeliverbleWhite } from './ic_deliverble_white.svg';
->>>>>>> 2d15102c2ea7716e96fef1740180401f302c91d5
 export { default as icMemo } from './ic_memo.svg';
 export { default as icAnnounce } from './ic_announce.svg';
 export { default as icHighlighter } from './ic_highlighter.svg';
 export { default as icSpacing } from './ic_spacing.svg';
 export { default as icKakao } from './ic_kakao.svg';
 export { default as icMicrophone } from './ic_microphone.svg';
-<<<<<<< HEAD
->>>>>>> 59ad44375f52e068c1109c4e5ef83cfa73b7baa0
-=======
->>>>>>> 2d15102c2ea7716e96fef1740180401f302c91d5
 export { default as icLikeClicked } from './ic_like_clicked.svg';
 export { default as icLikeDefault } from './ic_like_default.svg';
 export { default as icLikeHover } from './ic_like_hover.svg';
