@@ -199,7 +199,7 @@ function SliderContainer(props: SliderContainerProps) {
         </Link>
         <StContact>
           <p className="contact">Contact Us</p>
-          <p className="email">DeliverBle@gmail.com</p>
+          <p className="email">deliverble.team@gmail.com</p>
         </StContact>
       </StSixthSlider>
     </StSliderContainer>
