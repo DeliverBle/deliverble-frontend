@@ -84,6 +84,7 @@ const StInfo = styled.div`
 
 const StUnderlineText = styled.p`
   text-decoration-line: underline;
+  text-underline-position: under;
 `;
 
 const StService = styled.div`
