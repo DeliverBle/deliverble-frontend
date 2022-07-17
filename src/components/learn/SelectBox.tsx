@@ -39,10 +39,6 @@ function SelectBox(props: SelectBoxProps) {
     setConditionList(checkedList.includes('전체') || checkedList.length === optionList.length - 1 ? [] : checkedList);
   }, [checkedList, optionList, setConditionList]);
 
-  const handleClick = () => {
-    setIsClicked((prev) => !prev);
-  };
-
   useEffect(() => {
     const handleClickOutside = (e: Event) => {
       const eventTarget = e.target as HTMLElement;
@@ -60,7 +56,7 @@ function SelectBox(props: SelectBoxProps) {
   return (
     <StSelectBox ref={guideModalRef} isClicked={isClicked}>
       <span>{optionName}</span>
-      <StCategoryButton onClick={handleClick}>
+      <StCategoryButton onClick={() => setIsClicked((prev) => !prev)}>
         <div>{checkedList.join(', ')}</div>
         <ImageDiv src={icArrow} className="arrow" layout="fill" alt="" />
       </StCategoryButton>
