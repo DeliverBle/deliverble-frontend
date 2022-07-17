@@ -25,3 +25,4 @@ export { default as icLeftArrow } from './ic_left_arrow.svg';
 export { default as icDoubleLeftArrow } from './ic_double_left_arrow.svg';
 export { default as icRightArrow } from './ic_right_arrow.svg';
 export { default as icDoubleRightArrow } from './ic_double_right_arrow.svg';
+export { default as icAlert } from './ic_alert.svg';
