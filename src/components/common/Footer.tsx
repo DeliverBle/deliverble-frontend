@@ -18,14 +18,14 @@ function Footer() {
       <StInfo>
         <StService>
           <StInfoTitle>Service</StInfoTitle>
-          <a target="_blank" href="/" rel="noreferrer">
+          <a target="_blank" href="https://forms.gle/BGQGeGBLXTM6RBCR7" rel="noreferrer">
             <StUnderlineText>서비스 피드백</StUnderlineText>
           </a>
         </StService>
         <StPeople>
           <StInfoTitle>People</StInfoTitle>
-          <a target="_blank" href="/" rel="noreferrer">
-            <StUnderlineText>서비스를 만든 사람들</StUnderlineText>
+          <a target="_blank" href="https://airy-fang-202.notion.site/b2c4031ba1424e66840ddbad3432a8c5" rel="noreferrer">
+            <StUnderlineText>딜리버블을 만든 사람들</StUnderlineText>
           </a>
         </StPeople>
         <StContact>
@@ -34,7 +34,7 @@ function Footer() {
         </StContact>
         <StSocial>
           <StInfoTitle>Social</StInfoTitle>
-          <a target="_blank" href="/" rel="noreferrer">
+          <a target="_blank" href="https://www.instagram.com/deliverble_official/" rel="noreferrer">
             <ImageDiv className="social-link" src={icSocial} alt="instagram" />
           </a>
         </StSocial>
@@ -58,7 +58,7 @@ const StFooter = styled.div`
     margin-top: 1.6rem;
 
     color: ${COLOR.GRAY_60};
-    ${FONT_STYLES.M_20_BODY}
+    ${FONT_STYLES.M_20_FOOTER}
   }
 `;
 
@@ -83,8 +83,8 @@ const StInfo = styled.div`
 `;
 
 const StUnderlineText = styled.p`
-  line-height: 20px;
-  border-bottom: 2.3px solid ${COLOR.GRAY_60};
+  text-decoration-line: underline;
+  text-underline-position: under;
 `;
 
 const StService = styled.div`
