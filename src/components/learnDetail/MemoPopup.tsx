@@ -3,12 +3,11 @@ import { FONT_STYLES } from '@src/styles/fontStyle';
 import styled from 'styled-components';
 
 interface MemoPopupProps {
-  openPopup: () => void;
   editClicked: () => void;
 }
 
 function MemoPopup(props: MemoPopupProps) {
-  const { openPopup, editClicked } = props;
+  const { editClicked } = props;
 
   return (
     <StMemoPopup>
@@ -42,10 +41,13 @@ const StMemoEdit = styled.button`
   height: 3.2rem;
 
   color: ${COLOR.BLACK};
-  ${FONT_STYLES.M_16_CAPTION};
+  ${FONT_STYLES.SB_16_CAPTION};
 `;
 
 const StMemoDelete = styled.button`
+  width: 9.1rem;
+  height: 3.2rem;
+
   color: ${COLOR.BLACK};
-  ${FONT_STYLES.M_16_CAPTION};
+  ${FONT_STYLES.SB_16_CAPTION};
 `;

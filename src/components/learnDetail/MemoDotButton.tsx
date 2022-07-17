@@ -1,5 +1,5 @@
 import { icDotDefault, icDotHover } from 'public/assets/icons';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import ImageDiv from '../common/ImageDiv';
 import MemoPopup from './MemoPopup';
@@ -12,14 +12,26 @@ function MemoDotButton(props: MemoDotButtonProps) {
   const { editClicked } = props;
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const memoPopupRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: Event) => {
+      const eventTarget = e.target as HTMLElement;
+      if (isPopupOpen && !memoPopupRef?.current?.contains(eventTarget)) {
+        setIsPopupOpen(false);
+      }
+    };
+
+    window.addEventListener('click', handleClickOutside);
+  }, [isPopupOpen]);
 
   return (
-    <StMemoDotButton type="button" onClick={() => setIsPopupOpen((prev) => !prev)}>
+    <StMemoDotButton ref={memoPopupRef} type="button" onClick={() => setIsPopupOpen((prev) => !prev)}>
       <StMemoDotImage>
         <ImageDiv className="dot" src={icDotHover} alt="dot" />
         <ImageDiv className="dot default" src={icDotDefault} alt="like" />
       </StMemoDotImage>
-      {isPopupOpen && <MemoPopup openPopup={() => setIsPopupOpen(false)} editClicked={editClicked} />}
+      {isPopupOpen && <MemoPopup editClicked={editClicked} />}
     </StMemoDotButton>
   );
 }
@@ -30,6 +42,7 @@ const StMemoDotButton = styled.button`
   position: absolute;
   top: 1.2rem;
   right: 1.2rem;
+  display: inline-block;
 
   width: 4rem;
   height: 4rem;
