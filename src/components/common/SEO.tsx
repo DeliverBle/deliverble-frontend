@@ -37,6 +37,7 @@ function SEO(props: SEOProps) {
       />
       <meta property="twitter:image" content="/assets/images/img_twitter_thumbnail.png" />
       <meta property="twitter:url" content="https://deliverble.vercel.app/" />
+      <meta name="viewport" content="width=1280" />
     </Head>
   );
 }

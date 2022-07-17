@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import ImageDiv from '../../components/common/ImageDiv';
 import GuideModal from '@src/components/learnDetail/GuideModal';
+import HighlightModal from '@src/components/learnDetail/HighlightModal';
 import { icXButton, icGuide, icMemo, icAnnounce, icHighlighter, icSpacing, icLikeDefault } from 'public/assets/icons';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
@@ -15,6 +16,23 @@ import SEO from '@src/components/common/SEO';
 function LearnDetail({ videoData }: { videoData: VideoData }) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  //같은 부분 하이라이트 했을 경우로 로직 변경해야 함.
+  //useEffect의 빈 배열 -> '하이라이트 경고가 뜰 때 바뀌는 상태'로 바꿔주기.
+  const [highlightAlert, setHighlightAlert] = useState(false);
+  useEffect(() => {
+    const now = new Date().getTime();
+    const timeSaved = Number(localStorage.getItem('timeClicked'));
+    if (timeSaved) {
+      const gapHour = (now - timeSaved) / 1000 / 60 / 60;
+      if (gapHour > 72) {
+        setHighlightAlert(true);
+      }
+    } else {
+      setHighlightAlert(true);
+    }
+  }, []);
+
   const [player, setPlayer] = useState<YT.Player | null>();
   const [videoState, setVideoState] = useState(-1);
   const [currentTime, setCurrentTime] = useState(0);
@@ -92,6 +110,7 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
                     {text}
                   </StScriptText>
                 ))}
+                {highlightAlert && <HighlightModal closeModal={() => setHighlightAlert(false)} />}
               </div>
               <div>
                 <ImageDiv onClick={() => setIsModalOpen(true)} src={icGuide} className="guide" layout="fill" alt="?" />
@@ -194,6 +213,7 @@ const StLearnSection = styled.section`
     word-break: keep-all;
 
     & > div:first-child {
+      position: relative;
       flex: 1;
       padding: 0.6rem 1.2rem;
       height: 62.8rem;
