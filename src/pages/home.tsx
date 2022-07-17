@@ -1,4 +1,3 @@
-import Head from 'next/head';
 import styled from 'styled-components';
 import NavigationBar from '@src/components/common/NavigationBar';
 import NewsList from '@src/components/common/NewsList';
@@ -7,14 +6,12 @@ import { COLOR } from '@src/styles/color';
 import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/home';
 import Footer from '@src/components/common/Footer';
+import SEO from '@src/components/common/SEO';
 
 function Home({ videoData }: { videoData: VideoData[] }) {
   return (
     <>
-      <Head>
-        <title>DeliverBle</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <SEO title="Deliverble" />
       <NavigationBar />
       <StHome>
         <StBannerText>

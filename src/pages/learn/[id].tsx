@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import ImageDiv from '../../components/common/ImageDiv';
 import GuideModal from '@src/components/learnDetail/GuideModal';
-import ConfirmModal from '@src/components/learnDetail/ConfirmModal';
+import HighlightModal from '@src/components/learnDetail/HighlightModal';
 import { icXButton, icGuide, icMemo, icAnnounce, icHighlighter, icSpacing, icLikeDefault } from 'public/assets/icons';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
@@ -11,10 +11,28 @@ import { GetServerSidePropsContext } from 'next';
 import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/learn-detail';
 import YouTube from 'react-youtube';
+import SEO from '@src/components/common/SEO';
 
 function LearnDetail({ videoData }: { videoData: VideoData }) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  //같은 부분 하이라이트 했을 경우로 로직 변경해야 함.
+  //useEffect의 빈 배열 -> '하이라이트 경고가 뜰 때 바뀌는 상태'로 바꿔주기.
+  const [highlightAlert, setHighlightAlert] = useState(false);
+  useEffect(() => {
+    const now = new Date().getTime();
+    const timeSaved = Number(localStorage.getItem('timeClicked'));
+    if (timeSaved) {
+      const gapHour = (now - timeSaved) / 1000 / 60 / 60;
+      if (gapHour > 72) {
+        setHighlightAlert(true);
+      }
+    } else {
+      setHighlightAlert(true);
+    }
+  }, []);
+
   const [player, setPlayer] = useState<YT.Player | null>();
   const [videoState, setVideoState] = useState(-1);
   const [currentTime, setCurrentTime] = useState(0);
@@ -36,74 +54,77 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
   }, [player, videoState]);
 
   return (
-    <StLearnDetail>
-      <ImageDiv onClick={() => router.back()} src={icXButton} className="close" layout="fill" alt="x" />
-      <StLearnMain>
-        <aside>
-          <StVideoDetail>
+    <>
+      <SEO title="학습하기 | Deliverble" />
+      <StLearnDetail>
+        <ImageDiv onClick={() => router.back()} src={icXButton} className="close" layout="fill" alt="x" />
+        <StLearnMain>
+          <aside>
+            <StVideoDetail>
+              <div>
+                {channel} | {category} | {reportDate.replaceAll('-', '.')}
+              </div>
+              <h1>{title}</h1>
+              <StTagContainer>
+                {tags.map(({ id, name }) => (
+                  <span key={id}>{name}</span>
+                ))}
+              </StTagContainer>
+            </StVideoDetail>
+            <StVideoWrapper>
+              <ImageDiv src={icLikeDefault} className="like-button" layout="fill" />
+              <YouTube
+                videoId={link}
+                opts={{
+                  width: '670',
+                  height: '376',
+                  playerVars: {
+                    modestbranding: 1,
+                    start: startTime,
+                    end: endTime,
+                    controls: 0,
+                  },
+                }}
+                onReady={(e) => setPlayer(e.target)}
+                onStateChange={(e) => setVideoState(e.target.getPlayerState())}
+                onEnd={(e) => e.target.seekTo(startTime)}
+              />
+            </StVideoWrapper>
+            <StMemoWrapper>
+              <ImageDiv src={icMemo} className="memo" layout="fill" />
+              <h2>메모</h2>
+            </StMemoWrapper>
+          </aside>
+          <StLearnSection>
             <div>
-              {channel} | {category} | {reportDate.replaceAll('-', '.')}
+              <ImageDiv src={icAnnounce} className="announce" layout="fill" />
+              <h2>아나운서의 목소리를 듣고, 스크립트를 보며 따라 말해보세요.</h2>
             </div>
-            <h1>{title}</h1>
-            <StTagContainer>
-              {tags.map(({ id, name }) => (
-                <span key={id}>{name}</span>
-              ))}
-            </StTagContainer>
-          </StVideoDetail>
-          <StVideoWrapper>
-            <ImageDiv src={icLikeDefault} className="like-button" layout="fill" />
-            <YouTube
-              videoId={link}
-              opts={{
-                width: '670',
-                height: '376',
-                playerVars: {
-                  modestbranding: 1,
-                  start: startTime,
-                  end: endTime,
-                  controls: 0,
-                },
-              }}
-              onReady={(e) => setPlayer(e.target)}
-              onStateChange={(e) => setVideoState(e.target.getPlayerState())}
-              onEnd={(e) => e.target.seekTo(startTime)}
-            />
-          </StVideoWrapper>
-          <StMemoWrapper>
-            <ImageDiv src={icMemo} className="memo" layout="fill" />
-            <h2>메모</h2>
-          </StMemoWrapper>
-        </aside>
-        <StLearnSection>
-          <div>
-            <ImageDiv src={icAnnounce} className="announce" layout="fill" />
-            <h2>아나운서의 목소리를 듣고, 스크립트를 보며 따라 말해보세요.</h2>
-          </div>
-          <article>
-            <div>
-              {scripts.map(({ id, text, startTime, endTime }) => (
-                <StScriptText
-                  key={id}
-                  onClick={() => player?.seekTo(startTime, true)}
-                  isActive={startTime <= currentTime && currentTime <= endTime ? true : false}>
-                  {text}
-                </StScriptText>
-              ))}
-            </div>
-            <div>
-              <ImageDiv onClick={() => setIsModalOpen(true)} src={icGuide} className="guide" layout="fill" alt="?" />
-              <StButtonContainer>
-                <ImageDiv src={icHighlighter} className="function-button" layout="fill" alt="하이라이트" />
-                <ImageDiv src={icSpacing} className="function-button" layout="fill" alt="끊어 읽기" />
-              </StButtonContainer>
-            </div>
-          </article>
-        </StLearnSection>
-      </StLearnMain>
-      {isModalOpen && <GuideModal closeModal={() => setIsModalOpen(false)} />}
-      <ConfirmModal />
-    </StLearnDetail>
+            <article>
+              <div>
+                {scripts.map(({ id, text, startTime, endTime }) => (
+                  <StScriptText
+                    key={id}
+                    onClick={() => player?.seekTo(startTime, true)}
+                    isActive={startTime <= currentTime && currentTime <= endTime ? true : false}>
+                    {text}
+                  </StScriptText>
+                ))}
+                {highlightAlert && <HighlightModal closeModal={() => setHighlightAlert(false)} />}
+              </div>
+              <div>
+                <ImageDiv onClick={() => setIsModalOpen(true)} src={icGuide} className="guide" layout="fill" alt="?" />
+                <StButtonContainer>
+                  <ImageDiv src={icHighlighter} className="function-button" layout="fill" alt="하이라이트" />
+                  <ImageDiv src={icSpacing} className="function-button" layout="fill" alt="끊어 읽기" />
+                </StButtonContainer>
+              </div>
+            </article>
+          </StLearnSection>
+        </StLearnMain>
+        {isModalOpen && <GuideModal closeModal={() => setIsModalOpen(false)} />}
+      </StLearnDetail>
+    </>
   );
 }
 
@@ -192,6 +213,7 @@ const StLearnSection = styled.section`
     word-break: keep-all;
 
     & > div:first-child {
+      position: relative;
       flex: 1;
       padding: 0.6rem 1.2rem;
       height: 62.8rem;

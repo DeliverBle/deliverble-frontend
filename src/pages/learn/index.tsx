@@ -1,18 +1,52 @@
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import SEO from '@src/components/common/SEO';
 import NavigationBar from '@src/components/common/NavigationBar';
+import NewsList from '@src/components/common/NewsList';
 import SelectBox from '@src/components/learn/SelectBox';
 import ImageDiv from '@src/components/common/ImageDiv';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { icSearch } from 'public/assets/icons';
+import Footer from '@src/components/common/Footer';
+import { api } from '@src/services/api';
+import { VideoData } from '@src/services/api/types/home';
 
 function Learn() {
+  const LIST_SIZE = 12;
   const channelList = ['전체', 'SBS', 'KBS', 'MBC', '기타'];
   const categoryList = ['전체', '정치', '경제', '사회', '세계', '연예', '기타'];
   const speakerList = ['전체', '여성', '남성'];
+  const [selectedChannelList, setSelectedChannelList] = useState<string[]>([]);
+  const [selectedCategoryList, setSelectedCategoryList] = useState<string[]>([]);
+  const [selectedSpeakerList, setSelectedSpeakerList] = useState<string[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
+  const [resultList, setResultList] = useState<VideoData[]>([]);
+
+  const handleSearch = async () => {
+    const { paging, videoList } = await api.learnService.postSearchCondition({
+      channel: selectedChannelList,
+      category: selectedCategoryList,
+      speaker: selectedSpeakerList,
+      currentPage: 1,
+      listSize: LIST_SIZE,
+    });
+
+    setTotalCount(paging.totalCount);
+    setResultList(videoList);
+  };
+
+  useEffect(() => {
+    (async () => {
+      const { paging, videoList } = await api.learnService.postSearchCondition({ currentPage: 1, listSize: LIST_SIZE });
+      setTotalCount(paging.totalCount);
+      setResultList(videoList);
+    })();
+  }, []);
 
   return (
     <>
+      <SEO title="학습하기 | Deliverble" />
       <NavigationBar />
       <StLearn>
         <StTitle>
@@ -21,13 +55,21 @@ function Learn() {
         </StTitle>
         <StSearch>
           <StSelectBoxContainer>
-            <SelectBox optionName="방송사" optionList={channelList} />
-            <SelectBox optionName="분야" optionList={categoryList} />
-            <SelectBox optionName="발화자" optionList={speakerList} />
+            <SelectBox optionName="방송사" optionList={channelList} setConditionList={setSelectedChannelList} />
+            <SelectBox optionName="분야" optionList={categoryList} setConditionList={setSelectedCategoryList} />
+            <SelectBox optionName="발화자" optionList={speakerList} setConditionList={setSelectedSpeakerList} />
           </StSelectBoxContainer>
-          <button>검색하기</button>
+          <button onClick={() => handleSearch()}>검색하기</button>
         </StSearch>
+        <StResult>
+          <h2>
+            전체 <span>{totalCount}개 </span> 영상
+          </h2>
+          <NewsList newsList={resultList} />
+          <div>페이지네이션</div>
+        </StResult>
       </StLearn>
+      <Footer />
     </>
   );
 }
@@ -77,4 +119,22 @@ const StSearch = styled.div`
 const StSelectBoxContainer = styled.div`
   display: flex;
   gap: 1.6rem;
+`;
+
+const StResult = styled.div`
+  & > h2 {
+    ${FONT_STYLES.SB_20_BODY};
+    color: ${COLOR.GRAY_30};
+    margin-bottom: 2.3rem;
+
+    span {
+      color: ${COLOR.MAIN_BLUE};
+    }
+  }
+
+  & > div {
+    margin-top: 16rem;
+    margin-bottom: 26.4rem;
+    text-align: center;
+  }
 `;

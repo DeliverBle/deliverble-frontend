@@ -1,9 +1,10 @@
 import styled from 'styled-components';
+import { useState } from 'react';
 import { icDeliverbleBlue, icDeliverbleWhite } from 'public/assets/icons';
+import LoginModal from '../login/LoginModal';
 import { COLOR } from 'src/styles/color';
 import { FONT_STYLES } from 'src/styles/fontStyle';
 import ImageDiv from '../common/ImageDiv';
-import Link from 'next/link';
 
 interface NavProps {
   isFirstScrolled?: boolean;
@@ -12,21 +13,19 @@ interface NavProps {
 
 function Nav(props: NavProps) {
   const { isFirstScrolled = false, isSecondScrolled = false } = props;
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <StNav isSecondScrolled={isSecondScrolled}>
-      {isFirstScrolled ? (
-        <ImageDiv src={icDeliverbleBlue} className="logo" layout="fill" alt="" />
-      ) : (
-        <ImageDiv src={icDeliverbleWhite} className="logo" layout="fill" alt="" />
-      )}
+    <>
+      <StNav isSecondScrolled={isSecondScrolled}>
+        <ImageDiv src={isFirstScrolled ? icDeliverbleBlue : icDeliverbleWhite} className="logo" layout="fill" alt="" />
 
-      <Link href="/login">
-        <StLogin isFirstScrolled={isFirstScrolled}>
-          <a>로그인</a>
+        <StLogin isFirstScrolled={isFirstScrolled} onClick={() => setIsModalOpen(true)}>
+          로그인
         </StLogin>
-      </Link>
-    </StNav>
+      </StNav>
+      {isModalOpen && <LoginModal closeModal={() => setIsModalOpen(false)} />}
+    </>
   );
 }
 
@@ -57,9 +56,6 @@ const StLogin = styled.button<{ isFirstScrolled: boolean }>`
   position: fixed;
   margin-top: 2.9rem;
   right: 6.4rem;
-
-  & > a {
-    ${FONT_STYLES.SB_20_BODY};
-    color: ${({ isFirstScrolled }) => (isFirstScrolled ? COLOR.MAIN_BLUE : COLOR.WHITE)};
-  }
+  ${FONT_STYLES.SB_20_BODY};
+  color: ${({ isFirstScrolled }) => (isFirstScrolled ? COLOR.MAIN_BLUE : COLOR.WHITE)};
 `;
