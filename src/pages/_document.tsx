@@ -29,7 +29,6 @@ export default class MyDocument extends Document {
     return (
       <Html>
         <Head>
-          <meta name="viewport" content="width=1280" />
           <link rel="icon" href="/favicon.ico" />
           <link
             rel="stylesheet"

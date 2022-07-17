@@ -21,4 +21,8 @@ export { default as icLikeDefault } from './ic_like_default.svg';
 export { default as icLikeHover } from './ic_like_hover.svg';
 export { default as icLogoFooter } from './ic_logo_footer.svg';
 export { default as icSocial } from './ic_social.svg';
+export { default as icLeftArrow } from './ic_left_arrow.svg';
+export { default as icDoubleLeftArrow } from './ic_double_left_arrow.svg';
+export { default as icRightArrow } from './ic_right_arrow.svg';
+export { default as icDoubleRightArrow } from './ic_double_right_arrow.svg';
 export { default as icAlert } from './ic_alert.svg';
