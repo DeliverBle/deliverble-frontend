@@ -1,4 +1,5 @@
 import { LearnDetailService } from '../api/learn-detail';
+import { Script, Tag } from '../api/types/learn-detail';
 import { publicAPI } from './base';
 
 export function LearnDetailDataRemote(): LearnDetailService {
@@ -14,11 +15,11 @@ export function LearnDetailDataRemote(): LearnDetailService {
         reportDate: response.data.reportDate,
         startTime: response.data.startTime,
         endTime: response.data.endTime,
-        tags: response.data.tags.map((tag: any) => ({
+        tags: response.data.tags.map((tag: Tag) => ({
           id: tag.id,
           name: tag.name,
         })),
-        scripts: response.data.scripts.map((script: any) => ({
+        scripts: response.data.scripts.map((script: Script) => ({
           id: script.id,
           text: script.text,
           startTime: script.startTime,
