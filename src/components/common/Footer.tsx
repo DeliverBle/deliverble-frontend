@@ -58,7 +58,7 @@ const StFooter = styled.div`
     margin-top: 1.6rem;
 
     color: ${COLOR.GRAY_60};
-    ${FONT_STYLES.M_20_BODY}
+    ${FONT_STYLES.M_20_FOOTER}
   }
 `;
 
