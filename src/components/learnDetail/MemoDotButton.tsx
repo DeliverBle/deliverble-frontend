@@ -14,7 +14,7 @@ function MemoDotButton(props: MemoDotButtonProps) {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   return (
-    <StMemoDotButton type="button" onClick={() => setIsPopupOpen(true)}>
+    <StMemoDotButton type="button" onClick={() => setIsPopupOpen((prev) => !prev)}>
       <StMemoDotImage>
         <ImageDiv className="dot" src={icDotHover} alt="dot" />
         <ImageDiv className="dot default" src={icDotDefault} alt="like" />
