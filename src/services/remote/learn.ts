@@ -6,13 +6,7 @@ export function LearnDataRemote(): LearnService {
   const postSearchCondition = async (body: PostSearchConditionRequestBody) => {
     const response = await publicAPI.post({
       url: `/news/search`,
-      data: {
-        channel: body.channel,
-        category: body.category,
-        speaker: body.speaker,
-        currentPage: body.currentPage,
-        listSize: body.listSize,
-      },
+      data: body,
     });
     return {
       videoList: response.data

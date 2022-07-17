@@ -30,9 +30,9 @@ function Learn() {
     setIsLoading(true);
 
     const { paging, videoList } = await api.learnService.postSearchCondition({
-      channel: selectedChannelList,
-      category: selectedCategoryList,
-      speaker: selectedSpeakerList,
+      channels: selectedChannelList,
+      categories: selectedCategoryList,
+      announcerGender: selectedSpeakerList,
       currentPage: 1,
       listSize: LIST_SIZE,
     });
