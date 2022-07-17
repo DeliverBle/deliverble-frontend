@@ -1,7 +1,7 @@
 import { HomeService } from '../api/home';
 import { HOME_DATA } from './home.data';
 
-export function homeDataMock(): HomeService {
+export function HomeDataMock(): HomeService {
   const getVideoData = async () => {
     await wait(500);
     return HOME_DATA.VIDEO_DATA;

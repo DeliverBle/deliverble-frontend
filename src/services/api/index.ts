@@ -1,5 +1,5 @@
 import { HomeService } from './home';
-import { homeDataMock } from '../mock/home';
+import { HomeDataMock } from '../mock/home';
 import { LearnService } from './learn';
 import { LearnDataRemote } from '../remote/learn';
 import { LearnDetailService } from './learn-detail';
@@ -12,7 +12,7 @@ function getAPIMethod(): APIService {
 }
 
 function provideMockAPIService(): APIService {
-  const homeService = homeDataMock();
+  const homeService = HomeDataMock();
   const learnService = LearnDataRemote();
   const learnDetailService = LearnDetailDataRemote();
   return { homeService, learnService, learnDetailService };
