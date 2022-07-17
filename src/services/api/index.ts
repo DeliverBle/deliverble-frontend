@@ -4,8 +4,6 @@ import { LearnService } from './learn';
 import { LearnDataRemote } from '../remote/learn';
 import { LearnDetailService } from './learn-detail';
 import { LearnDetailDataRemote } from '../remote/learn-detail';
-// import { learnDataMock } from '../mock/learn';
-// import { learnDetailDataMock } from '../mock/learn-detail';
 
 export const api: APIService = getAPIMethod();
 
