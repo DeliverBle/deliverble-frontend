@@ -24,8 +24,11 @@ function Learn() {
   const [totalCount, setTotalCount] = useState(0);
   const [lastPage, setLastPage] = useState(0);
   const [resultList, setResultList] = useState<VideoData[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSearch = async () => {
+    setIsLoading(true);
+
     const { paging, videoList } = await api.learnService.postSearchCondition({
       channel: selectedChannelList,
       category: selectedCategoryList,
@@ -37,14 +40,17 @@ function Learn() {
     setTotalCount(paging.totalCount);
     setLastPage(paging.lastPage);
     setResultList(videoList);
+    setIsLoading(false);
   };
 
   useEffect(() => {
     (async () => {
+      setIsLoading(true);
       const { paging, videoList } = await api.learnService.postSearchCondition({ currentPage: 1, listSize: LIST_SIZE });
       setTotalCount(paging.totalCount);
       setLastPage(paging.lastPage);
       setResultList(videoList);
+      setIsLoading(false);
     })();
   }, []);
 
@@ -66,11 +72,17 @@ function Learn() {
           <button onClick={() => handleSearch()}>검색하기</button>
         </StSearch>
         <StResult>
-          <h2>
-            전체 <span>{totalCount}개 </span> 영상
-          </h2>
-          <NewsList newsList={resultList} />
-          <div>페이지네이션 마지막 페이지 : {lastPage}</div>
+          {isLoading ? (
+            <div>Loading ...</div>
+          ) : (
+            <>
+              <h2>
+                전체 <span>{totalCount}개 </span> 영상
+              </h2>
+              <NewsList newsList={resultList} />
+              <div>페이지네이션 마지막 페이지: {lastPage}</div>
+            </>
+          )}
         </StResult>
       </StLearn>
       <Footer />
