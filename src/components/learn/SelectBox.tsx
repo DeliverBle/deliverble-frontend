@@ -36,6 +36,14 @@ function SelectBox(props: SelectBoxProps) {
   }
 
   useEffect(() => {
+    setConditionList(checkedList.includes('전체') || checkedList.length === optionList.length - 1 ? [] : checkedList);
+  }, [checkedList, optionList]);
+
+  const handleClick = () => {
+    setIsClicked((prev) => !prev);
+  };
+
+  useEffect(() => {
     const handleClickOutside = (e: Event) => {
       const eventTarget = e.target as HTMLElement;
       if (isClicked && !guideModalRef?.current?.contains(eventTarget)) {
@@ -46,14 +54,13 @@ function SelectBox(props: SelectBoxProps) {
     window.addEventListener('click', handleClickOutside);
     return () => {
       window.removeEventListener('click', handleClickOutside);
-      setConditionList(checkedList.includes('전체') || checkedList.length === optionList.length - 1 ? [] : checkedList);
     };
-  }, [checkedList, isClicked, optionList.length, setConditionList]);
+  }, [isClicked]);
 
   return (
     <StSelectBox ref={guideModalRef} isClicked={isClicked}>
       <span>{optionName}</span>
-      <StCategoryButton onClick={() => setIsClicked((prev) => !prev)}>
+      <StCategoryButton onClick={handleClick}>
         <div>{checkedList.join(', ')}</div>
         <ImageDiv src={icArrow} className="arrow" layout="fill" alt="" />
       </StCategoryButton>
