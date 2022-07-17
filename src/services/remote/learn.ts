@@ -24,7 +24,10 @@ export function LearnDataRemote(): LearnService {
             reportDate: video.reportDate,
           }))
         : [],
-      paging: response.data.paginationInfo,
+      paging: {
+        lastPage: response.data.paginationInfo.lastPage,
+        totalCount: response.data.paginationInfo.totalCount,
+      },
     };
   };
 
