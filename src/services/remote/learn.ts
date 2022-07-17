@@ -15,9 +15,10 @@ export function LearnDataRemote(): LearnService {
       },
     });
     return {
-      videoList: response.data.videoList
-        ? response.data.videoList.map((video: VideoData) => ({
+      videoList: response.data
+        ? response.data.map((video: VideoData) => ({
             id: video.id,
+            title: video.title,
             category: video.category,
             channel: video.channel,
             thumbnail: video.thumbnail,
@@ -25,8 +26,8 @@ export function LearnDataRemote(): LearnService {
           }))
         : [],
       paging: {
-        lastPage: response.data.paginationInfo.lastPage,
-        totalCount: response.data.paginationInfo.totalCount,
+        lastPage: response.paginationInfo.lastPage,
+        totalCount: response.paginationInfo.totalCount,
       },
     };
   };
