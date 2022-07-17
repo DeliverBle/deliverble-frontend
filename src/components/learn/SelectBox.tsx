@@ -37,7 +37,7 @@ function SelectBox(props: SelectBoxProps) {
 
   useEffect(() => {
     setConditionList(checkedList.includes('전체') || checkedList.length === optionList.length - 1 ? [] : checkedList);
-  }, [checkedList, optionList]);
+  }, [checkedList, optionList, setConditionList]);
 
   const handleClick = () => {
     setIsClicked((prev) => !prev);
