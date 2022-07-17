@@ -5,14 +5,15 @@ import NavigationBar from '@src/components/common/NavigationBar';
 import NewsList from '@src/components/common/NewsList';
 import SelectBox from '@src/components/learn/SelectBox';
 import ImageDiv from '@src/components/common/ImageDiv';
+import Footer from '@src/components/common/Footer';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { icSearch } from 'public/assets/icons';
-import Footer from '@src/components/common/Footer';
 import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/home';
 
 function Learn() {
+  // const BLOCK_SIZE = 10;
   const LIST_SIZE = 12;
   const channelList = ['전체', 'SBS', 'KBS', 'MBC', '기타'];
   const categoryList = ['전체', '정치', '경제', '사회', '세계', '연예', '기타'];
@@ -21,6 +22,7 @@ function Learn() {
   const [selectedCategoryList, setSelectedCategoryList] = useState<string[]>([]);
   const [selectedSpeakerList, setSelectedSpeakerList] = useState<string[]>([]);
   const [totalCount, setTotalCount] = useState(0);
+  const [lastPage, setLastPage] = useState(0);
   const [resultList, setResultList] = useState<VideoData[]>([]);
 
   const handleSearch = async () => {
@@ -33,6 +35,7 @@ function Learn() {
     });
 
     setTotalCount(paging.totalCount);
+    setLastPage(paging.lastPage);
     setResultList(videoList);
   };
 
@@ -40,6 +43,7 @@ function Learn() {
     (async () => {
       const { paging, videoList } = await api.learnService.postSearchCondition({ currentPage: 1, listSize: LIST_SIZE });
       setTotalCount(paging.totalCount);
+      setLastPage(paging.lastPage);
       setResultList(videoList);
     })();
   }, []);
@@ -66,7 +70,7 @@ function Learn() {
             전체 <span>{totalCount}개 </span> 영상
           </h2>
           <NewsList newsList={resultList} />
-          <div>페이지네이션</div>
+          <div>페이지네이션 마지막 페이지 : {lastPage}</div>
         </StResult>
       </StLearn>
       <Footer />
