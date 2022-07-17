@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import ImageDiv from '../../components/common/ImageDiv';
 import GuideModal from '@src/components/learnDetail/GuideModal';
 import HighlightModal from '@src/components/learnDetail/HighlightModal';
+import ConfirmModal from '@src/components/learnDetail/ConfirmModal';
 import { icXButton, icGuide, icMemo, icAnnounce, icHighlighter, icSpacing, icLikeDefault } from 'public/assets/icons';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
@@ -17,8 +18,7 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  //같은 부분 하이라이트 했을 경우로 로직 변경해야 함.
-  //useEffect의 빈 배열 -> '하이라이트 경고가 뜰 때 바뀌는 상태'로 바꿔주기.
+  //하이라이트 경고가 뜨는 경우.
   const [highlightAlert, setHighlightAlert] = useState(false);
   useEffect(() => {
     const now = new Date().getTime();
@@ -31,6 +31,12 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
     } else {
       setHighlightAlert(true);
     }
+  }, []);
+
+  //confirm창이 나타나야하는 경우.
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  useEffect(() => {
+    setIsConfirmOpen(true);
   }, []);
 
   const [player, setPlayer] = useState<YT.Player | null>();
@@ -123,6 +129,7 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
           </StLearnSection>
         </StLearnMain>
         {isModalOpen && <GuideModal closeModal={() => setIsModalOpen(false)} />}
+        {isConfirmOpen && <ConfirmModal closeModal={() => setIsConfirmOpen(false)} />}
       </StLearnDetail>
     </>
   );

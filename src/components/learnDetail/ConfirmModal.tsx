@@ -2,7 +2,12 @@ import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 
-function ConfirmModal() {
+interface ConfirmModalProps {
+  closeModal: () => void;
+}
+
+function ConfirmModal(props: ConfirmModalProps) {
+  const { closeModal } = props;
   return (
     <StConfirmModal>
       <StDescription>
@@ -10,7 +15,7 @@ function ConfirmModal() {
         <p>작성 취소 선택시, 작성된 메모는 저장되지 않습니다.</p>
       </StDescription>
       <StButtonContainer>
-        <button>취소</button>
+        <button onClick={closeModal}>취소</button>
         <button>삭제하기</button>
       </StButtonContainer>
     </StConfirmModal>
