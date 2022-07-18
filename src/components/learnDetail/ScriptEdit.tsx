@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { MutableRefObject } from 'react';
 import { COLOR } from '@src/styles/color';
 interface ScriptType {
   id: number;
@@ -16,7 +15,6 @@ interface ScriptEditProps {
 
 function ScriptEdit(props: ScriptEditProps) {
   const { scripts, isHighlight, isSpacing } = props;
-  let scriptRef: MutableRefObject<HTMLDivElement | null> | undefined;
 
   const handleClick = () => {
     const selection = window.getSelection(); // 커서의 위치를 알 수 있음
@@ -27,10 +25,8 @@ function ScriptEdit(props: ScriptEditProps) {
     // 선택한 텍스트가 빈칸인지 확인하는 로직
     const selectedDiv = range?.startContainer as Node;
     const serializer = new XMLSerializer();
-    console.log(serializer.serializeToString(selectedDiv));
     const selectedLine = serializer.serializeToString(selectedDiv);
-    startIdx && console.log(selectedLine[startIdx - 1]); //커서 왼쪽 단어
-    startIdx && console.log(selectedLine[startIdx]); //커서 오른쪽 단어
+
     const isLeftBlank = startIdx && selectedLine[startIdx - 1] === ' '; //왼쪽이 빈칸
     const isRightBlank = startIdx && selectedLine[startIdx] === ' '; //오른쪽이 빈칸
     const isValidate = isLeftBlank || isRightBlank; //빈칸인지 여부
@@ -52,7 +48,6 @@ function ScriptEdit(props: ScriptEditProps) {
       const frag = document.createDocumentFragment();
       const div = document.createElement('div');
       const text = selection.toString();
-      console.log('드래그 된 텍스트', text);
 
       div.innerHTML = '<mark>' + text + '</mark>';
       while (div.firstChild) {
@@ -63,12 +58,7 @@ function ScriptEdit(props: ScriptEditProps) {
     }
   };
   return (
-    <StWrapper
-      contentEditable="true"
-      onClick={handleClick}
-      suppressContentEditableWarning={true}
-      spellCheck="false"
-      ref={scriptRef}>
+    <StWrapper contentEditable="true" onClick={handleClick} suppressContentEditableWarning={true} spellCheck="false">
       {scripts.map(({ id, text }) => (
         <StScriptText key={id}>{text}</StScriptText>
       ))}
