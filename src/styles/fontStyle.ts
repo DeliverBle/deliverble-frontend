@@ -3,7 +3,7 @@ import { css } from 'styled-components';
 type Font = {
   size: number;
   weight: 'R' | 'SB' | 'M' | 'B';
-  position: 'Headline' | 'Body' | 'Caption' | 'Footer';
+  position: 'Headline' | 'Body' | 'Caption' | 'Footer' | 'Memo';
   height: number;
 };
 
@@ -47,5 +47,7 @@ export const FONT_STYLES = {
   SB_16_CAPTION: FONT({ size: 16, weight: 'SB', position: 'Caption', height: 140 }),
   M_16_CAPTION: FONT({ size: 16, weight: 'M', position: 'Caption', height: 140 }),
   B_100_CAPTION: FONT({ size: 100, weight: 'B', position: 'Caption', height: 140 }),
+  SB_25_MEMO: FONT({ size: 25, weight: 'SB', position: 'Memo', height: 140 }),
+  R_23_MEMO: FONT({ size: 23, weight: 'R', position: 'Memo', height: 160 }),
   M_20_FOOTER: FONT({ size: 20, weight: 'M', position: 'Footer', height: 140 }),
 };

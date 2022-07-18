@@ -1,5 +1,6 @@
 export const COLOR = {
   MAIN_BLUE: '#4E8AFF',
+  SUB_BLUE_8: '#F1F6FF',
   SUB_BLUE_15: '#E5EEFF',
   SUB_BLUE_30: '#CADCFF',
   SUB_BLUE_50: '#A7C5FF',

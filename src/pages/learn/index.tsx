@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
 import SEO from '@src/components/common/SEO';
 import NavigationBar from '@src/components/common/NavigationBar';
 import NewsList from '@src/components/common/NewsList';
@@ -48,7 +49,13 @@ function Learn() {
   useEffect(() => {
     (async () => {
       setIsLoading(true);
-      const { paging, videoList } = await api.learnService.postSearchCondition({ currentPage: 1, listSize: LIST_SIZE });
+      const { paging, videoList } = await api.learnService.postSearchCondition({
+        channels: [],
+        categories: [],
+        announcerGender: [],
+        currentPage: 1,
+        listSize: LIST_SIZE,
+      });
       setTotalCount(paging.totalCount);
       setLastPage(paging.lastPage);
       setResultList(videoList);
@@ -73,19 +80,17 @@ function Learn() {
           </StSelectBoxContainer>
           <button onClick={() => handleSearch()}>검색하기</button>
         </StSearch>
-        <StResult>
-          {isLoading ? (
-            <div>Loading ...</div>
-          ) : (
-            <>
-              <h2>
-                전체 <span>{totalCount}개 </span> 영상
-              </h2>
-              <NewsList newsList={resultList} />
-              <div>페이지네이션 마지막 페이지: {lastPage}</div>
-            </>
-          )}
-        </StResult>
+        {isLoading ? (
+          <VideoListSkeleton itemNumber={12} />
+        ) : (
+          <StResult>
+            <h2>
+              전체 <span>{totalCount}개 </span> 영상
+            </h2>
+            <NewsList newsList={resultList} />
+            <div>페이지네이션 마지막 페이지: {lastPage}</div>
+          </StResult>
+        )}
       </StLearn>
       <Footer />
     </>

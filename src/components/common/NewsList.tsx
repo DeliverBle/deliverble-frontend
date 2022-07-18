@@ -15,12 +15,12 @@ function NewsList(props: NewsListProps) {
   const router = useRouter();
 
   return (
-    <StNewsContainer>
+    <StNewsList>
       {newsList.map(({ id, title, category, channel, thumbnail, reportDate }) => (
         <StNewsWrapper key={id} onClick={() => router.push(`/learn/${id}`)}>
           <StThumbnail>
             <ImageDiv className="thumbnail" src={thumbnail} layout="fill" alt="" />
-            <Like />
+            <Like isFromList={true} />
           </StThumbnail>
           <StTitle>{title}</StTitle>
           <StInfo>
@@ -28,13 +28,13 @@ function NewsList(props: NewsListProps) {
           </StInfo>
         </StNewsWrapper>
       ))}
-    </StNewsContainer>
+    </StNewsList>
   );
 }
 
 export default NewsList;
 
-const StNewsContainer = styled.section`
+const StNewsList = styled.section`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-row-gap: 11.2rem;
