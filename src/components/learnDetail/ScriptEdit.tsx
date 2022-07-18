@@ -64,7 +64,12 @@ function ScriptEdit(props: ScriptEdit) {
   };
   return (
     <>
-      <StWrapper contentEditable="true" onClick={handleClick} suppressContentEditableWarning={true} ref={scriptRef}>
+      <StWrapper
+        contentEditable="true"
+        onClick={handleClick}
+        suppressContentEditableWarning={true}
+        spellCheck="false"
+        ref={scriptRef}>
         {scripts.map(({ id, text }) => (
           <StScriptText key={id}>{text}</StScriptText>
         ))}
@@ -94,6 +99,18 @@ const StScriptText = styled.p`
 
   & > mark {
     background-color: #cadcff;
+    & > .left {
+      font-size: 3.2rem;
+      font-weight: 600;
+      color: #4e8aff;
+      margin-right: 0.4rem;
+    }
+    & > .right {
+      font-size: 3.2rem;
+      font-weight: 600;
+      color: #4e8aff;
+      margin-left: 0.4rem;
+    }
   }
 
   & > .left {
