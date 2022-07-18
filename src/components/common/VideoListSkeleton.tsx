@@ -2,12 +2,18 @@ import styled from 'styled-components';
 import VideoItemSkeleton from './VideoItemSkeleton';
 import { COLOR } from '@src/styles/color';
 
-function VideoListSkeleton() {
+interface VideoListSkeleton {
+  itemNumber: number;
+}
+
+function VideoListSkeleton(props: VideoListSkeleton) {
+  const { itemNumber } = props;
+
   return (
     <StVideoListSkeleton>
       <StHeader />
       <div>
-        {new Array(12).fill('').map((_, i) => (
+        {new Array(itemNumber).fill('').map((_, i) => (
           <VideoItemSkeleton key={i} />
         ))}
       </div>

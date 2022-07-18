@@ -75,7 +75,7 @@ function Learn() {
           <button onClick={() => handleSearch()}>검색하기</button>
         </StSearch>
         {isLoading ? (
-          <VideoListSkeleton />
+          <VideoListSkeleton itemNumber={12} />
         ) : (
           <StResult>
             <h2>
