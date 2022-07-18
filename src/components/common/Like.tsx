@@ -50,6 +50,7 @@ const StImageContainer = styled.div<{ fromList: boolean }>`
       ? css`
           .like {
             position: absolute;
+            top: 0.2rem;
             right: 0.2rem;
 
             width: 4rem;
@@ -60,6 +61,7 @@ const StImageContainer = styled.div<{ fromList: boolean }>`
       : css`
           .like {
             position: absolute;
+            top: 1.2rem;
             right: 1.2rem;
 
             width: 5rem;
