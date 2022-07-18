@@ -12,14 +12,12 @@ export { default as icDeliverbleBlue } from './ic_deliverble_blue.svg';
 export { default as icDeliverbleWhite } from './ic_deliverble_white.svg';
 export { default as icMemo } from './ic_memo.svg';
 export { default as icAnnounce } from './ic_announce.svg';
-
 export { default as icHighlighterDefault } from './ic_highlighter_default.svg';
 export { default as icHighlighterHover } from './ic_highlighter_hover.svg';
 export { default as icHighlighterClicked } from './ic_highlighter_clicked.svg';
 export { default as icSpacingDefault } from './ic_spacing_default.svg';
 export { default as icSpacingHover } from './ic_spacing_hover.svg';
 export { default as icSpacingClicked } from './ic_spacing_clicked.svg';
-
 export { default as icKakao } from './ic_kakao.svg';
 export { default as icMicrophone } from './ic_microphone.svg';
 export { default as icLikeClicked } from './ic_like_clicked.svg';

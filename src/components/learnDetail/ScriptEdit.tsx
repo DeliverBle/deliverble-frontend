@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { MutableRefObject } from 'react';
 import { COLOR } from '@src/styles/color';
-// import { FONT_STYLES } from '@src/styles/fontStyle';
 interface ScriptType {
   id: number;
   text: string;
@@ -9,12 +8,13 @@ interface ScriptType {
   endTime: number;
 }
 
-interface ScriptEdit {
+interface ScriptEditProps {
   scripts: ScriptType[];
   isHighlight: boolean;
   isSpacing: boolean;
 }
-function ScriptEdit(props: ScriptEdit) {
+
+function ScriptEdit(props: ScriptEditProps) {
   const { scripts, isHighlight, isSpacing } = props;
   let scriptRef: MutableRefObject<HTMLDivElement | null> | undefined;
 
@@ -63,18 +63,16 @@ function ScriptEdit(props: ScriptEdit) {
     }
   };
   return (
-    <>
-      <StWrapper
-        contentEditable="true"
-        onClick={handleClick}
-        suppressContentEditableWarning={true}
-        spellCheck="false"
-        ref={scriptRef}>
-        {scripts.map(({ id, text }) => (
-          <StScriptText key={id}>{text}</StScriptText>
-        ))}
-      </StWrapper>
-    </>
+    <StWrapper
+      contentEditable="true"
+      onClick={handleClick}
+      suppressContentEditableWarning={true}
+      spellCheck="false"
+      ref={scriptRef}>
+      {scripts.map(({ id, text }) => (
+        <StScriptText key={id}>{text}</StScriptText>
+      ))}
+    </StWrapper>
   );
 }
 
@@ -82,8 +80,6 @@ export default ScriptEdit;
 
 const StWrapper = styled.div`
   cursor: pointer;
-
-  font: 12px;
 `;
 
 const StScriptText = styled.p`
