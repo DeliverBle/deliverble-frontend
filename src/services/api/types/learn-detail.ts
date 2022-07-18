@@ -1,9 +1,9 @@
-type Tag = {
+export type Tag = {
   id: number;
   name: string;
 };
 
-type Script = {
+export type Script = {
   id: number;
   text: string;
   startTime: number;
