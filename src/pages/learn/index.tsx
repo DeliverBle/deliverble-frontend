@@ -49,7 +49,13 @@ function Learn() {
   useEffect(() => {
     (async () => {
       setIsLoading(true);
-      const { paging, videoList } = await api.learnService.postSearchCondition({ currentPage: 1, listSize: LIST_SIZE });
+      const { paging, videoList } = await api.learnService.postSearchCondition({
+        channels: [],
+        categories: [],
+        announcerGender: [],
+        currentPage: 1,
+        listSize: LIST_SIZE,
+      });
       setTotalCount(paging.totalCount);
       setLastPage(paging.lastPage);
       setResultList(videoList);
