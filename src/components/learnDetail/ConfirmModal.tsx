@@ -10,7 +10,7 @@ function ConfirmModal(props: ConfirmModalProps) {
   const { closeModal } = props;
 
   //ConfirmModal 생기는 상황별로 프롭스 가져오고 case로 나누기.
-  const situation: string = 'temp';
+  const situation: string | undefined = 'temp';
   const mainText = () => {
     switch (situation) {
       case 'temp':
