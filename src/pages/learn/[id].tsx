@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import ImageDiv from '../../components/common/ImageDiv';
 import GuideModal from '@src/components/learnDetail/GuideModal';
 import HighlightModal from '@src/components/learnDetail/HighlightModal';
-import { icXButton, icGuide, icMemo, icAnnounce, icHighlighter, icSpacing, icLikeDefault } from 'public/assets/icons';
+import { icXButton, icGuide, icMemo, icAnnounce, icHighlighter, icSpacing } from 'public/assets/icons';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { GetServerSidePropsContext } from 'next';
@@ -12,6 +12,7 @@ import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/learn-detail';
 import YouTube from 'react-youtube';
 import SEO from '@src/components/common/SEO';
+import Like from '@src/components/common/Like';
 
 function LearnDetail({ videoData }: { videoData: VideoData }) {
   const router = useRouter();
@@ -72,7 +73,7 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
               </StTagContainer>
             </StVideoDetail>
             <StVideoWrapper>
-              <ImageDiv src={icLikeDefault} className="like-button" layout="fill" />
+              <Like isFromList={false} />
               <YouTube
                 videoId={link}
                 opts={{

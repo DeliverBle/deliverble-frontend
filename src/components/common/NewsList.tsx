@@ -20,7 +20,7 @@ function NewsList(props: NewsListProps) {
         <StNewsWrapper key={id} onClick={() => router.push(`/learn/${id}`)}>
           <StThumbnail>
             <ImageDiv className="thumbnail" src={thumbnail} layout="fill" alt="" />
-            <Like />
+            <Like isFromList={true} />
           </StThumbnail>
           <StTitle>{title}</StTitle>
           <StInfo>
