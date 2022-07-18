@@ -17,8 +17,8 @@ import SEO from '@src/components/common/SEO';
 function LearnDetail({ videoData }: { videoData: VideoData }) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
-  //하이라이트 경고가 뜨는 경우.
   const [highlightAlert, setHighlightAlert] = useState(false);
   useEffect(() => {
     const now = new Date().getTime();
@@ -31,12 +31,6 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
     } else {
       setHighlightAlert(true);
     }
-  }, []);
-
-  //confirm창이 나타나야하는 경우.
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  useEffect(() => {
-    setIsConfirmOpen(true);
   }, []);
 
   const [player, setPlayer] = useState<YT.Player | null>();
