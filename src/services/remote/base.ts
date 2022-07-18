@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASEURL = 'http://13.209.32.166/v2';
+const BASEURL = 'https://deliverble.online/v2';
 const getAccessToken = () => localStorage.getItem('token') ?? '';
 
 const getBasePrivateHeaders = () => ({
