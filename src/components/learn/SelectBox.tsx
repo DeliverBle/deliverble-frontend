@@ -36,6 +36,10 @@ function SelectBox(props: SelectBoxProps) {
   }
 
   useEffect(() => {
+    setConditionList(checkedList.includes('전체') || checkedList.length === optionList.length - 1 ? [] : checkedList);
+  }, [checkedList, optionList, setConditionList]);
+
+  useEffect(() => {
     const handleClickOutside = (e: Event) => {
       const eventTarget = e.target as HTMLElement;
       if (isClicked && !guideModalRef?.current?.contains(eventTarget)) {
@@ -46,9 +50,8 @@ function SelectBox(props: SelectBoxProps) {
     window.addEventListener('click', handleClickOutside);
     return () => {
       window.removeEventListener('click', handleClickOutside);
-      setConditionList(checkedList.includes('전체') || checkedList.length === optionList.length - 1 ? [] : checkedList);
     };
-  }, [checkedList, isClicked, optionList.length, setConditionList]);
+  }, [isClicked]);
 
   return (
     <StSelectBox ref={guideModalRef} isClicked={isClicked}>
