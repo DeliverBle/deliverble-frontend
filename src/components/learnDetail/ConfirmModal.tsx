@@ -10,55 +10,55 @@ function ConfirmModal(props: ConfirmModalProps) {
   const { closeModal } = props;
 
   //ConfirmModal 생기는 상황별로 프롭스 가져오고 case로 나누기.
-  const situation: string | undefined = 'temp';
+  const situation: number | undefined = 0;
   const mainText = () => {
     switch (situation) {
-      case 'temp':
+      case 0:
         return '메모 작성을 취소하시겠습니까?';
-      case 'temp2':
+      case 1:
         return '메모 수정을 취소하시겠습니까?';
-      case 'temp3':
+      case 2:
         return '메모를 삭제하시겠습니까?';
-      case 'temp4':
+      case 3:
         return '하이라이트를 삭제하시겠습니까?';
     }
   };
 
   const subText = () => {
     switch (situation) {
-      case 'temp':
+      case 0:
         return '작성 취소 선택시, 작성된 메모는 저장되지 않습니다.';
-      case 'temp2':
+      case 1:
         return '수정 취소 선택시, 수정된 메모는 저장되지 않습니다.';
-      case 'temp3':
+      case 2:
         return '';
-      case 'temp4':
+      case 3:
         return '하이라이트 삭제시 해당 메모도 삭제됩니다.';
     }
   };
 
   const cancelButtonText = () => {
     switch (situation) {
-      case 'temp':
+      case 0:
         return '작성하기';
-      case 'temp2':
+      case 1:
         return '계속하기';
-      case 'temp3':
+      case 2:
         return '취소';
-      case 'temp4':
+      case 3:
         return '취소';
     }
   };
 
   const confirmButtonText = () => {
     switch (situation) {
-      case 'temp':
+      case 0:
         return '작성 취소';
-      case 'temp2':
+      case 1:
         return '수정 취소';
-      case 'temp3':
+      case 2:
         return '삭제하기';
-      case 'temp4':
+      case 3:
         return '삭제하기';
     }
   };
