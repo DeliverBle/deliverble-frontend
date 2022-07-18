@@ -1,5 +1,5 @@
-import { getRecommendVideoResponse } from './types/home';
+import { VideoListData } from './types/home';
 
 export interface HomeService {
-  getVideoData(): Promise<getRecommendVideoResponse>;
+  getVideoData(): Promise<VideoListData>;
 }

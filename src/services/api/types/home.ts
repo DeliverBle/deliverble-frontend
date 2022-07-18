@@ -7,6 +7,6 @@ export type VideoData = {
   reportDate: string;
 };
 
-export type getRecommendVideoResponse = {
-  videoListData: VideoData[];
+export type VideoListData = {
+  videoList: VideoData[];
 };

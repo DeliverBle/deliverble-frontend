@@ -37,7 +37,7 @@ export default Home;
 
 export async function getServerSideProps() {
   const response = await api.homeService.getVideoData();
-  return { props: { videoData: response.videoListData } };
+  return { props: { videoData: response.videoList } };
 }
 
 const StHome = styled.div`

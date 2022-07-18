@@ -7,7 +7,7 @@ export function homeDataRemote(): HomeService {
     const response = await publicAPI.get({ url: `/news/recommend` });
     if (response.status === 200) {
       return {
-        videoListData: response.data
+        videoList: response.data
           ? response.data.map((video: VideoData) => ({
               id: video.id,
               title: video.title,
