@@ -3,7 +3,7 @@ import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { useState } from 'react';
 import MemoEditForm from './MemoEditForm';
-import MemoDotButton from './MemoDotButton';
+import MemoDotButton from './MemoPopupButton';
 
 interface MemoProps {
   keyword: string;
