@@ -4,11 +4,11 @@ import ImageDiv from './ImageDiv';
 import styled, { css } from 'styled-components';
 
 interface LikeProps {
-  fromList: boolean;
+  isFromList: boolean;
 }
 
 function Like(props: LikeProps) {
-  const { fromList } = props;
+  const { isFromList } = props;
   const [isLiked, setIsLiked] = useState(false);
 
   return (
@@ -18,7 +18,7 @@ function Like(props: LikeProps) {
         e.stopPropagation();
         setIsLiked((prev) => !prev);
       }}>
-      <StImageContainer fromList={fromList}>
+      <StImageContainer isFromList={isFromList}>
         {isLiked ? (
           <ImageDiv className="like" src={icLikeClicked} alt="like" layout="fill" />
         ) : (
@@ -42,11 +42,11 @@ const StLikeButton = styled.button`
   padding: 0;
 `;
 
-const StImageContainer = styled.div<{ fromList: boolean }>`
+const StImageContainer = styled.div<{ isFromList: boolean }>`
   position: relative;
 
-  ${({ fromList }) =>
-    fromList
+  ${({ isFromList }) =>
+    isFromList
       ? css`
           .like {
             position: absolute;

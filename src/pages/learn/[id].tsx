@@ -73,7 +73,7 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
               </StTagContainer>
             </StVideoDetail>
             <StVideoWrapper>
-              <Like fromList={false} />
+              <Like isFromList={false} />
               <YouTube
                 videoId={link}
                 opts={{
