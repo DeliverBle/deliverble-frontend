@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import ImageDiv from '../../components/common/ImageDiv';
 import GuideModal from '@src/components/learnDetail/GuideModal';
 import HighlightModal from '@src/components/learnDetail/HighlightModal';
+import ScriptEdit from '@src/components/learnDetail/ScriptEdit';
 import {
   icXButton,
   icGuide,
@@ -117,14 +118,17 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
             </div>
             <article>
               <div>
-                {scripts.map(({ id, text, startTime, endTime }) => (
-                  <StScriptText
-                    key={id}
-                    onClick={() => player?.seekTo(startTime, true)}
-                    isActive={startTime <= currentTime && currentTime <= endTime ? true : false}>
-                    {text}
-                  </StScriptText>
-                ))}
+                {!isHighlight &&
+                  !isSpacing &&
+                  scripts.map(({ id, text, startTime, endTime }) => (
+                    <StScriptText
+                      key={id}
+                      onClick={() => player?.seekTo(startTime, true)}
+                      isActive={startTime <= currentTime && currentTime <= endTime ? true : false}>
+                      {text}
+                    </StScriptText>
+                  ))}
+                {(isHighlight || isSpacing) && <ScriptEdit scripts={scripts} />}
                 {highlightAlert && <HighlightModal closeModal={() => setHighlightAlert(false)} />}
               </div>
               <div>
