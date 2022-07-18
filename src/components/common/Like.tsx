@@ -1,9 +1,14 @@
 import { icLikeClicked, icLikeHover, icLikeDefault } from 'public/assets/icons';
 import { useState } from 'react';
 import ImageDiv from './ImageDiv';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
-function Like() {
+interface LikeProps {
+  fromList: boolean;
+}
+
+function Like(props: LikeProps) {
+  const { fromList } = props;
   const [isLiked, setIsLiked] = useState(false);
 
   return (
@@ -13,13 +18,13 @@ function Like() {
         e.stopPropagation();
         setIsLiked((prev) => !prev);
       }}>
-      <StImageContainer>
+      <StImageContainer fromList={fromList}>
         {isLiked ? (
-          <ImageDiv className="like" src={icLikeClicked} alt="like" />
+          <ImageDiv className="like" src={icLikeClicked} alt="like" layout="fill" />
         ) : (
           <>
-            <ImageDiv className="like" src={icLikeHover} alt="like" />
-            <ImageDiv className="like default" src={icLikeDefault} alt="like" />
+            <ImageDiv className="like" src={icLikeHover} alt="like" layout="fill" />
+            <ImageDiv className="like default" src={icLikeDefault} alt="like" layout="fill" />
           </>
         )}
       </StImageContainer>
@@ -34,25 +39,33 @@ const StLikeButton = styled.button`
   top: 1.2rem;
   right: 1.2rem;
 
-  width: 4rem;
-  height: 4rem;
   padding: 0;
 `;
 
-const StImageContainer = styled.div`
+const StImageContainer = styled.div<{ fromList: boolean }>`
   position: relative;
 
-  .like {
-    position: absolute;
-    top: -2rem;
+  ${({ fromList }) =>
+    fromList
+      ? css`
+          .like {
+            position: absolute;
+            right: 0.2rem;
 
-    opacity: 0;
-  }
+            width: 4rem;
+            height: 4rem;
+            opacity: 0;
+          }
+        `
+      : css`
+          .like {
+            position: absolute;
+            right: 1.2rem;
 
-  .like img {
-    width: 10rem;
-    height: 10rem;
-  }
+            width: 5rem;
+            height: 5rem;
+          }
+        `}
 
   &:hover .default img {
     transition: opacity 1s;
