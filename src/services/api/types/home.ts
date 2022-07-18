@@ -8,5 +8,5 @@ export type VideoData = {
 };
 
 export type getRecommendVideoResponse = {
-  videoList: VideoData[];
+  videoListData: VideoData[];
 };
