@@ -9,12 +9,14 @@ import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { GetServerSidePropsContext } from 'next';
 import { api } from '@src/services/api';
-import { VideoData } from '@src/services/api/types/learn-detail';
+import { MemoData, VideoData } from '@src/services/api/types/learn-detail';
 import YouTube from 'react-youtube';
+import EmptyMemo from '@src/components/learnDetail/memo/EmptyMemo';
 import SEO from '@src/components/common/SEO';
+import MemoList from '@src/components/learnDetail/memo/MemoList';
 import Like from '@src/components/common/Like';
 
-function LearnDetail({ videoData }: { videoData: VideoData }) {
+function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: MemoData[] }) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -91,10 +93,13 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
                 onEnd={(e) => e.target.seekTo(startTime)}
               />
             </StVideoWrapper>
-            <StMemoWrapper>
-              <ImageDiv src={icMemo} className="memo" layout="fill" />
-              <h2>메모</h2>
-            </StMemoWrapper>
+            <StMemoContainer>
+              <StMemoTitle>
+                <ImageDiv src={icMemo} className="memo" layout="fill" />
+                <h2>메모</h2>
+              </StMemoTitle>
+              <StMemoWrapper>{memoData ? <MemoList memoList={memoData} /> : <EmptyMemo />}</StMemoWrapper>
+            </StMemoContainer>
           </aside>
           <StLearnSection>
             <div>
@@ -133,13 +138,15 @@ export default LearnDetail;
 
 export async function getServerSideProps({ params }: GetServerSidePropsContext) {
   const id = +(params?.id ?? -1);
-  const response = await api.learnDetailService.getVideoData(id);
-  if (response.id !== id) {
+  const videoData = await api.learnDetailService.getVideoData(id);
+  const memoData = await api.learnDetailService.getMemoData(id);
+
+  if (videoData.id !== id) {
     return {
       notFound: true,
     };
   }
-  return { props: { videoData: response } };
+  return { props: { videoData: videoData, memoData: memoData } };
 }
 
 const StLearnDetail = styled.div`
@@ -168,12 +175,14 @@ const StLearnDetail = styled.div`
 const StLearnMain = styled.main`
   display: flex;
   margin: 0 auto;
-  gap: 4.8rem;
+  gap: 4rem;
   width: 172rem;
   height: 111.9rem;
   padding: 8rem 8rem 0 8rem;
   border-radius: 3rem;
   background-color: ${COLOR.WHITE};
+
+  overflow: hidden;
 `;
 
 const StLearnSection = styled.section`
@@ -324,7 +333,12 @@ const StVideoWrapper = styled.div`
   }
 `;
 
-const StMemoWrapper = styled.div`
+const StMemoContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const StMemoTitle = styled.div`
   display: flex;
   align-items: center;
   gap: 0.8rem;
@@ -340,4 +354,9 @@ const StMemoWrapper = styled.div`
     width: 3.2rem;
     height: 3.2rem;
   }
+`;
+
+const StMemoWrapper = styled.div`
+  display: flex;
+  justify-content: center;
 `;
