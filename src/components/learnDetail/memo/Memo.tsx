@@ -15,8 +15,11 @@ function Memo(props: MemoProps) {
   const [moreButton, setMoreButton] = useState(false);
   const [memoEdit, setMemoEdit] = useState(false);
 
+  const CONTENT_MAX = 30;
+  const KEYWORD_MAX = 28;
+
   const showContent = () => {
-    if (content.length > 30 && !moreButton) {
+    if (content.length > CONTENT_MAX && !moreButton) {
       return (
         <>
           {content.slice(0, 26)}
@@ -31,7 +34,7 @@ function Memo(props: MemoProps) {
 
   return (
     <StMemo>
-      <StKeyword>{keyword.length <= 28 || moreButton ? keyword : `${keyword.slice(0, 27)}...`}</StKeyword>
+      <StKeyword>{keyword.length <= KEYWORD_MAX || moreButton ? keyword : `${keyword.slice(0, 27)}...`}</StKeyword>
       {memoEdit ? (
         <MemoEditForm content={content} setMemoEdit={setMemoEdit} />
       ) : (
