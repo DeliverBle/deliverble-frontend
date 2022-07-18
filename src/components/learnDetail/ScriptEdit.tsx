@@ -25,6 +25,14 @@ function ScriptEdit(props: ScriptEdit) {
     // const startCont = range?.startContainer; // 커서의 시작인덱스
     // const endIdx = range?.endOffset; // 커서의 종료인덱스
 
+    // 지연 코드
+    const tokenNameDiv = range?.startContainer as Node;
+    const serializer = new XMLSerializer();
+    console.log(serializer.serializeToString(tokenNameDiv));
+    const tokenName = serializer.serializeToString(tokenNameDiv)[0];
+    console.log(tokenName);
+
+    // 송아 코드
     // const tokenNameDiv = range?.startContainer as Node;
     // console.log(tokenNameDiv);
     // const tokenName = tokenNameDiv[0].text();
