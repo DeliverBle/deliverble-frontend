@@ -6,3 +6,7 @@ export type VideoData = {
   thumbnail: string;
   reportDate: string;
 };
+
+export type getRecommendVideoResponse = {
+  videoList: VideoData[];
+};
