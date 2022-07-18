@@ -2,7 +2,7 @@ import { LearnService } from '../api/learn';
 import { publicAPI } from './base';
 import { PostSearchConditionRequestBody, VideoData } from '../api/types/learn';
 
-export function LearnDataRemote(): LearnService {
+export function learnDataRemote(): LearnService {
   const postSearchCondition = async (body: PostSearchConditionRequestBody) => {
     const response = await publicAPI.post({
       url: `/news/search`,

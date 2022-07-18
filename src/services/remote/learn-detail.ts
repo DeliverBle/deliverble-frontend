@@ -2,7 +2,7 @@ import { LearnDetailService } from '../api/learn-detail';
 import { Script, Tag } from '../api/types/learn-detail';
 import { publicAPI } from './base';
 
-export function LearnDetailDataRemote(): LearnDetailService {
+export function learnDetailDataRemote(): LearnDetailService {
   const getVideoData = async (id: number) => {
     const response = await publicAPI.get({ url: `/news/detail/${id}` });
     if (response.status === 200) {
