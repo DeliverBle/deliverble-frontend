@@ -27,7 +27,7 @@ const StMemoList = styled.div`
   gap: 1.2rem;
 
   height: 35.8rem;
-  /* overflow-x: hidden; */
+  overflow-x: hidden;
   overflow-y: auto;
 
   &::-webkit-scrollbar {

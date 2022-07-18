@@ -3,16 +3,16 @@ import { FONT_STYLES } from '@src/styles/fontStyle';
 import styled from 'styled-components';
 
 interface MemoPopupProps {
-  editClicked: () => void;
+  memoEdit: () => void;
 }
 
 function MemoPopup(props: MemoPopupProps) {
-  const { editClicked } = props;
+  const { memoEdit } = props;
 
   return (
     <StMemoPopup>
       <StMemoPopupContent>
-        <StMemoEdit onClick={editClicked}>메모 수정</StMemoEdit>
+        <StMemoEdit onClick={memoEdit}>메모 수정</StMemoEdit>
         <StMemoDelete>메모 삭제</StMemoDelete>
       </StMemoPopupContent>
     </StMemoPopup>
@@ -24,8 +24,14 @@ export default MemoPopup;
 const StMemoPopup = styled.div``;
 
 const StMemoPopupContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
   position: absolute;
   top: 4.8rem;
+  right: 0;
   z-index: 100;
 
   width: 10.3rem;

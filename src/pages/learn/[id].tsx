@@ -13,7 +13,7 @@ import { MemoData, VideoData } from '@src/services/api/types/learn-detail';
 import YouTube from 'react-youtube';
 import EmptyMemo from '@src/components/learnDetail/EmptyMemo';
 import SEO from '@src/components/common/SEO';
-import MemoList from '@src/components/learnDetail/MemoList';
+import MemoList from '@src/components/learnDetail/memo/MemoList';
 
 function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: MemoData[] }) {
   const router = useRouter();

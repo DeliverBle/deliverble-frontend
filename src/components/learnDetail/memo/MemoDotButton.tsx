@@ -1,16 +1,15 @@
+import ImageDiv from '@src/components/common/ImageDiv';
 import { icDotDefault, icDotHover } from 'public/assets/icons';
 import { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
-import ImageDiv from '../common/ImageDiv';
 import MemoPopup from './MemoPopup';
 
 interface MemoDotButtonProps {
-  editClicked: () => void;
+  memoEdit: () => void;
 }
 
 function MemoDotButton(props: MemoDotButtonProps) {
-  const { editClicked } = props;
-
+  const { memoEdit } = props;
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const memoPopupRef = useRef<HTMLButtonElement>(null);
 
@@ -21,7 +20,6 @@ function MemoDotButton(props: MemoDotButtonProps) {
         setIsPopupOpen(false);
       }
     };
-
     window.addEventListener('click', handleClickOutside);
   }, [isPopupOpen]);
 
@@ -31,7 +29,7 @@ function MemoDotButton(props: MemoDotButtonProps) {
         <ImageDiv className="dot" src={icDotHover} alt="dot" />
         <ImageDiv className="dot default" src={icDotDefault} alt="like" />
       </StMemoDotImage>
-      {isPopupOpen && <MemoPopup editClicked={editClicked} />}
+      {isPopupOpen && <MemoPopup memoEdit={memoEdit} />}
     </StMemoDotButton>
   );
 }
