@@ -10,20 +10,18 @@ function MemoPopup(props: MemoPopupProps) {
   const { memoEdit } = props;
 
   return (
-    <StMemoPopup>
-      <StMemoPopupContent>
+    <>
+      <StMemoPopup>
         <StMemoEdit onClick={memoEdit}>메모 수정</StMemoEdit>
         <StMemoDelete>메모 삭제</StMemoDelete>
-      </StMemoPopupContent>
-    </StMemoPopup>
+      </StMemoPopup>
+    </>
   );
 }
 
 export default MemoPopup;
 
-const StMemoPopup = styled.div``;
-
-const StMemoPopupContent = styled.div`
+const StMemoPopup = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;

@@ -13,7 +13,7 @@ function MemoEditForm(props: MemoEditFormProps) {
   const { content, setMemoEdit } = props;
 
   return (
-    <StMemoEditForm>
+    <>
       <StEditForm maxLength={70} rows={Math.ceil(content.length / 30)}>
         {content}
       </StEditForm>
@@ -25,13 +25,11 @@ function MemoEditForm(props: MemoEditFormProps) {
           <ImageDiv src={icCheckButton} alt="ok" />
         </button>
       </StButtonContainer>
-    </StMemoEditForm>
+    </>
   );
 }
 
 export default MemoEditForm;
-
-const StMemoEditForm = styled.div``;
 
 const StEditForm = styled.textarea`
   padding: 0.8rem 0.8rem 0.8rem 1.2rem;
