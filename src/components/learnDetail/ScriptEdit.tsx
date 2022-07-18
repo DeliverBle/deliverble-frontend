@@ -39,7 +39,6 @@ function ScriptEdit(props: ScriptEdit) {
     if (selection?.type === 'Caret' && isValidate && isSpacing) {
       const frag = document.createDocumentFragment();
       const div = document.createElement('div');
-      console.log(isLeftBlank);
       isLeftBlank ? (div.innerHTML = '<span class=left >/</span>') : (div.innerHTML = '<span class=right >/</span>');
       while (div.firstChild) {
         frag.appendChild(div.firstChild);
@@ -50,23 +49,17 @@ function ScriptEdit(props: ScriptEdit) {
 
     //드래깅 이벤트
     else if (selection?.type === 'Range' && isHighlight) {
-      //   let selection = document.getSelection();
-      //   let selected = input.value.slice(input.selectionStart, input.selectionEnd);
-      //   input.setRangeText(`<mark>${selected}</mark>`);
-      //   // Clone DOM nodes from ranges (we support multiselect here)
-      //   for (let i = 0; i < selection?.rangeCount; i++) {
-      //     cloned.append(selection.getRangeAt(i).cloneContents());
-      //   }
-      //   // Get as text
-      //   astext.innerHTML += selection;
-      //   const frag = document.createDocumentFragment();
-      //   const div = document.createElement('div');
-      //   div.innerHTML = '<span>/</span>';
-      //   while (div.firstChild) {
-      //     frag?.appendChild(div.firstChild);
-      //   }
-      //   range?.deleteContents();
-      //   range?.insertNode(frag);
+      const frag = document.createDocumentFragment();
+      const div = document.createElement('div');
+      const text = selection.toString();
+      console.log('드래그 된 텍스트', text);
+
+      div.innerHTML = '<mark>' + text + '</mark>';
+      while (div.firstChild) {
+        frag.appendChild(div.firstChild);
+      }
+      range?.deleteContents();
+      range?.insertNode(frag);
     }
   };
   return (
@@ -97,6 +90,10 @@ const StScriptText = styled.p`
     font-size: 3.2rem;
     font-weight: 600;
     color: #4e8aff;
+  }
+
+  & > mark {
+    background-color: #cadcff;
   }
 
   & > .left {
