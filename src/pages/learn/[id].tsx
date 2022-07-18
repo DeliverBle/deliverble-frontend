@@ -139,8 +139,8 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
                   <StButton
                     onClick={(e) => {
                       e.stopPropagation();
+                      isHighlight ? setIsHighlight(false) : setIsHighlight(true);
                       setIsSpacing(false);
-                      setIsHighlight(true);
                     }}>
                     {isHighlight ? (
                       <ImageDiv className="function-button" src={icHighlighterClicked} alt="하이라이트" />
@@ -154,7 +154,7 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
                   <StButton
                     onClick={(e) => {
                       e.stopPropagation();
-                      setIsSpacing(true);
+                      isSpacing ? setIsSpacing(false) : setIsSpacing(true);
                       setIsHighlight(false);
                     }}>
                     {isSpacing ? (
