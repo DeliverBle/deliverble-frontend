@@ -128,7 +128,9 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
                       {text}
                     </StScriptText>
                   ))}
-                {(isHighlight || isSpacing) && <ScriptEdit scripts={scripts} />}
+                {(isHighlight || isSpacing) && (
+                  <ScriptEdit scripts={scripts} isHighlight={isHighlight} isSpacing={isSpacing} />
+                )}
                 {highlightAlert && <HighlightModal closeModal={() => setHighlightAlert(false)} />}
               </div>
               <div>
