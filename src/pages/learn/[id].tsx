@@ -11,7 +11,7 @@ import { GetServerSidePropsContext } from 'next';
 import { api } from '@src/services/api';
 import { MemoData, VideoData } from '@src/services/api/types/learn-detail';
 import YouTube from 'react-youtube';
-import EmptyMemo from '@src/components/learnDetail/EmptyMemo';
+import EmptyMemo from '@src/components/learnDetail/memo/EmptyMemo';
 import SEO from '@src/components/common/SEO';
 import MemoList from '@src/components/learnDetail/memo/MemoList';
 

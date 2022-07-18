@@ -2,7 +2,7 @@ import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { imgMemoEmpty } from 'public/assets/images';
 import styled from 'styled-components';
-import ImageDiv from '../common/ImageDiv';
+import ImageDiv from '../../common/ImageDiv';
 
 function EmptyMemo() {
   return (
