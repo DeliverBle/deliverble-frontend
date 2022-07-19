@@ -18,6 +18,10 @@ import {
   icSpacingClicked,
 } from 'public/assets/icons';
 import ConfirmModal from '@src/components/learnDetail/ConfirmModal';
+<<<<<<< HEAD
+=======
+import { icXButton, icGuide, icMemo, icAnnounce, icHighlighter, icSpacing } from 'public/assets/icons';
+>>>>>>> 325299fdfb65204f657e6b61d3a2325449e31de8
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { GetServerSidePropsContext } from 'next';
