@@ -18,21 +18,19 @@ function ScriptEdit(props: ScriptEditProps) {
   const { scripts, isHighlight, isSpacing } = props;
 
   const handleClick = () => {
-    const selection = window.getSelection(); // 커서의 위치를 알 수 있음
-    const range = selection?.getRangeAt(0); // 커서의 startOffset과 endOffset을 갖고 있는 객체이다.
-    const startIdx = range?.startOffset; // 커서의 시작인덱스
-    const endContainer = range?.endContainer; // 커서의 종료인덱스
+    const selection = window.getSelection();
+    const range = selection?.getRangeAt(0);
+    const startIdx = range?.startOffset;
+    const endContainer = range?.endContainer;
 
-    // 선택한 텍스트가 빈칸인지 확인하는 로직
     const selectedDiv = range?.startContainer as Node;
     const serializer = new XMLSerializer();
     const selectedLine = serializer.serializeToString(selectedDiv);
 
-    const isLeftBlank = startIdx && selectedLine[startIdx - 1] === ' '; //왼쪽이 빈칸
-    const isRightBlank = startIdx && selectedLine[startIdx] === ' '; //오른쪽이 빈칸
-    const isValidate = isLeftBlank || isRightBlank; //빈칸인지 여부
+    const isLeftBlank = startIdx && selectedLine[startIdx - 1] === ' ';
+    const isRightBlank = startIdx && selectedLine[startIdx] === ' ';
+    const isValidate = isLeftBlank || isRightBlank;
 
-    //클릭시 이벤트
     if (selection?.type === 'Caret' && isValidate && isSpacing) {
       const frag = document.createDocumentFragment();
       const div = document.createElement('div');
@@ -43,21 +41,16 @@ function ScriptEdit(props: ScriptEditProps) {
       range?.deleteContents();
       range?.insertNode(frag);
       endContainer && selection?.collapse(endContainer, 0);
-    }
+    } else if (selection?.type === 'Range' && isHighlight) {
+      let text = selection.toString();
 
-    //드래깅 이벤트
-    else if (selection?.type === 'Range' && isHighlight) {
-      let text = selection.toString(); //드래깅 된 텍스트
-
-      //하이라이트 표시 안에 '/'끊어 읽기 들어가 있을 때 예외처리
       if (text.includes('/')) {
-        const texts = text.split('/'); // 끊어 읽기 문자 단위로 자르고 해당 텍스트를 배열로 만든 것
+        const texts = text.split('/');
         const res = texts.join('<span>/</span>');
         console.log('res', res);
         text = res;
       }
 
-      //선택된 텍스트를 태그안에 넣어주는 부분
       const frag = document.createDocumentFragment();
       const div = document.createElement('div');
       div.innerHTML = '<mark>' + text + '</mark>';
