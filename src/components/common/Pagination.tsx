@@ -1,5 +1,6 @@
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 interface PaginationProps {
@@ -11,16 +12,32 @@ interface PaginationProps {
 }
 
 function Pagination(props: PaginationProps) {
-  const { listSize, blockSize, currentPage, lastPage, handleSearchWithPage } = props;
-  console.log(listSize); // 12
-  console.log(blockSize); // 10
+  const { blockSize, currentPage, lastPage, handleSearchWithPage } = props;
   const pageList = Array.from({ length: lastPage }, (_, i) => i + 1);
+  const [pageGroup, setPageGroup] = useState(pageList.slice(0, blockSize));
+
+  const groupList = pageList
+    .map((_, i) => {
+      return i % blockSize === 0 ? pageList.slice(i, i + blockSize) : null;
+    })
+    .filter((group) => {
+      return group;
+    });
+
+  useEffect(() => {
+    const index = Math.floor(currentPage / blockSize);
+    if (currentPage % blockSize !== 0) {
+      setPageGroup(groupList.length > 0 && groupList[index]);
+    } else {
+      setPageGroup(groupList.length > 0 && groupList[currentPage / blockSize - 1]);
+    }
+  }, [currentPage]);
 
   return (
     <StPagination>
       {lastPage > blockSize && <StDoubleLeftArrowButton onClick={() => currentPage !== 1 && handleSearchWithPage(1)} />}
       <StLeftArrowButton onClick={() => currentPage !== 1 && handleSearchWithPage(currentPage - 1)} />
-      {pageList.map((page) => (
+      {pageGroup.map((page) => (
         <StNumberButton onClick={() => handleSearchWithPage(page)} isActive={page === currentPage} key={page}>
           {page}
         </StNumberButton>
