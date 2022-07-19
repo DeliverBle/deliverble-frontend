@@ -83,6 +83,7 @@ const StWrapper = styled.div`
   :focus {
     outline: none;
   }
+  caret-color: transparent;
 `;
 
 const StScriptText = styled.p`
