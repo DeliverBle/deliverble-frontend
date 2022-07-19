@@ -18,7 +18,7 @@ function Pagination(props: PaginationProps) {
 
   return (
     <StPagination>
-      {lastPage > blockSize && <StDoubleLeftArrowButton onClick={() => handleSearchWithPage(1)} />}
+      {lastPage > blockSize && <StDoubleLeftArrowButton onClick={() => currentPage !== 1 && handleSearchWithPage(1)} />}
       <StLeftArrowButton onClick={() => currentPage !== 1 && handleSearchWithPage(currentPage - 1)} />
       {pageList.map((page) => (
         <StNumberButton onClick={() => handleSearchWithPage(page)} isActive={page === currentPage} key={page}>
@@ -26,7 +26,9 @@ function Pagination(props: PaginationProps) {
         </StNumberButton>
       ))}
       <StRightArrowButton onClick={() => currentPage !== lastPage && handleSearchWithPage(currentPage + 1)} />
-      {lastPage > blockSize && <StDoubleRightArrowButton onClick={() => handleSearchWithPage(lastPage)} />}
+      {lastPage > blockSize && (
+        <StDoubleRightArrowButton onClick={() => currentPage !== lastPage && handleSearchWithPage(lastPage)} />
+      )}
     </StPagination>
   );
 }
