@@ -24,7 +24,7 @@ function LoginModal(props: LoginModalProps) {
         <Link href={'https://deliverble.online/v2/auth/kakao'}>
           <StLoginButton>
             <ImageDiv src={icKakao} className="kakao-icon" layout="fill" alt="" />
-            <a onClick={loginUserRemote}>카카오로 3초만에 시작하기</a>
+            <a>카카오로 3초만에 시작하기</a>
           </StLoginButton>
         </Link>
       </StLoginModalContent>

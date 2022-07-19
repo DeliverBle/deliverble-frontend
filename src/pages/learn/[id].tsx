@@ -4,21 +4,36 @@ import styled from 'styled-components';
 import ImageDiv from '../../components/common/ImageDiv';
 import GuideModal from '@src/components/learnDetail/GuideModal';
 import HighlightModal from '@src/components/learnDetail/HighlightModal';
-import { icXButton, icGuide, icMemo, icAnnounce, icHighlighter, icSpacing, icLikeDefault } from 'public/assets/icons';
+import ScriptEdit from '@src/components/learnDetail/ScriptEdit';
+import {
+  icXButton,
+  icGuide,
+  icMemo,
+  icAnnounce,
+  icHighlighterDefault,
+  icHighlighterHover,
+  icHighlighterClicked,
+  icSpacingDefault,
+  icSpacingHover,
+  icSpacingClicked,
+} from 'public/assets/icons';
+import ConfirmModal from '@src/components/learnDetail/ConfirmModal';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { GetServerSidePropsContext } from 'next';
 import { api } from '@src/services/api';
-import { VideoData } from '@src/services/api/types/learn-detail';
+import { MemoData, VideoData } from '@src/services/api/types/learn-detail';
 import YouTube from 'react-youtube';
+import EmptyMemo from '@src/components/learnDetail/memo/EmptyMemo';
 import SEO from '@src/components/common/SEO';
+import MemoList from '@src/components/learnDetail/memo/MemoList';
+import Like from '@src/components/common/Like';
 
-function LearnDetail({ videoData }: { videoData: VideoData }) {
+function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: MemoData[] }) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
-  //같은 부분 하이라이트 했을 경우로 로직 변경해야 함.
-  //useEffect의 빈 배열 -> '하이라이트 경고가 뜰 때 바뀌는 상태'로 바꿔주기.
   const [highlightAlert, setHighlightAlert] = useState(false);
   useEffect(() => {
     const now = new Date().getTime();
@@ -53,6 +68,9 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
     return () => interval && clearInterval(interval);
   }, [player, videoState]);
 
+  const [isHighlight, setIsHighlight] = useState(false);
+  const [isSpacing, setIsSpacing] = useState(false);
+
   return (
     <>
       <SEO title="학습하기 | Deliverble" />
@@ -72,7 +90,7 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
               </StTagContainer>
             </StVideoDetail>
             <StVideoWrapper>
-              <ImageDiv src={icLikeDefault} className="like-button" layout="fill" />
+              <Like isFromList={false} />
               <YouTube
                 videoId={link}
                 opts={{
@@ -90,10 +108,13 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
                 onEnd={(e) => e.target.seekTo(startTime)}
               />
             </StVideoWrapper>
-            <StMemoWrapper>
-              <ImageDiv src={icMemo} className="memo" layout="fill" />
-              <h2>메모</h2>
-            </StMemoWrapper>
+            <StMemoContainer>
+              <StMemoTitle>
+                <ImageDiv src={icMemo} className="memo" layout="fill" />
+                <h2>메모</h2>
+              </StMemoTitle>
+              <StMemoWrapper>{memoData ? <MemoList memoList={memoData} /> : <EmptyMemo />}</StMemoWrapper>
+            </StMemoContainer>
           </aside>
           <StLearnSection>
             <div>
@@ -102,27 +123,61 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
             </div>
             <article>
               <div>
-                {scripts.map(({ id, text, startTime, endTime }) => (
-                  <StScriptText
-                    key={id}
-                    onClick={() => player?.seekTo(startTime, true)}
-                    isActive={startTime <= currentTime && currentTime <= endTime ? true : false}>
-                    {text}
-                  </StScriptText>
-                ))}
+                {!isHighlight &&
+                  !isSpacing &&
+                  scripts.map(({ id, text, startTime, endTime }) => (
+                    <StScriptText
+                      key={id}
+                      onClick={() => player?.seekTo(startTime, true)}
+                      isActive={startTime <= currentTime && currentTime <= endTime ? true : false}>
+                      {text}
+                    </StScriptText>
+                  ))}
+                {(isHighlight || isSpacing) && (
+                  <ScriptEdit scripts={scripts} isHighlight={isHighlight} isSpacing={isSpacing} />
+                )}
                 {highlightAlert && <HighlightModal closeModal={() => setHighlightAlert(false)} />}
               </div>
               <div>
                 <ImageDiv onClick={() => setIsModalOpen(true)} src={icGuide} className="guide" layout="fill" alt="?" />
                 <StButtonContainer>
-                  <ImageDiv src={icHighlighter} className="function-button" layout="fill" alt="하이라이트" />
-                  <ImageDiv src={icSpacing} className="function-button" layout="fill" alt="끊어 읽기" />
+                  <StButton
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      isHighlight ? setIsHighlight(false) : setIsHighlight(true);
+                      setIsSpacing(false);
+                    }}>
+                    {isHighlight ? (
+                      <ImageDiv className="function-button" src={icHighlighterClicked} alt="하이라이트" />
+                    ) : (
+                      <>
+                        <ImageDiv className="function-button" src={icHighlighterHover} alt="하이라이트" />
+                        <ImageDiv className="default function-button" src={icHighlighterDefault} alt="하이라이트" />
+                      </>
+                    )}
+                  </StButton>
+                  <StButton
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      isSpacing ? setIsSpacing(false) : setIsSpacing(true);
+                      setIsHighlight(false);
+                    }}>
+                    {isSpacing ? (
+                      <ImageDiv className="spacing function-button" src={icSpacingClicked} alt="끊어 읽기" />
+                    ) : (
+                      <>
+                        <ImageDiv className="spacing function-button" src={icSpacingHover} alt="끊어 읽기" />
+                        <ImageDiv className="spacing default function-button" src={icSpacingDefault} alt="끊어 읽기" />
+                      </>
+                    )}
+                  </StButton>
                 </StButtonContainer>
               </div>
             </article>
           </StLearnSection>
         </StLearnMain>
         {isModalOpen && <GuideModal closeModal={() => setIsModalOpen(false)} />}
+        {isConfirmOpen && <ConfirmModal closeModal={() => setIsConfirmOpen(false)} />}
       </StLearnDetail>
     </>
   );
@@ -132,13 +187,15 @@ export default LearnDetail;
 
 export async function getServerSideProps({ params }: GetServerSidePropsContext) {
   const id = +(params?.id ?? -1);
-  const response = await api.learnDetailService.getVideoData(id);
-  if (response.id !== id) {
+  const videoData = await api.learnDetailService.getVideoData(id);
+  const memoData = await api.learnDetailService.getMemoData(id);
+
+  if (videoData.id !== id) {
     return {
       notFound: true,
     };
   }
-  return { props: { videoData: response } };
+  return { props: { videoData: videoData, memoData: memoData } };
 }
 
 const StLearnDetail = styled.div`
@@ -167,12 +224,14 @@ const StLearnDetail = styled.div`
 const StLearnMain = styled.main`
   display: flex;
   margin: 0 auto;
-  gap: 4.8rem;
+  gap: 4rem;
   width: 172rem;
   height: 111.9rem;
   padding: 8rem 8rem 0 8rem;
   border-radius: 3rem;
   background-color: ${COLOR.WHITE};
+
+  overflow: hidden;
 `;
 
 const StLearnSection = styled.section`
@@ -242,13 +301,6 @@ const StLearnSection = styled.section`
       margin-top: 2.4rem;
       border-top: 0.2rem solid ${COLOR.GRAY_10};
     }
-
-    .function-button {
-      position: relative;
-      width: 4.8rem;
-      height: 4.8rem;
-      cursor: pointer;
-    }
   }
 `;
 
@@ -267,6 +319,23 @@ const StScriptText = styled.p<{ isActive: boolean }>`
 const StButtonContainer = styled.div`
   display: flex;
   gap: 0.8rem;
+  position: relative;
+`;
+
+const StButton = styled.button`
+  width: 4.8rem;
+  height: 4.8rem;
+
+  &:hover .default img {
+    transition: opacity 1s;
+    opacity: 0;
+  }
+
+  .function-button {
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+  }
 `;
 
 const StVideoDetail = styled.div`
@@ -323,7 +392,12 @@ const StVideoWrapper = styled.div`
   }
 `;
 
-const StMemoWrapper = styled.div`
+const StMemoContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const StMemoTitle = styled.div`
   display: flex;
   align-items: center;
   gap: 0.8rem;
@@ -339,4 +413,9 @@ const StMemoWrapper = styled.div`
     width: 3.2rem;
     height: 3.2rem;
   }
+`;
+
+const StMemoWrapper = styled.div`
+  display: flex;
+  justify-content: center;
 `;
