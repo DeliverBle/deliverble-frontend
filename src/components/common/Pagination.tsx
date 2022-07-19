@@ -20,7 +20,7 @@ function Pagination(props: PaginationProps) {
 
   return (
     <StPagination>
-      <ImageDiv className="arrow" src={icDoubleLeftArrow} layout="fill" alt="<<" />
+      {lastPage > blockSize && <ImageDiv className="arrow" src={icDoubleLeftArrow} layout="fill" alt="<<" />}
       <ImageDiv className="arrow" src={icLeftArrow} layout="fill" alt="<" />
       {pageList.map((page) => (
         <StButton onClick={() => handleSearchWithPage(page)} isActive={page === currentPage} key={page}>
@@ -28,7 +28,7 @@ function Pagination(props: PaginationProps) {
         </StButton>
       ))}
       <ImageDiv className="arrow" src={icRightArrow} layout="fill" alt=">" />
-      <ImageDiv className="arrow" src={icDoubleRightArrow} layout="fill" alt=">>" />
+      {lastPage > blockSize && <ImageDiv className="arrow" src={icDoubleRightArrow} layout="fill" alt=">>" />}
     </StPagination>
   );
 }
