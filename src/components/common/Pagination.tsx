@@ -27,12 +27,12 @@ function Pagination(props: PaginationProps) {
 
   useEffect(() => {
     const totalPageList = Array.from({ length: lastPage }, (_, i) => i + 1);
-    const totalGroupList: number[] = sliceIntoChunks(totalPageList, blockSize);
+    const totalGroupList = sliceIntoChunks(totalPageList, blockSize);
     const index = Math.floor(currentPage / blockSize);
     if (currentPage % blockSize !== 0) {
-      setPageGroupList(totalGroupList[index] as number[]);
+      setPageGroupList(totalGroupList[index]);
     } else {
-      setPageGroupList(totalGroupList[currentPage / blockSize - 1] as number[]);
+      setPageGroupList(totalGroupList[currentPage / blockSize - 1]);
     }
   }, [currentPage, blockSize, lastPage]);
 
