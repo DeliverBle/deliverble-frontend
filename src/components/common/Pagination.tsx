@@ -18,7 +18,7 @@ function Pagination(props: PaginationProps) {
 
   const groupList = pageList
     .map((_, i) => {
-      return i % blockSize === 0 ? pageList.slice(i, i + blockSize) : [];
+      return i % blockSize === 0 ? pageList.slice(i, i + blockSize) : null;
     })
     .filter((group) => {
       return group;
@@ -27,9 +27,9 @@ function Pagination(props: PaginationProps) {
   useEffect(() => {
     const index = Math.floor(currentPage / blockSize);
     if (currentPage % blockSize !== 0) {
-      setPageGroup(groupList[index]);
+      setPageGroup(groupList[index] as number[]);
     } else {
-      setPageGroup(groupList[currentPage / blockSize - 1]);
+      setPageGroup(groupList[currentPage / blockSize - 1] as number[]);
     }
   }, [currentPage]);
 
