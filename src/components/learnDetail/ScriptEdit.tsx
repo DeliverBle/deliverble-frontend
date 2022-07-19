@@ -72,6 +72,9 @@ export default ScriptEdit;
 
 const StWrapper = styled.div`
   cursor: pointer;
+  :focus {
+    outline: none;
+  }
 `;
 
 const StScriptText = styled.p`
