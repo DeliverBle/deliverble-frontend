@@ -1,8 +1,6 @@
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import { icDoubleLeftArrow, icDoubleRightArrow, icLeftArrow, icRightArrow } from 'public/assets/icons';
 import styled from 'styled-components';
-import ImageDiv from './ImageDiv';
 
 interface PaginationProps {
   listSize: number;
