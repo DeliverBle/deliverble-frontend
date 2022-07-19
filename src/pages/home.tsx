@@ -7,8 +7,22 @@ import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/home';
 import Footer from '@src/components/common/Footer';
 import SEO from '@src/components/common/SEO';
+import { useEffect, useState } from 'react';
+import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
 
-function Home({ videoData }: { videoData: VideoData[] }) {
+function Home() {
+  const [newsList, setNewsList] = useState<VideoData[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      setIsLoading(true);
+      const { videoList } = await api.homeService.getVideoData();
+      setNewsList(videoList);
+      setIsLoading(false);
+    })();
+  }, []);
+
   return (
     <>
       <SEO title="Deliverble" />
@@ -24,9 +38,7 @@ function Home({ videoData }: { videoData: VideoData[] }) {
       </StHome>
       <StNews>
         <h3>딜리버블의 추천 뉴스를 만나보세요.</h3>
-        <div>
-          <NewsList newsList={videoData} />
-        </div>
+        <div>{isLoading ? <VideoListSkeleton itemNumber={8} /> : <NewsList newsList={newsList} />}</div>
       </StNews>
       <Footer />
     </>
@@ -35,10 +47,10 @@ function Home({ videoData }: { videoData: VideoData[] }) {
 
 export default Home;
 
-export async function getServerSideProps() {
-  const response = await api.homeService.getVideoData();
-  return { props: { videoData: response.videoList } };
-}
+// export async function getServerSideProps() {
+//   const response = await api.homeService.getVideoData();
+//   return { props: { videoData: response.videoList } };
+// }
 
 const StHome = styled.div`
   display: flex;
