@@ -48,7 +48,15 @@ function ScriptEdit(props: ScriptEditProps) {
     else if (selection?.type === 'Range' && isHighlight) {
       const frag = document.createDocumentFragment();
       const div = document.createElement('div');
-      const text = selection.toString();
+      let text = selection.toString();
+
+      //하이라이트 표시 안에 '/'끊어 읽기 들어가 있을 때 예외처리
+      if (text.includes('/')) {
+        const texts = text.split('/'); // 끊어 읽기 문자 단위로 자르고 해당 텍스트를 배열로 만든 것
+        const res = texts.join('<span>/</span>');
+        console.log('res', res);
+        text = res;
+      }
 
       div.innerHTML = '<mark>' + text + '</mark>';
       while (div.firstChild) {
@@ -84,9 +92,13 @@ const StWrapper = styled.div`
     outline: none;
   }
   caret-color: transparent;
+
+  & > mark {
+    background: linear-gradient(259.3deg, #d8d9ff 0%, #a7c5ff 100%);
+  }
 `;
 
-const StScriptText = styled.p`
+const StScriptText = styled.div`
   font-size: 2.6rem;
   color: ${COLOR.BLACK};
   cursor: pointer;
