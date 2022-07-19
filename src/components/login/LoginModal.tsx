@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import ImageDiv from '../common/ImageDiv';
-import { KAKAO_AUTH_URL } from '@src/components/login/OAuth';
 import Link from 'next/link';
 import { icXButton, icKakao, icMicrophone } from 'public/assets/icons';
 import { imgLogo } from 'public/assets/images';
 import { COLOR } from '@src/styles/color';
+import { loginUserRemote } from '@src/services/remote/login-user';
 
 interface LoginModalProps {
   closeModal: () => void;
@@ -21,10 +21,10 @@ function LoginModal(props: LoginModalProps) {
         <ImageDiv src={imgLogo} className="logo" layout="fill" alt="DeliverBle" />
         <p>로그인하고 더 다양한 기능을 누려보세요.</p>
         <ImageDiv src={icMicrophone} className="microphone" layout="fill" alt="마이크" />
-        <Link href={KAKAO_AUTH_URL}>
+        <Link href={'https://deliverble.online/v2/auth/kakao'}>
           <StLoginButton>
             <ImageDiv src={icKakao} className="kakao-icon" layout="fill" alt="" />
-            <a>카카오로 3초만에 시작하기</a>
+            <a onClick={loginUserRemote}>카카오로 3초만에 시작하기</a>
           </StLoginButton>
         </Link>
       </StLoginModalContent>
