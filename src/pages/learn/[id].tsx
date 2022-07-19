@@ -4,8 +4,20 @@ import styled from 'styled-components';
 import ImageDiv from '../../components/common/ImageDiv';
 import GuideModal from '@src/components/learnDetail/GuideModal';
 import HighlightModal from '@src/components/learnDetail/HighlightModal';
+import ScriptEdit from '@src/components/learnDetail/ScriptEdit';
+import {
+  icXButton,
+  icGuide,
+  icMemo,
+  icAnnounce,
+  icHighlighterDefault,
+  icHighlighterHover,
+  icHighlighterClicked,
+  icSpacingDefault,
+  icSpacingHover,
+  icSpacingClicked,
+} from 'public/assets/icons';
 import ConfirmModal from '@src/components/learnDetail/ConfirmModal';
-import { icXButton, icGuide, icMemo, icAnnounce, icHighlighter, icSpacing } from 'public/assets/icons';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { GetServerSidePropsContext } from 'next';
@@ -55,6 +67,9 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
     }
     return () => interval && clearInterval(interval);
   }, [player, videoState]);
+
+  const [isHighlight, setIsHighlight] = useState(false);
+  const [isSpacing, setIsSpacing] = useState(false);
 
   return (
     <>
@@ -108,21 +123,54 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
             </div>
             <article>
               <div>
-                {scripts.map(({ id, text, startTime, endTime }) => (
-                  <StScriptText
-                    key={id}
-                    onClick={() => player?.seekTo(startTime, true)}
-                    isActive={startTime <= currentTime && currentTime <= endTime ? true : false}>
-                    {text}
-                  </StScriptText>
-                ))}
+                {!isHighlight &&
+                  !isSpacing &&
+                  scripts.map(({ id, text, startTime, endTime }) => (
+                    <StScriptText
+                      key={id}
+                      onClick={() => player?.seekTo(startTime, true)}
+                      isActive={startTime <= currentTime && currentTime <= endTime ? true : false}>
+                      {text}
+                    </StScriptText>
+                  ))}
+                {(isHighlight || isSpacing) && (
+                  <ScriptEdit scripts={scripts} isHighlight={isHighlight} isSpacing={isSpacing} />
+                )}
                 {highlightAlert && <HighlightModal closeModal={() => setHighlightAlert(false)} />}
               </div>
               <div>
                 <ImageDiv onClick={() => setIsModalOpen(true)} src={icGuide} className="guide" layout="fill" alt="?" />
                 <StButtonContainer>
-                  <ImageDiv src={icHighlighter} className="function-button" layout="fill" alt="하이라이트" />
-                  <ImageDiv src={icSpacing} className="function-button" layout="fill" alt="끊어 읽기" />
+                  <StButton
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      isHighlight ? setIsHighlight(false) : setIsHighlight(true);
+                      setIsSpacing(false);
+                    }}>
+                    {isHighlight ? (
+                      <ImageDiv className="function-button" src={icHighlighterClicked} alt="하이라이트" />
+                    ) : (
+                      <>
+                        <ImageDiv className="function-button" src={icHighlighterHover} alt="하이라이트" />
+                        <ImageDiv className="default function-button" src={icHighlighterDefault} alt="하이라이트" />
+                      </>
+                    )}
+                  </StButton>
+                  <StButton
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      isSpacing ? setIsSpacing(false) : setIsSpacing(true);
+                      setIsHighlight(false);
+                    }}>
+                    {isSpacing ? (
+                      <ImageDiv className="spacing function-button" src={icSpacingClicked} alt="끊어 읽기" />
+                    ) : (
+                      <>
+                        <ImageDiv className="spacing function-button" src={icSpacingHover} alt="끊어 읽기" />
+                        <ImageDiv className="spacing default function-button" src={icSpacingDefault} alt="끊어 읽기" />
+                      </>
+                    )}
+                  </StButton>
                 </StButtonContainer>
               </div>
             </article>
@@ -253,13 +301,6 @@ const StLearnSection = styled.section`
       margin-top: 2.4rem;
       border-top: 0.2rem solid ${COLOR.GRAY_10};
     }
-
-    .function-button {
-      position: relative;
-      width: 4.8rem;
-      height: 4.8rem;
-      cursor: pointer;
-    }
   }
 `;
 
@@ -278,6 +319,23 @@ const StScriptText = styled.p<{ isActive: boolean }>`
 const StButtonContainer = styled.div`
   display: flex;
   gap: 0.8rem;
+  position: relative;
+`;
+
+const StButton = styled.button`
+  width: 4.8rem;
+  height: 4.8rem;
+
+  &:hover .default img {
+    transition: opacity 1s;
+    opacity: 0;
+  }
+
+  .function-button {
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+  }
 `;
 
 const StVideoDetail = styled.div`
