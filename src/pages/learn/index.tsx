@@ -6,6 +6,7 @@ import NavigationBar from '@src/components/common/NavigationBar';
 import NewsList from '@src/components/common/NewsList';
 import SelectBox from '@src/components/learn/SelectBox';
 import ImageDiv from '@src/components/common/ImageDiv';
+import Pagination from '@src/components/common/Pagination';
 import Footer from '@src/components/common/Footer';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
@@ -18,14 +19,14 @@ const categoryList = ['전체', '정치', '경제', '사회', '세계', '연예'
 const speakerList = ['전체', '여성', '남성'];
 
 function Learn() {
-  // const BLOCK_SIZE = 10;
+  const BLOCK_SIZE = 10;
   const LIST_SIZE = 12;
-
   const [selectedChannelList, setSelectedChannelList] = useState<string[]>([]);
   const [selectedCategoryList, setSelectedCategoryList] = useState<string[]>([]);
   const [selectedSpeakerList, setSelectedSpeakerList] = useState<string[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [lastPage, setLastPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [resultList, setResultList] = useState<VideoData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -40,6 +41,24 @@ function Learn() {
       listSize: LIST_SIZE,
     });
 
+    setTotalCount(paging.totalCount);
+    setLastPage(paging.lastPage);
+    setResultList(videoList);
+    setIsLoading(false);
+  };
+
+  const handleSearchWithPage = async (page: number) => {
+    setIsLoading(true);
+
+    const { paging, videoList } = await api.learnService.postSearchCondition({
+      channels: selectedChannelList,
+      categories: selectedCategoryList,
+      announcerGender: selectedSpeakerList,
+      currentPage: page,
+      listSize: LIST_SIZE,
+    });
+
+    setCurrentPage(page);
     setTotalCount(paging.totalCount);
     setLastPage(paging.lastPage);
     setResultList(videoList);
@@ -78,7 +97,7 @@ function Learn() {
             <SelectBox optionName="분야" optionList={categoryList} setConditionList={setSelectedCategoryList} />
             <SelectBox optionName="발화자" optionList={speakerList} setConditionList={setSelectedSpeakerList} />
           </StSelectBoxContainer>
-          <button onClick={() => handleSearch()}>검색하기</button>
+          <button onClick={handleSearch}>검색하기</button>
         </StSearch>
         {isLoading ? (
           <VideoListSkeleton itemNumber={12} />
@@ -88,7 +107,13 @@ function Learn() {
               전체 <span>{totalCount}개 </span> 영상
             </h2>
             <NewsList newsList={resultList} />
-            <div>페이지네이션 마지막 페이지: {lastPage}</div>
+            <Pagination
+              listSize={LIST_SIZE}
+              blockSize={BLOCK_SIZE}
+              currentPage={currentPage}
+              lastPage={lastPage}
+              handleSearchWithPage={handleSearchWithPage}
+            />
           </StResult>
         )}
       </StLearn>
