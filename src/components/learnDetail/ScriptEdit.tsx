@@ -46,9 +46,7 @@ function ScriptEdit(props: ScriptEditProps) {
 
     //드래깅 이벤트
     else if (selection?.type === 'Range' && isHighlight) {
-      const frag = document.createDocumentFragment();
-      const div = document.createElement('div');
-      let text = selection.toString();
+      let text = selection.toString(); //드래깅 된 텍스트
 
       //하이라이트 표시 안에 '/'끊어 읽기 들어가 있을 때 예외처리
       if (text.includes('/')) {
@@ -58,6 +56,9 @@ function ScriptEdit(props: ScriptEditProps) {
         text = res;
       }
 
+      //선택된 텍스트를 태그안에 넣어주는 부분
+      const frag = document.createDocumentFragment();
+      const div = document.createElement('div');
       div.innerHTML = '<mark>' + text + '</mark>';
       while (div.firstChild) {
         frag.appendChild(div.firstChild);
