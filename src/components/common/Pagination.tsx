@@ -13,8 +13,7 @@ interface PaginationProps {
 
 function Pagination(props: PaginationProps) {
   const { blockSize, currentPage, lastPage, handleSearchWithPage } = props;
-  const totalPageList = Array.from({ length: lastPage }, (_, i) => i + 1);
-  const [pageGroupList, setPageGroupList] = useState(totalPageList.slice(0, blockSize));
+  const [pageGroupList, setPageGroupList] = useState([]);
 
   const sliceIntoChunks = (list: number[], chunkSize: number) => {
     const chunkList = [];
@@ -26,16 +25,16 @@ function Pagination(props: PaginationProps) {
     return chunkList;
   };
 
-  const totalGroupList = sliceIntoChunks(totalPageList, blockSize);
-
   useEffect(() => {
+    const totalPageList = Array.from({ length: lastPage }, (_, i) => i + 1);
+    const totalGroupList = sliceIntoChunks(totalPageList, blockSize);
     const index = Math.floor(currentPage / blockSize);
     if (currentPage % blockSize !== 0) {
       setPageGroupList(totalGroupList[index]);
     } else {
       setPageGroupList(totalGroupList[currentPage / blockSize - 1]);
     }
-  }, [currentPage]);
+  }, [currentPage, blockSize, lastPage]);
 
   return (
     <StPagination>
