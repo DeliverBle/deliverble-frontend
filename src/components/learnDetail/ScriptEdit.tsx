@@ -60,7 +60,15 @@ function ScriptEdit(props: ScriptEditProps) {
   };
 
   return (
-    <StWrapper contentEditable="true" onClick={handleClick} suppressContentEditableWarning={true} spellCheck="false">
+    <StWrapper
+      contentEditable="true"
+      onClick={handleClick}
+      suppressContentEditableWarning={true}
+      spellCheck="false"
+      onCut={(e) => e.preventDefault()}
+      onCopy={(e) => e.preventDefault()}
+      onPaste={(e) => e.preventDefault()}
+      onKeyDown={(e) => e.preventDefault()}>
       {scripts.map(({ id, text }) => (
         <StScriptText key={id}>{text}</StScriptText>
       ))}
