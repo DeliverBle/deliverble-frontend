@@ -30,9 +30,9 @@ function Pagination(props: PaginationProps) {
     const totalGroupList = sliceIntoChunks(totalPageList, blockSize);
     const index = Math.floor(currentPage / blockSize);
     if (currentPage % blockSize !== 0) {
-      setPageGroupList(totalGroupList[index]);
+      setPageGroupList(totalGroupList[index] as number[]);
     } else {
-      setPageGroupList(totalGroupList[currentPage / blockSize - 1]);
+      setPageGroupList(totalGroupList[currentPage / blockSize - 1] as number[]);
     }
   }, [currentPage, blockSize, lastPage]);
 
