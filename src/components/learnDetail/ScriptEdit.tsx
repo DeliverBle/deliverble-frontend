@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
+
 interface ScriptType {
   id: number;
   text: string;
@@ -57,6 +58,7 @@ function ScriptEdit(props: ScriptEditProps) {
       range?.insertNode(frag);
     }
   };
+
   return (
     <StWrapper contentEditable="true" onClick={handleClick} suppressContentEditableWarning={true} spellCheck="false">
       {scripts.map(({ id, text }) => (
@@ -83,27 +85,29 @@ const StScriptText = styled.p`
     color: #4e8aff;
   }
 
-  & > mark {
-    background-color: #cadcff;
-    & > .left {
-      font-size: 3.2rem;
-      font-weight: 600;
-      color: #4e8aff;
-      margin-right: 0.4rem;
-    }
-    & > .right {
-      font-size: 3.2rem;
-      font-weight: 600;
-      color: #4e8aff;
-      margin-left: 0.4rem;
-    }
-  }
-
   & > .left {
     margin-right: 0.4rem;
   }
 
   & > .right {
     margin-left: 0.4rem;
+  }
+
+  & > mark {
+    background: linear-gradient(259.3deg, #d8d9ff 0%, #a7c5ff 100%);
+
+    & > span {
+      font-size: 3.2rem;
+      font-weight: 600;
+      color: #4e8aff;
+    }
+
+    & > .left {
+      margin-right: 0.4rem;
+    }
+
+    & > .right {
+      margin-left: 0.4rem;
+    }
   }
 `;
