@@ -16,20 +16,24 @@ function Pagination(props: PaginationProps) {
   const totalPageList = Array.from({ length: lastPage }, (_, i) => i + 1);
   const [pageGroupList, setPageGroupList] = useState(totalPageList.slice(0, blockSize));
 
-  const totalGroupList = totalPageList
-    .map((_, i) => {
-      return i % blockSize === 0 ? totalPageList.slice(i, i + blockSize) : null;
-    })
-    .filter((group) => {
-      return group;
-    });
+  const sliceIntoChunks = (list: number[], chunkSize: number) => {
+    const chunkList = [];
+    const length = list.length;
+    for (let i = 0; i < length; i += chunkSize) {
+      const chunk = list.slice(i, i + chunkSize);
+      chunkList.push(chunk);
+    }
+    return chunkList;
+  };
+
+  const totalGroupList = sliceIntoChunks(totalPageList, blockSize);
 
   useEffect(() => {
     const index = Math.floor(currentPage / blockSize);
     if (currentPage % blockSize !== 0) {
-      setPageGroupList(totalGroupList[index] as number[]);
+      setPageGroupList(totalGroupList[index]);
     } else {
-      setPageGroupList(totalGroupList[currentPage / blockSize - 1] as number[]);
+      setPageGroupList(totalGroupList[currentPage / blockSize - 1]);
     }
   }, [currentPage]);
 
