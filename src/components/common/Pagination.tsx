@@ -20,15 +20,15 @@ function Pagination(props: PaginationProps) {
 
   return (
     <StPagination>
-      {lastPage > blockSize && <ImageDiv className="arrow" src={icDoubleLeftArrow} layout="fill" alt="<<" />}
-      <ImageDiv className="arrow" src={icLeftArrow} layout="fill" alt="<" />
+      {lastPage > blockSize && <StDoubleLeftArrowButton />}
+      <StLeftArrowButton />
       {pageList.map((page) => (
-        <StButton onClick={() => handleSearchWithPage(page)} isActive={page === currentPage} key={page}>
+        <StNumberButton onClick={() => handleSearchWithPage(page)} isActive={page === currentPage} key={page}>
           {page}
-        </StButton>
+        </StNumberButton>
       ))}
-      <ImageDiv className="arrow" src={icRightArrow} layout="fill" alt=">" />
-      {lastPage > blockSize && <ImageDiv className="arrow" src={icDoubleRightArrow} layout="fill" alt=">>" />}
+      <StRightArrowButton />
+      {lastPage > blockSize && <StDoubleRightArrowButton />}
     </StPagination>
   );
 }
@@ -49,7 +49,41 @@ const StPagination = styled.div`
   }
 `;
 
-const StButton = styled.button<{ isActive: boolean }>`
+const StArrowButton = styled.button`
+  width: 2.8rem;
+  height: 2.8rem;
+  padding: 0;
+`;
+
+const StLeftArrowButton = styled(StArrowButton)`
+  background-image: url('/assets/icons/ic_left_arrow.svg');
+  &:hover {
+    background-image: url('/assets/icons/ic_left_arrow_hover.svg');
+  }
+`;
+
+const StRightArrowButton = styled(StArrowButton)`
+  background-image: url('/assets/icons/ic_right_arrow.svg');
+  &:hover {
+    background-image: url('/assets/icons/ic_right_arrow_hover.svg');
+  }
+`;
+
+const StDoubleLeftArrowButton = styled(StArrowButton)`
+  background-image: url('/assets/icons/ic_double_left_arrow.svg');
+  &:hover {
+    background-image: url('/assets/icons/ic_double_left_arrow_hover.svg');
+  }
+`;
+
+const StDoubleRightArrowButton = styled(StArrowButton)`
+  background-image: url('/assets/icons/ic_double_right_arrow.svg');
+  &:hover {
+    background-image: url('/assets/icons/ic_double_right_arrow_hover.svg');
+  }
+`;
+
+const StNumberButton = styled.button<{ isActive: boolean }>`
   padding: 0;
   color: ${({ isActive }) => (isActive ? COLOR.BLACK : COLOR.GRAY_30)};
   ${FONT_STYLES.SB_20_BODY};
