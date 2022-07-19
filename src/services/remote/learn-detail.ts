@@ -1,5 +1,6 @@
 import { LearnDetailService } from '../api/learn-detail';
 import { Script, Tag } from '../api/types/learn-detail';
+import { LEARN_DETAIL_DATA } from '../mock/learn-detail.data';
 import { publicAPI } from './base';
 
 export function learnDetailDataRemote(): LearnDetailService {
@@ -29,5 +30,9 @@ export function learnDetailDataRemote(): LearnDetailService {
     } else throw '서버 통신 실패';
   };
 
-  return { getVideoData };
+  const getMemoData = async () => {
+    return LEARN_DETAIL_DATA.MEMO_DATA;
+  };
+
+  return { getVideoData, getMemoData };
 }

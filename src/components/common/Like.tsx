@@ -12,13 +12,13 @@ function Like(props: LikeProps) {
   const [isLiked, setIsLiked] = useState(false);
 
   return (
-    <StLikeButton
+    <StLike
       type="button"
       onClick={(e) => {
         e.stopPropagation();
         setIsLiked((prev) => !prev);
       }}>
-      <StImageContainer isFromList={isFromList}>
+      <StLikeImage isFromList={isFromList}>
         {isLiked ? (
           <ImageDiv className="like" src={icLikeClicked} alt="like" layout="fill" />
         ) : (
@@ -27,14 +27,14 @@ function Like(props: LikeProps) {
             <ImageDiv className="like default" src={icLikeDefault} alt="like" layout="fill" />
           </>
         )}
-      </StImageContainer>
-    </StLikeButton>
+      </StLikeImage>
+    </StLike>
   );
 }
 
 export default Like;
 
-const StLikeButton = styled.button`
+const StLike = styled.button`
   position: absolute;
   top: 1.2rem;
   right: 1.2rem;
@@ -42,7 +42,7 @@ const StLikeButton = styled.button`
   padding: 0;
 `;
 
-const StImageContainer = styled.div<{ isFromList: boolean }>`
+const StLikeImage = styled.div<{ isFromList: boolean }>`
   position: relative;
 
   ${({ isFromList }) =>
