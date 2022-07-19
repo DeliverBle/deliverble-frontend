@@ -13,12 +13,12 @@ interface PaginationProps {
 
 function Pagination(props: PaginationProps) {
   const { blockSize, currentPage, lastPage, handleSearchWithPage } = props;
-  const pageList = Array.from({ length: lastPage }, (_, i) => i + 1);
-  const [pageGroup, setPageGroup] = useState(pageList.slice(0, blockSize));
+  const totalPageList = Array.from({ length: lastPage }, (_, i) => i + 1);
+  const [pageGroupList, setPageGroupList] = useState(totalPageList.slice(0, blockSize));
 
-  const groupList = pageList
+  const totalGroupList = totalPageList
     .map((_, i) => {
-      return i % blockSize === 0 ? pageList.slice(i, i + blockSize) : null;
+      return i % blockSize === 0 ? totalPageList.slice(i, i + blockSize) : null;
     })
     .filter((group) => {
       return group;
@@ -27,9 +27,9 @@ function Pagination(props: PaginationProps) {
   useEffect(() => {
     const index = Math.floor(currentPage / blockSize);
     if (currentPage % blockSize !== 0) {
-      setPageGroup(groupList[index] as number[]);
+      setPageGroupList(totalGroupList[index] as number[]);
     } else {
-      setPageGroup(groupList[currentPage / blockSize - 1] as number[]);
+      setPageGroupList(totalGroupList[currentPage / blockSize - 1] as number[]);
     }
   }, [currentPage]);
 
@@ -37,7 +37,7 @@ function Pagination(props: PaginationProps) {
     <StPagination>
       {lastPage > blockSize && <StDoubleLeftArrowButton onClick={() => currentPage !== 1 && handleSearchWithPage(1)} />}
       <StLeftArrowButton onClick={() => currentPage !== 1 && handleSearchWithPage(currentPage - 1)} />
-      {pageGroup.map((page) => (
+      {pageGroupList.map((page) => (
         <StNumberButton onClick={() => handleSearchWithPage(page)} isActive={page === currentPage} key={page}>
           {page}
         </StNumberButton>
