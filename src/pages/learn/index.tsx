@@ -41,6 +41,7 @@ function Learn() {
       listSize: LIST_SIZE,
     });
 
+    setCurrentPage(1);
     setTotalCount(paging.totalCount);
     setLastPage(paging.lastPage);
     setResultList(videoList);
