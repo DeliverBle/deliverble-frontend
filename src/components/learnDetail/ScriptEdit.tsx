@@ -21,7 +21,7 @@ function ScriptEdit(props: ScriptEditProps) {
     const selection = window.getSelection(); // 커서의 위치를 알 수 있음
     const range = selection?.getRangeAt(0); // 커서의 startOffset과 endOffset을 갖고 있는 객체이다.
     const startIdx = range?.startOffset; // 커서의 시작인덱스
-    // const endIdx = range?.endOffset; // 커서의 종료인덱스
+    const endContainer = range?.endContainer; // 커서의 종료인덱스
 
     // 선택한 텍스트가 빈칸인지 확인하는 로직
     const selectedDiv = range?.startContainer as Node;
@@ -42,6 +42,7 @@ function ScriptEdit(props: ScriptEditProps) {
       }
       range?.deleteContents();
       range?.insertNode(frag);
+      endContainer && selection?.collapse(endContainer, 0);
     }
 
     //드래깅 이벤트
@@ -66,6 +67,7 @@ function ScriptEdit(props: ScriptEditProps) {
       range?.deleteContents();
       range?.insertNode(frag);
     }
+    endContainer && selection?.collapse(endContainer, 0);
   };
 
   return (
