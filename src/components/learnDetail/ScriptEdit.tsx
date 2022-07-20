@@ -19,9 +19,18 @@ function ScriptEdit(props: ScriptEditProps) {
 
   const handleClick = () => {
     const selection = window.getSelection();
+    //mark 태그 안에 들어가있는 친구인지?
+    const isInMark = document.getElementsByTagName('mark');
+    let found;
+    for (let i = 0; i < isInMark.length; i++) {
+      selection?.containsNode(isInMark[i], true) ? (found = true) : (found = false);
+    }
     const range = selection?.getRangeAt(0);
     const startIdx = range?.startOffset;
+    // const endIdx = range?.endOffset;
+    // const startContainer = range?.startContainer;
     const endContainer = range?.endContainer;
+    // console.log('range', range);
 
     const selectedDiv = range?.startContainer as Node;
     const serializer = new XMLSerializer();
@@ -41,7 +50,7 @@ function ScriptEdit(props: ScriptEditProps) {
       range?.deleteContents();
       range?.insertNode(frag);
       endContainer && selection?.collapse(endContainer, 0);
-    } else if (selection?.type === 'Range' && isHighlight) {
+    } else if (!found && selection?.type === 'Range' && isHighlight) {
       let text = selection.toString();
 
       if (text.includes('/')) {
