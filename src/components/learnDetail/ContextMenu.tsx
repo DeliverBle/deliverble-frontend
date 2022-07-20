@@ -15,8 +15,14 @@ function ContextMenu(props: ContextMenuProps) {
   return (
     <StContextMenu top={y} left={x} className="test">
       <ul>
-        <li>메모 추가</li>
-        <li>하이라이트 삭제</li>
+        <li>
+          <button type="button" onClick={(e) => e.stopPropagation()}>
+            메모 추가
+          </button>
+        </li>
+        <li>
+          <button type="button">하이라이트 삭제</button>
+        </li>
       </ul>
     </StContextMenu>
   );
@@ -49,13 +55,15 @@ const StContextMenu = styled.div<{ top: number; left: number }>`
     display: flex;
     justify-content: center;
 
-    width: 13.2rem;
-    height: 3.2rem;
-    padding: 0.5rem 1.6rem;
-
     border-radius: 0.8rem;
-    ${FONT_STYLES.SB_16_CAPTION}
-    color: ${COLOR.BLACK};
+    & > button {
+      width: 13.2rem;
+      height: 3.2rem;
+      padding: 0.5rem 1.6rem;
+
+      ${FONT_STYLES.SB_16_CAPTION}
+      color: ${COLOR.BLACK};
+    }
   }
 
   & > ul > li:hover {

@@ -160,7 +160,7 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
                       key={id}
                       onClick={() => player?.seekTo(startTime, true)}
                       isActive={startTime <= currentTime && currentTime <= endTime ? true : false}>
-                      {text}
+                      <p>{text}</p>
                       {clickedScriptId == id && <ContextMenu points={points} />}
                     </StScriptText>
                   ))}
@@ -343,7 +343,7 @@ const StLearnSection = styled.section`
   }
 `;
 
-const StScriptText = styled.p<{ isActive: boolean }>`
+const StScriptText = styled.div<{ isActive: boolean }>`
   position: relative;
 
   font-size: 2.6rem;
