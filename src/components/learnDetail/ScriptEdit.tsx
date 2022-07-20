@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { COLOR } from '@src/styles/color';
 import HighlightModal from './HighlightModal';
+
 interface ScriptType {
   id: number;
   text: string;
@@ -20,17 +21,21 @@ function ScriptEdit(props: ScriptEditProps) {
   const [highlightAlert, setHighlightAlert] = useState<boolean>(false);
 
   useEffect(() => {
-    const now = new Date().getTime();
-    const timeSaved = Number(localStorage.getItem('timeClicked'));
-    if (timeSaved) {
-      const gapHour = (now - timeSaved) / 1000 / 60 / 60;
-      if (gapHour > 72) {
+    if (highlightAlert) {
+      const now = new Date().getTime();
+      const timeSaved = Number(localStorage.getItem('timeClicked'));
+      if (timeSaved) {
+        const gapHour = (now - timeSaved) / 1000 / 60 / 60;
+        if (gapHour > 72) {
+          setHighlightAlert(true);
+        } else {
+          setHighlightAlert(false);
+        }
+      } else {
         setHighlightAlert(true);
       }
-    } else {
-      setHighlightAlert(true);
     }
-  }, []);
+  }, [highlightAlert]);
 
   const handleClick = () => {
     const selection = window.getSelection();
