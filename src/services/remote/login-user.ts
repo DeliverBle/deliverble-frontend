@@ -1,6 +1,7 @@
+import { LoginUserService } from '../api/login-user';
 import { publicAPI } from './base';
 
-export function loginUserRemote() {
+export function loginUserRemote(): LoginUserService {
   //accessToken 서버에서 받아오기.
   const requestAccessToken = async () => {
     const response = await publicAPI.get({ url: '/auth/kakao' });
@@ -8,7 +9,6 @@ export function loginUserRemote() {
       console.log(response);
       return {
         accessToken: response.message.accessToken,
-        expiredIn: response.message.expired_in,
         userId: response.message.userId,
       };
     } else throw '엑세스 토큰 요청 실패';

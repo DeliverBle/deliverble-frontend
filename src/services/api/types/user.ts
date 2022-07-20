@@ -1,6 +1,6 @@
 export interface LoginUser {
   accessToken: string;
-  user_id: string;
+  userId: string;
 }
 
 export interface UserInfo {

@@ -34,3 +34,8 @@
 //         throw '로그인 실패'
 //     }
 // };
+
+import { LoginUser } from './types/user';
+export interface LoginUserService {
+  requestAccessToken(): Promise<LoginUser>;
+}
