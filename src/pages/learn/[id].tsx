@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import ImageDiv from '../../components/common/ImageDiv';
 import GuideModal from '@src/components/learnDetail/GuideModal';
 import HighlightModal from '@src/components/learnDetail/HighlightModal';
@@ -28,6 +28,7 @@ import EmptyMemo from '@src/components/learnDetail/memo/EmptyMemo';
 import SEO from '@src/components/common/SEO';
 import MemoList from '@src/components/learnDetail/memo/MemoList';
 import Like from '@src/components/common/Like';
+import ContextMenu from '@src/components/learnDetail/ContextMenu';
 
 function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: MemoData[] }) {
   const router = useRouter();
@@ -71,13 +72,8 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
   const [isHighlight, setIsHighlight] = useState(false);
   const [isSpacing, setIsSpacing] = useState(false);
 
-  const [clickedId, setClickedId] = useState<number>();
+  const [clickedScriptId, setClickedScriptId] = useState<number>();
   const [points, setPoints] = useState({ x: 0, y: 0 });
-
-  // const setShowId = (id: number) => {
-  //   window.addEventListener('click', () => setClickedId(id));
-  //   return () => window.removeEventListener('click', () => setClickedId(id));
-  // };
 
   return (
     <>
@@ -137,10 +133,7 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
                     <StScriptText
                       onContextMenu={(e) => {
                         e.preventDefault();
-                        setClickedId(id); // 우클릭한 하이라이트가 속한 문장의 아이디
-                        // setShowId(id);
-                        console.log('offsetX', e.nativeEvent.offsetX);
-                        console.log('offsetY', e.nativeEvent.offsetY);
+                        setClickedScriptId(id);
                         setPoints({
                           x: e.nativeEvent.offsetX / 10 + (e.nativeEvent.offsetX / 10) * 0.5,
                           y: e.nativeEvent.offsetY / 10 + (e.nativeEvent.offsetY / 10) * 0.5,
@@ -150,14 +143,7 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
                       onClick={() => player?.seekTo(startTime, true)}
                       isActive={startTime <= currentTime && currentTime <= endTime ? true : false}>
                       {text}
-                      {clickedId == id && (
-                        <StContextMenu top={points.y} left={points.x} className="test">
-                          <ul>
-                            <li>메모 추가</li>
-                            <li>하이라이트 삭제</li>
-                          </ul>
-                        </StContextMenu>
-                      )}
+                      {clickedScriptId == id && <ContextMenu points={points} />}
                     </StScriptText>
                   ))}
                 {(isHighlight || isSpacing) && (
@@ -339,7 +325,7 @@ const StScriptText = styled.p<{ isActive: boolean }>`
   color: ${({ isActive }) => (isActive ? COLOR.MAIN_BLUE : COLOR.BLACK)};
   cursor: pointer;
 
-  &:not(& div):hover {
+  &:hover {
     color: ${COLOR.MAIN_BLUE};
     font-weight: 600;
   }
@@ -452,47 +438,4 @@ const StMemoTitle = styled.div`
 const StMemoWrapper = styled.div`
   display: flex;
   justify-content: center;
-`;
-
-type ContextMenuProps = {
-  top: number;
-  left: number;
-};
-
-const StContextMenu = styled.div<ContextMenuProps>`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  position: absolute;
-  width: 14.4rem;
-  height: 8rem;
-  z-index: 1;
-
-  border-radius: 1.2rem;
-  border: 1px solid ${COLOR.GRAY_10};
-  background-color: ${COLOR.WHITE};
-  box-shadow: 0.4rem 0.4rem 2rem rgba(22, 15, 53, 0.15);
-
-  ${({ top, left }) => css`
-    top: ${top}rem;
-    left: ${left}rem;
-  `}
-
-  & > ul > li {
-    display: flex;
-    justify-content: center;
-
-    width: 13.2rem;
-    height: 3.2rem;
-    padding: 0.5rem 1.6rem;
-
-    ${FONT_STYLES.SB_16_CAPTION}
-    color: ${COLOR.BLACK};
-  }
-
-  & > ul > li:hover {
-    cursor: pointer;
-  }
 `;
