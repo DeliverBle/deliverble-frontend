@@ -91,8 +91,35 @@ function ScriptEdit(props: ScriptEditProps) {
       }
       range?.deleteContents();
       range?.insertNode(frag);
+      handleHighlightIdx(selection); //하이라이트의 인덱스를 구하는 함수
     }
     selection?.collapseToEnd();
+  };
+
+  //하이라이트 인덱스 구하기
+  const [highlightStartIdx, setHighlightStartIdx] = useState<number>();
+  const [highlightEndIdx, setHighlightEndIdx] = useState<number>();
+  const [currentLine, setCurrentLine] = useState<number>();
+
+  useEffect(() => {
+    console.log(highlightStartIdx, highlightEndIdx, currentLine);
+  }, [highlightStartIdx, highlightEndIdx, currentLine]);
+
+  const handleHighlightIdx = (selection: any) => {
+    const range2 = selection?.getRangeAt(0);
+
+    //여기서 node가 children을 가지면 mark태그임.
+    let textCount = 0;
+    for (const node of range2.commonAncestorContainer.childNodes) {
+      if (node.length) {
+        textCount += node.length;
+      }
+      if (node.hasChildNodes()) {
+        setHighlightStartIdx(textCount);
+        textCount += node.childNodes[0].length;
+        setHighlightEndIdx(textCount);
+      }
+    }
   };
 
   return (
@@ -107,7 +134,9 @@ function ScriptEdit(props: ScriptEditProps) {
         onPaste={(e) => e.preventDefault()}
         onKeyDown={(e) => e.preventDefault()}>
         {scripts.map(({ id, text }) => (
-          <StScriptText key={id}>{text}</StScriptText>
+          <StScriptText key={id} onClick={() => setCurrentLine(id)}>
+            {text}
+          </StScriptText>
         ))}
       </StWrapper>
       {highlightAlert && <HighlightModal closeModal={() => setHighlightAlert(false)} />}
