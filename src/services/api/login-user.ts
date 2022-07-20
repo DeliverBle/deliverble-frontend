@@ -35,7 +35,21 @@
 //     }
 // };
 
+import { publicAPI } from '../remote/base';
 import { LoginUser } from './types/user';
 export interface LoginUserService {
   requestAccessToken(): Promise<LoginUser>;
 }
+
+export const getAccessTokenAndId = async (
+  code: string,
+): Promise<{ accessToken: string; expired_in: string; userId: string }> => {
+  try {
+    const response = await publicAPI.get({ url: `/auth/kakao/token?code=${code}` });
+    if (response.status === 200) return response.message;
+    else throw '실패';
+  } catch (error) {
+    console.error(error);
+    throw '실패';
+  }
+};
