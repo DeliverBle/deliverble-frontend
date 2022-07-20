@@ -44,7 +44,7 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
     setSubText("작성 취소 선택시, 작성된 메모는 저장되지 않습니다.'");
     setCancelButtonText('작성하기');
     setConfirmButtonText('작성 취소');
-  });
+  }, []);
 
   const [highlightAlert, setHighlightAlert] = useState(false);
   useEffect(() => {
