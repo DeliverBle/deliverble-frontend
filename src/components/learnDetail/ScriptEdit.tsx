@@ -1,5 +1,6 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { COLOR } from '@src/styles/color';
+import { useEffect, useRef, useState } from 'react';
 
 interface ScriptType {
   id: number;
@@ -22,6 +23,7 @@ function ScriptEdit(props: ScriptEditProps) {
     const range = selection?.getRangeAt(0); // 커서의 startOffset과 endOffset을 갖고 있는 객체이다.
     const startIdx = range?.startOffset; // 커서의 시작인덱스
     // const endIdx = range?.endOffset; // 커서의 종료인덱스
+    // console.log(range);
 
     // 선택한 텍스트가 빈칸인지 확인하는 로직
     const selectedDiv = range?.startContainer as Node;
@@ -68,10 +70,91 @@ function ScriptEdit(props: ScriptEditProps) {
     }
   };
 
+  // const testRef = useRef<any>();
+
+  // let x: any;
+  // let y: any;
+  // document.addEventListener('contextmenu', function (e) {
+  //   e.preventDefault(); // 원래 있던 오른쪽 마우스 이벤트를 무효화한다.
+  //   x = e.pageX + 'px'; // 현재 마우스의 X좌표
+  //   y = e.pageY + 'px'; // 현재 마우스의 Y좌표
+  //   // console.log('x', x);
+  // });
+
+  // function handleCreateContextMenu(event: any) {
+  //   event.preventDefault();
+
+  //   // console.log('event', event.target);
+  //   console.log('pageX', event.pageX);
+  //   console.log('pageY', event.pageY);
+  //   // console.log('X', event.pageX - 578);
+  //   // console.log('Y', event.pageY - 301);
+
+  //   // console.log('getBoundingClientRect', event.target.getBoundingClientRect());
+
+  //   console.log('getBoundingClientRect x', event.target.getBoundingClientRect().x);
+  //   console.log('getBoundingClientRect y', event.target.getBoundingClientRect().y);
+  //   // console.log('getBoundingClientRect width', event.target.getBoundingClientRect().width);
+  //   // console.log('getBoundingClientRect height', event.target.getBoundingClientRect().height);
+
+  //   if (event.target.outerHTML.slice(0, 6) === '<mark>') {
+  //     testRef.current.style.position = 'absolute';
+  //     // testRef.current.style.left = event.pageX - event.target.getBoundingClientRect().x + 'px';
+  //     // testRef.current.style.top = event.pageY - event.target.getBoundingClientRect().y + 'px';
+  //     testRef.current.style.left = event.pageX - event.target.getBoundingClientRect().x + 'px';
+  //     testRef.current.style.top = event.pageY - event.target.getBoundingClientRect().y + 'px';
+  //     // testRef.current.style.left = '30px';
+  //     // testRef.current.style.top = '30px';
+  //     testRef.current.style.display = 'block';
+  //     testRef.current.style.backgroundColor = 'red';
+  //   }
+  // }
+
+  // const testRef = useRef();
+
+  //   const popMenu = document.getElementById('popMenu'); // 팝업창을 담아옴
+  //   // const popMenu = testRef.current();
+  //   console.log('test');
+  //   console.log(popMenu);
+
+  //   // popMenu.style.position = 'relative';
+  //   // popMenu.style.left = x;
+  //   // popMenu.style.top = y;
+  //   // popMenu.style.display = 'block';
+  // });
+
+  //클릭시 메뉴 숨기기
+  // document.addEventListener('click', function (e) {
+  //   // 노출 초기화
+  //   popMenu.style.display = 'none';
+  //   popMenu.style.top = null;
+  //   popMenu.style.left = null;
+  // });
+
+  const [show, setShow] = useState(false);
+  const [points, setPoints] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleClick = () => setShow(false);
+    window.addEventListener('click', handleClick);
+    return () => window.removeEventListener('click', handleClick);
+  }, []);
+
   return (
     <StWrapper
       contentEditable="true"
       onClick={handleClick}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        setShow(true);
+        console.log(e.target);
+        console.log('offsetX', e.nativeEvent.offsetX);
+        console.log('offsetY', e.nativeEvent.offsetY);
+        setPoints({
+          x: e.nativeEvent.offsetX / 10 + (e.nativeEvent.offsetX / 10) * 0.5,
+          y: e.nativeEvent.offsetY / 10 + (e.nativeEvent.offsetY / 10) * 2,
+        });
+      }}
       suppressContentEditableWarning={true}
       spellCheck="false"
       onCut={(e) => e.preventDefault()}
@@ -79,7 +162,17 @@ function ScriptEdit(props: ScriptEditProps) {
       onPaste={(e) => e.preventDefault()}
       onKeyDown={(e) => e.preventDefault()}>
       {scripts.map(({ id, text }) => (
-        <StScriptText key={id}>{text}</StScriptText>
+        <StScriptText key={id}>
+          {text}
+          {show && (
+            <StContextMenu top={points.y} left={points.x}>
+              <ul>
+                <li>Delete</li>
+                <li>Edit</li>
+              </ul>
+            </StContextMenu>
+          )}
+        </StScriptText>
       ))}
     </StWrapper>
   );
@@ -97,9 +190,12 @@ const StWrapper = styled.div`
   & > mark {
     background: linear-gradient(259.3deg, #d8d9ff 0%, #a7c5ff 100%);
   }
+
+  position: relative;
 `;
 
 const StScriptText = styled.div`
+  position: relative;
   font-size: 2.6rem;
   color: ${COLOR.BLACK};
   cursor: pointer;
@@ -134,5 +230,37 @@ const StScriptText = styled.div`
     & > .right {
       margin-left: 0.4rem;
     }
+  }
+`;
+
+type ContextMenuProps = {
+  top: number;
+  left: number;
+};
+
+const StContextMenu = styled.div<ContextMenuProps>`
+  border-radius: 4px;
+  box-sizing: border-box;
+  position: absolute;
+  width: 100px;
+  background-color: white;
+  box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.1);
+  ${({ top, left }) => css`
+    top: ${top}rem;
+    left: ${left}rem;
+  `}
+  ul {
+    list-style-type: none;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 10px;
+  }
+  ul li {
+    /* padding: 8px 2px;
+    border-radius: 4px; */
+  }
+
+  ul li:hover {
+    cursor: pointer;
   }
 `;
