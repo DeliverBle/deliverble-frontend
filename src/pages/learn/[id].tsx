@@ -34,6 +34,17 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [mainText, setMainText] = useState('');
+  const [subText, setSubText] = useState('');
+  const [cancelButtonText, setCancelButtonText] = useState('');
+  const [confirmButtonText, setConfirmButtonText] = useState('');
+
+  useEffect(() => {
+    setMainText('메모 작성을 취소하시겠습니까?');
+    setSubText("작성 취소 선택시, 작성된 메모는 저장되지 않습니다.'");
+    setCancelButtonText('작성하기');
+    setConfirmButtonText('작성 취소');
+  });
 
   const [highlightAlert, setHighlightAlert] = useState(false);
   useEffect(() => {
@@ -197,7 +208,15 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
           </StLearnSection>
         </StLearnMain>
         {isModalOpen && <GuideModal closeModal={() => setIsModalOpen(false)} />}
-        {isConfirmOpen && <ConfirmModal closeModal={() => setIsConfirmOpen(false)} />}
+        {isConfirmOpen && (
+          <ConfirmModal
+            closeModal={() => setIsConfirmOpen(false)}
+            mainText={mainText}
+            subText={subText}
+            cancelButtonText={cancelButtonText}
+            confirmButtonText={confirmButtonText}
+          />
+        )}
       </StLearnDetail>
     </>
   );
