@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { icXButton, icKakao, icMicrophone } from 'public/assets/icons';
 import { imgLogo } from 'public/assets/images';
 import { COLOR } from '@src/styles/color';
+import { KAKAO_AUTH_URL } from './OAuth';
 
 interface LoginModalProps {
   closeModal: () => void;
@@ -20,7 +21,7 @@ function LoginModal(props: LoginModalProps) {
         <ImageDiv src={imgLogo} className="logo" layout="fill" alt="DeliverBle" />
         <p>로그인하고 더 다양한 기능을 누려보세요.</p>
         <ImageDiv src={icMicrophone} className="microphone" layout="fill" alt="마이크" />
-        <Link href={'https://deliverble.online/v2/auth/kakao'}>
+        <Link href={KAKAO_AUTH_URL}>
           <StLoginButton>
             <ImageDiv src={icKakao} className="kakao-icon" layout="fill" alt="" />
             <a>카카오로 3초만에 시작하기</a>
