@@ -22,7 +22,7 @@ import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { GetServerSidePropsContext } from 'next';
 import { api } from '@src/services/api';
-import { MemoData, VideoData } from '@src/services/api/types/learn-detail';
+import { HighlightData, VideoData } from '@src/services/api/types/learn-detail';
 import YouTube from 'react-youtube';
 import EmptyMemo from '@src/components/learnDetail/memo/EmptyMemo';
 import SEO from '@src/components/common/SEO';
@@ -30,7 +30,7 @@ import MemoList from '@src/components/learnDetail/memo/MemoList';
 import Like from '@src/components/common/Like';
 import ContextMenu from '@src/components/learnDetail/ContextMenu';
 
-function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: MemoData[] }) {
+function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highlightData: HighlightData[] }) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
@@ -138,7 +138,9 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
                 <ImageDiv src={icMemo} className="memo" layout="fill" />
                 <h2>메모</h2>
               </StMemoTitle>
-              <StMemoWrapper>{memoData ? <MemoList memoList={memoData} /> : <EmptyMemo />}</StMemoWrapper>
+              <StMemoWrapper>
+                {highlightData ? <MemoList highlightList={highlightData} /> : <EmptyMemo />}
+              </StMemoWrapper>
             </StMemoContainer>
           </aside>
           <StLearnSection>
@@ -227,14 +229,14 @@ export default LearnDetail;
 export async function getServerSideProps({ params }: GetServerSidePropsContext) {
   const id = +(params?.id ?? -1);
   const videoData = await api.learnDetailService.getVideoData(id);
-  const memoData = await api.learnDetailService.getMemoData(id);
+  const highlightData = await api.learnDetailService.getHighlightData(id);
 
   if (videoData.id !== id) {
     return {
       notFound: true,
     };
   }
-  return { props: { videoData: videoData, memoData: memoData } };
+  return { props: { videoData: videoData, highlightData: highlightData } };
 }
 
 const StLearnDetail = styled.div`

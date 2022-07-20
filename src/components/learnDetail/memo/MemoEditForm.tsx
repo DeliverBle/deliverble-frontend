@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import ImageDiv from '../../common/ImageDiv';
 
 interface MemoEditFormProps {
-  content: string;
+  content: string | undefined;
   setMemoEdit: (edit: boolean) => void;
 }
 
@@ -14,9 +14,11 @@ function MemoEditForm(props: MemoEditFormProps) {
 
   return (
     <>
-      <StEditForm maxLength={70} rows={Math.ceil(content.length / 30)}>
-        {content}
-      </StEditForm>
+      {content && (
+        <StEditForm maxLength={70} rows={Math.ceil(content.length / 30)}>
+          {content}
+        </StEditForm>
+      )}
       <StButtonContainer>
         <button type="button" onClick={() => setMemoEdit(false)}>
           <ImageDiv src={icMemoXButton} alt="x" />

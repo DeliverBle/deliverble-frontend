@@ -1,20 +1,21 @@
-import { MemoData } from '@src/services/api/types/learn-detail';
+import { HighlightData } from '@src/services/api/types/learn-detail';
 import { COLOR } from '@src/styles/color';
 import styled from 'styled-components';
 import Memo from './Memo';
 
 interface MemoListProps {
-  memoList: MemoData[];
+  highlightList: HighlightData[];
 }
 
 function MemoList(props: MemoListProps) {
-  const { memoList } = props;
+  const { highlightList } = props;
 
   return (
     <StMemoList>
-      {memoList.map(({ id, keyword, content }) => (
-        <Memo key={id} keyword={keyword} content={content} />
-      ))}
+      {highlightList.map(
+        ({ memo }) =>
+          Object.keys(memo).length !== 0 && <Memo key={memo.id} keyword={memo.keyword} content={memo.content} />,
+      )}
     </StMemoList>
   );
 }

@@ -6,8 +6,8 @@ import MemoEditForm from './MemoEditForm';
 import MemoDotButton from './MemoPopupButton';
 
 interface MemoProps {
-  keyword: string;
-  content: string;
+  keyword: string | undefined;
+  content: string | undefined;
 }
 
 function Memo(props: MemoProps) {
@@ -19,7 +19,7 @@ function Memo(props: MemoProps) {
   const KEYWORD_MAX = 28;
 
   const showContent = () => {
-    if (content.length > CONTENT_MAX && !moreButton) {
+    if (content && content.length > CONTENT_MAX && !moreButton) {
       return (
         <>
           {content.slice(0, 26)}
@@ -34,7 +34,9 @@ function Memo(props: MemoProps) {
 
   return (
     <StMemo>
-      <StKeyword>{keyword.length <= KEYWORD_MAX || moreButton ? keyword : `${keyword.slice(0, 27)}...`}</StKeyword>
+      {keyword && (
+        <StKeyword>{keyword.length <= KEYWORD_MAX || moreButton ? keyword : `${keyword.slice(0, 27)}...`}</StKeyword>
+      )}
       {memoEdit ? (
         <MemoEditForm content={content} setMemoEdit={setMemoEdit} />
       ) : (
