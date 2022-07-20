@@ -53,11 +53,14 @@ const StContextMenu = styled.div<{ top: number; left: number }>`
     height: 3.2rem;
     padding: 0.5rem 1.6rem;
 
+    border-radius: 0.8rem;
     ${FONT_STYLES.SB_16_CAPTION}
     color: ${COLOR.BLACK};
   }
 
   & > ul > li:hover {
     cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+    background-color: ${COLOR.GRAY_5};
   }
 `;

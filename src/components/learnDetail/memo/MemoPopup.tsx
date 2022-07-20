@@ -38,6 +38,11 @@ const StMemoPopup = styled.div`
   border: 1px solid ${COLOR.GRAY_10};
   border-radius: 1.2rem;
   background-color: ${COLOR.WHITE};
+
+  & > button:hover {
+    transition: background-color 0.3s ease-in-out;
+    background-color: ${COLOR.GRAY_5};
+  }
 `;
 
 const StMemoEdit = styled.button`
