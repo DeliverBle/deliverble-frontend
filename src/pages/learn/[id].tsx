@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, BaseSyntheticEvent } from 'react';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import ImageDiv from '../../components/common/ImageDiv';
@@ -75,9 +75,9 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
   const [clickedScriptId, setClickedScriptId] = useState<number>();
   const [points, setPoints] = useState({ x: 0, y: 0 });
 
-  const controlPointX = (e: any) => {
-    const x = e.offsetX / 10;
-    const y = e.offsetY / 10;
+  const controlPointX = (e: React.MouseEvent) => {
+    const x = e.nativeEvent.offsetX / 10;
+    const y = e.nativeEvent.offsetY / 10;
 
     if (x > 40) {
       return { x: x + x * 0.2, y: y + y * 0.5 };
@@ -144,7 +144,7 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
                       onContextMenu={(e) => {
                         e.preventDefault();
                         setClickedScriptId(id);
-                        setPoints(controlPointX(e.nativeEvent));
+                        setPoints(controlPointX(e));
                       }}
                       key={id}
                       onClick={() => player?.seekTo(startTime, true)}
