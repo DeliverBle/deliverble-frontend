@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { icXButton, icKakao, icMicrophone } from 'public/assets/icons';
 import { imgLogo } from 'public/assets/images';
 import { COLOR } from '@src/styles/color';
-import { loginUserRemote } from '@src/services/remote/login-user';
 
 interface LoginModalProps {
   closeModal: () => void;
