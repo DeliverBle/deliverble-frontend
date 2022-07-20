@@ -54,11 +54,9 @@ function ScriptEdit(props: ScriptEditProps) {
       for (let i = 0; i < marks.length; i++) {
         if (selection?.containsNode(marks[i], true) === true) {
           isOverlap = true;
+          setHighlightAlert(true);
           break;
         }
-      }
-      if (isOverlap) {
-        setHighlightAlert(true);
       }
     }
 
