@@ -74,6 +74,7 @@ function ScriptEdit(props: ScriptEditProps) {
       }
       range?.deleteContents();
       range?.insertNode(frag);
+      handleClickIdx(selection);
     } else if (!isOverlap && selection?.type === 'Range' && isHighlight) {
       let text = selection.toString();
 
@@ -96,12 +97,48 @@ function ScriptEdit(props: ScriptEditProps) {
     selection?.collapseToEnd();
   };
 
+  const [currentLine, setCurrentLine] = useState<number>(); //현재 스크립트 아이디
+
+  //끊어읽기 인덱스 구하기
+  // 끊어읽기는 두가지 경우 존재 1.plain 텍스트 안에 있는 경우 2.하이라이트 안에 있는 경우
+  //spacingIdx는 text로 접근해서 위치를 구해야해서 state를 사용했다.
+  const [spacingIdx, setSpacingIdx] = useState<number[]>([]);
+
+  useEffect(() => {
+    //서버에서 받아온 인덱스와 비교 후 post하는 함수 들어갈 예정
+    //currentLine이 겹쳐서 관련 조건 넣어주어야할듯
+    console.log(spacingIdx, currentLine);
+  }, [spacingIdx, currentLine]);
+
+  const handleClickIdx = (selection: any) => {
+    const range2 = selection?.getRangeAt(0);
+
+    let textCount = 0;
+    if (range2.commonAncestorContainer.nodeName === 'DIV') {
+      const innertext = range2.commonAncestorContainer.innerText;
+      const deleteMarks = innertext.split('/');
+      console.log(deleteMarks);
+
+      for (let i = 0; i < deleteMarks.length - 1; i++) {
+        console.log('해당 아이템의 길이', deleteMarks[i].length);
+        textCount += deleteMarks[i].length;
+        console.log('단어 카운트', textCount);
+        setSpacingIdx([...spacingIdx, textCount]);
+      }
+    } else if (range2.commonAncestorContainer.nodeName === 'MARK') {
+      const innertext = range2.commonAncestorContainer.parentNode.innerText;
+      const deleteMarks = innertext.split('/');
+      console.log(deleteMarks);
+    }
+  };
+
   //하이라이트 인덱스 구하기
   const [highlightStartIdx, setHighlightStartIdx] = useState<number>();
   const [highlightEndIdx, setHighlightEndIdx] = useState<number>();
-  const [currentLine, setCurrentLine] = useState<number>();
 
   useEffect(() => {
+    //서버에서 받아온 인덱스와 비교 후 post하는 함수 들어갈 예정
+    //currentLine이 겹쳐서 관련 조건 넣어주어야할듯
     console.log(highlightStartIdx, highlightEndIdx, currentLine);
   }, [highlightStartIdx, highlightEndIdx, currentLine]);
 
