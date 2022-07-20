@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import ImageDiv from '../../components/common/ImageDiv';
@@ -28,11 +28,23 @@ import EmptyMemo from '@src/components/learnDetail/memo/EmptyMemo';
 import SEO from '@src/components/common/SEO';
 import MemoList from '@src/components/learnDetail/memo/MemoList';
 import Like from '@src/components/common/Like';
+import ContextMenu from '@src/components/learnDetail/ContextMenu';
 
 function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: MemoData[] }) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [mainText, setMainText] = useState('');
+  const [subText, setSubText] = useState('');
+  const [cancelButtonText, setCancelButtonText] = useState('');
+  const [confirmButtonText, setConfirmButtonText] = useState('');
+
+  useEffect(() => {
+    setMainText('메모 작성을 취소하시겠습니까?');
+    setSubText("작성 취소 선택시, 작성된 메모는 저장되지 않습니다.'");
+    setCancelButtonText('작성하기');
+    setConfirmButtonText('작성 취소');
+  });
 
   const [highlightAlert, setHighlightAlert] = useState(false);
   useEffect(() => {
@@ -70,6 +82,19 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
 
   const [isHighlight, setIsHighlight] = useState(false);
   const [isSpacing, setIsSpacing] = useState(false);
+
+  const [clickedScriptId, setClickedScriptId] = useState<number>();
+  const [points, setPoints] = useState({ x: 0, y: 0 });
+
+  const controlPointX = (e: React.MouseEvent) => {
+    const x = e.nativeEvent.offsetX / 10;
+    const y = e.nativeEvent.offsetY / 10;
+
+    if (x > 40) {
+      return { x: x + x * 0.2, y: y + y * 0.5 };
+    }
+    return { x: x + x * 0.5, y: y + y * 0.5 };
+  };
 
   return (
     <>
@@ -127,10 +152,16 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
                   !isSpacing &&
                   scripts.map(({ id, text, startTime, endTime }) => (
                     <StScriptText
+                      onContextMenu={(e) => {
+                        e.preventDefault();
+                        setClickedScriptId(id);
+                        setPoints(controlPointX(e));
+                      }}
                       key={id}
                       onClick={() => player?.seekTo(startTime, true)}
                       isActive={startTime <= currentTime && currentTime <= endTime ? true : false}>
                       {text}
+                      {clickedScriptId == id && <ContextMenu points={points} />}
                     </StScriptText>
                   ))}
                 {(isHighlight || isSpacing) && (
@@ -177,7 +208,15 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
           </StLearnSection>
         </StLearnMain>
         {isModalOpen && <GuideModal closeModal={() => setIsModalOpen(false)} />}
-        {isConfirmOpen && <ConfirmModal closeModal={() => setIsConfirmOpen(false)} />}
+        {isConfirmOpen && (
+          <ConfirmModal
+            closeModal={() => setIsConfirmOpen(false)}
+            mainText={mainText}
+            subText={subText}
+            cancelButtonText={cancelButtonText}
+            confirmButtonText={confirmButtonText}
+          />
+        )}
       </StLearnDetail>
     </>
   );
@@ -305,6 +344,8 @@ const StLearnSection = styled.section`
 `;
 
 const StScriptText = styled.p<{ isActive: boolean }>`
+  position: relative;
+
   font-size: 2.6rem;
   font-weight: ${({ isActive }) => (isActive ? 600 : 400)};
   color: ${({ isActive }) => (isActive ? COLOR.MAIN_BLUE : COLOR.BLACK)};

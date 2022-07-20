@@ -22,6 +22,7 @@ function ScriptEdit(props: ScriptEditProps) {
     const range = selection?.getRangeAt(0); // 커서의 startOffset과 endOffset을 갖고 있는 객체이다.
     const startIdx = range?.startOffset; // 커서의 시작인덱스
     // const endIdx = range?.endOffset; // 커서의 종료인덱스
+    // console.log(range);
 
     // 선택한 텍스트가 빈칸인지 확인하는 로직
     const selectedDiv = range?.startContainer as Node;
@@ -97,9 +98,12 @@ const StWrapper = styled.div`
   & > mark {
     background: linear-gradient(259.3deg, #d8d9ff 0%, #a7c5ff 100%);
   }
+
+  position: relative;
 `;
 
 const StScriptText = styled.div`
+  position: relative;
   font-size: 2.6rem;
   color: ${COLOR.BLACK};
   cursor: pointer;
