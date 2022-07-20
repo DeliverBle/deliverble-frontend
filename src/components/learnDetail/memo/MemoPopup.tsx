@@ -12,8 +12,10 @@ function MemoPopup(props: MemoPopupProps) {
   return (
     <>
       <StMemoPopup>
-        <StMemoEdit onClick={memoEdit}>메모 수정</StMemoEdit>
-        <StMemoDelete>메모 삭제</StMemoDelete>
+        <button type="button" onClick={memoEdit}>
+          메모 수정
+        </button>
+        <button type="button">메모 삭제</button>
       </StMemoPopup>
     </>
   );
@@ -38,20 +40,19 @@ const StMemoPopup = styled.div`
   border: 1px solid ${COLOR.GRAY_10};
   border-radius: 1.2rem;
   background-color: ${COLOR.WHITE};
-`;
+  box-shadow: 0.4rem 0.4rem 2rem rgba(22, 15, 53, 0.15);
 
-const StMemoEdit = styled.button`
-  width: 9.1rem;
-  height: 3.2rem;
+  & > button {
+    width: 9.1rem;
+    height: 3.2rem;
 
-  color: ${COLOR.BLACK};
-  ${FONT_STYLES.SB_16_CAPTION};
-`;
+    border-radius: 0.8rem;
+    color: ${COLOR.BLACK};
+    ${FONT_STYLES.SB_16_CAPTION};
+  }
 
-const StMemoDelete = styled.button`
-  width: 9.1rem;
-  height: 3.2rem;
-
-  color: ${COLOR.BLACK};
-  ${FONT_STYLES.SB_16_CAPTION};
+  & > button:hover {
+    transition: background-color 0.3s ease-in-out;
+    background-color: ${COLOR.GRAY_5};
+  }
 `;

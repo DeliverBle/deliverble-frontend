@@ -47,11 +47,6 @@ function Home() {
 
 export default Home;
 
-// export async function getServerSideProps() {
-//   const response = await api.homeService.getVideoData();
-//   return { props: { videoData: response.videoList } };
-// }
-
 const StHome = styled.div`
   display: flex;
   align-items: center;
