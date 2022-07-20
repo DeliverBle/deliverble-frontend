@@ -30,9 +30,9 @@ export function learnDetailDataRemote(): LearnDetailService {
     } else throw '서버 통신 실패';
   };
 
-  const getMemoData = async () => {
-    return LEARN_DETAIL_DATA.MEMO_DATA;
+  const getHighlightData = async () => {
+    return LEARN_DETAIL_DATA.HIGHLIGHT_DATA;
   };
 
-  return { getVideoData, getMemoData };
+  return { getVideoData, getHighlightData };
 }

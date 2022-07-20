@@ -7,12 +7,12 @@ export function learnDetailDataMock(): LearnDetailService {
     return LEARN_DETAIL_DATA.VIDEO_DATA;
   };
 
-  const getMemoData = async () => {
+  const getHighlightData = async () => {
     await wait(500);
-    return LEARN_DETAIL_DATA.MEMO_DATA;
+    return LEARN_DETAIL_DATA.HIGHLIGHT_DATA;
   };
 
-  return { getVideoData, getMemoData };
+  return { getVideoData, getHighlightData };
 }
 
 const wait = (milliSeconds: number) => new Promise((resolve) => setTimeout(resolve, milliSeconds));
