@@ -329,11 +329,6 @@ const StScriptText = styled.p<{ isActive: boolean }>`
     color: ${COLOR.MAIN_BLUE};
     font-weight: 600;
   }
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
 `;
 
 const StButtonContainer = styled.div`
