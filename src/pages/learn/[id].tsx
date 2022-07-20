@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import ImageDiv from '../../components/common/ImageDiv';
 import GuideModal from '@src/components/learnDetail/GuideModal';
-import HighlightModal from '@src/components/learnDetail/HighlightModal';
 import ScriptEdit from '@src/components/learnDetail/ScriptEdit';
 import {
   icXButton,
@@ -33,20 +32,6 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-
-  const [highlightAlert, setHighlightAlert] = useState(false);
-  useEffect(() => {
-    const now = new Date().getTime();
-    const timeSaved = Number(localStorage.getItem('timeClicked'));
-    if (timeSaved) {
-      const gapHour = (now - timeSaved) / 1000 / 60 / 60;
-      if (gapHour > 72) {
-        setHighlightAlert(true);
-      }
-    } else {
-      setHighlightAlert(true);
-    }
-  }, []);
 
   const [player, setPlayer] = useState<YT.Player | null>();
   const [videoState, setVideoState] = useState(-1);
@@ -136,7 +121,6 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
                 {(isHighlight || isSpacing) && (
                   <ScriptEdit scripts={scripts} isHighlight={isHighlight} isSpacing={isSpacing} />
                 )}
-                {highlightAlert && <HighlightModal closeModal={() => setHighlightAlert(false)} />}
               </div>
               <div>
                 <ImageDiv onClick={() => setIsModalOpen(true)} src={icGuide} className="guide" layout="fill" alt="?" />

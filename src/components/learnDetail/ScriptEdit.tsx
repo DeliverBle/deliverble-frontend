@@ -1,6 +1,7 @@
 import styled from 'styled-components';
+import { useEffect, useState } from 'react';
 import { COLOR } from '@src/styles/color';
-
+import HighlightModal from './HighlightModal';
 interface ScriptType {
   id: number;
   text: string;
@@ -16,21 +17,25 @@ interface ScriptEditProps {
 
 function ScriptEdit(props: ScriptEditProps) {
   const { scripts, isHighlight, isSpacing } = props;
+  const [highlightAlert, setHighlightAlert] = useState<boolean>(false);
+
+  useEffect(() => {
+    const now = new Date().getTime();
+    const timeSaved = Number(localStorage.getItem('timeClicked'));
+    if (timeSaved) {
+      const gapHour = (now - timeSaved) / 1000 / 60 / 60;
+      if (gapHour > 72) {
+        setHighlightAlert(true);
+      }
+    } else {
+      setHighlightAlert(true);
+    }
+  }, []);
 
   const handleClick = () => {
     const selection = window.getSelection();
-    //mark 태그 안에 들어가있는 친구인지?
-    const isInMark = document.getElementsByTagName('mark');
-    let found;
-    for (let i = 0; i < isInMark.length; i++) {
-      selection?.containsNode(isInMark[i], true) ? (found = true) : (found = false);
-    }
     const range = selection?.getRangeAt(0);
     const startIdx = range?.startOffset;
-    // const endIdx = range?.endOffset;
-    // const startContainer = range?.startContainer;
-    // const endContainer = range?.endContainer;
-    // console.log('range', range);
 
     const selectedDiv = range?.startContainer as Node;
     const serializer = new XMLSerializer();
@@ -39,6 +44,23 @@ function ScriptEdit(props: ScriptEditProps) {
     const isLeftBlank = startIdx && selectedLine[startIdx - 1] === ' ';
     const isRightBlank = startIdx && selectedLine[startIdx] === ' ';
     const isValidate = isLeftBlank || isRightBlank;
+
+    let isOverlap = false;
+    if (selection?.type === 'Range') {
+      //중복여부를 검사하자
+      const marks = document.getElementsByTagName('mark'); //mark라는 태그를 모두 담은 html collection
+
+      //marks를 돌면서 현재 셀렉션이 marks와 겹치는 애가 있는 지 확인
+      for (let i = 0; i < marks.length; i++) {
+        if (selection?.containsNode(marks[i], true) === true) {
+          isOverlap = true;
+          break;
+        }
+      }
+      if (isOverlap) {
+        setHighlightAlert(true);
+      }
+    }
 
     if (selection?.type === 'Caret' && isValidate && isSpacing) {
       const frag = document.createDocumentFragment();
@@ -49,13 +71,12 @@ function ScriptEdit(props: ScriptEditProps) {
       }
       range?.deleteContents();
       range?.insertNode(frag);
-    } else if (!found && selection?.type === 'Range' && isHighlight) {
+    } else if (!isOverlap && selection?.type === 'Range' && isHighlight) {
       let text = selection.toString();
 
       if (text.includes('/')) {
         const texts = text.split('/');
         const res = texts.join('<span>/</span>');
-        console.log('res', res);
         text = res;
       }
 
@@ -72,19 +93,22 @@ function ScriptEdit(props: ScriptEditProps) {
   };
 
   return (
-    <StWrapper
-      contentEditable="true"
-      onClick={handleClick}
-      suppressContentEditableWarning={true}
-      spellCheck="false"
-      onCut={(e) => e.preventDefault()}
-      onCopy={(e) => e.preventDefault()}
-      onPaste={(e) => e.preventDefault()}
-      onKeyDown={(e) => e.preventDefault()}>
-      {scripts.map(({ id, text }) => (
-        <StScriptText key={id}>{text}</StScriptText>
-      ))}
-    </StWrapper>
+    <>
+      <StWrapper
+        contentEditable="true"
+        onClick={handleClick}
+        suppressContentEditableWarning={true}
+        spellCheck="false"
+        onCut={(e) => e.preventDefault()}
+        onCopy={(e) => e.preventDefault()}
+        onPaste={(e) => e.preventDefault()}
+        onKeyDown={(e) => e.preventDefault()}>
+        {scripts.map(({ id, text }) => (
+          <StScriptText key={id}>{text}</StScriptText>
+        ))}
+      </StWrapper>
+      {highlightAlert && <HighlightModal closeModal={() => setHighlightAlert(false)} />}
+    </>
   );
 }
 
