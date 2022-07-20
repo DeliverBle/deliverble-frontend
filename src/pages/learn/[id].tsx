@@ -32,7 +32,7 @@ import Like from '@src/components/common/Like';
 function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: MemoData[] }) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(true);
 
   const [highlightAlert, setHighlightAlert] = useState(false);
   useEffect(() => {
@@ -177,7 +177,15 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
           </StLearnSection>
         </StLearnMain>
         {isModalOpen && <GuideModal closeModal={() => setIsModalOpen(false)} />}
-        {isConfirmOpen && <ConfirmModal closeModal={() => setIsConfirmOpen(false)} />}
+        {isConfirmOpen && (
+          <ConfirmModal
+            closeModal={() => setIsConfirmOpen(false)}
+            mainText="메모 작성을 취소하시겠습니까?"
+            subText="작성 취소 선택시, 작성된 메모는 저장되지 않습니다."
+            cancelButtonText="작성하기"
+            confirmButtonText="작성 취소"
+          />
+        )}
       </StLearnDetail>
     </>
   );
