@@ -29,7 +29,7 @@ function ScriptEdit(props: ScriptEditProps) {
     const startIdx = range?.startOffset;
     // const endIdx = range?.endOffset;
     // const startContainer = range?.startContainer;
-    const endContainer = range?.endContainer;
+    // const endContainer = range?.endContainer;
     // console.log('range', range);
 
     const selectedDiv = range?.startContainer as Node;
@@ -49,7 +49,6 @@ function ScriptEdit(props: ScriptEditProps) {
       }
       range?.deleteContents();
       range?.insertNode(frag);
-      endContainer && selection?.collapse(endContainer, 0);
     } else if (!found && selection?.type === 'Range' && isHighlight) {
       let text = selection.toString();
 
@@ -69,7 +68,7 @@ function ScriptEdit(props: ScriptEditProps) {
       range?.deleteContents();
       range?.insertNode(frag);
     }
-    endContainer && selection?.collapse(endContainer, 0);
+    selection?.collapseToEnd();
   };
 
   return (
