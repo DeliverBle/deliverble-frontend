@@ -24,6 +24,9 @@ function ScriptEdit(props: ScriptEditProps) {
     // const endIdx = range?.endOffset; // 커서의 종료인덱스
     // console.log(range);
 
+    console.log(range?.startOffset);
+    console.log(range?.endOffset);
+
     // 선택한 텍스트가 빈칸인지 확인하는 로직
     const selectedDiv = range?.startContainer as Node;
     const serializer = new XMLSerializer();
@@ -80,7 +83,13 @@ function ScriptEdit(props: ScriptEditProps) {
       onPaste={(e) => e.preventDefault()}
       onKeyDown={(e) => e.preventDefault()}>
       {scripts.map(({ id, text }) => (
-        <StScriptText key={id}>{text}</StScriptText>
+        <StScriptText
+          key={id}
+          onContextMenu={(e) => {
+            console.log('하이라이트', e);
+          }}>
+          {text}
+        </StScriptText>
       ))}
     </StWrapper>
   );

@@ -84,6 +84,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   const [isSpacing, setIsSpacing] = useState(false);
 
   const [clickedScriptId, setClickedScriptId] = useState<number>();
+  const [keyword, setKeyword] = useState<string>('');
   const [points, setPoints] = useState({ x: 0, y: 0 });
 
   const controlPointX = (e: React.MouseEvent) => {
@@ -95,6 +96,9 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
     }
     return { x: x + x * 0.5, y: y + y * 0.5 };
   };
+
+  const [create, setCreate] = useState(false);
+  console.log('create', create);
 
   return (
     <>
@@ -139,7 +143,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                 <h2>메모</h2>
               </StMemoTitle>
               <StMemoWrapper>
-                {highlightData ? <MemoList highlightList={highlightData} /> : <EmptyMemo />}
+                {highlightData ? <MemoList highlightList={highlightData} keyword={keyword} /> : <EmptyMemo />}
               </StMemoWrapper>
             </StMemoContainer>
           </aside>
@@ -158,12 +162,13 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                         e.preventDefault();
                         setClickedScriptId(id);
                         setPoints(controlPointX(e));
+                        setKeyword(text); // 키워드 뽑아내기 문장을 형광펜 했다고 가정 (하이라이트 기능 미완성 상태)
                       }}
                       key={id}
                       onClick={() => player?.seekTo(startTime, true)}
                       isActive={startTime <= currentTime && currentTime <= endTime ? true : false}>
                       <p>{text}</p>
-                      {clickedScriptId == id && <ContextMenu points={points} />}
+                      {clickedScriptId == id && <ContextMenu points={points} setCreate={setCreate} />}
                     </StScriptText>
                   ))}
                 {(isHighlight || isSpacing) && (

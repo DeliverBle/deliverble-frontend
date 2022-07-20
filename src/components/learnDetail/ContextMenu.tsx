@@ -1,22 +1,34 @@
+// import { HighlightData } from '@src/services/api/types/learn-detail';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
+// import { useState } from 'react';
 import styled, { css } from 'styled-components';
+// import MemoCreate from './memo/MemoCreate';
 
 interface ContextMenuProps {
   points: {
     x: number;
     y: number;
   };
+  // highlightList: HighlightData[];
+  // keyword: string;
+  setCreate: (create: boolean) => void;
 }
 
 function ContextMenu(props: ContextMenuProps) {
-  const { x, y } = props.points;
+  // const { points, highlightList, keyword } = props;
+  const { points, setCreate } = props;
 
   return (
-    <StContextMenu top={y} left={x} className="test">
+    <StContextMenu top={points.y} left={points.x} className="test">
       <ul>
         <li>
-          <button type="button" onClick={(e) => e.stopPropagation()}>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setCreate(true);
+            }}>
             메모 추가
           </button>
         </li>
@@ -24,6 +36,7 @@ function ContextMenu(props: ContextMenuProps) {
           <button type="button">하이라이트 삭제</button>
         </li>
       </ul>
+      {/* {create && <MemoCreate highlightList={highlightList} keyword={keyword} />} */}
     </StContextMenu>
   );
 }

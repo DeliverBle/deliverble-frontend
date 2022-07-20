@@ -1,20 +1,34 @@
 import { HighlightData } from '@src/services/api/types/learn-detail';
 import { COLOR } from '@src/styles/color';
+import { useState } from 'react';
 import styled from 'styled-components';
 import Memo from './Memo';
 
 interface MemoListProps {
   highlightList: HighlightData[];
+  keyword: string;
 }
 
 function MemoList(props: MemoListProps) {
-  const { highlightList } = props;
+  const { highlightList, keyword } = props;
+  // const [count, setCount] = useState(0);
+
+  const getInsertMemoIndex = () => {
+    let count = 0;
+    for (let i = 0; i < highlightList.length; i++) {
+      if (highlightList[i].memo.keyword === keyword) {
+        return count;
+      }
+      if (Object.keys(highlightList[i].memo).length !== 0) {
+        count = count + 1;
+      }
+    }
+  };
 
   return (
     <StMemoList>
       {highlightList.map(
-        ({ memo }) =>
-          Object.keys(memo).length !== 0 && <Memo key={memo.id} keyword={memo.keyword} content={memo.content} />,
+        ({ memo }) => Object.keys(memo).length && <Memo key={memo.id} keyword={memo.keyword} content={memo.content} />,
       )}
     </StMemoList>
   );
