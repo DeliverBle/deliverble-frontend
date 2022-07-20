@@ -75,6 +75,16 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
   const [clickedScriptId, setClickedScriptId] = useState<number>();
   const [points, setPoints] = useState({ x: 0, y: 0 });
 
+  const controlPointX = (e: any) => {
+    const x = e.offsetX / 10;
+    const y = e.offsetY / 10;
+
+    if (x > 40) {
+      return { x: x + x * 0.2, y: y + y * 0.5 };
+    }
+    return { x: x + x * 0.5, y: y + y * 0.5 };
+  };
+
   return (
     <>
       <SEO title="학습하기 | Deliverble" />
@@ -134,10 +144,7 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
                       onContextMenu={(e) => {
                         e.preventDefault();
                         setClickedScriptId(id);
-                        setPoints({
-                          x: e.nativeEvent.offsetX / 10 + (e.nativeEvent.offsetX / 10) * 0.5,
-                          y: e.nativeEvent.offsetY / 10 + (e.nativeEvent.offsetY / 10) * 0.5,
-                        });
+                        setPoints(controlPointX(e.nativeEvent));
                       }}
                       key={id}
                       onClick={() => player?.seekTo(startTime, true)}
