@@ -32,7 +32,7 @@ import Like from '@src/components/common/Like';
 function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: MemoData[] }) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isConfirmOpen, setIsConfirmOpen] = useState(true);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [mainText, setMainText] = useState('');
   const [subText, setSubText] = useState('');
   const [cancelButtonText, setCancelButtonText] = useState('');
