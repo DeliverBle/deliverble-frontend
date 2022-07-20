@@ -117,18 +117,19 @@ function ScriptEdit(props: ScriptEditProps) {
     if (range2.commonAncestorContainer.nodeName === 'DIV') {
       const innertext = range2.commonAncestorContainer.innerText;
       const deleteMarks = innertext.split('/');
-      console.log(deleteMarks);
 
       for (let i = 0; i < deleteMarks.length - 1; i++) {
-        console.log('해당 아이템의 길이', deleteMarks[i].length);
         textCount += deleteMarks[i].length;
-        console.log('단어 카운트', textCount);
         setSpacingIdx([...spacingIdx, textCount]);
       }
     } else if (range2.commonAncestorContainer.nodeName === 'MARK') {
       const innertext = range2.commonAncestorContainer.parentNode.innerText;
       const deleteMarks = innertext.split('/');
-      console.log(deleteMarks);
+
+      for (let i = 0; i < deleteMarks.length - 1; i++) {
+        textCount += deleteMarks[i].length;
+        setSpacingIdx([...spacingIdx, textCount]);
+      }
     }
   };
 
