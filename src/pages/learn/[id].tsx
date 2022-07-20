@@ -1,4 +1,4 @@
-import React, { useState, useEffect, BaseSyntheticEvent } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import ImageDiv from '../../components/common/ImageDiv';
