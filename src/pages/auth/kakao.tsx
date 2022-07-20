@@ -1,14 +1,11 @@
-// import { useEffect } from "react";
+import { useEffect } from 'react';
 
-// function OAuthRedirectHandler() {
-//     useEffect(() => {
+function OAuthRedirectHandler() {
+  useEffect(() => {
+    const code = new URL(window.location.href).searchParams.get('code') ?? '';
+    console.log(code);
+  }, []);
+  return <></>;
+}
 
-//     }, [])
-//   return <></>;
-// }
-
-// export default OAuthRedirectHandler;
-
-// export async function getServerSideProps(context) {
-//     const cookie = context.req ? context.req.headers.cookie : "";
-// }
+export default OAuthRedirectHandler;
