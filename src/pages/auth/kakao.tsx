@@ -15,9 +15,7 @@ function OAuthRedirectHandler() {
         const { kakaoId } = response.userInfo;
         console.log(accessToken);
         console.log(kakaoId);
-        // navigate('/home');
       }
-      //router.push('/home');
     });
   }, []);
   return <></>;
