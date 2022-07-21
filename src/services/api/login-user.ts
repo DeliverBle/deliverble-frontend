@@ -1,10 +1,10 @@
 import { publicAPI } from '../remote/base';
-import { LoginUser, JoinAndLoginRequestBody } from './types/user';
+import { JoinAndLoginRequestBody, TokenAndUserInfo } from './types/user';
 export interface LoginUserService {
-  requestAccessToken(): Promise<LoginUser>;
+  requestAccessToken(): Promise<TokenAndUserInfo>;
 }
 
-export const getAccessTokenAndId = async (code: string): Promise<LoginUser> => {
+export const getAccessTokenAndId = async (code: string): Promise<TokenAndUserInfo> => {
   try {
     const response = await publicAPI.get({ url: `/auth/kakao/token?code=${code}` });
     if (response.status === 200) return response.message;

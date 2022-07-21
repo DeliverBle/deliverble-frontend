@@ -15,14 +15,14 @@ export type JoinResponseBody = {
   userId: string;
 };
 
-export type UserInfo = {
+export interface TokenAndUserInfo {
+  tokenInfo: TokenInfo;
+  userInfo: UserIdInfo;
+}
+
+export interface LoginUser {
   kakaoId: string;
   nickname: string;
   email?: string;
   gender?: string;
-};
-
-export interface LoginUser {
-  tokenInfo: TokenInfo;
-  userInfo: UserIdInfo;
 }
