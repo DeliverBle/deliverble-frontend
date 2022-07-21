@@ -39,7 +39,7 @@ function OAuthRedirectHandler() {
           });
       }
     });
-  }, []);
+  }, [router]);
 
   return <></>;
 }

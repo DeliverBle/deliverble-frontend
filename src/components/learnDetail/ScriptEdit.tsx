@@ -22,7 +22,6 @@ function ScriptEdit(props: ScriptEditProps) {
     const range = selection?.getRangeAt(0); // 커서의 startOffset과 endOffset을 갖고 있는 객체이다.
     const startIdx = range?.startOffset; // 커서의 시작인덱스
     // const endIdx = range?.endOffset; // 커서의 종료인덱스
-    // console.log(range);
 
     // 선택한 텍스트가 빈칸인지 확인하는 로직
     const selectedDiv = range?.startContainer as Node;
