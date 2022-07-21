@@ -30,3 +30,4 @@ export { default as icSocial } from './ic_social.svg';
 export { default as icDotDefault } from './ic_dot_default.svg';
 export { default as icDotHover } from './ic_dot_hover.svg';
 export { default as icAlert } from './ic_alert.svg';
+export { default as icButtonMypage } from './ic_btn_mypage.svg';
