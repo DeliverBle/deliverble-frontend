@@ -27,11 +27,13 @@ function VideoContainer(props: VideoContainerProps) {
 
   return (
     <StVideoContainer>
-      <StCountVideo>
-        <p>전체</p>
-        <span>{countVideo}개</span>
-        <p>영상</p>
-      </StCountVideo>
+      {tab === 'isLiked' && (
+        <StCountVideo>
+          전체
+          <span>{countVideo}개</span>
+          영상
+        </StCountVideo>
+      )}
       <StVideoWrapper>
         {tab === 'isLiked' ? <p>isLiked</p> : <p>isLearned</p>}
         {/* {videoList ? videoList.map(item:VideoList,idx :number)=>{
@@ -49,7 +51,7 @@ const StVideoContainer = styled.div`
   margin-left: 16rem;
 `;
 
-const StCountVideo = styled.article`
+const StCountVideo = styled.div`
   display: flex;
   gap: 0.4rem;
   ${FONT_STYLES.M_20_BODY};
