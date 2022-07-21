@@ -12,11 +12,9 @@ function OAuthRedirectHandler() {
       if (response?.tokenInfo) {
         const { access_token } = response.tokenInfo;
         const accessToken = access_token;
-        const { email, kakaoId, nickname } = response.userInfo;
+        const { kakaoId } = response.userInfo;
         console.log(accessToken);
-        console.log(email);
         console.log(kakaoId);
-        console.log(nickname);
         // navigate('/home');
       }
       //router.push('/home');

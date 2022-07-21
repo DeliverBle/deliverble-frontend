@@ -2,13 +2,11 @@ type TokenInfo = {
   access_token: string;
 };
 
-type UserInfo = {
-  email?: string;
+type UserIdInfo = {
   kakaoId: number;
-  nickname: string;
 };
 
 export interface LoginUser {
   tokenInfo: TokenInfo;
-  userInfo: UserInfo;
+  userInfo: UserIdInfo;
 }
