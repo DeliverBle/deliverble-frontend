@@ -11,11 +11,12 @@ interface EmptyProps {
 
 function Empty(props: EmptyProps) {
   const { tab } = props;
+
   return (
     <StEmpty>
       <ImageDiv src={imgReviewEmpty} className="empty" layout="fill" alt="" />
-      {tab === 'isLiked' ? <div>아직 즐겨찾기 한 영상이 없어요!</div> : <div>아직 학습한 영상이 없어요!</div>}
-      <div>지금 바로 쉐도잉하러 가볼까요?</div>
+      <div>{tab === 'isLiked' ? '아직 즐겨찾기 한 영상이 없어요!' : 'Coming Soon'}</div>
+      <div>{tab === 'isLiked' ? '지금 바로 쉐도잉하러 가볼까요?' : '내 학습 기록을 곧 만나보실 수 있어요!'}</div>
       <Link href="/learn">
         <StLearnButton>학습하러 가기</StLearnButton>
       </Link>
@@ -28,11 +29,8 @@ export default Empty;
 const StEmpty = styled.div`
   display: flex;
   flex-direction: column;
-  jusify-content: center;
+  justify-content: center;
   align-items: center;
-
-  margin-top: 6.2rem;
-  margin-bottom: 37.9rem;
 
   .empty {
     position: relative;

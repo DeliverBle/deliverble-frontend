@@ -8,11 +8,11 @@ function Footer() {
   return (
     <StFooter>
       <StLogo>
-        <ImageDiv className="logo" src={icLogoFooter} alt="logo" />
+        <ImageDiv className="logo" src={icLogoFooter} alt="DeliverBle" />
         <h4>
-          언제 어디서나 당당한 당신의 말하기를
+          언제 어디서나 당당할 당신의 말하기를
           <br />
-          응원합니다.
+          딜리버블이 응원합니다.
         </h4>
       </StLogo>
       <StInfo>
