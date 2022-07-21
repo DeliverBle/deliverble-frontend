@@ -12,13 +12,14 @@ interface VideoContainerProps {
 
 function VideoContainer(props: VideoContainerProps) {
   const { tab, videoList } = props;
+  const videoListLength = videoList.length;
 
   return (
     <StVideoContainer>
-      {tab === 'isLiked' && (
+      {tab === 'isLiked' && videoListLength > 0 && (
         <StCountVideo>
           전체
-          <span> {videoList.length}개 </span>
+          <span> {videoListLength}개 </span>
           영상
         </StCountVideo>
       )}
