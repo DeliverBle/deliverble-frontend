@@ -56,22 +56,22 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
     //spacing 데이터들을 get해온걸 정리 해야함. 다 받아와서 한번에 뿌려줌
     //get 해온 아이디에 해당하는 문장의 해당 단어를 string.replace(searchfor,replacewith);
     //여기서는 하나하나 매칭시킬 예정
-    const data = {
+    const SpacingData = {
       spacingReturnCollection: [
         {
           spacingId: 12,
           scriptId: 33,
-          index: 3,
+          index: 5,
         },
         {
           spacingId: 13,
           scriptId: 33,
-          index: 6,
+          index: 8,
         },
         {
           spacingId: 11,
           scriptId: 33,
-          index: 9,
+          index: 18,
         },
         {
           spacingId: 7,
@@ -91,7 +91,56 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
       ],
     };
 
-    ////////////////////////////////////////////객체들을 내가 뽑기 좋은 형태로 바꾸는 것
+    const highlightData = [
+      {
+        scriptId: 32,
+        highlightId: 8,
+        startingIndex: 0,
+        endingIndex: 3,
+        memo: {
+          id: 1,
+          keyword: '이 시각',
+        },
+      },
+      {
+        scriptId: 33,
+        highlightId: 1,
+        startingIndex: 3,
+        endingIndex: 4,
+      },
+      {
+        scriptId: 1,
+        highlightId: 3,
+        startingIndex: 5,
+        endingIndex: 6,
+      },
+      {
+        scriptId: 2,
+        highlightId: 6,
+        startingIndex: 0,
+        endingIndex: 2,
+      },
+      {
+        scriptId: 3,
+        highlightId: 4,
+        startingIndex: 0,
+        endingIndex: 2,
+      },
+      {
+        scriptId: 4,
+        highlightId: 7,
+        startingIndex: 0,
+        endingIndex: 2,
+      },
+      {
+        scriptId: 4,
+        highlightId: 9,
+        startingIndex: 3,
+        endingIndex: 7,
+      },
+    ];
+
+    //객체들을 내가 뽑기 좋은 형태로 바꾸는 것
     function groupBy(objectArray: any[], property: string) {
       return objectArray.reduce(function (acc, obj) {
         const key = obj[property]; //스크립트 아이디의 값을 키로 선언
@@ -104,64 +153,110 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
         return acc;
       }, {});
     }
-    const groupedScriptId = groupBy(data.spacingReturnCollection, 'scriptId');
 
-    const keys = Object.keys(groupedScriptId);
+    const spacingGroupedById = groupBy(SpacingData.spacingReturnCollection, 'scriptId');
+
+    //스페이싱 ID로 분류된 애들안에서 인덱스배열이랑 아이디배열 만들기
+    const keys = Object.keys(spacingGroupedById);
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i]; // 각각의 키 지금은 스크립트 아이디
-      const value = groupedScriptId[key]; // 각각의 키에 해당하는 각각의 값
-      const indexRes = [];
-      const spacingIdRes = [];
+      const value = spacingGroupedById[key]; // 각각의 키에 해당하는 각각의 값
+      const spacingIndexArr = [];
+      const spacingIdArr = [];
+
       for (let j = 0; j < value.length; j++) {
-        indexRes.push(value[j].index);
-        spacingIdRes.push(value[j].spacingId);
+        spacingIndexArr.push(value[j].index);
+        spacingIdArr.push(value[j].spacingId);
       }
-      console.log('현재 키의:', keys[i], '인덱스배열', indexRes, '스페이스아이디들', spacingIdRes);
+      console.log('현재 스크립트 아이디:', keys[i], '인덱스배열', spacingIndexArr, '아이디배열', spacingIdArr);
 
       let searchedLine = ''; //스크립트 아이디에 해당하는 문장
-      const scriptsId: Script[] = [];
+      const scriptsId: Script[] = []; //스크립트를 모두 담아둔 배열
+      const scriptsIdNum: number[] = []; //스크립트의 아이디배열
       scripts.map((item) => {
         scriptsId.push(item);
+        scriptsIdNum.push(item.id);
         if (+keys[i] === item.id) {
-          searchedLine = item.text;
+          //받아온 스페이스 인덱스의 스크립트의 아이디와 현재 스크립트 아이디가 같으면
+          searchedLine = item.text; //해당 줄을 넣고
         }
       });
-      console.log(searchedLine);
+      console.log('뭐였드라', searchedLine);
+      console.log('아이디배열', scriptsIdNum);
 
-      //인덱스 리스트를 순회하면서 처리
-      let temp = '';
-      for (let i = 0; i < indexRes.length + 1; i++) {
-        if (i === 0) {
-          temp += searchedLine.slice(0, indexRes[0]) + '<span>/</span>';
-        } else if (i === indexRes.length) {
-          temp += searchedLine.slice(indexRes[i - 1]);
-        } else {
-          temp += searchedLine.slice(indexRes[i - 1], indexRes[i]) + '<span>/</span>';
-        }
-      }
-
-      //그리고 HTML로 수정
-      const frag = document.createDocumentFragment();
-      const div = document.createElement('div');
-      div.innerHTML = temp;
-      while (div.firstChild) {
-        frag.appendChild(div.firstChild);
-      }
-      console.log(frag);
-
-      scriptsId.map((item, index) => {
-        if (item.id === +keys[i]) {
-          const currentNode = learnRef.current?.childNodes[index];
-          console.log(',,,,,,,,,', learnRef.current?.childNodes[index].firstChild);
-          currentNode?.firstChild && currentNode?.removeChild(currentNode?.firstChild);
-          console.log(',,,,,,,,,삭제', learnRef.current?.childNodes[index].firstChild);
-          currentNode?.appendChild(frag);
-          console.log(',,,,,,,,,추가', learnRef.current?.childNodes[index].firstChild);
+      //현재 내가 바꿔야하는 문장이 몇번째 childNode인지 알아야함.
+      //How? 지금 받아온 scriptsIdNum 돌면서 +keys[i]와 같은 친구가 몇번째 넘버인 지 확인
+      let nodeNum = 0;
+      scriptsIdNum.map((item, index) => {
+        if (item === +keys[i]) {
+          nodeNum = index;
         }
       });
-      // const elem = document.getElementById(keys[i]);
-      // elem?.appendChild(frag);
+
+      //받아온 스크립트아이디에 해당하는 노드에 접근해서 / 넣어주는 것
+      const currentNode = learnRef.current?.childNodes[nodeNum];
+      if (learnRef.current?.childNodes) {
+        //index에 있는 애들 string으로 다 넣고
+        let count = 0;
+        let tempText = '';
+        if (currentNode?.textContent) {
+          for (let k = 0; k < currentNode.textContent?.length; k++) {
+            if (spacingIndexArr[count] === k) {
+              tempText += '<span id=' + spacingIdArr[count] + '>/</span>' + currentNode.textContent[k];
+              console.log(currentNode.textContent[k]);
+              count++;
+            } else {
+              tempText += currentNode.textContent[k];
+            }
+          }
+        }
+        //HTML로 파싱
+        const frag = document.createDocumentFragment();
+        const div = document.createElement('div');
+        div.innerHTML = tempText;
+        while (div.firstChild) {
+          frag.appendChild(div.firstChild);
+        }
+        //기존의 plain text를 지우고
+        currentNode?.firstChild && currentNode?.removeChild(currentNode.firstChild);
+        //HTML있는 문장을 삽입해둠
+        currentNode?.appendChild(frag);
+
+        // //인덱스 리스트를 순회하면서 spacing 자리에 <span>넣어두기
+        // let temp = '';
+        // for (let i = 0; i < indexRes.length + 1; i++) {
+        //   if (i === 0) {
+        //     temp += searchedLine.slice(0, indexRes[0]) + '<span id=' + spacingIdRes[i] + '>/</span>';
+        //   } else if (i === indexRes.length) {
+        //     temp += searchedLine.slice(indexRes[i - 1]);
+        //   } else {
+        //     temp += searchedLine.slice(indexRes[i - 1], indexRes[i]) + '<span>/</span>';
+        //   }
+        // }
+
+        // //그리고 HTML로 수정
+        // const frag = document.createDocumentFragment();
+        // const div = document.createElement('div');
+        // div.innerHTML = temp;
+        // while (div.firstChild) {
+        //   frag.appendChild(div.firstChild);
+        // }
+        // console.log(frag);
+
+        // scriptsId.map((item, index) => {
+        //   if (item.id === +keys[i]) {
+        //     const currentNode = learnRef.current?.childNodes[index];
+        //     currentNode?.firstChild && currentNode?.removeChild(currentNode?.firstChild);
+        //     currentNode?.appendChild(frag);
+        //   }
+        // });
+      }
     }
+
+    console.log('하이라이트 접근', highlightData);
+    highlightData.map((item) => {
+      console.log('각각의 아이템들', item);
+    });
   }, [scripts]);
 
   useEffect(() => {
@@ -452,6 +547,12 @@ const StScriptText = styled.p<{ isActive: boolean }>`
   &:hover {
     color: ${COLOR.MAIN_BLUE};
     font-weight: 600;
+  }
+
+  & > span {
+    font-size: 3.2rem;
+    font-weight: 600;
+    color: #4e8aff;
   }
 `;
 

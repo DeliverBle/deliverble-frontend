@@ -85,10 +85,11 @@ function ScriptEdit(props: ScriptEditProps) {
         text = res;
       }
 
+      const songah = 119;
       if (!text.includes('\n')) {
         const frag = document.createDocumentFragment();
         const div = document.createElement('div');
-        div.innerHTML = '<mark>' + text + '</mark>';
+        div.innerHTML = '<mark id=' + songah + '>' + text + '</mark>';
         while (div.firstChild) {
           frag.appendChild(div.firstChild);
         }
@@ -156,6 +157,7 @@ function ScriptEdit(props: ScriptEditProps) {
         textCount += node.length;
       }
       if (node.hasChildNodes()) {
+        //하이라이트 발견시작
         setHighlightStartIdx(textCount);
         textCount += node.childNodes[0].length;
         setHighlightEndIdx(textCount);
