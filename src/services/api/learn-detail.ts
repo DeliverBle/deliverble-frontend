@@ -1,6 +1,6 @@
-import { MemoData, VideoData } from './types/learn-detail';
+import { HighlightData, VideoData } from './types/learn-detail';
 
 export interface LearnDetailService {
   getVideoData(videoId: number): Promise<VideoData>;
-  getMemoData(videoId: number): Promise<MemoData[]>;
+  getHighlightData(videoId: number): Promise<HighlightData[]>;
 }

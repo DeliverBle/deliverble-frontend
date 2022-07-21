@@ -9,6 +9,34 @@
 **아나운서 쉐도잉**과 **뉴스 리딩**을 통해 스피치 자신감을 키우고, 더 세련된 이미지를 만들도록 도와주는 서비스입니다.  
 <br />
 
+## 💡 서비스 페이지 및 기능 소개
+|랜딩 페이지|홈|학습하기|학습 상세|복습하기|404 페이지|
+|:-:|:-:|:-:|:-:|:-:|:-:|
+|<img src="https://user-images.githubusercontent.com/58380158/180308929-132a8745-6a24-4595-a98b-0d11f8e78c51.png" width="200px" />|<img src="https://user-images.githubusercontent.com/58380158/180307299-4905e0ea-4c56-4700-ba5c-4f95c0ed4554.png" width="200px" />|<img src="https://user-images.githubusercontent.com/58380158/180307361-f71ec0b1-4de7-4199-8535-0a208f5f8488.png" width="200px" />|<img src="https://user-images.githubusercontent.com/58380158/180307213-3fca82fe-83e0-467f-bf1c-d89992ac41a6.png" width="200px" />|<img src="https://user-images.githubusercontent.com/58380158/180307774-4625bccf-e3e3-4a95-b34a-b3439746a303.png" width="200px" /> <img src="https://user-images.githubusercontent.com/58380158/180309484-57be35f1-984a-4852-b394-e1d4e04e27da.png" width="200px" />|<img src="https://user-images.githubusercontent.com/58380158/180307129-29f4aa38-3ef0-411b-bad1-671afcb2cf17.png" width="200px" />|
+
+### 랜딩 페이지
+- 일러스트와 로티 애니메이션을 통해 서비스 이용 방법 안내 및 이용 유도
+### 홈
+- 딜리버블의 추천 뉴스
+### 학습하기
+- 셀렉트 박스에서 방송사, 분야, 발화자를 선택해 원하는 영상 탐색 가능
+### 학습 상세
+- 아나운서 쉐도잉을 할 수 있는 페이지
+- 뉴스 영상을 통해 아나운서의 모습을 확인
+- 아나운서가 읽고 있는 문장을 스크립트에 바로 표시
+- 스크립트를 클릭해서 영상 시점 이동
+- 스크립트를 드래그해 하이라이트
+- 하이라이트한 단어에 메모 추가
+- 단어 사이의 공백을 클릭해 끊어 읽기 표시
+### 복습하기
+- 즐겨찾기한 영상 모아보기
+### 404 페이지
+- 주소가 정확하지 않을 때 홈으로 돌아가도록 안내
+### 기타
+- 카카오 로그인
+- 영상 즐겨찾기
+<br />
+
 ## 👩🏻‍💻 팀원 소개
 |백지연|이혜준|주송아|최유진|
 |:-:|:-:|:-:|:-:|

@@ -4,21 +4,26 @@ import { icCheckButton, icMemoXButton } from 'public/assets/icons';
 import styled from 'styled-components';
 import ImageDiv from '../../common/ImageDiv';
 
-interface MemoEditFormProps {
-  content: string;
-  setMemoEdit: (edit: boolean) => void;
+interface MemoFormProps {
+  content?: string;
+  setIsNewMemo: (isisNewMemo: boolean) => void;
+  setEdit: (edit: boolean) => void;
 }
 
-function MemoEditForm(props: MemoEditFormProps) {
-  const { content, setMemoEdit } = props;
+function MemoForm(props: MemoFormProps) {
+  const { setIsNewMemo, content } = props;
 
   return (
     <>
-      <StEditForm maxLength={70} rows={Math.ceil(content.length / 30)}>
-        {content}
-      </StEditForm>
+      {content ? (
+        <StForm maxLength={70} rows={Math.ceil(content.length / 30)}>
+          {content}
+        </StForm>
+      ) : (
+        <StForm maxLength={70} rows={3} autoFocus></StForm>
+      )}
       <StButtonContainer>
-        <button type="button" onClick={() => setMemoEdit(false)}>
+        <button type="button" onClick={() => setIsNewMemo(false)}>
           <ImageDiv src={icMemoXButton} alt="x" />
         </button>
         <button type="button">
@@ -29,9 +34,9 @@ function MemoEditForm(props: MemoEditFormProps) {
   );
 }
 
-export default MemoEditForm;
+export default MemoForm;
 
-const StEditForm = styled.textarea`
+const StForm = styled.textarea`
   padding: 0.8rem 0.8rem 0.8rem 1.2rem;
   width: 60.6rem;
 

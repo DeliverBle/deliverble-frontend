@@ -1,20 +1,43 @@
-import { MemoData } from '@src/services/api/types/learn-detail';
+import { HighlightData } from '@src/services/api/types/learn-detail';
 import { COLOR } from '@src/styles/color';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Memo from './Memo';
 
 interface MemoListProps {
-  memoList: MemoData[];
+  highlightList: HighlightData[];
+  isisNewMemo: boolean;
+  setIsNewMemo: (isisNewMemo: boolean) => void;
+  highlightId?: number;
+  keyword?: string;
 }
 
 function MemoList(props: MemoListProps) {
-  const { memoList } = props;
+  const { highlightList, isisNewMemo, setIsNewMemo, highlightId, keyword } = props;
+  const [index, setIndex] = useState<number>();
+
+  useEffect(() => {
+    setIndex(highlightList.findIndex((item) => item.highlightId === highlightId));
+  }, [highlightId, highlightList, index]);
+
+  if (index !== undefined && index !== -1) {
+    highlightList[index].memo = isisNewMemo ? { keyword: keyword } : {};
+  }
 
   return (
     <StMemoList>
-      {memoList.map(({ id, keyword, content }) => (
-        <Memo key={id} keyword={keyword} content={content} />
-      ))}
+      {highlightList.map(
+        ({ highlightId, memo }) =>
+          Object.keys(memo).length > 0 && (
+            <Memo
+              key={highlightId}
+              isisNewMemo={isisNewMemo}
+              setIsNewMemo={setIsNewMemo}
+              keyword={memo.keyword}
+              content={memo.content}
+            />
+          ),
+      )}
     </StMemoList>
   );
 }
