@@ -84,7 +84,6 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   const [isSpacing, setIsSpacing] = useState(false);
 
   const [clickedScriptId, setClickedScriptId] = useState<number>();
-  const [keyword, setKeyword] = useState<string>('');
   const [points, setPoints] = useState({ x: 0, y: 0 });
 
   const controlPointX = (e: React.MouseEvent) => {
@@ -98,7 +97,32 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   };
 
   const [create, setCreate] = useState(false);
-  console.log('create', create);
+  // const [scriptId, setScriptId] = useState<number>();
+  // const [startIndex, setStartIdx] = useState<number>(); // 테스트 값 0 - 하이라이트: "정부는"
+
+  // const handleHighlightInfo = (e: any, id: number) => {
+  //   console.log(e.target.id);
+
+  //   let textCount = 0;
+  //   for (const node of e.currentTarget.childNodes) {
+  //     if (e.target === node) {
+  //       setStartIdx(textCount);
+  //       break;
+  //     }
+
+  //     if (node.childNodes.length > 1) {
+  //       textCount -= Math.floor(node.childNodes.length / 2);
+  //     } else if (node.innerText == '/') {
+  //       textCount -= 1;
+  //     }
+  //     textCount += node.innerText ? node.innerText.length : node.length;
+  //   }
+
+  //   setScriptId(id);
+  // };
+
+  const [clickedHighlightId, setClickedHighlightId] = useState<number>();
+  const [keyword, setKeyword] = useState<string>();
 
   return (
     <>
@@ -143,7 +167,16 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                 <h2>메모</h2>
               </StMemoTitle>
               <StMemoWrapper>
-                {highlightData ? <MemoList highlightList={highlightData} keyword={keyword} /> : <EmptyMemo />}
+                {highlightData ? (
+                  <MemoList
+                    highlightList={highlightData}
+                    create={create}
+                    highlightId={clickedHighlightId}
+                    keyword={keyword}
+                  />
+                ) : (
+                  <EmptyMemo />
+                )}
               </StMemoWrapper>
             </StMemoContainer>
           </aside>
@@ -162,12 +195,13 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                         e.preventDefault();
                         setClickedScriptId(id);
                         setPoints(controlPointX(e));
-                        setKeyword(text); // 키워드 뽑아내기 문장을 형광펜 했다고 가정 (하이라이트 기능 미완성 상태)
+                        setClickedHighlightId(() => Number((e.target as HTMLDivElement).id));
+                        setKeyword((e.target as HTMLDivElement).innerText);
                       }}
                       key={id}
                       onClick={() => player?.seekTo(startTime, true)}
                       isActive={startTime <= currentTime && currentTime <= endTime ? true : false}>
-                      <p>{text}</p>
+                      <p id={id.toString()}>{text}</p>
                       {clickedScriptId == id && <ContextMenu points={points} setCreate={setCreate} />}
                     </StScriptText>
                   ))}

@@ -2,18 +2,20 @@ import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { useState } from 'react';
-import MemoEditForm from './MemoEditForm';
+import MemoForm from './MemoForm';
 import MemoDotButton from './MemoPopupButton';
 
 interface MemoProps {
-  keyword: string | undefined;
-  content: string | undefined;
+  // create: boolean;
+  keyword?: string;
+  content?: string;
 }
 
 function Memo(props: MemoProps) {
   const { keyword, content } = props;
   const [moreButton, setMoreButton] = useState(false);
-  const [memoEdit, setMemoEdit] = useState(false);
+  const [create, setCreate] = useState(content === undefined);
+  const [edit, setEdit] = useState(false);
 
   const CONTENT_MAX = 30;
   const KEYWORD_MAX = 28;
@@ -37,12 +39,12 @@ function Memo(props: MemoProps) {
       {keyword && (
         <StKeyword>{keyword.length <= KEYWORD_MAX || moreButton ? keyword : `${keyword.slice(0, 27)}...`}</StKeyword>
       )}
-      {memoEdit ? (
-        <MemoEditForm content={content} setMemoEdit={setMemoEdit} />
+      {create || edit ? (
+        <MemoForm content={content} setCreate={setCreate} setEdit={setEdit} />
       ) : (
         <StContent>
           {showContent()}
-          <MemoDotButton memoEdit={() => setMemoEdit(true)} />
+          <MemoDotButton edit={() => setEdit(true)} />
         </StContent>
       )}
     </StMemo>
@@ -60,10 +62,6 @@ const StMemo = styled.div`
 
   background-color: ${COLOR.SUB_BLUE_8};
   border-radius: 2.5rem;
-
-  &:hover .dot {
-    opacity: 1;
-  }
 `;
 
 const StKeyword = styled.h1`

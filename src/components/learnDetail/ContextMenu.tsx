@@ -1,22 +1,16 @@
-// import { HighlightData } from '@src/services/api/types/learn-detail';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-// import { useState } from 'react';
 import styled, { css } from 'styled-components';
-// import MemoCreate from './memo/MemoCreate';
 
 interface ContextMenuProps {
   points: {
     x: number;
     y: number;
   };
-  // highlightList: HighlightData[];
-  // keyword: string;
   setCreate: (create: boolean) => void;
 }
 
 function ContextMenu(props: ContextMenuProps) {
-  // const { points, highlightList, keyword } = props;
   const { points, setCreate } = props;
 
   return (
@@ -36,7 +30,6 @@ function ContextMenu(props: ContextMenuProps) {
           <button type="button">하이라이트 삭제</button>
         </li>
       </ul>
-      {/* {create && <MemoCreate highlightList={highlightList} keyword={keyword} />} */}
     </StContextMenu>
   );
 }
