@@ -1,26 +1,26 @@
-import styled from 'styled-components';
 import { useState, useEffect } from 'react';
-import { COLOR } from 'src/styles/color';
-import { FONT_STYLES } from 'src/styles/fontStyle';
+import styled from 'styled-components';
 import SEO from '@src/components/common/SEO';
 import NavigationBar from '@src/components/common/NavigationBar';
+import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
 import HeadlineContainer from '@src/components/review/HeadlineContainer';
 import VideoContainer from '@src/components/review/VideoContainer';
 import Footer from '@src/components/common/Footer';
+import { COLOR } from 'src/styles/color';
+import { FONT_STYLES } from 'src/styles/fontStyle';
 import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/review';
-import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
 
 function Review() {
   const [tab, setTab] = useState('isLiked');
-  const [videoList, setVideoList] = useState<VideoData[]>([]);
+  const [favoriteList, setFavoriteList] = useState<VideoData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
       setIsLoading(true);
       const { favoriteVideoList } = await api.reviewService.getFavoriteVideoList();
-      setVideoList(favoriteVideoList);
+      setFavoriteList(favoriteVideoList);
       setIsLoading(false);
     })();
   }, []);
@@ -38,11 +38,11 @@ function Review() {
             </StButton>
             <span> | </span>
             <StButton isActive={tab === 'isLearned'} onClick={() => setTab('isLearned')}>
-              내 학습기록
+              내 학습 기록
             </StButton>
           </StTab>
         </nav>
-        {isLoading ? <VideoListSkeleton itemNumber={12} /> : <VideoContainer tab={tab} videoList={videoList} />}
+        {isLoading ? <VideoListSkeleton itemNumber={12} /> : <VideoContainer tab={tab} videoList={favoriteList} />}
       </StReview>
       <Footer />
     </>

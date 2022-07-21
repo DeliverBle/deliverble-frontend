@@ -15,7 +15,7 @@ function VideoContainer(props: VideoContainerProps) {
   const videoListLength = videoList.length;
 
   return (
-    <StVideoContainer>
+    <>
       {tab === 'isLiked' && videoListLength > 0 && (
         <StCountVideo>
           전체
@@ -34,13 +34,11 @@ function VideoContainer(props: VideoContainerProps) {
           <Empty tab={tab} />
         )}
       </StVideoWrapper>
-    </StVideoContainer>
+    </>
   );
 }
 
 export default VideoContainer;
-
-const StVideoContainer = styled.div``;
 
 const StCountVideo = styled.div`
   margin-bottom: 2.4rem;
