@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import ImageDiv from '../common/ImageDiv';
-import { icButtonMypage, icLogout } from 'public/assets/icons';
+import { icMypageButton, icLogout } from 'public/assets/icons';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { useEffect, useState } from 'react';
@@ -26,12 +26,11 @@ function ProfileModal() {
 
   return (
     <StProfileModal>
-      <ImageDiv className="profile-image" src={icButtonMypage} layout="fill" alt="icMypageButton" />
       <StProfileInfo>
+        <ImageDiv className="profile-image" src={icMypageButton} layout="fill" alt="" />
         <p>{nickname}</p>
-        <div>{email}</div>
+        {email !== 'NO_EMAIL' && <div>{email}</div>}
       </StProfileInfo>
-      <hr />
       <StLogoutButton onClick={handleLogout}>
         <ImageDiv className="logout" src={icLogout} layout="fill" alt="" />
         로그아웃
@@ -56,7 +55,8 @@ const StProfileModal = styled.div`
 
   .profile-image {
     position: relative;
-    margin: 4rem auto 2rem auto;
+    margin: 0 auto;
+    margin-bottom: 2rem;
     width: 5.6rem;
     height: 5.6rem;
   }
@@ -67,17 +67,12 @@ const StProfileModal = styled.div`
     height: 2.4rem;
     margin-right: 0.8rem;
   }
-
-  & > hr {
-    height: 0.1rem;
-    margin: 0;
-    border: 0;
-    background-color: ${COLOR.GRAY_10};
-  }
 `;
 
 const StProfileInfo = styled.div`
   text-align: center;
+  padding-top: 4rem;
+  height: 21.4rem;
 
   & > p {
     ${FONT_STYLES.SB_20_BODY};
@@ -98,4 +93,6 @@ const StLogoutButton = styled.button`
   height: 7.1rem;
   ${FONT_STYLES.R_18_CAPTION};
   color: ${COLOR.GRAY_45};
+  border-top: 0.1rem ${COLOR.GRAY_10} solid;
+  padding: 0;
 `;

@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import ImageDiv from './ImageDiv';
 import LoginModal from '../login/LoginModal';
-import { icButtonMypage } from 'public/assets/icons';
+import { icMypageButton } from 'public/assets/icons';
 import ProfileModal from './ProfileModal';
 
 function NavigationBar() {
@@ -58,9 +58,9 @@ function NavigationBar() {
           <ImageDiv
             onClick={() => setIsProfileModalOpen((prev) => !prev)}
             className="profile"
-            src={icButtonMypage}
+            src={icMypageButton}
             layout="fill"
-            alt="mypageButton"
+            alt=""
           />
         )}
         {!loginState && <StLogin onClick={() => setIsModalOpen(true)}>로그인</StLogin>}
