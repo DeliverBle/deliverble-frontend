@@ -31,9 +31,6 @@ const StEmpty = styled.div`
   justify-content: center;
   align-items: center;
 
-  margin-top: 6.2rem;
-  margin-bottom: 37.9rem;
-
   .empty {
     position: relative;
     width: 38.8rem;

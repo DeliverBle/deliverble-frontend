@@ -42,14 +42,15 @@ export default VideoContainer;
 const StVideoContainer = styled.div``;
 
 const StCountVideo = styled.div`
+  margin-bottom: 2.4rem;
   ${FONT_STYLES.M_20_BODY};
   color: ${COLOR.GRAY_30};
+
   & > span {
     color: ${COLOR.MAIN_BLUE};
   }
 `;
 
 const StVideoWrapper = styled.section`
-  display: flex;
-  margin-top: 2.4rem;
+  margin: 0 auto;
 `;
