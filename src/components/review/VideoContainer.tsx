@@ -1,65 +1,55 @@
 import styled from 'styled-components';
-import { useState, useEffect } from 'react';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { COLOR } from '@src/styles/color';
-
-// interface VideoList {
-//   id: number;
-//   videoId: string;
-//   title: string;
-//   channel: string;
-//   category: string;
-//   date: string;
-// }
+import { VideoData } from '@src/services/api/types/review';
+import NewsList from '../common/NewsList';
+import Empty from './Empty';
 
 interface VideoContainerProps {
   tab: string;
+  videoList: VideoData[];
 }
-function VideoContainer(props: VideoContainerProps) {
-  const { tab } = props;
-  const [countVideo, setCountVideo] = useState(0);
-  // const [videoList, setVideoList] = useState<VideoList[]>([]);
 
-  useEffect(() => {
-    setCountVideo(13);
-    // setVideoList();
-  }, []);
+function VideoContainer(props: VideoContainerProps) {
+  const { tab, videoList } = props;
+  const videoListLength = videoList.length;
 
   return (
-    <StVideoContainer>
-      <StCountVideo>
-        <p>전체</p>
-        <span>{countVideo}개</span>
-        <p>영상</p>
-      </StCountVideo>
+    <>
+      {tab === 'isLiked' && videoListLength > 0 && (
+        <StCountVideo>
+          전체
+          <span> {videoListLength}개 </span>
+          영상
+        </StCountVideo>
+      )}
       <StVideoWrapper>
-        {tab === 'isLiked' ? <p>isLiked</p> : <p>isLearned</p>}
-        {/* {videoList ? videoList.map(item:VideoList,idx :number)=>{
-        const {id, videoId, title, channel, category, data}=item;
-      }):"novideo"} */}
+        {tab === 'isLiked' ? (
+          videoList.length ? (
+            <NewsList newsList={videoList} />
+          ) : (
+            <Empty tab={tab} />
+          )
+        ) : (
+          <Empty tab={tab} />
+        )}
       </StVideoWrapper>
-    </StVideoContainer>
+    </>
   );
 }
 
 export default VideoContainer;
 
-const StVideoContainer = styled.div`
-  margin-top: 9.6rem;
-  margin-left: 16rem;
-`;
-
-const StCountVideo = styled.article`
-  display: flex;
-  gap: 0.4rem;
+const StCountVideo = styled.div`
+  margin-bottom: 2.4rem;
   ${FONT_STYLES.M_20_BODY};
   color: ${COLOR.GRAY_30};
+
   & > span {
     color: ${COLOR.MAIN_BLUE};
   }
 `;
 
 const StVideoWrapper = styled.section`
-  display: flex;
-  margin-top: 2.4rem;
+  margin: 0 auto;
 `;
