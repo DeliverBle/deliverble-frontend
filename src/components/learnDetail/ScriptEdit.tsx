@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
-import { useState } from 'react';
 
 interface ScriptType {
   id: number;
