@@ -95,7 +95,7 @@ export const LEARN_DETAIL_DATA = {
       memo: {
         id: 2,
         keyword: '군남댐',
-        content: '발음주의!!!!!',
+        content: '발음에 주의해서 말한다.',
       },
     },
     {
@@ -108,9 +108,9 @@ export const LEARN_DETAIL_DATA = {
     {
       scriptId: 4,
       highlightId: 9,
-      startingIndex: 3,
-      endingIndex: 7,
-      memo: { id: 3, keyword: '군남asdfasdf댐', content: '발음주dsafasdf의!!!!!' },
+      startingIndex: 5,
+      endingIndex: 6,
+      memo: { id: 3, keyword: '한박자', content: '한 박자 쉬고 말한다.' },
     },
   ],
 };
