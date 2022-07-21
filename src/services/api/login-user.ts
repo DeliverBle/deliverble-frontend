@@ -1,4 +1,3 @@
-import { responseEncoding } from 'axios';
 import { publicAPI } from '../remote/base';
 import { LoginUser, PostLoginRequestBody } from './types/user';
 export interface LoginUserService {
