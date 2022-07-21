@@ -39,6 +39,95 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
   const { title, category, channel, reportDate, tags, link, startTime, endTime, scripts } = videoData;
 
   useEffect(() => {
+    //spacing 데이터들을 get해온걸 정리 해야함. 다 받아와서 한번에 뿌려줌
+    //get 해온 아이디에 해당하는 문장의 해당 단어를 string.replace(searchfor,replacewith);
+    //여기서는 하나하나 매칭시킬 예정
+    const data = {
+      spacingReturnCollection: [
+        {
+          spacingId: 12,
+          scriptId: 33,
+          index: 3,
+        },
+        {
+          spacingId: 13,
+          scriptId: 33,
+          index: 6,
+        },
+        {
+          spacingId: 11,
+          scriptId: 33,
+          index: 9,
+        },
+        {
+          spacingId: 7,
+          scriptId: 36,
+          index: 9,
+        },
+        {
+          spacingId: 8,
+          scriptId: 36,
+          index: 14,
+        },
+        {
+          spacingId: 10,
+          scriptId: 36,
+          index: 20,
+        },
+      ],
+    };
+
+    ////////////////////////////////////////////객체들을 내가 뽑기 좋은 형태로 바꾸는 것
+    function groupBy(objectArray: any[], property: string) {
+      return objectArray.reduce(function (acc, obj) {
+        const key = obj[property]; //스크립트 아이디의 값을 키로 선언
+        //만약 지금 키가 없으면
+        if (!acc[key]) {
+          //키에 대한 배열을 생성함
+          acc[key] = [];
+        }
+        acc[key].push(obj); //
+        return acc;
+      }, {});
+    }
+    const groupedScriptId = groupBy(data.spacingReturnCollection, 'scriptId');
+
+    const keys = Object.keys(groupedScriptId);
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i]; // 각각의 키 지금은 스크립트 아이디
+      const value = groupedScriptId[key]; // 각각의 키에 해당하는 각각의 값
+      const indexRes = [];
+      const spacingIdRes = [];
+      for (let j = 0; j < value.length; j++) {
+        indexRes.push(value[j].index);
+        spacingIdRes.push(value[j].spacingId);
+      }
+      console.log('현재 키의:', keys[i], '인덱스배열', indexRes, '스페이스아이디들', spacingIdRes);
+
+      let searchedLine = ''; //스크립트 아이디에 해당하는 문장
+      scripts.map((item) => {
+        if (+keys[i] === item.id) {
+          searchedLine = item.text;
+        }
+      });
+      console.log(searchedLine);
+
+      //인덱스 리스트를 순회하면서 처리
+      let temp = '';
+      for (let i = 0; i < indexRes.length + 1; i++) {
+        if (i === 0) {
+          temp += searchedLine.slice(0, indexRes[0]) + '<span>/</span>';
+        } else if (i === indexRes.length) {
+          temp += searchedLine.slice(indexRes[indexRes.length]);
+        } else {
+          temp += searchedLine.slice(indexRes[i - 1], indexRes[i]) + '<span>/</span>';
+        }
+      }
+      console.log(temp); //그리고 이걸 DOM parsor로 바꿀 것
+    }
+  }, [scripts]);
+
+  useEffect(() => {
     if (!player) return;
 
     const interval =

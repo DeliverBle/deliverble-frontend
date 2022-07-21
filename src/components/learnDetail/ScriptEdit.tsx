@@ -37,7 +37,8 @@ function ScriptEdit(props: ScriptEditProps) {
     }
   }, [highlightAlert]);
 
-  const handleClick = () => {
+  const handleClick = (e: any) => {
+    console.log('아ㅣ이디값을 내놔라', e.target.id);
     const selection = window.getSelection();
     const range = selection?.getRangeAt(0);
     const startIdx = range?.startOffset;
@@ -51,6 +52,7 @@ function ScriptEdit(props: ScriptEditProps) {
     const isValidate = isLeftBlank || isRightBlank;
 
     let isOverlap = false;
+    console.log('>>>>>>>>>>', range);
     if (selection?.type === 'Range') {
       //중복여부를 검사하자
       const marks = document.getElementsByTagName('mark'); //mark라는 태그를 모두 담은 html collection
@@ -86,7 +88,7 @@ function ScriptEdit(props: ScriptEditProps) {
 
       const frag = document.createDocumentFragment();
       const div = document.createElement('div');
-      div.innerHTML = '<mark>' + text + '</mark>';
+      div.innerHTML = '<mark id=songah>' + text + '</mark>';
       while (div.firstChild) {
         frag.appendChild(div.firstChild);
       }
@@ -164,7 +166,7 @@ function ScriptEdit(props: ScriptEditProps) {
     <>
       <StWrapper
         contentEditable="true"
-        onClick={handleClick}
+        onClick={(e) => handleClick(e)}
         suppressContentEditableWarning={true}
         spellCheck="false"
         onCut={(e) => e.preventDefault()}

@@ -30,7 +30,6 @@ const StScrollContainer = styled.ul`
   right: 6.4rem;
 
   z-index: 2;
-  }
 `;
 
 const StListItem = styled.li<{ isActive: boolean }>`
