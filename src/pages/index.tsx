@@ -4,16 +4,25 @@ import SliderContainer from '@src/components/landing/SliderContainer';
 import SEO from '@src/components/common/SEO';
 import Nav from '@src/components/landing/Nav';
 import ScrollControl from '@src/components/landing/ScrollControl';
+import { useRouter } from 'next/router';
 
 function Landing() {
   const [isFirstScrolled, setIsFirstScrolled] = useState<boolean>(false);
   const [isSecondScrolled, setIsSecondScrolled] = useState<boolean>(false);
   const [slideNumber, setSlideNumber] = useState<number>(1);
+  const router = useRouter();
 
   const scrollListener = () => {
     setIsFirstScrolled(window.scrollY > 423);
     setIsSecondScrolled(window.scrollY > 620);
   };
+
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      router.push('/home');
+    }
+  }, [router]);
+
   useEffect(() => {
     window.addEventListener('scroll', scrollListener);
     return () => {
@@ -32,6 +41,7 @@ function Landing() {
 }
 
 export default Landing;
+
 const StLanding = styled.div`
   height: 100%;
   @font-face {
