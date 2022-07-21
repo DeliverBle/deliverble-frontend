@@ -111,6 +111,17 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
     window.addEventListener('click', handleClickOutside);
   }, [clickedScriptId]);
 
+  const handleRightClick = (e: React.MouseEvent, id: number) => {
+    if (newMemo) {
+      setClickedScriptId(-1);
+      return setIsConfirmOpen(true);
+    }
+    setClickedScriptId(id);
+    setPoints(controlPointX(e));
+    setClickedHighlightId(() => Number((e.target as HTMLDivElement).id));
+    setKeyword((e.target as HTMLDivElement).innerText);
+  };
+
   return (
     <>
       <SEO title="학습하기 | Deliverble" />
@@ -182,16 +193,13 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                       ref={contextMenuRef}
                       onContextMenu={(e) => {
                         e.preventDefault();
-                        setClickedScriptId(id);
-                        setPoints(controlPointX(e));
-                        setClickedHighlightId(() => Number((e.target as HTMLDivElement).id));
-                        setKeyword((e.target as HTMLDivElement).innerText);
+                        handleRightClick(e, id);
                       }}
                       key={id}
                       onClick={() => player?.seekTo(startTime, true)}
                       isActive={startTime <= currentTime && currentTime <= endTime ? true : false}>
                       <p id={id.toString()}>{text}</p>
-                      {clickedScriptId === id && <ContextMenu points={points} setNewMemo={setNewMemo} />}
+                      {clickedScriptId === id && !newMemo && <ContextMenu points={points} setNewMemo={setNewMemo} />}
                     </StScriptText>
                   ))}
                 {(isHighlight || isSpacing) && (
@@ -240,11 +248,12 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
         {isModalOpen && <GuideModal closeModal={() => setIsModalOpen(false)} />}
         {isConfirmOpen && (
           <ConfirmModal
-            closeModal={() => setIsConfirmOpen(false)}
+            closeModal={setIsConfirmOpen}
             mainText={mainText}
             subText={subText}
             cancelButtonText={cancelButtonText}
             confirmButtonText={confirmButtonText}
+            setNewMemo={setNewMemo}
           />
         )}
       </StLearnDetail>
