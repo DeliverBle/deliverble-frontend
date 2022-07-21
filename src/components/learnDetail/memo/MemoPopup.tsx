@@ -3,16 +3,16 @@ import { FONT_STYLES } from '@src/styles/fontStyle';
 import styled from 'styled-components';
 
 interface MemoPopupProps {
-  memoEdit: () => void;
+  edit: () => void;
 }
 
 function MemoPopup(props: MemoPopupProps) {
-  const { memoEdit } = props;
+  const { edit } = props;
 
   return (
     <>
       <StMemoPopup>
-        <button type="button" onClick={memoEdit}>
+        <button type="button" onClick={edit}>
           메모 수정
         </button>
         <button type="button">메모 삭제</button>
