@@ -1,11 +1,9 @@
-import useLoginUser from '@src/hooks/useLoginUser';
 import { getAccessTokenAndId, postJoin, postLogin } from '@src/services/api/login-user';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
 function OAuthRedirectHandler() {
   const router = useRouter();
-  const { saveLoginUser } = useLoginUser();
 
   useEffect(() => {
     const code = new URL(window.location.href).searchParams.get('code') ?? '';
@@ -20,9 +18,10 @@ function OAuthRedirectHandler() {
           .then(() => {
             // 회원가입 성공하면 로그인
             postLogin({ access_token: accessToken, user_id: kakaoId.toString() }).then((response) => {
-              saveLoginUser(response);
               localStorage.setItem('token', accessToken);
               localStorage.setItem('userId', kakaoId.toString());
+              localStorage.setItem('email', response.email);
+              localStorage.setItem('nickname', response.nickname);
               router.back();
             });
           })
@@ -30,9 +29,10 @@ function OAuthRedirectHandler() {
             // 이미 회원이면 로그인
             if (error === '회원가입 실패') {
               postLogin({ access_token: accessToken, user_id: kakaoId.toString() }).then((response) => {
-                saveLoginUser(response);
                 localStorage.setItem('token', accessToken);
                 localStorage.setItem('userId', kakaoId.toString());
+                localStorage.setItem('email', response.email);
+                localStorage.setItem('nickname', response.nickname);
                 router.back();
               });
             }
