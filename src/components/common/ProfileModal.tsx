@@ -4,8 +4,10 @@ import { icButtonMypage, icLogout } from 'public/assets/icons';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
 function ProfileModal() {
+  const router = useRouter();
   const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
   useEffect(() => {
@@ -17,6 +19,11 @@ function ProfileModal() {
     }
   }, []);
 
+  const handleLogout = () => {
+    localStorage.clear();
+    router.reload();
+  };
+
   return (
     <StProfileModal>
       <ImageDiv className="profile-image" src={icButtonMypage} layout="fill" alt="profileImage" />
@@ -25,7 +32,7 @@ function ProfileModal() {
         <h2>{email}</h2>
       </StProfileInfo>
       <hr />
-      <StLogoutButton>
+      <StLogoutButton onClick={handleLogout}>
         <ImageDiv className="logout" src={icLogout} layout="fill" alt="" />
         로그아웃
       </StLogoutButton>
