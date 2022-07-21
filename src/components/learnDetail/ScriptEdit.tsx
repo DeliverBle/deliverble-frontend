@@ -86,15 +86,17 @@ function ScriptEdit(props: ScriptEditProps) {
         text = res;
       }
 
-      const frag = document.createDocumentFragment();
-      const div = document.createElement('div');
-      div.innerHTML = '<mark id=songah>' + text + '</mark>';
-      while (div.firstChild) {
-        frag.appendChild(div.firstChild);
+      if (!text.includes('\n')) {
+        const frag = document.createDocumentFragment();
+        const div = document.createElement('div');
+        div.innerHTML = '<mark id=songah>' + text + '</mark>';
+        while (div.firstChild) {
+          frag.appendChild(div.firstChild);
+        }
+        range?.deleteContents();
+        range?.insertNode(frag);
+        handleHighlightIdx(selection); //하이라이트의 인덱스를 구하는 함수
       }
-      range?.deleteContents();
-      range?.insertNode(frag);
-      handleHighlightIdx(selection); //하이라이트의 인덱스를 구하는 함수
     }
     selection?.collapseToEnd();
   };
