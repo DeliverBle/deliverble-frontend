@@ -22,6 +22,7 @@ function OAuthRedirectHandler() {
             postLogin({ access_token: accessToken, user_id: kakaoId.toString() }).then((response) => {
               saveLoginUser(response);
               localStorage.setItem('token', accessToken);
+              localStorage.setItem('userId', kakaoId.toString());
               router.back();
             });
           })
@@ -31,6 +32,7 @@ function OAuthRedirectHandler() {
               postLogin({ access_token: accessToken, user_id: kakaoId.toString() }).then((response) => {
                 saveLoginUser(response);
                 localStorage.setItem('token', accessToken);
+                localStorage.setItem('userId', kakaoId.toString());
                 router.back();
               });
             }
