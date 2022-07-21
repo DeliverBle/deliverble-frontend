@@ -1,4 +1,4 @@
-export type VideoData = {
+type VideoData = {
   id: number;
   title: string;
   category: string;
@@ -7,12 +7,6 @@ export type VideoData = {
   reportDate: string;
 };
 
-export type Paging = {
-  lastPage: number;
-  totalCount: number;
-};
-
-export type FavoriteVideoResponse = {
-  videoList: VideoData[];
-  paging: Paging;
+export type FavoriteVideoList = {
+  favoriteVideoList: VideoData[];
 };
