@@ -8,11 +8,11 @@ interface ConfirmModalProps {
   subText: string;
   cancelButtonText: string;
   confirmButtonText: string;
-  setNewMemo: (newData: boolean) => void;
+  setIsNewMemo: (newData: boolean) => void;
 }
 
 function ConfirmModal(props: ConfirmModalProps) {
-  const { closeModal, mainText, subText, cancelButtonText, confirmButtonText, setNewMemo } = props;
+  const { closeModal, mainText, subText, cancelButtonText, confirmButtonText, setIsNewMemo } = props;
 
   return (
     <StConfirmModal>
@@ -24,7 +24,7 @@ function ConfirmModal(props: ConfirmModalProps) {
         <button onClick={() => closeModal(false)}>{cancelButtonText}</button>
         <button
           onClick={() => {
-            setNewMemo(false);
+            setIsNewMemo(false);
             closeModal(false);
           }}>
           {confirmButtonText}

@@ -38,6 +38,14 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   const [subText, setSubText] = useState('');
   const [cancelButtonText, setCancelButtonText] = useState('');
   const [confirmButtonText, setConfirmButtonText] = useState('');
+  const [isHighlight, setIsHighlight] = useState(false);
+  const [isSpacing, setIsSpacing] = useState(false);
+  const [clickedScriptId, setClickedScriptId] = useState<number>();
+  const [clickedHighlightId, setClickedHighlightId] = useState<number>();
+  const [points, setPoints] = useState({ x: 0, y: 0 });
+  const [isisNewMemo, setIsNewMemo] = useState(false);
+  const [keyword, setKeyword] = useState<string>();
+  const contextMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMainText('메모 작성을 취소하시겠습니까?');
@@ -80,12 +88,6 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
     return () => interval && clearInterval(interval);
   }, [player, videoState]);
 
-  const [isHighlight, setIsHighlight] = useState(false);
-  const [isSpacing, setIsSpacing] = useState(false);
-
-  const [clickedScriptId, setClickedScriptId] = useState<number>();
-  const [points, setPoints] = useState({ x: 0, y: 0 });
-
   const controlPointX = (e: React.MouseEvent) => {
     const x = e.nativeEvent.offsetX / 10;
     const y = e.nativeEvent.offsetY / 10;
@@ -95,11 +97,6 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
     }
     return { x: x + x * 0.5, y: y + y * 0.5 };
   };
-
-  const [newMemo, setNewMemo] = useState(false);
-  const [clickedHighlightId, setClickedHighlightId] = useState<number>();
-  const [keyword, setKeyword] = useState<string>();
-  const contextMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (e: Event) => {
@@ -112,7 +109,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   }, [clickedScriptId]);
 
   const handleRightClick = (e: React.MouseEvent, id: number) => {
-    if (newMemo) {
+    if (isisNewMemo) {
       setClickedScriptId(-1);
       return setIsConfirmOpen(true);
     }
@@ -168,8 +165,8 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                 {highlightData ? (
                   <MemoList
                     highlightList={highlightData}
-                    newMemo={newMemo}
-                    setNewMemo={setNewMemo}
+                    isisNewMemo={isisNewMemo}
+                    setIsNewMemo={setIsNewMemo}
                     highlightId={clickedHighlightId}
                     keyword={keyword}
                   />
@@ -199,7 +196,9 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                       onClick={() => player?.seekTo(startTime, true)}
                       isActive={startTime <= currentTime && currentTime <= endTime ? true : false}>
                       <p id={id.toString()}>{text}</p>
-                      {clickedScriptId === id && !newMemo && <ContextMenu points={points} setNewMemo={setNewMemo} />}
+                      {clickedScriptId === id && !isisNewMemo && (
+                        <ContextMenu points={points} setIsNewMemo={setIsNewMemo} />
+                      )}
                     </StScriptText>
                   ))}
                 {(isHighlight || isSpacing) && (
@@ -253,7 +252,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
             subText={subText}
             cancelButtonText={cancelButtonText}
             confirmButtonText={confirmButtonText}
-            setNewMemo={setNewMemo}
+            setIsNewMemo={setIsNewMemo}
           />
         )}
       </StLearnDetail>

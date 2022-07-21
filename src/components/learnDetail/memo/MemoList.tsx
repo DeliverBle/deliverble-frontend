@@ -6,14 +6,14 @@ import Memo from './Memo';
 
 interface MemoListProps {
   highlightList: HighlightData[];
-  newMemo: boolean;
-  setNewMemo: (newMemo: boolean) => void;
+  isisNewMemo: boolean;
+  setIsNewMemo: (isisNewMemo: boolean) => void;
   highlightId?: number;
   keyword?: string;
 }
 
 function MemoList(props: MemoListProps) {
-  const { highlightList, newMemo, setNewMemo, highlightId, keyword } = props;
+  const { highlightList, isisNewMemo, setIsNewMemo, highlightId, keyword } = props;
   const [index, setIndex] = useState<number>();
 
   useEffect(() => {
@@ -21,21 +21,22 @@ function MemoList(props: MemoListProps) {
   }, [highlightId, highlightList, index]);
 
   if (index !== undefined && index !== -1) {
-    highlightList[index].memo = newMemo ? { keyword: keyword } : {};
+    highlightList[index].memo = isisNewMemo ? { keyword: keyword } : {};
   }
 
   return (
     <StMemoList>
-      {highlightList.map(({ highlightId, memo }) =>
-        Object.keys(memo).length ? (
-          <Memo
-            key={highlightId}
-            newMemo={newMemo}
-            setNewMemo={setNewMemo}
-            keyword={memo.keyword}
-            content={memo.content}
-          />
-        ) : null,
+      {highlightList.map(
+        ({ highlightId, memo }) =>
+          Object.keys(memo).length > 0 && (
+            <Memo
+              key={highlightId}
+              isisNewMemo={isisNewMemo}
+              setIsNewMemo={setIsNewMemo}
+              keyword={memo.keyword}
+              content={memo.content}
+            />
+          ),
       )}
     </StMemoList>
   );
