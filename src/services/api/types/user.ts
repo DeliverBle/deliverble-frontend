@@ -1,11 +1,14 @@
-export interface LoginUser {
-  accessToken: string;
-  userId: string;
-}
+type TokenInfo = {
+  access_token: string;
+};
 
-export interface UserInfo {
-  kakaoId: string;
+type UserInfo = {
+  email?: string;
+  kakaoId: number;
   nickname: string;
-  email: string;
-  gender: string;
+};
+
+export interface LoginUser {
+  tokenInfo: TokenInfo;
+  userInfo: UserInfo;
 }

@@ -7,10 +7,18 @@ function OAuthRedirectHandler() {
 
   useEffect(() => {
     const code = new URL(window.location.href).searchParams.get('code') ?? '';
-    console.log(code);
     getAccessTokenAndId(code).then((response) => {
       console.log('성공');
-      console.log(response);
+      if (response?.tokenInfo) {
+        const { access_token } = response.tokenInfo;
+        const accessToken = access_token;
+        const { email, kakaoId, nickname } = response.userInfo;
+        console.log(accessToken);
+        console.log(email);
+        console.log(kakaoId);
+        console.log(nickname);
+        // navigate('/home');
+      }
       //router.push('/home');
     });
   }, []);
