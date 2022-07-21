@@ -3,14 +3,26 @@ import ImageDiv from '../common/ImageDiv';
 import { icButtonMypage, icLogout } from 'public/assets/icons';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
+import { useEffect, useState } from 'react';
 
 function ProfileModal() {
+  const [nickname, setNickname] = useState('');
+  const [email, setEmail] = useState('');
+  useEffect(() => {
+    const userNickname = localStorage.getItem('nickname');
+    const userEmail = localStorage.getItem('email');
+    if (userNickname && userEmail) {
+      setNickname(userNickname);
+      setEmail(userEmail);
+    }
+  }, []);
+
   return (
     <StProfileModal>
       <ImageDiv className="profile-image" src={icButtonMypage} layout="fill" alt="profileImage" />
       <StProfileInfo>
-        <p>김버블</p>
-        <h2>deliverble.team@gmail.com</h2>
+        <p>{nickname}</p>
+        <h2>{email}</h2>
       </StProfileInfo>
       <hr />
       <StLogoutButton>
