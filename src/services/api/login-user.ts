@@ -1,5 +1,5 @@
 import { publicAPI } from '../remote/base';
-import { LoginUser, PostLoginRequestBody } from './types/user';
+import { LoginUser, JoinAndLoginRequestBody } from './types/user';
 export interface LoginUserService {
   requestAccessToken(): Promise<LoginUser>;
 }
@@ -15,7 +15,19 @@ export const getAccessTokenAndId = async (code: string): Promise<LoginUser> => {
   }
 };
 
-export const postLogin = async (body: PostLoginRequestBody) => {
+export const postJoin = async (body: JoinAndLoginRequestBody) => {
+  try {
+    const response = await publicAPI.post({
+      url: `/auth/signup`,
+      data: body,
+    });
+    return response;
+  } catch (e) {
+    throw '회원가입 실패';
+  }
+};
+
+export const postLogin = async (body: JoinAndLoginRequestBody) => {
   try {
     const response = await publicAPI.post({
       url: `/auth/login`,

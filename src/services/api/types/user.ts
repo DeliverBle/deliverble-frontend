@@ -6,8 +6,12 @@ type UserIdInfo = {
   kakaoId: number;
 };
 
-export type PostLoginRequestBody = {
-  accessToken: string;
+export type JoinAndLoginRequestBody = {
+  access_token: string;
+  user_id: string;
+};
+
+export type JoinResponseBody = {
   userId: string;
 };
 

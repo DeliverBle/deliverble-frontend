@@ -1,20 +1,20 @@
 import { getAccessTokenAndId } from '@src/services/api/login-user';
-// import { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
 function OAuthRedirectHandler() {
-  // const router = useRouter();
+  const router = useRouter();
 
   useEffect(() => {
     const code = new URL(window.location.href).searchParams.get('code') ?? '';
-    getAccessTokenAndId(code).then((response) => {
+    getAccessTokenAndId(code).then(({ tokenInfo, userInfo }) => {
       console.log('성공');
-      if (response?.tokenInfo) {
-        const { access_token } = response.tokenInfo;
-        const accessToken = access_token;
-        const { kakaoId } = response.userInfo;
+      if (tokenInfo && userInfo) {
+        const { access_token: accessToken } = tokenInfo;
+        const { kakaoId } = userInfo;
         console.log(accessToken);
         console.log(kakaoId);
+        router.back();
       }
     });
   }, []);
