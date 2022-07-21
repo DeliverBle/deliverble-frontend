@@ -5,6 +5,9 @@ import { FONT_STYLES } from '@src/styles/fontStyle';
 import { VideoData } from '@src/services/api/types/home';
 import ImageDiv from './ImageDiv';
 import Like from './Like';
+import { useEffect, useState } from 'react';
+import { api } from '@src/services/api';
+import { LikeData } from '@src/services/api/types/like';
 
 interface NewsListProps {
   newsList: VideoData[];
@@ -13,19 +16,31 @@ interface NewsListProps {
 function NewsList(props: NewsListProps) {
   const { newsList } = props;
   const router = useRouter();
+  const [isLiked, setIsLiked] = useState<boolean>(false);
+  const [likeList, setLikeList] = useState<number[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      // const { likeList } = await api.likeService.getLikeData();
+      const likeList = await api.likeService.getLikeData();
+      setLikeList(likeList.map((like) => like.id));
+    })();
+  }, []);
 
   return (
     <StNewsList>
       {newsList.map(({ id, title, category, channel, thumbnail, reportDate }) => (
         <StNewsWrapper key={id} onClick={() => router.push(`/learn/${id}`)}>
-          <StThumbnail>
-            <ImageDiv className="thumbnail" src={thumbnail} layout="fill" alt="" />
-            <Like isFromList={true} />
-          </StThumbnail>
-          <StTitle>{title}</StTitle>
-          <StInfo>
-            {channel} | {category} | {reportDate.replaceAll('-', '.')}
-          </StInfo>
+          <>
+            <StThumbnail>
+              <ImageDiv className="thumbnail" src={thumbnail} layout="fill" alt="" />
+              <Like isFromList={true} isLiked={likeList.includes(id)} setIsLiked={setIsLiked} />
+            </StThumbnail>
+            <StTitle>{title}</StTitle>
+            <StInfo>
+              {channel} | {category} | {reportDate.replaceAll('-', '.')}
+            </StInfo>
+          </>
         </StNewsWrapper>
       ))}
     </StNewsList>
