@@ -21,7 +21,7 @@ import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { GetServerSidePropsContext } from 'next';
 import { api } from '@src/services/api';
-import { MemoData, Script, VideoData } from '@src/services/api/types/learn-detail';
+import { MemoData, VideoData } from '@src/services/api/types/learn-detail';
 import YouTube from 'react-youtube';
 import EmptyMemo from '@src/components/learnDetail/memo/EmptyMemo';
 import SEO from '@src/components/common/SEO';
@@ -52,115 +52,177 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
 
   const learnRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    //spacing 데이터들을 get해온걸 정리 해야함. 다 받아와서 한번에 뿌려줌
-    //get 해온 아이디에 해당하는 문장의 해당 단어를 string.replace(searchfor,replacewith);
-    //여기서는 하나하나 매칭시킬 예정
-    const SpacingData = {
-      spacingReturnCollection: [
-        {
-          spacingId: 12,
-          scriptId: 33,
-          index: 5,
-        },
-        {
-          spacingId: 13,
-          scriptId: 33,
-          index: 8,
-        },
-        {
-          spacingId: 11,
-          scriptId: 33,
-          index: 18,
-        },
-        {
-          spacingId: 7,
-          scriptId: 36,
-          index: 9,
-        },
-        {
-          spacingId: 8,
-          scriptId: 36,
-          index: 14,
-        },
-        {
-          spacingId: 10,
-          scriptId: 36,
-          index: 20,
-        },
-      ],
-    };
-
-    const highlightData = [
+  const SpacingData = {
+    spacingReturnCollection: [
       {
-        scriptId: 32,
-        highlightId: 8,
-        startingIndex: 0,
-        endingIndex: 3,
-        memo: {
-          id: 1,
-          keyword: '이 시각',
-        },
-      },
-      {
+        spacingId: 12,
         scriptId: 33,
-        highlightId: 1,
-        startingIndex: 3,
-        endingIndex: 4,
+        index: 4,
       },
       {
-        scriptId: 1,
-        highlightId: 3,
-        startingIndex: 5,
-        endingIndex: 6,
+        spacingId: 13,
+        scriptId: 33,
+        index: 8,
       },
       {
-        scriptId: 2,
-        highlightId: 6,
-        startingIndex: 0,
-        endingIndex: 2,
+        spacingId: 11,
+        scriptId: 33,
+        index: 19,
       },
       {
-        scriptId: 3,
-        highlightId: 4,
-        startingIndex: 0,
-        endingIndex: 2,
+        spacingId: 7,
+        scriptId: 36,
+        index: 9,
       },
       {
-        scriptId: 4,
-        highlightId: 7,
-        startingIndex: 0,
-        endingIndex: 2,
+        spacingId: 8,
+        scriptId: 36,
+        index: 15,
       },
       {
-        scriptId: 4,
-        highlightId: 9,
-        startingIndex: 3,
-        endingIndex: 7,
+        spacingId: 10,
+        scriptId: 36,
+        index: 20,
       },
-    ];
+    ],
+  };
 
-    //객체들을 내가 뽑기 좋은 형태로 바꾸는 것
-    function groupBy(objectArray: any[], property: string) {
-      return objectArray.reduce(function (acc, obj) {
-        const key = obj[property]; //스크립트 아이디의 값을 키로 선언
-        //만약 지금 키가 없으면
-        if (!acc[key]) {
-          //키에 대한 배열을 생성함
-          acc[key] = [];
+  const highlightData = [
+    {
+      scriptId: 32,
+      highlightId: 8,
+      startingIndex: 0,
+      endingIndex: 3,
+    },
+    {
+      scriptId: 33,
+      highlightId: 1,
+      startingIndex: 3,
+      endingIndex: 7,
+    },
+    {
+      scriptId: 34,
+      highlightId: 3,
+      startingIndex: 5,
+      endingIndex: 13,
+    },
+    {
+      scriptId: 35,
+      highlightId: 6,
+      startingIndex: 0,
+      endingIndex: 6,
+    },
+    {
+      scriptId: 33,
+      highlightId: 4,
+      startingIndex: 10,
+      endingIndex: 15,
+    },
+    {
+      scriptId: 33,
+      highlightId: 7,
+      startingIndex: 18,
+      endingIndex: 20,
+    },
+    {
+      scriptId: 34,
+      highlightId: 9,
+      startingIndex: 19,
+      endingIndex: 23,
+    },
+  ];
+
+  //객체들을 내가 뽑기 좋은 형태로 바꾸는 것
+  function groupBy(objectArray: any[], property: string) {
+    return objectArray.reduce(function (acc, obj) {
+      const key = obj[property]; //스크립트 아이디의 값을 키로 선언
+      //만약 지금 키가 없으면
+      if (!acc[key]) {
+        //키에 대한 배열을 생성함
+        acc[key] = [];
+      }
+      acc[key].push(obj);
+      return acc;
+    }, {});
+  }
+
+  //하이라이팅 get
+  useEffect(() => {
+    const hlGroupedById = groupBy(highlightData, 'scriptId');
+    const hlKeys = Object.keys(hlGroupedById);
+    for (let i = 0; i < hlKeys.length; i++) {
+      const hlKey = hlKeys[i];
+      const value = hlGroupedById[hlKey];
+      const hlStartIndexArr = [];
+      const hlEndIndexArr = [];
+      const hlIdArr = [];
+
+      for (let j = 0; j < value.length; j++) {
+        hlStartIndexArr.push(value[j].startingIndex);
+        hlEndIndexArr.push(value[j].endingIndex);
+        hlIdArr.push(value[j].highlightId);
+      }
+
+      const scriptsIdNum: number[] = []; //스크립트의 아이디배열
+      scripts.map((item) => {
+        scriptsIdNum.push(item.id);
+      });
+
+      //현재 내가 바꿔야하는 문장이 몇번째 childNode인지 알아야함.
+      //How? 지금 받아온 scriptsIdNum 돌면서 +keys[i]와 같은 친구가 몇번째 넘버인 지 확인
+      let nodeNum = 0;
+      scriptsIdNum.map((item, index) => {
+        if (item === +hlKeys[i]) {
+          nodeNum = index;
         }
-        acc[key].push(obj); //
-        return acc;
-      }, {});
-    }
+      });
 
+      //받아온 스크립트아이디에 해당하는 노드에 접근해서 / 넣어주는 것
+      const currentNode = learnRef.current?.childNodes[nodeNum];
+      if (learnRef.current?.childNodes) {
+        //index에 있는 애들 string으로 다 넣고
+        let count = 0;
+        let tempText = '';
+        if (currentNode?.textContent) {
+          for (let k = 0; k < currentNode.textContent?.length; k++) {
+            if (hlStartIndexArr[count] === k) {
+              tempText += '<mark id=' + hlIdArr[count] + '>' + currentNode.textContent[k];
+              console.log('시작', k);
+            } else if (hlEndIndexArr[count] === k) {
+              tempText += '</mark>' + currentNode.textContent[k];
+              console.log('끝', k);
+              count++;
+            } else {
+              tempText += currentNode.textContent[k];
+            }
+          }
+          console.log('mark 다 박아둠', tempText);
+        }
+
+        //HTML로 파싱
+        const frag = document.createDocumentFragment();
+        const div = document.createElement('div');
+        div.innerHTML = tempText;
+        while (div.firstChild) {
+          frag.appendChild(div.firstChild);
+        }
+        //기존의 plain text를 지우고
+        currentNode?.firstChild && currentNode?.removeChild(currentNode.firstChild);
+        //HTML있는 문장을 삽입해둠
+        currentNode?.appendChild(frag);
+      }
+    }
+  }, [scripts]);
+
+  //끊어읽기 get
+  useEffect(() => {
     const spacingGroupedById = groupBy(SpacingData.spacingReturnCollection, 'scriptId');
 
     //스페이싱 ID로 분류된 애들안에서 인덱스배열이랑 아이디배열 만들기
-    const keys = Object.keys(spacingGroupedById);
-    for (let i = 0; i < keys.length; i++) {
-      const key = keys[i]; // 각각의 키 지금은 스크립트 아이디
-      const value = spacingGroupedById[key]; // 각각의 키에 해당하는 각각의 값
+    const spacingKeys = Object.keys(spacingGroupedById);
+    for (let i = 0; i < spacingKeys.length; i++) {
+      const spacingKey = spacingKeys[i]; // 각각의 키 지금은 스크립트 아이디
+      const value = spacingGroupedById[spacingKey]; // 각각의 키에 해당하는 각각의 값
       const spacingIndexArr = [];
       const spacingIdArr = [];
 
@@ -168,27 +230,18 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
         spacingIndexArr.push(value[j].index);
         spacingIdArr.push(value[j].spacingId);
       }
-      console.log('현재 스크립트 아이디:', keys[i], '인덱스배열', spacingIndexArr, '아이디배열', spacingIdArr);
+      console.log('현재 스크립트 아이디:', spacingKeys[i], '인덱스배열', spacingIndexArr, '아이디배열', spacingIdArr);
 
-      let searchedLine = ''; //스크립트 아이디에 해당하는 문장
-      const scriptsId: Script[] = []; //스크립트를 모두 담아둔 배열
       const scriptsIdNum: number[] = []; //스크립트의 아이디배열
       scripts.map((item) => {
-        scriptsId.push(item);
         scriptsIdNum.push(item.id);
-        if (+keys[i] === item.id) {
-          //받아온 스페이스 인덱스의 스크립트의 아이디와 현재 스크립트 아이디가 같으면
-          searchedLine = item.text; //해당 줄을 넣고
-        }
       });
-      console.log('뭐였드라', searchedLine);
-      console.log('아이디배열', scriptsIdNum);
 
       //현재 내가 바꿔야하는 문장이 몇번째 childNode인지 알아야함.
       //How? 지금 받아온 scriptsIdNum 돌면서 +keys[i]와 같은 친구가 몇번째 넘버인 지 확인
       let nodeNum = 0;
       scriptsIdNum.map((item, index) => {
-        if (item === +keys[i]) {
+        if (item === +spacingKeys[i]) {
           nodeNum = index;
         }
       });
@@ -221,42 +274,8 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
         currentNode?.firstChild && currentNode?.removeChild(currentNode.firstChild);
         //HTML있는 문장을 삽입해둠
         currentNode?.appendChild(frag);
-
-        // //인덱스 리스트를 순회하면서 spacing 자리에 <span>넣어두기
-        // let temp = '';
-        // for (let i = 0; i < indexRes.length + 1; i++) {
-        //   if (i === 0) {
-        //     temp += searchedLine.slice(0, indexRes[0]) + '<span id=' + spacingIdRes[i] + '>/</span>';
-        //   } else if (i === indexRes.length) {
-        //     temp += searchedLine.slice(indexRes[i - 1]);
-        //   } else {
-        //     temp += searchedLine.slice(indexRes[i - 1], indexRes[i]) + '<span>/</span>';
-        //   }
-        // }
-
-        // //그리고 HTML로 수정
-        // const frag = document.createDocumentFragment();
-        // const div = document.createElement('div');
-        // div.innerHTML = temp;
-        // while (div.firstChild) {
-        //   frag.appendChild(div.firstChild);
-        // }
-        // console.log(frag);
-
-        // scriptsId.map((item, index) => {
-        //   if (item.id === +keys[i]) {
-        //     const currentNode = learnRef.current?.childNodes[index];
-        //     currentNode?.firstChild && currentNode?.removeChild(currentNode?.firstChild);
-        //     currentNode?.appendChild(frag);
-        //   }
-        // });
       }
     }
-
-    console.log('하이라이트 접근', highlightData);
-    highlightData.map((item) => {
-      console.log('각각의 아이템들', item);
-    });
   }, [scripts]);
 
   useEffect(() => {
@@ -553,6 +572,17 @@ const StScriptText = styled.p<{ isActive: boolean }>`
     font-size: 3.2rem;
     font-weight: 600;
     color: #4e8aff;
+  }
+
+  & > mark {
+    background: linear-gradient(259.3deg, #d8d9ff 0%, #a7c5ff 100%);
+    font-weight: ${({ isActive }) => (isActive ? 600 : 400)};
+    color: ${({ isActive }) => (isActive ? COLOR.MAIN_BLUE : COLOR.BLACK)};
+  }
+
+  & > mark:hover {
+    color: ${COLOR.MAIN_BLUE};
+    font-weight: 600;
   }
 `;
 
