@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import ImageDiv from '../../components/common/ImageDiv';
@@ -97,32 +97,19 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   };
 
   const [newMemo, setNewMemo] = useState(false);
-  // const [scriptId, setScriptId] = useState<number>();
-  // const [startIndex, setStartIdx] = useState<number>(); // 테스트 값 0 - 하이라이트: "정부는"
-
-  // const handleHighlightInfo = (e: any, id: number) => {
-  //   console.log(e.target.id);
-
-  //   let textCount = 0;
-  //   for (const node of e.currentTarget.childNodes) {
-  //     if (e.target === node) {
-  //       setStartIdx(textCount);
-  //       break;
-  //     }
-
-  //     if (node.childNodes.length > 1) {
-  //       textCount -= Math.floor(node.childNodes.length / 2);
-  //     } else if (node.innerText == '/') {
-  //       textCount -= 1;
-  //     }
-  //     textCount += node.innerText ? node.innerText.length : node.length;
-  //   }
-
-  //   setScriptId(id);
-  // };
-
   const [clickedHighlightId, setClickedHighlightId] = useState<number>();
   const [keyword, setKeyword] = useState<string>();
+  const contextMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: Event) => {
+      const eventTarget = e.target as HTMLElement;
+      if (clickedScriptId && !contextMenuRef?.current?.contains(eventTarget)) {
+        setClickedScriptId(-1);
+      }
+    };
+    window.addEventListener('click', handleClickOutside);
+  }, [clickedScriptId]);
 
   return (
     <>
@@ -192,6 +179,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                   !isSpacing &&
                   scripts.map(({ id, text, startTime, endTime }) => (
                     <StScriptText
+                      ref={contextMenuRef}
                       onContextMenu={(e) => {
                         e.preventDefault();
                         setClickedScriptId(id);
@@ -203,7 +191,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                       onClick={() => player?.seekTo(startTime, true)}
                       isActive={startTime <= currentTime && currentTime <= endTime ? true : false}>
                       <p id={id.toString()}>{text}</p>
-                      {clickedScriptId == id && <ContextMenu points={points} setNewMemo={setNewMemo} />}
+                      {clickedScriptId === id && <ContextMenu points={points} setNewMemo={setNewMemo} />}
                     </StScriptText>
                   ))}
                 {(isHighlight || isSpacing) && (
