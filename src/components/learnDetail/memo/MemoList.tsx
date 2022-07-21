@@ -15,7 +15,6 @@ interface MemoListProps {
 function MemoList(props: MemoListProps) {
   const { highlightList, newMemo, setNewMemo, highlightId, keyword } = props;
   const [index, setIndex] = useState<number>();
-  console.log('newMemo2', newMemo);
 
   useEffect(() => {
     setIndex(highlightList.findIndex((item) => item.highlightId === highlightId));
