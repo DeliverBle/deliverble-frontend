@@ -1,16 +1,17 @@
 import styled from 'styled-components';
+import ImageDiv from '../common/ImageDiv';
 import { icScript } from 'public/assets/icons/index';
 import { COLOR } from 'src/styles/color';
 import { FONT_STYLES } from 'src/styles/fontStyle';
-import ImageDiv from '../common/ImageDiv';
 
 function HeadlineContainer() {
   return (
     <StHeadlineContainer>
       <ImageDiv src={icScript} className="script" layout="fill" alt="" />
       <StHeadLineWrapper>
-        <p>한번으로 끝내지 마세요!</p>
-        <p>복습으로 매력적인 목소리를 만들어요!</p>
+        한 번으로 끝내지 마세요!
+        <br />
+        복습으로 매력적인 목소리를 만들어요.
       </StHeadLineWrapper>
     </StHeadlineContainer>
   );
@@ -30,7 +31,7 @@ const StHeadlineContainer = styled.section`
   }
 `;
 
-const StHeadLineWrapper = styled.section`
+const StHeadLineWrapper = styled.div`
   display: flex;
   flex-direction: column;
   color: ${COLOR.BLACK};
