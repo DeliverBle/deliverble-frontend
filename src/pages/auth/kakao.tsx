@@ -19,16 +19,16 @@ function OAuthRedirectHandler() {
             postLogin({ access_token: accessToken, user_id: kakaoId.toString() });
           })
           .catch((error) => {
-            // 이미 회원이면 로그인 시키고, 이전 페이지로 이동
+            // 이미 회원이면 로그인
             if (error === '회원가입 실패') {
               postLogin({ access_token: accessToken, user_id: kakaoId.toString() }).then((response) => {
                 console.log(response);
-                router.back();
               });
-            } else {
-              router.back();
             }
           });
+
+        // 이전 페이지로 이동
+        router.back();
       }
     });
   }, []);
