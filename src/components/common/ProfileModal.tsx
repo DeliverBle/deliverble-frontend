@@ -26,10 +26,10 @@ function ProfileModal() {
 
   return (
     <StProfileModal>
-      <ImageDiv className="profile-image" src={icButtonMypage} layout="fill" alt="profileImage" />
+      <ImageDiv className="profile-image" src={icButtonMypage} layout="fill" alt="icMypageButton" />
       <StProfileInfo>
         <p>{nickname}</p>
-        <h2>{email}</h2>
+        <div>{email}</div>
       </StProfileInfo>
       <hr />
       <StLogoutButton onClick={handleLogout}>
@@ -83,7 +83,7 @@ const StProfileInfo = styled.div`
     ${FONT_STYLES.SB_20_BODY};
   }
 
-  & > h2 {
+  & > div {
     ${FONT_STYLES.R_17_CAPTION};
     color: ${COLOR.GRAY_45};
     margin: 0.4rem 0 4rem 0;
