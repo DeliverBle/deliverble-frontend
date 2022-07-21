@@ -75,7 +75,7 @@ export const LEARN_DETAIL_DATA = {
     },
     {
       scriptId: 2,
-      highlightId: 2,
+      highlightId: 6,
       startingIndex: 0,
       endingIndex: 2,
       memo: {},
@@ -93,7 +93,7 @@ export const LEARN_DETAIL_DATA = {
     },
     {
       scriptId: 4,
-      highlightId: 5,
+      highlightId: 7,
       startingIndex: 0,
       endingIndex: 2,
       memo: {},
