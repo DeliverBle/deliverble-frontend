@@ -57,9 +57,16 @@ export const LEARN_DETAIL_DATA = {
   HIGHLIGHT_DATA: [
     {
       scriptId: 1,
-      highlightId: 1,
+      highlightId: 8,
       startingIndex: 0,
       endingIndex: 2,
+      memo: {},
+    },
+    {
+      scriptId: 1,
+      highlightId: 1,
+      startingIndex: 3,
+      endingIndex: 4,
       memo: {
         id: 1,
         keyword: '북한이',
@@ -69,7 +76,7 @@ export const LEARN_DETAIL_DATA = {
     {
       scriptId: 1,
       highlightId: 3,
-      startingIndex: 4,
+      startingIndex: 5,
       endingIndex: 6,
       memo: {},
     },
@@ -97,6 +104,13 @@ export const LEARN_DETAIL_DATA = {
       startingIndex: 0,
       endingIndex: 2,
       memo: {},
+    },
+    {
+      scriptId: 4,
+      highlightId: 9,
+      startingIndex: 3,
+      endingIndex: 7,
+      memo: { id: 3, keyword: '군남asdfasdf댐', content: '발음주dsafasdf의!!!!!' },
     },
   ],
 };

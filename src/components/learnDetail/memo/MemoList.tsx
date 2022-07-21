@@ -20,7 +20,7 @@ function MemoList(props: MemoListProps) {
     setIndex(highlightList.findIndex((item) => item.highlightId === highlightId));
   }, [highlightId, highlightList, index]);
 
-  if (index && index !== -1) {
+  if (index !== undefined && index !== -1) {
     highlightList[index].memo = newMemo ? { keyword: keyword } : {};
   }
 
