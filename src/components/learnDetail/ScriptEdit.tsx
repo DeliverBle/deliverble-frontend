@@ -197,9 +197,12 @@ const StWrapper = styled.div`
   & > mark {
     background: linear-gradient(259.3deg, #d8d9ff 0%, #a7c5ff 100%);
   }
+
+  position: relative;
 `;
 
 const StScriptText = styled.div`
+  position: relative;
   font-size: 2.6rem;
   color: ${COLOR.BLACK};
   cursor: pointer;
