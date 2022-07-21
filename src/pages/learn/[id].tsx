@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import ImageDiv from '../../components/common/ImageDiv';
@@ -21,7 +21,7 @@ import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { GetServerSidePropsContext } from 'next';
 import { api } from '@src/services/api';
-import { MemoData, VideoData } from '@src/services/api/types/learn-detail';
+import { MemoData, Script, VideoData } from '@src/services/api/types/learn-detail';
 import YouTube from 'react-youtube';
 import EmptyMemo from '@src/components/learnDetail/memo/EmptyMemo';
 import SEO from '@src/components/common/SEO';
@@ -37,6 +37,8 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
   const [videoState, setVideoState] = useState(-1);
   const [currentTime, setCurrentTime] = useState(0);
   const { title, category, channel, reportDate, tags, link, startTime, endTime, scripts } = videoData;
+
+  const learnRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     //spacing 데이터들을 get해온걸 정리 해야함. 다 받아와서 한번에 뿌려줌
@@ -105,7 +107,9 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
       console.log('현재 키의:', keys[i], '인덱스배열', indexRes, '스페이스아이디들', spacingIdRes);
 
       let searchedLine = ''; //스크립트 아이디에 해당하는 문장
+      const scriptsId: Script[] = [];
       scripts.map((item) => {
+        scriptsId.push(item);
         if (+keys[i] === item.id) {
           searchedLine = item.text;
         }
@@ -118,12 +122,33 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
         if (i === 0) {
           temp += searchedLine.slice(0, indexRes[0]) + '<span>/</span>';
         } else if (i === indexRes.length) {
-          temp += searchedLine.slice(indexRes[indexRes.length]);
+          temp += searchedLine.slice(indexRes[i - 1]);
         } else {
           temp += searchedLine.slice(indexRes[i - 1], indexRes[i]) + '<span>/</span>';
         }
       }
-      console.log(temp); //그리고 이걸 DOM parsor로 바꿀 것
+
+      //그리고 HTML로 수정
+      const frag = document.createDocumentFragment();
+      const div = document.createElement('div');
+      div.innerHTML = temp;
+      while (div.firstChild) {
+        frag.appendChild(div.firstChild);
+      }
+      console.log(frag);
+
+      scriptsId.map((item, index) => {
+        if (item.id === +keys[i]) {
+          const currentNode = learnRef.current?.childNodes[index];
+          console.log(',,,,,,,,,', learnRef.current?.childNodes[index].firstChild);
+          currentNode?.firstChild && currentNode?.removeChild(currentNode?.firstChild);
+          console.log(',,,,,,,,,삭제', learnRef.current?.childNodes[index].firstChild);
+          currentNode?.appendChild(frag);
+          console.log(',,,,,,,,,추가', learnRef.current?.childNodes[index].firstChild);
+        }
+      });
+      // const elem = document.getElementById(keys[i]);
+      // elem?.appendChild(frag);
     }
   }, [scripts]);
 
@@ -196,7 +221,7 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
               <h2>아나운서의 목소리를 듣고, 스크립트를 보며 따라 말해보세요.</h2>
             </div>
             <article>
-              <div>
+              <div ref={learnRef}>
                 {!isHighlight &&
                   !isSpacing &&
                   scripts.map(({ id, text, startTime, endTime }) => (

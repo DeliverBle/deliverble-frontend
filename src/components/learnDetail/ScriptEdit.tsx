@@ -52,7 +52,6 @@ function ScriptEdit(props: ScriptEditProps) {
     const isValidate = isLeftBlank || isRightBlank;
 
     let isOverlap = false;
-    console.log('>>>>>>>>>>', range);
     if (selection?.type === 'Range') {
       //중복여부를 검사하자
       const marks = document.getElementsByTagName('mark'); //mark라는 태그를 모두 담은 html collection
@@ -89,7 +88,7 @@ function ScriptEdit(props: ScriptEditProps) {
       if (!text.includes('\n')) {
         const frag = document.createDocumentFragment();
         const div = document.createElement('div');
-        div.innerHTML = '<mark id=songah>' + text + '</mark>';
+        div.innerHTML = '<mark>' + text + '</mark>';
         while (div.firstChild) {
           frag.appendChild(div.firstChild);
         }
