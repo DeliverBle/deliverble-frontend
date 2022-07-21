@@ -20,8 +20,9 @@ export default HeadlineContainer;
 
 const StHeadlineContainer = styled.section`
   display: flex;
-  margin: 16rem 0 14.8rem 16rem;
   gap: 1.2rem;
+  margin-bottom: 14.8rem;
+
   .script {
     position: relative;
     width: 4.8rem;
