@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 
 function OAuthRedirectHandler() {
   const router = useRouter();
-  const { setAccessToken, saveLoginUser } = useLoginUser();
+  const { saveLoginUser } = useLoginUser();
 
   useEffect(() => {
     const code = new URL(window.location.href).searchParams.get('code') ?? '';
@@ -20,25 +20,25 @@ function OAuthRedirectHandler() {
           .then(() => {
             // 회원가입 성공하면 로그인
             postLogin({ access_token: accessToken, user_id: kakaoId.toString() }).then((response) => {
-              setAccessToken(accessToken);
               saveLoginUser(response);
+              localStorage.setItem('token', accessToken);
+              router.back();
             });
           })
           .catch((error) => {
             // 이미 회원이면 로그인
             if (error === '회원가입 실패') {
               postLogin({ access_token: accessToken, user_id: kakaoId.toString() }).then((response) => {
-                setAccessToken(accessToken);
                 saveLoginUser(response);
+                localStorage.setItem('token', accessToken);
+                router.back();
               });
             }
           });
-
-        // 이전 페이지로 이동
-        router.back();
       }
     });
   }, []);
+
   return <></>;
 }
 
