@@ -6,15 +6,15 @@ import MemoForm from './MemoForm';
 import MemoDotButton from './MemoPopupButton';
 
 interface MemoProps {
-  // create: boolean;
+  newMemo: boolean;
+  setNewMemo: (cancel: boolean) => void;
   keyword?: string;
   content?: string;
 }
 
 function Memo(props: MemoProps) {
-  const { keyword, content } = props;
+  const { newMemo, setNewMemo, keyword, content } = props;
   const [moreButton, setMoreButton] = useState(false);
-  const [create, setCreate] = useState(content === undefined);
   const [edit, setEdit] = useState(false);
 
   const CONTENT_MAX = 30;
@@ -37,10 +37,12 @@ function Memo(props: MemoProps) {
   return (
     <StMemo>
       {keyword && (
-        <StKeyword>{keyword.length <= KEYWORD_MAX || moreButton ? keyword : `${keyword.slice(0, 27)}...`}</StKeyword>
+        <StKeyword>
+          {keyword.length <= KEYWORD_MAX || moreButton || newMemo ? keyword : `${keyword.slice(0, 27)}...`}
+        </StKeyword>
       )}
-      {create || edit ? (
-        <MemoForm content={content} setCreate={setCreate} setEdit={setEdit} />
+      {!content || edit ? (
+        <MemoForm content={content} setNewMemo={setNewMemo} setEdit={setEdit} />
       ) : (
         <StContent>
           {showContent()}

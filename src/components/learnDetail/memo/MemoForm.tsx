@@ -6,12 +6,12 @@ import ImageDiv from '../../common/ImageDiv';
 
 interface MemoFormProps {
   content?: string;
-  setCreate: (cancel: boolean) => void;
-  setEdit: (cancel: boolean) => void;
+  setNewMemo: (newMemo: boolean) => void;
+  setEdit: (edit: boolean) => void;
 }
 
 function MemoForm(props: MemoFormProps) {
-  const { content, setCreate, setEdit } = props;
+  const { setNewMemo, content } = props;
 
   return (
     <>
@@ -20,15 +20,10 @@ function MemoForm(props: MemoFormProps) {
           {content}
         </StForm>
       ) : (
-        <StForm maxLength={70} rows={3}></StForm>
+        <StForm maxLength={70} rows={3} autoFocus></StForm>
       )}
       <StButtonContainer>
-        <button
-          type="button"
-          onClick={() => {
-            setCreate(false);
-            setEdit(false);
-          }}>
+        <button type="button" onClick={() => setNewMemo(false)}>
           <ImageDiv src={icMemoXButton} alt="x" />
         </button>
         <button type="button">

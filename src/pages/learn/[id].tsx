@@ -96,7 +96,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
     return { x: x + x * 0.5, y: y + y * 0.5 };
   };
 
-  const [create, setCreate] = useState(false);
+  const [newMemo, setNewMemo] = useState(false);
   // const [scriptId, setScriptId] = useState<number>();
   // const [startIndex, setStartIdx] = useState<number>(); // 테스트 값 0 - 하이라이트: "정부는"
 
@@ -170,7 +170,8 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                 {highlightData ? (
                   <MemoList
                     highlightList={highlightData}
-                    create={create}
+                    newMemo={newMemo}
+                    setNewMemo={setNewMemo}
                     highlightId={clickedHighlightId}
                     keyword={keyword}
                   />
@@ -202,7 +203,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                       onClick={() => player?.seekTo(startTime, true)}
                       isActive={startTime <= currentTime && currentTime <= endTime ? true : false}>
                       <p id={id.toString()}>{text}</p>
-                      {clickedScriptId == id && <ContextMenu points={points} setCreate={setCreate} />}
+                      {clickedScriptId == id && <ContextMenu points={points} setNewMemo={setNewMemo} />}
                     </StScriptText>
                   ))}
                 {(isHighlight || isSpacing) && (

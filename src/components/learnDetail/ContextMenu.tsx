@@ -7,11 +7,11 @@ interface ContextMenuProps {
     x: number;
     y: number;
   };
-  setCreate: (create: boolean) => void;
+  setNewMemo: (create: boolean) => void;
 }
 
 function ContextMenu(props: ContextMenuProps) {
-  const { points, setCreate } = props;
+  const { points, setNewMemo } = props;
 
   return (
     <StContextMenu top={points.y} left={points.x} className="test">
@@ -21,7 +21,7 @@ function ContextMenu(props: ContextMenuProps) {
             type="button"
             onClick={(e) => {
               e.stopPropagation();
-              setCreate(true);
+              setNewMemo(true);
             }}>
             메모 추가
           </button>
