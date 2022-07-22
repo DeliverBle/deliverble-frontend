@@ -205,17 +205,9 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
         while (div.firstChild) {
           frag.appendChild(div.firstChild);
         }
-        console.log('what to remove?', currentNode);
-        console.log('생성할 데이터', frag);
-        //기존의 plain text를 지우고
-        // while (currentNode?.hasChildNodes()) {
-        //   console.log('지울데이터', currentNode?.firstChild);
-        //   currentNode?.firstChild && currentNode?.removeChild(currentNode.firstChild);
-        // }
         if (currentNode?.textContent) {
           currentNode.textContent = '';
         }
-
         currentNode?.appendChild(frag);
       }
     }
@@ -257,8 +249,6 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
 
         for (let i = 0; i < currentNode.childNodes.length; i++) {
           const currentChild = currentNode.childNodes[i];
-          // const isMark = currentNode.childNodes[i].hasChildNodes();
-          // console.log('gogo', spacingIndexArr[matchingCount]);
           //만약에 타입이 텍스트인 경우
           if (currentChild.nodeName === '#text') {
             if (currentChild.textContent?.length) {
@@ -297,9 +287,7 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
             tempText += '</mark>';
           }
         }
-        console.log('>>>>>>>가라가라확갇혀 내안에갇혀', tempText, textCount, matchingCount);
 
-        console.log('완성된 텍스트', tempText);
         //HTML로 파싱
         const frag = document.createDocumentFragment();
         const div = document.createElement('div');
@@ -307,9 +295,6 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
         while (div.firstChild) {
           frag.appendChild(div.firstChild);
         }
-        console.log('what to remove?', currentNode);
-        console.log('지울데이터', currentNode?.firstChild);
-        console.log('생성할 데이터', frag);
         //기존의 plain text를 지우고
         if (currentNode?.textContent) {
           currentNode.textContent = '';
