@@ -21,7 +21,7 @@ import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { GetServerSidePropsContext } from 'next';
 import { api } from '@src/services/api';
-import { HighlightData, VideoData } from '@src/services/api/types/learn-detail';
+import { VideoData } from '@src/services/api/types/learn-detail';
 import YouTube from 'react-youtube';
 import EmptyMemo from '@src/components/learnDetail/memo/EmptyMemo';
 import SEO from '@src/components/common/SEO';
@@ -30,7 +30,7 @@ import Like from '@src/components/common/Like';
 import ContextMenu from '@src/components/learnDetail/ContextMenu';
 import LoginModal from '@src/components/login/LoginModal';
 
-function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highlightData: HighlightData[] }) {
+function LearnDetail({ videoData }: { videoData: VideoData }) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
@@ -65,82 +65,42 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   const learnRef = useRef<HTMLDivElement>(null);
 
   const SpacingData = {
-    spacingReturnCollection: [
-      {
-        spacingId: 12,
-        scriptId: 33,
-        index: 4,
-      },
-      {
-        spacingId: 13,
-        scriptId: 33,
-        index: 8,
-      },
-      {
-        spacingId: 11,
-        scriptId: 33,
-        index: 19,
-      },
-      {
-        spacingId: 7,
-        scriptId: 36,
-        index: 9,
-      },
-      {
-        spacingId: 8,
-        scriptId: 36,
-        index: 15,
-      },
-      {
-        spacingId: 10,
-        scriptId: 36,
-        index: 20,
-      },
-    ],
+    spacingReturnCollection: [],
   };
 
   const HighlightData = [
     {
-      scriptId: 32,
-      highlightId: 8,
+      scriptId: 6,
+      highlightId: 1,
       startingIndex: 0,
       endingIndex: 3,
+      memo: {
+        id: 1,
+        keyword: '북한이',
+        content: '한에 강세를 주어 말한다.',
+      },
     },
     {
-      scriptId: 33,
-      highlightId: 1,
-      startingIndex: 3,
-      endingIndex: 7,
-    },
-    {
-      scriptId: 34,
-      highlightId: 3,
-      startingIndex: 5,
-      endingIndex: 13,
-    },
-    {
-      scriptId: 35,
-      highlightId: 6,
-      startingIndex: 0,
-      endingIndex: 6,
-    },
-    {
-      scriptId: 33,
+      scriptId: 7,
       highlightId: 4,
-      startingIndex: 10,
-      endingIndex: 15,
+      startingIndex: 11,
+      endingIndex: 58,
+      memo: {
+        id: 2,
+        keyword: '북한에 댐을 방류하면 사전 통지해 달라고 요청했지만, 북한은 이에 대한 응답 없이 방류',
+        content: '내가 너무 입을 작게 벌려서 발음하더라 입을 크게 벌려서 말하자 아아아아 ~~~!',
+      },
     },
     {
-      scriptId: 33,
+      scriptId: 8,
       highlightId: 7,
-      startingIndex: 18,
-      endingIndex: 20,
-    },
-    {
-      scriptId: 34,
-      highlightId: 9,
-      startingIndex: 19,
-      endingIndex: 23,
+      startingIndex: 0,
+      endingIndex: 3,
+      memo: {
+        id: 3,
+        keyword: '군남댐',
+        content: '발음에 주의해서 말한다.',
+      },
     },
   ];
 
@@ -402,9 +362,9 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                 <h2>메모</h2>
               </StMemoTitle>
               <StMemoWrapper>
-                {highlightData ? (
+                {HighlightData ? (
                   <MemoList
-                    highlightList={highlightData}
+                    highlightList={HighlightData}
                     isNewMemo={isNewMemo}
                     setIsNewMemo={setIsNewMemo}
                     highlightId={clickedHighlightId}
@@ -520,14 +480,13 @@ export default LearnDetail;
 export async function getServerSideProps({ params }: GetServerSidePropsContext) {
   const id = +(params?.id ?? -1);
   const videoData = await api.learnDetailService.getVideoData(id);
-  const highlightData = await api.learnDetailService.getHighlightData(id);
 
   if (videoData.id !== id) {
     return {
       notFound: true,
     };
   }
-  return { props: { videoData: videoData, highlightData: highlightData } };
+  return { props: { videoData: videoData } };
 }
 
 const StLearnDetail = styled.div`

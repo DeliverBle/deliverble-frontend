@@ -57,16 +57,9 @@ export const LEARN_DETAIL_DATA = {
   HIGHLIGHT_DATA: [
     {
       scriptId: 1,
-      highlightId: 8,
-      startingIndex: 0,
-      endingIndex: 2,
-      memo: {},
-    },
-    {
-      scriptId: 1,
       highlightId: 1,
-      startingIndex: 3,
-      endingIndex: 4,
+      startingIndex: 0,
+      endingIndex: 0,
       memo: {
         id: 1,
         keyword: '북한이',
@@ -74,24 +67,10 @@ export const LEARN_DETAIL_DATA = {
       },
     },
     {
-      scriptId: 1,
-      highlightId: 3,
-      startingIndex: 5,
-      endingIndex: 6,
-      memo: {},
-    },
-    {
-      scriptId: 2,
-      highlightId: 6,
-      startingIndex: 0,
-      endingIndex: 2,
-      memo: {},
-    },
-    {
       scriptId: 3,
       highlightId: 4,
       startingIndex: 0,
-      endingIndex: 2,
+      endingIndex: 0,
       memo: {
         id: 2,
         keyword: '북한에 댐을 방류하면 사전 통지해 달라고 요청했지만, 북한은 이에 대한 응답 없이 방류',
@@ -100,16 +79,9 @@ export const LEARN_DETAIL_DATA = {
     },
     {
       scriptId: 4,
-      highlightId: 7,
-      startingIndex: 0,
-      endingIndex: 2,
-      memo: {},
-    },
-    {
-      scriptId: 4,
       highlightId: 9,
-      startingIndex: 5,
-      endingIndex: 6,
+      startingIndex: 0,
+      endingIndex: 0,
       memo: {
         id: 3,
         keyword: '군남댐',
