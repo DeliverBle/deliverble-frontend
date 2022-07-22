@@ -6,7 +6,6 @@ export function reviewDataRemote(): ReviewService {
   const getFavoriteVideoList = async () => {
     const response = await privateAPI.get({ url: `/user/favorite/all` });
     if (response.status === 200) {
-      console.log(response.message.favoriteNews);
       return {
         favoriteNews: response.message.favoriteNews
           ? response.message.favoriteNews.map((video: VideoData) => ({
