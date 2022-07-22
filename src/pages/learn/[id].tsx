@@ -146,16 +146,15 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
     }, {});
   }
 
-  const scriptsIdNum: number[] = []; //스크립트의 아이디배열
-  useEffect(() => {
-    scripts.map((item) => {
-      scriptsIdNum.push(item.id);
-    });
-  }, [scripts]);
+  const scriptsIdNum = scripts.map((item) => {
+    return item.id;
+  });
+
+  const hlGroupedById = groupBy(highlightData, 'scriptId');
+  const spacingGroupedById = groupBy(SpacingData.spacingReturnCollection, 'scriptId');
 
   //하이라이팅 get
   useEffect(() => {
-    const hlGroupedById = groupBy(highlightData, 'scriptId');
     const hlKeys = Object.keys(hlGroupedById);
 
     for (let i = 0; i < hlKeys.length; i++) {
@@ -214,9 +213,6 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
   }, [scripts]);
 
   useEffect(() => {
-    //끊어읽기 get
-    const spacingGroupedById = groupBy(SpacingData.spacingReturnCollection, 'scriptId');
-
     //스페이싱 ID로 분류된 애들안에서 인덱스배열이랑 아이디배열 만들기
     const spacingKeys = Object.keys(spacingGroupedById);
     for (let i = 0; i < spacingKeys.length; i++) {
@@ -404,8 +400,15 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
                       {clickedScriptId == id && <ContextMenu points={points} />}
                     </StScriptText>
                   ))}
-                {(isHighlight || isSpacing) && (
-                  <ScriptEdit scripts={scripts} isHighlight={isHighlight} isSpacing={isSpacing} />
+                {(isHighlight || isSpacing) && hlGroupedById && spacingGroupedById && scriptsIdNum && (
+                  <ScriptEdit
+                    scripts={scripts}
+                    isHighlight={isHighlight}
+                    isSpacing={isSpacing}
+                    scriptsIdNum={scriptsIdNum}
+                    hlGroupedById={hlGroupedById}
+                    spacingGroupedById={spacingGroupedById}
+                  />
                 )}
               </div>
               <div>
