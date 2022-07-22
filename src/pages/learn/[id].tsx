@@ -146,10 +146,18 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
     }, {});
   }
 
+  const scriptsIdNum: number[] = []; //스크립트의 아이디배열
+  useEffect(() => {
+    scripts.map((item) => {
+      scriptsIdNum.push(item.id);
+    });
+  }, [scripts]);
+
   //하이라이팅 get
   useEffect(() => {
     const hlGroupedById = groupBy(highlightData, 'scriptId');
     const hlKeys = Object.keys(hlGroupedById);
+
     for (let i = 0; i < hlKeys.length; i++) {
       const hlKey = hlKeys[i];
       const value = hlGroupedById[hlKey];
@@ -163,11 +171,6 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
         hlIdArr.push(value[j].highlightId);
       }
 
-      const scriptsIdNum: number[] = []; //스크립트의 아이디배열
-      scripts.map((item) => {
-        scriptsIdNum.push(item.id);
-      });
-
       //현재 내가 바꿔야하는 문장이 몇번째 childNode인지 알아야함.
       //How? 지금 받아온 scriptsIdNum 돌면서 +keys[i]와 같은 친구가 몇번째 넘버인 지 확인
       let nodeNum = 0;
@@ -177,26 +180,22 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
         }
       });
 
-      //받아온 스크립트아이디에 해당하는 노드에 접근해서 / 넣어주는 것
+      //받아온 스크립트아이디에 해당하는 노드에 접근해서 하이라이팅 넣어주는 것
       const currentNode = learnRef.current?.childNodes[nodeNum];
       if (learnRef.current?.childNodes) {
-        //index에 있는 애들 string으로 다 넣고
         let count = 0;
         let tempText = '';
         if (currentNode?.textContent) {
-          for (let k = 0; k < currentNode.textContent?.length; k++) {
-            if (hlStartIndexArr[count] === k) {
-              tempText += '<mark id=' + hlIdArr[count] + '>' + currentNode.textContent[k];
-              console.log('시작', k);
-            } else if (hlEndIndexArr[count] === k) {
-              tempText += '</mark>' + currentNode.textContent[k];
-              console.log('끝', k);
+          for (let j = 0; j < currentNode.textContent?.length; j++) {
+            if (hlStartIndexArr[count] === j) {
+              tempText += '<mark id=' + hlIdArr[count] + '>' + currentNode.textContent[j];
+            } else if (hlEndIndexArr[count] === j) {
+              tempText += currentNode.textContent[j] + '</mark>';
               count++;
             } else {
-              tempText += currentNode.textContent[k];
+              tempText += currentNode.textContent[j];
             }
           }
-          console.log('mark 다 박아둠', tempText);
         }
 
         //HTML로 파싱
@@ -206,16 +205,24 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
         while (div.firstChild) {
           frag.appendChild(div.firstChild);
         }
+        console.log('what to remove?', currentNode);
+        console.log('생성할 데이터', frag);
         //기존의 plain text를 지우고
-        currentNode?.firstChild && currentNode?.removeChild(currentNode.firstChild);
-        //HTML있는 문장을 삽입해둠
+        // while (currentNode?.hasChildNodes()) {
+        //   console.log('지울데이터', currentNode?.firstChild);
+        //   currentNode?.firstChild && currentNode?.removeChild(currentNode.firstChild);
+        // }
+        if (currentNode?.textContent) {
+          currentNode.textContent = '';
+        }
+
         currentNode?.appendChild(frag);
       }
     }
   }, [scripts]);
 
-  //끊어읽기 get
   useEffect(() => {
+    //끊어읽기 get
     const spacingGroupedById = groupBy(SpacingData.spacingReturnCollection, 'scriptId');
 
     //스페이싱 ID로 분류된 애들안에서 인덱스배열이랑 아이디배열 만들기
@@ -230,12 +237,6 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
         spacingIndexArr.push(value[j].index);
         spacingIdArr.push(value[j].spacingId);
       }
-      console.log('현재 스크립트 아이디:', spacingKeys[i], '인덱스배열', spacingIndexArr, '아이디배열', spacingIdArr);
-
-      const scriptsIdNum: number[] = []; //스크립트의 아이디배열
-      scripts.map((item) => {
-        scriptsIdNum.push(item.id);
-      });
 
       //현재 내가 바꿔야하는 문장이 몇번째 childNode인지 알아야함.
       //How? 지금 받아온 scriptsIdNum 돌면서 +keys[i]와 같은 친구가 몇번째 넘버인 지 확인
@@ -248,21 +249,57 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
 
       //받아온 스크립트아이디에 해당하는 노드에 접근해서 / 넣어주는 것
       const currentNode = learnRef.current?.childNodes[nodeNum];
-      if (learnRef.current?.childNodes) {
+      if (currentNode) {
         //index에 있는 애들 string으로 다 넣고
-        let count = 0;
+        let matchingCount = 0;
+        let textCount = 0;
         let tempText = '';
-        if (currentNode?.textContent) {
-          for (let k = 0; k < currentNode.textContent?.length; k++) {
-            if (spacingIndexArr[count] === k) {
-              tempText += '<span id=' + spacingIdArr[count] + '>/</span>' + currentNode.textContent[k];
-              console.log(currentNode.textContent[k]);
-              count++;
-            } else {
-              tempText += currentNode.textContent[k];
+
+        for (let i = 0; i < currentNode.childNodes.length; i++) {
+          const currentChild = currentNode.childNodes[i];
+          // const isMark = currentNode.childNodes[i].hasChildNodes();
+          // console.log('gogo', spacingIndexArr[matchingCount]);
+          //만약에 타입이 텍스트인 경우
+          if (currentChild.nodeName === '#text') {
+            if (currentChild.textContent?.length) {
+              for (let j = 0; j < currentChild.textContent?.length; j++) {
+                //스페이스 인덱스 일때
+                if (spacingIndexArr[matchingCount] === textCount) {
+                  tempText += '<span id=' + spacingIdArr[matchingCount] + '>/</span>' + currentChild.textContent[j];
+                  matchingCount++;
+                  textCount++;
+                } //스페이스 인덱스 아닐때
+                else {
+                  tempText += currentChild.textContent[j];
+                  textCount++;
+                }
+              }
             }
           }
+          //타입이 마크인 경우
+          else if (currentChild.nodeName === 'MARK') {
+            const clone = currentChild as HTMLElement;
+            tempText += '<mark id=' + clone.id + '>';
+            if (currentChild.textContent?.length) {
+              for (let j = 0; j < currentChild.textContent?.length; j++) {
+                //스페이스 인덱스 일때
+                if (spacingIndexArr[matchingCount] === textCount) {
+                  tempText += '<span id=' + spacingIdArr[matchingCount] + '>/</span>' + currentChild.textContent[j];
+                  matchingCount++;
+                  textCount++;
+                } //스페이스 인덱스 아닐때
+                else {
+                  tempText += currentChild.textContent[j];
+                  textCount++;
+                }
+              }
+            }
+            tempText += '</mark>';
+          }
         }
+        console.log('>>>>>>>가라가라확갇혀 내안에갇혀', tempText, textCount, matchingCount);
+
+        console.log('완성된 텍스트', tempText);
         //HTML로 파싱
         const frag = document.createDocumentFragment();
         const div = document.createElement('div');
@@ -270,8 +307,13 @@ function LearnDetail({ videoData, memoData }: { videoData: VideoData; memoData: 
         while (div.firstChild) {
           frag.appendChild(div.firstChild);
         }
+        console.log('what to remove?', currentNode);
+        console.log('지울데이터', currentNode?.firstChild);
+        console.log('생성할 데이터', frag);
         //기존의 plain text를 지우고
-        currentNode?.firstChild && currentNode?.removeChild(currentNode.firstChild);
+        if (currentNode?.textContent) {
+          currentNode.textContent = '';
+        }
         //HTML있는 문장을 삽입해둠
         currentNode?.appendChild(frag);
       }
@@ -572,12 +614,18 @@ const StScriptText = styled.p<{ isActive: boolean }>`
     font-size: 3.2rem;
     font-weight: 600;
     color: #4e8aff;
+    margin: 0 0.02rem 0 0.02rem;
   }
 
   & > mark {
     background: linear-gradient(259.3deg, #d8d9ff 0%, #a7c5ff 100%);
     font-weight: ${({ isActive }) => (isActive ? 600 : 400)};
     color: ${({ isActive }) => (isActive ? COLOR.MAIN_BLUE : COLOR.BLACK)};
+    & > span {
+      font-size: 3.2rem;
+      font-weight: 600;
+      color: #4e8aff;
+    }
   }
 
   & > mark:hover {
