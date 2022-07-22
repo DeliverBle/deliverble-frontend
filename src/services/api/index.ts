@@ -21,8 +21,7 @@ function provideMockAPIService(): APIService {
   const learnService = learnDataRemote();
   const learnDetailService = learnDetailDataRemote();
   const likeService = likeDataRemote();
-  // const likeService = like
-  likeService: any;DataMock();
+  // const likeService = likeDataMock();
   const reviewService = reviewDataRemote();
   return { homeService, learnService, learnDetailService, reviewService, likeService };
 }

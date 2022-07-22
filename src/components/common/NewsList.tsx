@@ -23,10 +23,13 @@ function NewsList(props: NewsListProps) {
       const { favoriteList } = await api.likeService.getLikeData();
       setLikeList(favoriteList.map((like) => like.id));
     })();
-    console.log('test');
+
     const newsListId = newsList.map((news) => news.id);
     setIsLiked(newsListId.map((newsId) => likeList.includes(newsId)));
   }, []);
+
+  console.log('isLiked1 배열', isLiked);
+  console.log('likeList', likeList);
 
   return (
     <StNewsList>
@@ -44,31 +47,15 @@ function NewsList(props: NewsListProps) {
             <Like
               isFromList={true}
               isLiked={isLiked[index]}
-              // toggleLike={() =>
-              //   setIsLiked((prev: boolean[]) => {
-              //     prev.splice(index, 1, !prev[index]);
-              //     return prev;
-              //   })
-              // toggleLike={setIsLiked((prev: boolean[]) => {
-              //   prev.splice(index, 1, !prev[index]);
-              //   return prev;
-              // })}
-              // setIsLiked={(prev: boolean[]) => {
-              //   prev.splice(index, 1, !prev[index]);
-              //   return prev;
-              // }}
-              // setIsLiked={() => {
-              //   isLiked.splice(index, 1, !isLiked[index]);
-              //   console.log('isLiked', isLiked);
-              //   return isLiked;
-              // }}
-              setIsLiked={() => {
-                isLiked.splice(index, 1, !isLiked[index]);
-                console.log('isLiked', isLiked);
-                return isLiked;
-              }}
+              toggleLike={() =>
+                setIsLiked((prev: boolean[]) => {
+                  console.log(prev);
+                  prev.splice(index, 1, !prev[index]);
+                  console.log(prev);
+                  return prev;
+                })
+              }
             />
-            <Like isFromList={true} />
           </StThumbnail>
           <StTitle>{title}</StTitle>
           <StInfo>
