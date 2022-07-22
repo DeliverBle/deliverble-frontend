@@ -5,3 +5,7 @@ export type LikeData = {
 export type LikeListData = {
   favoriteList: LikeData[];
 };
+
+export type PostLikeRequestBody = {
+  news_id: number;
+};
