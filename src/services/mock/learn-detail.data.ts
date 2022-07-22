@@ -53,27 +53,64 @@ export const LEARN_DETAIL_DATA = {
       },
     ],
   },
-  MEMO_DATA: [
+
+  HIGHLIGHT_DATA: [
     {
-      id: 1,
-      keyword: '임진강 상류 황강댐 수문',
-      content: '발음 주의',
+      scriptId: 1,
+      highlightId: 8,
+      startingIndex: 0,
+      endingIndex: 2,
+      memo: {},
     },
     {
-      id: 2,
-      keyword: '제목은최대이십팔자까지보입니다최대이십팔자최대이십팔자최',
-      content: '최대삼십자최대삼십자최대삼십자최대삼십자최대삼십자최대삼십자',
+      scriptId: 1,
+      highlightId: 1,
+      startingIndex: 3,
+      endingIndex: 4,
+      memo: {
+        id: 1,
+        keyword: '북한이',
+        content: '한에 강세를 주어 말한다.',
+      },
     },
     {
-      id: 3,
-      keyword: '제목은최대이십팔자까지보입니다최대이십팔자최대이십팔자최넘었다',
-      content: '최대삼십자최대삼십자최대삼십자최대삼십자최대삼십자최대삼십자넘었다',
+      scriptId: 1,
+      highlightId: 3,
+      startingIndex: 5,
+      endingIndex: 6,
+      memo: {},
     },
     {
-      id: 4,
-      keyword: '더보기눌렀을때제목은글자수상관없이몽땅다나와요이렇게길어도몽땅다나옵니다요',
-      content:
-        '더보기눌렀을때내용은최대칠십글자최대칠십글자최대칠십글자최대칠십글자최대칠십글자최대칠십글자최대칠십글자최대칠십글자최대칠십글자최대칠십글자',
+      scriptId: 2,
+      highlightId: 6,
+      startingIndex: 0,
+      endingIndex: 2,
+      memo: {},
+    },
+    {
+      scriptId: 3,
+      highlightId: 4,
+      startingIndex: 0,
+      endingIndex: 2,
+      memo: {
+        id: 2,
+        keyword: '군남댐',
+        content: '발음에 주의해서 말한다.',
+      },
+    },
+    {
+      scriptId: 4,
+      highlightId: 7,
+      startingIndex: 0,
+      endingIndex: 2,
+      memo: {},
+    },
+    {
+      scriptId: 4,
+      highlightId: 9,
+      startingIndex: 5,
+      endingIndex: 6,
+      memo: { id: 3, keyword: '한박자', content: '한 박자 쉬고 말한다.' },
     },
   ],
 };

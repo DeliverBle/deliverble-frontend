@@ -4,13 +4,28 @@ import { FONT_STYLES } from '@src/styles/fontStyle';
 import { imgLogo } from 'public/assets/images';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ImageDiv from './ImageDiv';
 import LoginModal from '../login/LoginModal';
+import { icMypageButton } from 'public/assets/icons';
+import ProfileModal from './ProfileModal';
 
 function NavigationBar() {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loginState, setLoginState] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+
+  useEffect(() => {
+    handleLoginState();
+  }, []);
+
+  const handleLoginState = () => {
+    const tokenValue = localStorage.getItem('token');
+    if (tokenValue) {
+      setLoginState(true);
+    }
+  };
 
   return (
     <>
@@ -39,7 +54,17 @@ function NavigationBar() {
             </StTab>
           </StTabList>
         </nav>
-        <StLogin onClick={() => setIsModalOpen(true)}>로그인</StLogin>
+        {loginState && (
+          <ImageDiv
+            onClick={() => setIsProfileModalOpen((prev) => !prev)}
+            className="profile"
+            src={icMypageButton}
+            layout="fill"
+            alt=""
+          />
+        )}
+        {!loginState && <StLogin onClick={() => setIsModalOpen(true)}>로그인</StLogin>}
+        {isProfileModalOpen && <ProfileModal />}
       </StNavigationBar>
       {isModalOpen && <LoginModal closeModal={() => setIsModalOpen(false)} />}
     </>
@@ -69,6 +94,15 @@ const StNavigationBar = styled.div`
     width: 14rem;
     height: 5.6rem;
     margin-right: 5.6rem;
+  }
+
+  .profile {
+    position: absolute;
+    right: 6.4rem;
+    width: 4rem;
+    height: 4rem;
+
+    cursor: pointer;
   }
 `;
 

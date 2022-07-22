@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import ImageDiv from '../common/ImageDiv';
-import { KAKAO_AUTH_URL } from '@src/components/login/OAuth';
 import Link from 'next/link';
 import { icXButton, icKakao, icMicrophone } from 'public/assets/icons';
 import { imgLogo } from 'public/assets/images';
 import { COLOR } from '@src/styles/color';
+import { KAKAO_AUTH_URL } from './OAuth';
 
 interface LoginModalProps {
   closeModal: () => void;

@@ -8,5 +8,5 @@ export type VideoData = {
 };
 
 export type FavoriteVideoList = {
-  favoriteVideoList: VideoData[];
+  favoriteNews: VideoData[];
 };

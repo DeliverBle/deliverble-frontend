@@ -1,5 +1,6 @@
-//테스트 REST API
-const CLIENT_ID = '3c72adb081c3a1922f06614930f30782';
-const REDIRECT_URI = 'http://localhost:3000/kakao';
+const isProduction = process.env.NODE_ENV === 'production';
+const DOMAIN = isProduction ? 'https://deliverble.vercel.app' : 'http://localhost:3000';
+const CLIENT_ID = `${process.env.NEXT_PUBLIC_CLIENT_ID}`;
+const REDIRECT_URI = `${DOMAIN}/auth/kakao`;
 
 export const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`;

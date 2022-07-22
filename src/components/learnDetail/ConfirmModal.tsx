@@ -3,15 +3,16 @@ import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 
 interface ConfirmModalProps {
-  closeModal: () => void;
+  closeModal: (close: boolean) => void;
   mainText: string;
   subText: string;
   cancelButtonText: string;
   confirmButtonText: string;
+  setIsNewMemo: (newData: boolean) => void;
 }
 
 function ConfirmModal(props: ConfirmModalProps) {
-  const { closeModal, mainText, subText, cancelButtonText, confirmButtonText } = props;
+  const { closeModal, mainText, subText, cancelButtonText, confirmButtonText, setIsNewMemo } = props;
 
   return (
     <StConfirmModal>
@@ -20,8 +21,14 @@ function ConfirmModal(props: ConfirmModalProps) {
         <p>{subText}</p>
       </StDescription>
       <StButtonContainer>
-        <button onClick={closeModal}>{cancelButtonText}</button>
-        <button>{confirmButtonText}</button>
+        <button onClick={() => closeModal(false)}>{cancelButtonText}</button>
+        <button
+          onClick={() => {
+            setIsNewMemo(false);
+            closeModal(false);
+          }}>
+          {confirmButtonText}
+        </button>
       </StButtonContainer>
     </StConfirmModal>
   );

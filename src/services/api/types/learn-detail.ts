@@ -23,10 +23,16 @@ export type VideoData = {
   scripts: Script[];
 };
 
-export type MemoData = {
-  id: number;
-  keyword: string;
-  content: string;
+export type HighlightData = {
+  scriptId: number;
+  highlightId: number;
+  startingIndex: number;
+  endingIndex: number;
+  memo: {
+    id?: number;
+    keyword?: string;
+    content?: string;
+  };
 };
 
 export type GroupedObjectKey = {

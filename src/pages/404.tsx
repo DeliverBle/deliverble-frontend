@@ -1,3 +1,4 @@
+import Footer from '@src/components/common/Footer';
 import NavigationBar from '@src/components/common/NavigationBar';
 import SEO from '@src/components/common/SEO';
 import { COLOR } from '@src/styles/color';
@@ -20,6 +21,7 @@ function Custom404() {
             <StHomeButton>홈으로 돌아가기</StHomeButton>
           </Link>
         </StBackground>
+        <Footer />
       </StCustom404>
     </>
   );
