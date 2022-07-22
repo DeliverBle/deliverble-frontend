@@ -29,8 +29,8 @@ function ProfileModal() {
       <StProfileInfo>
         <ImageDiv className="profile-image" src={icMypageButton} layout="fill" alt="" />
         <p>{nickname}</p>
+        {email !== 'NO_EMAIL' && <div>{email}</div>}
       </StProfileInfo>
-      <StEmailInfo> {email !== 'NO_EMAIL' && <div>{email}</div>}</StEmailInfo>
       <StLogoutButton onClick={handleLogout}>
         <ImageDiv className="logout" src={icLogout} layout="fill" alt="" />
         로그아웃
@@ -55,8 +55,7 @@ const StProfileModal = styled.div`
 
   .profile-image {
     position: relative;
-    margin: 0 auto;
-    margin-bottom: 2rem;
+    margin: 4rem auto 2rem auto;
     width: 5.6rem;
     height: 5.6rem;
   }
@@ -70,18 +69,18 @@ const StProfileModal = styled.div`
 `;
 
 const StProfileInfo = styled.div`
-  padding-top: 4rem;
-  height: 14.4rem;
+  text-align: center;
 
   & > p {
     ${FONT_STYLES.SB_20_BODY};
   }
-`;
 
-const StEmailInfo = styled.div`
-  ${FONT_STYLES.R_17_CAPTION};
-  color: ${COLOR.GRAY_45};
-  margin: 0.4rem 0 4rem 0;
+  & > div {
+    height: 2.6rem;
+    ${FONT_STYLES.R_17_CAPTION};
+    color: ${COLOR.GRAY_45};
+    margin: 0.4rem 0 4rem 0;
+  }
 `;
 
 const StLogoutButton = styled.button`
@@ -90,6 +89,7 @@ const StLogoutButton = styled.button`
   align-items: center;
   width: 100%;
   height: 7.1rem;
+  margin-top: 4rem;
   ${FONT_STYLES.R_18_CAPTION};
   color: ${COLOR.GRAY_45};
   border-top: 0.1rem ${COLOR.GRAY_10} solid;
