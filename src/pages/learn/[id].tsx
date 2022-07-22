@@ -60,7 +60,19 @@ function LearnDetail() {
         setVideoData(videoData);
         const highlightData = await api.learnDetailService.getHighlightData(+id);
         setHighlightData(highlightData);
-        console.log(highlightData);
+        console.log('하이라이트 : ', highlightData);
+      })();
+  }, [highlightData, router]);
+
+  useEffect(() => {
+    const id = router.query.id;
+    id &&
+      (async () => {
+        const videoData = await api.learnDetailService.getVideoData(+id);
+        setVideoData(videoData);
+        const highlightData = await api.learnDetailService.getHighlightData(+id);
+        setHighlightData(highlightData);
+        console.log('하이라이트 : ', highlightData);
       })();
   }, [highlightData, router]);
 
@@ -106,54 +118,11 @@ function LearnDetail() {
     ],
   };
 
-  const HighlightData = [
-    {
-      scriptId: 32,
-      highlightId: 8,
-      startingIndex: 0,
-      endingIndex: 3,
-    },
-    {
-      scriptId: 33,
-      highlightId: 1,
-      startingIndex: 3,
-      endingIndex: 7,
-    },
-    {
-      scriptId: 34,
-      highlightId: 3,
-      startingIndex: 5,
-      endingIndex: 13,
-    },
-    {
-      scriptId: 35,
-      highlightId: 6,
-      startingIndex: 0,
-      endingIndex: 6,
-    },
-    {
-      scriptId: 33,
-      highlightId: 4,
-      startingIndex: 10,
-      endingIndex: 15,
-    },
-    {
-      scriptId: 33,
-      highlightId: 7,
-      startingIndex: 18,
-      endingIndex: 20,
-    },
-    {
-      scriptId: 34,
-      highlightId: 9,
-      startingIndex: 19,
-      endingIndex: 23,
-    },
-  ];
-
   //객체들을 내가 뽑기 좋은 형태로 바꾸는 것
-  function groupBy(objectArray: any[], property: string) {
-    return objectArray.reduce(function (acc, obj) {
+  function groupBy(objectArray: HighlightData[], property: string) {
+    console.log(objectArray);
+    console.log(typeof objectArray);
+    return objectArray?.reduce(function (acc, obj) {
       const key = obj[property]; //스크립트 아이디의 값을 키로 선언
       //만약 지금 키가 없으면
       if (!acc[key]) {
@@ -169,64 +138,66 @@ function LearnDetail() {
     return item.id;
   });
 
-  const hlGroupedById = groupBy(HighlightData, 'scriptId');
+  const hlGroupedById = highlightData.length > 0 && groupBy(highlightData, 'scriptId');
   const spacingGroupedById = groupBy(SpacingData.spacingReturnCollection, 'scriptId');
 
   //하이라이팅 get
   useEffect(() => {
     const hlKeys = Object.keys(hlGroupedById);
 
-    for (let i = 0; i < hlKeys.length; i++) {
-      const hlKey = hlKeys[i];
-      const value = hlGroupedById[hlKey];
-      const hlStartIndexArr = [];
-      const hlEndIndexArr = [];
-      const hlIdArr = [];
+    if (hlKeys.length > 0) {
+      for (let i = 0; i < hlKeys.length; i++) {
+        const hlKey = hlKeys[i];
+        const value = hlGroupedById[hlKey];
+        const hlStartIndexArr = [];
+        const hlEndIndexArr = [];
+        const hlIdArr = [];
 
-      for (let j = 0; j < value.length; j++) {
-        hlStartIndexArr.push(value[j].startingIndex);
-        hlEndIndexArr.push(value[j].endingIndex);
-        hlIdArr.push(value[j].highlightId);
-      }
-
-      //현재 내가 바꿔야하는 문장이 몇번째 childNode인지 알아야함.
-      //How? 지금 받아온 scriptsIdNum 돌면서 +keys[i]와 같은 친구가 몇번째 넘버인 지 확인
-      let nodeNum = 0;
-      scriptsIdNum?.map((item, index) => {
-        if (item === +hlKeys[i]) {
-          nodeNum = index;
+        for (let j = 0; j < value.length; j++) {
+          hlStartIndexArr.push(value[j].startingIndex);
+          hlEndIndexArr.push(value[j].endingIndex);
+          hlIdArr.push(value[j].highlightId);
         }
-      });
 
-      //받아온 스크립트아이디에 해당하는 노드에 접근해서 하이라이팅 넣어주는 것
-      const currentNode = learnRef.current?.childNodes[nodeNum];
-      if (learnRef.current?.childNodes) {
-        let count = 0;
-        let tempText = '';
-        if (currentNode?.textContent) {
-          for (let j = 0; j < currentNode.textContent?.length; j++) {
-            if (hlStartIndexArr[count] === j) {
-              tempText += '<mark id=' + hlIdArr[count] + '>' + currentNode.textContent[j];
-            } else if (hlEndIndexArr[count] === j) {
-              tempText += currentNode.textContent[j] + '</mark>';
-              count++;
-            } else {
-              tempText += currentNode.textContent[j];
+        //현재 내가 바꿔야하는 문장이 몇번째 childNode인지 알아야함.
+        //How? 지금 받아온 scriptsIdNum 돌면서 +keys[i]와 같은 친구가 몇번째 넘버인 지 확인
+        let nodeNum = 0;
+        scriptsIdNum?.map((item, index) => {
+          if (item === +hlKeys[i]) {
+            nodeNum = index;
+          }
+        });
+
+        //받아온 스크립트아이디에 해당하는 노드에 접근해서 하이라이팅 넣어주는 것
+        const currentNode = learnRef.current?.childNodes[nodeNum];
+        if (learnRef.current?.childNodes) {
+          let count = 0;
+          let tempText = '';
+          if (currentNode?.textContent) {
+            for (let j = 0; j < currentNode.textContent?.length; j++) {
+              if (hlStartIndexArr[count] === j) {
+                tempText += '<mark id=' + hlIdArr[count] + '>' + currentNode.textContent[j];
+              } else if (hlEndIndexArr[count] === j) {
+                tempText += currentNode.textContent[j] + '</mark>';
+                count++;
+              } else {
+                tempText += currentNode.textContent[j];
+              }
             }
           }
-        }
 
-        //HTML로 파싱
-        const frag = document.createDocumentFragment();
-        const div = document.createElement('div');
-        div.innerHTML = tempText;
-        while (div.firstChild) {
-          frag.appendChild(div.firstChild);
+          //HTML로 파싱
+          const frag = document.createDocumentFragment();
+          const div = document.createElement('div');
+          div.innerHTML = tempText;
+          while (div.firstChild) {
+            frag.appendChild(div.firstChild);
+          }
+          if (currentNode?.textContent) {
+            currentNode.textContent = '';
+          }
+          currentNode?.appendChild(frag);
         }
-        if (currentNode?.textContent) {
-          currentNode.textContent = '';
-        }
-        currentNode?.appendChild(frag);
       }
     }
   }, [scripts]);

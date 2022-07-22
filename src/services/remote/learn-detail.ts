@@ -37,8 +37,8 @@ export function learnDetailDataRemote(): LearnDetailService {
           ? response.data.highlightReturnCollection.map((highlight: HighlightData) => ({
               scriptId: highlight.scriptId,
               highlightId: highlight.highlightId,
-              startIndex: highlight.startIndex,
-              endIndex: highlight.endIndex,
+              startIndex: highlight.startingIndex,
+              endIndex: highlight.endingIndex,
               memo: {
                 id: highlight.memo.id,
                 keyword: highlight.memo.keyword,
