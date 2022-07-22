@@ -53,11 +53,5 @@ const StMemoDotImage = styled.div`
   .dot {
     position: absolute;
     top: -2rem;
-    opacity: 0;
-  }
-
-  &:hover .default img {
-    transition: opacity 0.3s;
-    opacity: 0;
   }
 `;
