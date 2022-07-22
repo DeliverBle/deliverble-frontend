@@ -57,7 +57,7 @@ export const LEARN_DETAIL_DATA = {
   HIGHLIGHT_DATA: [
     {
       scriptId: 1,
-      highlightId: 1,
+      highlightId: 0,
       startingIndex: 0,
       endingIndex: 0,
       memo: {
@@ -68,7 +68,7 @@ export const LEARN_DETAIL_DATA = {
     },
     {
       scriptId: 3,
-      highlightId: 4,
+      highlightId: 0,
       startingIndex: 0,
       endingIndex: 0,
       memo: {
@@ -79,7 +79,7 @@ export const LEARN_DETAIL_DATA = {
     },
     {
       scriptId: 4,
-      highlightId: 9,
+      highlightId: 0,
       startingIndex: 0,
       endingIndex: 0,
       memo: {

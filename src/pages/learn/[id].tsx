@@ -21,7 +21,7 @@ import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { GetServerSidePropsContext } from 'next';
 import { api } from '@src/services/api';
-import { VideoData } from '@src/services/api/types/learn-detail';
+import { HighlightData, VideoData } from '@src/services/api/types/learn-detail';
 import YouTube from 'react-youtube';
 import EmptyMemo from '@src/components/learnDetail/memo/EmptyMemo';
 import SEO from '@src/components/common/SEO';
@@ -30,7 +30,7 @@ import Like from '@src/components/common/Like';
 import ContextMenu from '@src/components/learnDetail/ContextMenu';
 import LoginModal from '@src/components/login/LoginModal';
 
-function LearnDetail({ videoData }: { videoData: VideoData }) {
+function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highlightData: HighlightData[] }) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
@@ -47,6 +47,7 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
   const [keyword, setKeyword] = useState<string>();
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isfirstClicked, setIsFirstClicked] = useState(false);
 
   const getLoginStatus = () => localStorage.getItem('token') ?? '';
 
@@ -64,43 +65,24 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
 
   const learnRef = useRef<HTMLDivElement>(null);
 
-  const SpacingData = {
-    spacingReturnCollection: [],
-  };
-
   const HighlightData = [
     {
       scriptId: 6,
-      highlightId: 1,
+      highlightId: 8,
       startingIndex: 0,
       endingIndex: 3,
-      memo: {
-        id: 1,
-        keyword: '북한이',
-        content: '한에 강세를 주어 말한다.',
-      },
     },
     {
       scriptId: 7,
-      highlightId: 4,
+      highlightId: 1,
       startingIndex: 11,
       endingIndex: 58,
-      memo: {
-        id: 2,
-        keyword: '북한에 댐을 방류하면 사전 통지해 달라고 요청했지만, 북한은 이에 대한 응답 없이 방류',
-        content: '내가 너무 입을 작게 벌려서 발음하더라 입을 크게 벌려서 말하자 아아아아 ~~~!',
-      },
     },
     {
       scriptId: 8,
-      highlightId: 7,
+      highlightId: 3,
       startingIndex: 0,
       endingIndex: 3,
-      memo: {
-        id: 3,
-        keyword: '군남댐',
-        content: '발음에 주의해서 말한다.',
-      },
     },
   ];
 
@@ -123,7 +105,6 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
   });
 
   const hlGroupedById = groupBy(HighlightData, 'scriptId');
-  const spacingGroupedById = groupBy(SpacingData.spacingReturnCollection, 'scriptId');
 
   //하이라이팅 get
   useEffect(() => {
@@ -179,95 +160,6 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
         if (currentNode?.textContent) {
           currentNode.textContent = '';
         }
-        currentNode?.appendChild(frag);
-      }
-    }
-  }, [scripts]);
-
-  useEffect(() => {
-    //스페이싱 ID로 분류된 애들안에서 인덱스배열이랑 아이디배열 만들기
-    const spacingKeys = Object.keys(spacingGroupedById);
-    for (let i = 0; i < spacingKeys.length; i++) {
-      const spacingKey = spacingKeys[i]; // 각각의 키 지금은 스크립트 아이디
-      const value = spacingGroupedById[spacingKey]; // 각각의 키에 해당하는 각각의 값
-      const spacingIndexArr = [];
-      const spacingIdArr = [];
-
-      for (let j = 0; j < value.length; j++) {
-        spacingIndexArr.push(value[j].index);
-        spacingIdArr.push(value[j].spacingId);
-      }
-
-      //현재 내가 바꿔야하는 문장이 몇번째 childNode인지 알아야함.
-      //How? 지금 받아온 scriptsIdNum 돌면서 +keys[i]와 같은 친구가 몇번째 넘버인 지 확인
-      let nodeNum = 0;
-      scriptsIdNum.map((item, index) => {
-        if (item === +spacingKeys[i]) {
-          nodeNum = index;
-        }
-      });
-
-      //받아온 스크립트아이디에 해당하는 노드에 접근해서 / 넣어주는 것
-      const currentNode = learnRef.current?.childNodes[nodeNum];
-      if (currentNode) {
-        //index에 있는 애들 string으로 다 넣고
-        let matchingCount = 0;
-        let textCount = 0;
-        let tempText = '';
-
-        for (let i = 0; i < currentNode.childNodes.length; i++) {
-          const currentChild = currentNode.childNodes[i];
-          //만약에 타입이 텍스트인 경우
-          if (currentChild.nodeName === '#text') {
-            if (currentChild.textContent?.length) {
-              for (let j = 0; j < currentChild.textContent?.length; j++) {
-                //스페이스 인덱스 일때
-                if (spacingIndexArr[matchingCount] === textCount) {
-                  tempText += '<span id=' + spacingIdArr[matchingCount] + '>/</span>' + currentChild.textContent[j];
-                  matchingCount++;
-                  textCount++;
-                } //스페이스 인덱스 아닐때
-                else {
-                  tempText += currentChild.textContent[j];
-                  textCount++;
-                }
-              }
-            }
-          }
-          //타입이 마크인 경우
-          else if (currentChild.nodeName === 'MARK') {
-            const clone = currentChild as HTMLElement;
-            tempText += '<mark id=' + clone.id + '>';
-            if (currentChild.textContent?.length) {
-              for (let j = 0; j < currentChild.textContent?.length; j++) {
-                //스페이스 인덱스 일때
-                if (spacingIndexArr[matchingCount] === textCount) {
-                  tempText += '<span id=' + spacingIdArr[matchingCount] + '>/</span>' + currentChild.textContent[j];
-                  matchingCount++;
-                  textCount++;
-                } //스페이스 인덱스 아닐때
-                else {
-                  tempText += currentChild.textContent[j];
-                  textCount++;
-                }
-              }
-            }
-            tempText += '</mark>';
-          }
-        }
-
-        //HTML로 파싱
-        const frag = document.createDocumentFragment();
-        const div = document.createElement('div');
-        div.innerHTML = tempText;
-        while (div.firstChild) {
-          frag.appendChild(div.firstChild);
-        }
-        //기존의 plain text를 지우고
-        if (currentNode?.textContent) {
-          currentNode.textContent = '';
-        }
-        //HTML있는 문장을 삽입해둠
         currentNode?.appendChild(frag);
       }
     }
@@ -362,9 +254,9 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
                 <h2>메모</h2>
               </StMemoTitle>
               <StMemoWrapper>
-                {HighlightData ? (
+                {highlightData ? (
                   <MemoList
-                    highlightList={HighlightData}
+                    highlightList={highlightData}
                     isNewMemo={isNewMemo}
                     setIsNewMemo={setIsNewMemo}
                     highlightId={clickedHighlightId}
@@ -383,8 +275,7 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
             </div>
             <article>
               <div ref={learnRef}>
-                {!isHighlight &&
-                  !isSpacing &&
+                {!isfirstClicked &&
                   scripts.map(({ id, text, startTime, endTime }) => (
                     <StScriptText
                       ref={contextMenuRef}
@@ -401,16 +292,7 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
                       )}
                     </StScriptText>
                   ))}
-                {(isHighlight || isSpacing) && hlGroupedById && spacingGroupedById && scriptsIdNum && (
-                  <ScriptEdit
-                    scripts={scripts}
-                    isHighlight={isHighlight}
-                    isSpacing={isSpacing}
-                    scriptsIdNum={scriptsIdNum}
-                    hlGroupedById={hlGroupedById}
-                    spacingGroupedById={spacingGroupedById}
-                  />
-                )}
+                {isfirstClicked && <ScriptEdit scripts={scripts} isHighlight={isHighlight} isSpacing={isSpacing} />}
               </div>
               <div>
                 <ImageDiv onClick={() => setIsModalOpen(true)} src={icGuide} className="guide" layout="fill" alt="?" />
@@ -423,6 +305,7 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
                       } else {
                         isHighlight ? setIsHighlight(false) : setIsHighlight(true);
                         setIsSpacing(false);
+                        setIsFirstClicked(true);
                       }
                     }}>
                     {isHighlight ? (
@@ -442,6 +325,7 @@ function LearnDetail({ videoData }: { videoData: VideoData }) {
                       } else {
                         isSpacing ? setIsSpacing(false) : setIsSpacing(true);
                         setIsHighlight(false);
+                        setIsFirstClicked(true);
                       }
                     }}>
                     {isSpacing ? (
@@ -480,13 +364,14 @@ export default LearnDetail;
 export async function getServerSideProps({ params }: GetServerSidePropsContext) {
   const id = +(params?.id ?? -1);
   const videoData = await api.learnDetailService.getVideoData(id);
+  const highlightData = await api.learnDetailService.getHighlightData(id);
 
   if (videoData.id !== id) {
     return {
       notFound: true,
     };
   }
-  return { props: { videoData: videoData } };
+  return { props: { videoData: videoData, highlightData: highlightData } };
 }
 
 const StLearnDetail = styled.div`
@@ -494,7 +379,6 @@ const StLearnDetail = styled.div`
   min-height: 100vh;
   background: rgba(229, 238, 255, 0.85);
   backdrop-filter: blur(2.8rem);
-
   .close {
     position: fixed;
     top: 2.4rem;
@@ -503,7 +387,6 @@ const StLearnDetail = styled.div`
     height: 4.8rem;
     cursor: pointer;
   }
-
   .guide {
     position: relative;
     width: 3.4rem;
@@ -521,7 +404,6 @@ const StLearnMain = styled.main`
   padding: 8rem 8rem 0 8rem;
   border-radius: 3rem;
   background-color: ${COLOR.WHITE};
-
   overflow: hidden;
 `;
 
@@ -529,7 +411,6 @@ const StLearnSection = styled.section`
   display: flex;
   flex-direction: column;
   padding-bottom: 8rem;
-
   & > div {
     display: flex;
     align-items: center;
@@ -537,18 +418,15 @@ const StLearnSection = styled.section`
     margin-top: 14rem;
     margin-bottom: 2.4rem;
   }
-
   & > div > h2 {
     color: ${COLOR.BLACK};
     ${FONT_STYLES.SB_24_HEADLINE};
   }
-
   .announce {
     position: relative;
     width: 3.2rem;
     height: 3.2rem;
   }
-
   article {
     display: flex;
     flex-direction: column;
@@ -561,29 +439,24 @@ const StLearnSection = styled.section`
     font-size: 2.6rem;
     line-height: 5.8rem;
     word-break: keep-all;
-
     & > div:first-child {
       position: relative;
       flex: 1;
       padding: 0.6rem 1.2rem;
       height: 62.8rem;
       overflow-y: scroll;
-
       &::-webkit-scrollbar {
         width: 1rem;
       }
-
       &::-webkit-scrollbar-thumb {
         background-color: ${COLOR.GRAY_10};
         border-radius: 1.3rem;
       }
-
       &::-webkit-scrollbar-track-piece {
         height: 13.6rem;
         max-height: 13.6rem;
       }
     }
-
     & > div:last-child {
       display: flex;
       align-items: center;
@@ -597,24 +470,20 @@ const StLearnSection = styled.section`
 
 const StScriptText = styled.div<{ isActive: boolean }>`
   position: relative;
-
   font-size: 2.6rem;
   font-weight: ${({ isActive }) => (isActive ? 600 : 400)};
   color: ${({ isActive }) => (isActive ? COLOR.MAIN_BLUE : COLOR.BLACK)};
   cursor: pointer;
-
   &:hover {
     color: ${COLOR.MAIN_BLUE};
     font-weight: 600;
   }
-
   & > span {
     font-size: 3.2rem;
     font-weight: 600;
     color: #4e8aff;
     margin: 0 0.02rem 0 0.02rem;
   }
-
   & > mark {
     background: linear-gradient(259.3deg, #d8d9ff 0%, #a7c5ff 100%);
     font-weight: ${({ isActive }) => (isActive ? 600 : 400)};
@@ -625,7 +494,6 @@ const StScriptText = styled.div<{ isActive: boolean }>`
       color: #4e8aff;
     }
   }
-
   & > mark:hover {
     color: ${COLOR.MAIN_BLUE};
     font-weight: 600;
@@ -641,12 +509,10 @@ const StButtonContainer = styled.div`
 const StButton = styled.button`
   width: 4.8rem;
   height: 4.8rem;
-
   &:hover .default img {
     transition: opacity 1s;
     opacity: 0;
   }
-
   .function-button {
     cursor: pointer;
     position: absolute;
@@ -660,7 +526,6 @@ const StVideoDetail = styled.div`
     color: ${COLOR.GRAY_30};
     ${FONT_STYLES.M_21_BODY};
   }
-
   & > h1 {
     margin-top: 1.2rem;
     margin-bottom: 2rem;
@@ -673,7 +538,6 @@ const StTagContainer = styled.div`
   display: flex;
   gap: 0.8rem;
   margin-bottom: 4.8rem;
-
   & > span {
     padding: 1rem 1.6rem;
     border-radius: 2.4rem;
@@ -690,7 +554,6 @@ const StVideoWrapper = styled.div`
   height: fit-content;
   border-radius: 2.4rem;
   overflow: hidden;
-
   .like-button {
     position: absolute;
     width: 4.8rem;
@@ -699,7 +562,6 @@ const StVideoWrapper = styled.div`
     top: 2.4rem;
     right: 2.4rem;
   }
-
   video {
     position: relative;
     left: 0;
@@ -718,12 +580,10 @@ const StMemoTitle = styled.div`
   align-items: center;
   gap: 0.8rem;
   margin-bottom: 2.4rem;
-
   & > h2 {
     color: ${COLOR.BLACK};
     ${FONT_STYLES.SB_24_HEADLINE};
   }
-
   .memo {
     position: relative;
     width: 3.2rem;
