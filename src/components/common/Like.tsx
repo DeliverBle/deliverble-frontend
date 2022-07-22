@@ -7,10 +7,11 @@ interface LikeProps {
   isFromList: boolean;
   isLiked: boolean;
   toggleLike: () => void;
+  handleClick: () => void;
 }
 
 function Like(props: LikeProps) {
-  const { isFromList, isLiked, toggleLike } = props;
+  const { isFromList, isLiked, toggleLike, handleClick } = props;
   const [isLikeStatus, setIsLikeStatus] = useState<boolean>(isLiked);
 
   return (
@@ -20,6 +21,8 @@ function Like(props: LikeProps) {
         e.stopPropagation();
         toggleLike();
         setIsLikeStatus((prev) => !prev);
+        console.log('Test');
+        handleClick();
       }}>
       <StLikeImage isFromList={isFromList}>
         {isLiked || isLikeStatus ? (

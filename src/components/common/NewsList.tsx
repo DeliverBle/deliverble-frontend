@@ -17,6 +17,8 @@ function NewsList(props: NewsListProps) {
   const router = useRouter();
   const [isLiked, setIsLiked] = useState<boolean[]>([]);
   const [likeList, setLikeList] = useState<number[]>([]);
+  const [token, setToken] = useState('');
+  const [userId, setUserId] = useState('');
 
   useEffect(() => {
     (async () => {
@@ -27,8 +29,30 @@ function NewsList(props: NewsListProps) {
 
   useEffect(() => {
     const newsListId = newsList.map((news) => news.id);
-    setIsLiked(newsListId.map((newsId) => likeList.includes(newsId)));
+    setIsLiked(newsListId.map((newsId) => likeList?.includes(newsId)));
   }, [likeList, newsList]);
+
+  useEffect(() => {
+    (async () => {
+      const getAccessToken = () => localStorage.getItem('token') ?? '';
+      const getUserId = () => localStorage.getItem('userId') ?? '';
+      if (getAccessToken()) {
+        setToken(getAccessToken());
+      }
+      if (getUserId()) {
+        setUserId(getUserId());
+      }
+    })();
+  }, []);
+
+  const handleClick = async (id: number) => {
+    const { favoriteList } = await api.likeService.postLikeData({
+      news_id: id,
+      access_token: token,
+      user_id: userId,
+    });
+    setLikeList(favoriteList?.map((like) => like.id));
+  };
 
   return (
     <StNewsList>
@@ -52,6 +76,7 @@ function NewsList(props: NewsListProps) {
                   return prev;
                 })
               }
+              handleClick={() => handleClick(id)}
             />
           </StThumbnail>
           <StTitle>{title}</StTitle>

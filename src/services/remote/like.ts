@@ -21,7 +21,7 @@ export function likeDataRemote(): LikeService {
     if (response.status === 200) {
       return {
         favoriteList: response.message
-          ? response.message.favoriteNews.map((like: LikeData) => ({
+          ? response.message.favoriteNews?.map((like: LikeData) => ({
               id: like.id,
             }))
           : [],

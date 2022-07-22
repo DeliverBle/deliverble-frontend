@@ -8,4 +8,6 @@ export type LikeListData = {
 
 export type PostLikeRequestBody = {
   news_id: number;
+  access_token: string;
+  user_id: string;
 };
