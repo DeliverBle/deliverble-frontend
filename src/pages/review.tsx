@@ -19,8 +19,8 @@ function Review() {
   useEffect(() => {
     (async () => {
       setIsLoading(true);
-      const { favoriteVideoList } = await api.reviewService.getFavoriteVideoList();
-      setFavoriteList(favoriteVideoList);
+      const { favoriteNews } = await api.reviewService.getFavoriteVideoList();
+      setFavoriteList(favoriteNews);
       setIsLoading(false);
     })();
   }, []);
