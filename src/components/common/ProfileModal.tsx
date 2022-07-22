@@ -43,6 +43,7 @@ export default ProfileModal;
 
 const StProfileModal = styled.div`
   position: absolute;
+  text-align: center;
   top: 7.6rem;
   right: 4rem;
   width: 38rem;

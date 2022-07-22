@@ -28,6 +28,7 @@ import SEO from '@src/components/common/SEO';
 import MemoList from '@src/components/learnDetail/memo/MemoList';
 import Like from '@src/components/common/Like';
 import ContextMenu from '@src/components/learnDetail/ContextMenu';
+import LoginModal from '@src/components/login/LoginModal';
 
 function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highlightData: HighlightData[] }) {
   const router = useRouter();
@@ -45,6 +46,9 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   const [isNewMemo, setIsNewMemo] = useState(false);
   const [keyword, setKeyword] = useState<string>();
   const contextMenuRef = useRef<HTMLDivElement>(null);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
+  const getLoginStatus = () => localStorage.getItem('token') ?? '';
 
   useEffect(() => {
     setMainText('메모 작성을 취소하시겠습니까?');
@@ -454,8 +458,12 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                   <StButton
                     onClick={(e) => {
                       e.stopPropagation();
-                      isHighlight ? setIsHighlight(false) : setIsHighlight(true);
-                      setIsSpacing(false);
+                      if (getLoginStatus() === '') {
+                        setIsLoginModalOpen(true);
+                      } else {
+                        isHighlight ? setIsHighlight(false) : setIsHighlight(true);
+                        setIsSpacing(false);
+                      }
                     }}>
                     {isHighlight ? (
                       <ImageDiv className="function-button" src={icHighlighterClicked} alt="하이라이트" />
@@ -469,8 +477,12 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                   <StButton
                     onClick={(e) => {
                       e.stopPropagation();
-                      isSpacing ? setIsSpacing(false) : setIsSpacing(true);
-                      setIsHighlight(false);
+                      if (getLoginStatus() === '') {
+                        setIsLoginModalOpen(true);
+                      } else {
+                        isSpacing ? setIsSpacing(false) : setIsSpacing(true);
+                        setIsHighlight(false);
+                      }
                     }}>
                     {isSpacing ? (
                       <ImageDiv className="spacing function-button" src={icSpacingClicked} alt="끊어 읽기" />
@@ -497,6 +509,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
             setIsNewMemo={setIsNewMemo}
           />
         )}
+        {isLoginModalOpen && <LoginModal closeModal={() => setIsLoginModalOpen(false)} />}
       </StLearnDetail>
     </>
   );
