@@ -61,7 +61,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   const [player, setPlayer] = useState<YT.Player | null>();
   const [videoState, setVideoState] = useState(-1);
   const [currentTime, setCurrentTime] = useState(0);
-  const { title, category, channel, reportDate, tags, link, startTime, endTime, scripts } = videoData;
+  const { id, title, category, channel, reportDate, tags, link, startTime, endTime, scripts } = videoData;
 
   const learnRef = useRef<HTMLDivElement>(null);
 
@@ -230,7 +230,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
               </StTagContainer>
             </StVideoDetail>
             <StVideoWrapper>
-              <Like isFromList={false} />
+              <Like isFromList={false} newsId={id} />
               <YouTube
                 videoId={link}
                 opts={{

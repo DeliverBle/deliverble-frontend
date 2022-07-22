@@ -5,6 +5,8 @@ import { FONT_STYLES } from '@src/styles/fontStyle';
 import { VideoData } from '@src/services/api/types/home';
 import ImageDiv from './ImageDiv';
 import Like from './Like';
+import { useEffect, useState } from 'react';
+import { api } from '@src/services/api';
 
 interface NewsListProps {
   newsList: VideoData[];
@@ -13,21 +15,35 @@ interface NewsListProps {
 function NewsList(props: NewsListProps) {
   const { newsList } = props;
   const router = useRouter();
+  const [, setUpdateState] = useState(0);
+
+  useEffect(() => {
+    (async () => {
+      const { favoriteList } = await api.likeService.getLikeData();
+      console.log('favoriteList', favoriteList);
+      newsList.map((news) => {
+        news.isLiked = favoriteList.map((like) => like.id).includes(news.id) ? true : false;
+      });
+      setUpdateState(1);
+    })();
+  }, []);
 
   return (
     <StNewsList>
-      {newsList.map(({ id, title, category, channel, thumbnail, reportDate }) => (
+      {newsList.map(({ id, title, category, channel, thumbnail, reportDate, isLiked }) => (
         <StNewsWrapper key={id} onClick={() => router.push(`/learn/${id}`)}>
           <StThumbnail>
-            <ImageDiv
-              className="thumbnail"
-              src={thumbnail}
-              blurDataURL={thumbnail}
-              placeholder="blur"
-              layout="fill"
-              alt=""
-            />
-            <Like isFromList={true} />
+            <>
+              <ImageDiv
+                className="thumbnail"
+                src={thumbnail}
+                blurDataURL={thumbnail}
+                placeholder="blur"
+                layout="fill"
+                alt=""
+              />
+              <Like isFromList={true} newsId={id} isLiked={isLiked} />
+            </>
           </StThumbnail>
           <StTitle>{title}</StTitle>
           <StInfo>
@@ -63,8 +79,9 @@ const StThumbnail = styled.div`
   cursor: pointer;
 
   &:hover {
-    transition: 0.5s ease-in-out;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 100%);
+    transition: background-color 0.2s ease-in-out;
+    /* background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 100%); */
+    background-color: rgba(0, 0, 0, 0.15);
   }
 
   &:hover .like {
