@@ -17,7 +17,7 @@ function MemoList(props: MemoListProps) {
   const [index, setIndex] = useState<number>();
 
   useEffect(() => {
-    setIndex(highlightList.findIndex((item) => item.highlightId === highlightId));
+    highlightList.length > 0 && setIndex(highlightList.findIndex((item) => item.highlightId === highlightId));
   }, [highlightId, highlightList, index]);
 
   if (index !== undefined && index !== -1) {
@@ -26,18 +26,19 @@ function MemoList(props: MemoListProps) {
 
   return (
     <StMemoList>
-      {highlightList.map(
-        ({ highlightId, memo }) =>
-          Object.keys(memo).length > 0 && (
-            <Memo
-              key={highlightId}
-              isNewMemo={isNewMemo}
-              setIsNewMemo={setIsNewMemo}
-              keyword={memo.keyword}
-              content={memo.content}
-            />
-          ),
-      )}
+      {highlightList.length > 0 &&
+        highlightList.map(
+          ({ highlightId, memo }) =>
+            Object.keys(memo).length > 0 && (
+              <Memo
+                key={highlightId}
+                isNewMemo={isNewMemo}
+                setIsNewMemo={setIsNewMemo}
+                keyword={memo.keyword}
+                content={memo.content}
+              />
+            ),
+        )}
     </StMemoList>
   );
 }

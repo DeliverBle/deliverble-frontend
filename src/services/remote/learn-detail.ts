@@ -33,7 +33,7 @@ export function learnDetailDataRemote(): LearnDetailService {
     const response = await privateAPI.get({ url: `/highlight?news_id=${id}` });
     if (response.status === 200) {
       return {
-        highlightReturnCollection: response.data.highlightReturnCollection
+        highlightReturnCollection: response.data
           ? response.data.highlightReturnCollection.map((highlight: HighlightData) => ({
               scriptId: highlight.scriptId,
               highlightId: highlight.highlightId,
