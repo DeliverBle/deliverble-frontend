@@ -29,7 +29,7 @@ import MemoList from '@src/components/learnDetail/memo/MemoList';
 import Like from '@src/components/common/Like';
 import ContextMenu from '@src/components/learnDetail/ContextMenu';
 
-function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highlightData: HighlightData[] }) {
+function LearnDetail({ videoData }: { videoData: VideoData; highlightData: HighlightData[] }) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
