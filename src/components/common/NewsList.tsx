@@ -15,24 +15,36 @@ interface NewsListProps {
 function NewsList(props: NewsListProps) {
   const { newsList } = props;
   const router = useRouter();
-  const [isLiked, setIsLiked] = useState<boolean[]>([]);
-  const [likeList, setLikeList] = useState<number[]>([]);
+  // const [likeList, setLikeList] = useState<number[]>([]);
   const [token, setToken] = useState('');
   const [userId, setUserId] = useState('');
+
+  const [, setUpdateState] = useState<number>(0);
 
   useEffect(() => {
     (async () => {
       const { favoriteList } = await api.likeService.getLikeData();
-      console.log(favoriteList);
-      const tempList = favoriteList.map((like) => like.id);
-      setLikeList(tempList);
+      // setLikeList(favoriteList.map((like) => like.id));
+      console.log('favoriteList', favoriteList);
+      newsList.map((news) => {
+        news.isLiked = favoriteList.map((like) => like.id).includes(news.id) ? true : false;
+      });
+      // console.log('newsList2', newsList);
+      setUpdateState(1);
     })();
   }, []);
 
-  useEffect(() => {
-    const newsListId = newsList.map((news) => news.id);
-    setIsLiked(newsListId.map((newsId) => likeList?.includes(newsId)));
-  }, [likeList, newsList]);
+  // useEffect(() => {
+  //   console.log('likeList', likeList);
+  //   // const tempList = JSON.parse(JSON.stringify(newsList));
+  //   // temp?.map((news: any) => {
+  //   //   news.isLiked = likeList?.includes(news.id) ? true : false;
+  //   // });
+  //   newsList?.map((news) => {
+  //     news.isLiked = likeList?.includes(news.id) ? true : false;
+  //   });
+  //   console.log('newsLisdsft', newsList[0].isLiked);
+  // }, [likeList, newsList]);
 
   useEffect(() => {
     (async () => {
@@ -47,23 +59,21 @@ function NewsList(props: NewsListProps) {
     })();
   }, []);
 
-  const handleClick = async (id: number, isLiked: boolean) => {
-    if (isLiked) {
+  const handleClick = async (id: number, isLiked?: boolean) => {
+    if (!isLiked) {
       console.log('데이터 추가 요청');
-      const { favoriteList } = await api.likeService.postLikeData({
+      await api.likeService.postLikeData({
         news_id: id,
         access_token: token,
         user_id: userId,
       });
-      setLikeList(favoriteList?.map((like) => like.id));
     } else {
       console.log('데이터 삭제 요청');
-      const { favoriteList } = await api.likeService.deleteLikeData({
+      await api.likeService.deleteLikeData({
         news_id: id,
         access_token: token,
         user_id: userId,
       });
-      setLikeList(favoriteList?.map((like) => like.id));
     }
   };
 
@@ -71,32 +81,21 @@ function NewsList(props: NewsListProps) {
 
   return (
     <StNewsList>
-      {newsList.map(({ id, title, category, channel, thumbnail, reportDate }, index) => (
+      {newsList.map(({ id, title, category, channel, thumbnail, reportDate, isLiked }) => (
         <StNewsWrapper key={id} onClick={() => router.push(`/learn/${id}`)}>
           <StThumbnail>
-            <ImageDiv
-              className="thumbnail"
-              src={thumbnail}
-              blurDataURL={thumbnail}
-              placeholder="blur"
-              layout="fill"
-              alt=""
-            />
-            <Like
-              isFromList={true}
-              isLiked={isLiked[index]}
-              toggleLike={() => {
-                setIsLiked((prev: boolean[]) => {
-                  // console.log('prev', prev);
-                  // console.log('prev[index]', prev[index]);
-                  prev.splice(index, 1, !prev[index]);
-                  // console.log('prev', prev);
-                  // console.log('prev[index]', prev[index]);
-                  handleClick(id, prev[index]);
-                  return prev;
-                });
-              }}
-            />
+            <>
+              <ImageDiv
+                className="thumbnail"
+                src={thumbnail}
+                blurDataURL={thumbnail}
+                placeholder="blur"
+                layout="fill"
+                alt=""
+              />
+              {console.log('isLiked', isLiked)}
+              <Like isFromList={true} isLiked={isLiked} toggleLike={() => handleClick(id, isLiked)} />
+            </>
           </StThumbnail>
           <StTitle>{title}</StTitle>
           <StInfo>
