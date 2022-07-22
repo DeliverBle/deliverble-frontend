@@ -1,18 +1,21 @@
 import { icLikeClicked, icLikeHover, icLikeDefault } from 'public/assets/icons';
 import ImageDiv from './ImageDiv';
 import styled, { css } from 'styled-components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface LikeProps {
   isFromList: boolean;
   isLiked: boolean;
   toggleLike: () => void;
-  handleClick: () => void;
 }
 
 function Like(props: LikeProps) {
-  const { isFromList, isLiked, toggleLike, handleClick } = props;
-  const [isLikeStatus, setIsLikeStatus] = useState<boolean>(isLiked);
+  const { isFromList, isLiked, toggleLike } = props;
+  const [isLikedTemp, setIsLikedTemp] = useState<boolean>(isLiked);
+
+  useEffect(() => {
+    setIsLikedTemp(isLiked);
+  }, []);
 
   return (
     <StLike
@@ -20,11 +23,12 @@ function Like(props: LikeProps) {
       onClick={(e) => {
         e.stopPropagation();
         toggleLike();
-        setIsLikeStatus((prev) => !prev);
-        handleClick();
+        // console.log('isLikedTemp', isLikedTemp);
+        setIsLikedTemp((prev) => !prev);
+        // console.log('isLikedTemp', isLikedTemp);
       }}>
       <StLikeImage isFromList={isFromList}>
-        {isLiked || isLikeStatus ? (
+        {isLikedTemp ? (
           <ImageDiv className="like" src={icLikeClicked} alt="like" layout="fill" />
         ) : (
           <>

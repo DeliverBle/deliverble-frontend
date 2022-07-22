@@ -23,7 +23,9 @@ function NewsList(props: NewsListProps) {
   useEffect(() => {
     (async () => {
       const { favoriteList } = await api.likeService.getLikeData();
-      setLikeList(favoriteList.map((like) => like.id));
+      console.log(favoriteList);
+      const tempList = favoriteList.map((like) => like.id);
+      setLikeList(tempList);
     })();
   }, []);
 
@@ -46,16 +48,17 @@ function NewsList(props: NewsListProps) {
   }, []);
 
   const handleClick = async (id: number, isLiked: boolean) => {
-    console.log('isLiked', isLiked);
     if (isLiked) {
-      const { favoriteList } = await api.likeService.deleteLikeData({
+      console.log('데이터 추가 요청');
+      const { favoriteList } = await api.likeService.postLikeData({
         news_id: id,
         access_token: token,
         user_id: userId,
       });
       setLikeList(favoriteList?.map((like) => like.id));
     } else {
-      const { favoriteList } = await api.likeService.postLikeData({
+      console.log('데이터 삭제 요청');
+      const { favoriteList } = await api.likeService.deleteLikeData({
         news_id: id,
         access_token: token,
         user_id: userId,
@@ -63,6 +66,8 @@ function NewsList(props: NewsListProps) {
       setLikeList(favoriteList?.map((like) => like.id));
     }
   };
+
+  // 버튼 클릭 -> 빈 버튼이었으면 즐찾 추가 (post) -> response를 가지고 화면에 꽉찬 하트 보여줌
 
   return (
     <StNewsList>
@@ -80,15 +85,16 @@ function NewsList(props: NewsListProps) {
             <Like
               isFromList={true}
               isLiked={isLiked[index]}
-              toggleLike={() =>
+              toggleLike={() => {
                 setIsLiked((prev: boolean[]) => {
+                  // console.log('prev', prev);
+                  // console.log('prev[index]', prev[index]);
                   prev.splice(index, 1, !prev[index]);
+                  // console.log('prev', prev);
+                  // console.log('prev[index]', prev[index]);
+                  handleClick(id, prev[index]);
                   return prev;
-                })
-              }
-              handleClick={() => {
-                console.log('isLiked[index]', isLiked[index]);
-                handleClick(id, isLiked[index]);
+                });
               }}
             />
           </StThumbnail>
@@ -126,8 +132,9 @@ const StThumbnail = styled.div`
   cursor: pointer;
 
   &:hover {
-    transition: 0.5s ease-in-out;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 100%);
+    transition: background-color 0.2s ease-in-out;
+    /* background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 100%); */
+    background-color: rgba(0, 0, 0, 0.15);
   }
 
   &:hover .like {
