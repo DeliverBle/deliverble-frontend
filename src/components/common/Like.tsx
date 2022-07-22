@@ -21,7 +21,6 @@ function Like(props: LikeProps) {
         e.stopPropagation();
         toggleLike();
         setIsLikeStatus((prev) => !prev);
-        console.log('Test');
         handleClick();
       }}>
       <StLikeImage isFromList={isFromList}>

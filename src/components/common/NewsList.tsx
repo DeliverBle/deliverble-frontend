@@ -45,13 +45,23 @@ function NewsList(props: NewsListProps) {
     })();
   }, []);
 
-  const handleClick = async (id: number) => {
-    const { favoriteList } = await api.likeService.postLikeData({
-      news_id: id,
-      access_token: token,
-      user_id: userId,
-    });
-    setLikeList(favoriteList?.map((like) => like.id));
+  const handleClick = async (id: number, isLiked: boolean) => {
+    console.log('isLiked', isLiked);
+    if (isLiked) {
+      const { favoriteList } = await api.likeService.deleteLikeData({
+        news_id: id,
+        access_token: token,
+        user_id: userId,
+      });
+      setLikeList(favoriteList?.map((like) => like.id));
+    } else {
+      const { favoriteList } = await api.likeService.postLikeData({
+        news_id: id,
+        access_token: token,
+        user_id: userId,
+      });
+      setLikeList(favoriteList?.map((like) => like.id));
+    }
   };
 
   return (
@@ -76,7 +86,10 @@ function NewsList(props: NewsListProps) {
                   return prev;
                 })
               }
-              handleClick={() => handleClick(id)}
+              handleClick={() => {
+                console.log('isLiked[index]', isLiked[index]);
+                handleClick(id, isLiked[index]);
+              }}
             />
           </StThumbnail>
           <StTitle>{title}</StTitle>
