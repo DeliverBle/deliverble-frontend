@@ -6,14 +6,14 @@ import Memo from './Memo';
 
 interface MemoListProps {
   highlightList: HighlightData[];
-  isisNewMemo: boolean;
-  setIsNewMemo: (isisNewMemo: boolean) => void;
+  isNewMemo: boolean;
+  setIsNewMemo: (isNewMemo: boolean) => void;
   highlightId?: number;
   keyword?: string;
 }
 
 function MemoList(props: MemoListProps) {
-  const { highlightList, isisNewMemo, setIsNewMemo, highlightId, keyword } = props;
+  const { highlightList, isNewMemo, setIsNewMemo, highlightId, keyword } = props;
   const [index, setIndex] = useState<number>();
 
   useEffect(() => {
@@ -21,7 +21,7 @@ function MemoList(props: MemoListProps) {
   }, [highlightId, highlightList, index]);
 
   if (index !== undefined && index !== -1) {
-    highlightList[index].memo = isisNewMemo ? { keyword: keyword } : {};
+    highlightList[index].memo = isNewMemo ? { keyword: keyword } : {};
   }
 
   return (
@@ -31,7 +31,7 @@ function MemoList(props: MemoListProps) {
           Object.keys(memo).length > 0 && (
             <Memo
               key={highlightId}
-              isisNewMemo={isisNewMemo}
+              isNewMemo={isNewMemo}
               setIsNewMemo={setIsNewMemo}
               keyword={memo.keyword}
               content={memo.content}

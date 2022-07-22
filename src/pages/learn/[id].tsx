@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import ImageDiv from '../../components/common/ImageDiv';
 import GuideModal from '@src/components/learnDetail/GuideModal';
-import HighlightModal from '@src/components/learnDetail/HighlightModal';
 import ScriptEdit from '@src/components/learnDetail/ScriptEdit';
 import {
   icXButton,
@@ -43,7 +42,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   const [clickedScriptId, setClickedScriptId] = useState<number>();
   const [clickedHighlightId, setClickedHighlightId] = useState<number>();
   const [points, setPoints] = useState({ x: 0, y: 0 });
-  const [isisNewMemo, setIsNewMemo] = useState(false);
+  const [isNewMemo, setIsNewMemo] = useState(false);
   const [keyword, setKeyword] = useState<string>();
   const contextMenuRef = useRef<HTMLDivElement>(null);
 
@@ -54,24 +53,261 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
     setConfirmButtonText('작성 취소');
   }, []);
 
-  const [highlightAlert, setHighlightAlert] = useState(false);
-  useEffect(() => {
-    const now = new Date().getTime();
-    const timeSaved = Number(localStorage.getItem('timeClicked'));
-    if (timeSaved) {
-      const gapHour = (now - timeSaved) / 1000 / 60 / 60;
-      if (gapHour > 72) {
-        setHighlightAlert(true);
-      }
-    } else {
-      setHighlightAlert(true);
-    }
-  }, []);
-
   const [player, setPlayer] = useState<YT.Player | null>();
   const [videoState, setVideoState] = useState(-1);
   const [currentTime, setCurrentTime] = useState(0);
   const { title, category, channel, reportDate, tags, link, startTime, endTime, scripts } = videoData;
+
+  const learnRef = useRef<HTMLDivElement>(null);
+
+  const SpacingData = {
+    spacingReturnCollection: [
+      {
+        spacingId: 12,
+        scriptId: 33,
+        index: 4,
+      },
+      {
+        spacingId: 13,
+        scriptId: 33,
+        index: 8,
+      },
+      {
+        spacingId: 11,
+        scriptId: 33,
+        index: 19,
+      },
+      {
+        spacingId: 7,
+        scriptId: 36,
+        index: 9,
+      },
+      {
+        spacingId: 8,
+        scriptId: 36,
+        index: 15,
+      },
+      {
+        spacingId: 10,
+        scriptId: 36,
+        index: 20,
+      },
+    ],
+  };
+
+  const HighlightData = [
+    {
+      scriptId: 32,
+      highlightId: 8,
+      startingIndex: 0,
+      endingIndex: 3,
+    },
+    {
+      scriptId: 33,
+      highlightId: 1,
+      startingIndex: 3,
+      endingIndex: 7,
+    },
+    {
+      scriptId: 34,
+      highlightId: 3,
+      startingIndex: 5,
+      endingIndex: 13,
+    },
+    {
+      scriptId: 35,
+      highlightId: 6,
+      startingIndex: 0,
+      endingIndex: 6,
+    },
+    {
+      scriptId: 33,
+      highlightId: 4,
+      startingIndex: 10,
+      endingIndex: 15,
+    },
+    {
+      scriptId: 33,
+      highlightId: 7,
+      startingIndex: 18,
+      endingIndex: 20,
+    },
+    {
+      scriptId: 34,
+      highlightId: 9,
+      startingIndex: 19,
+      endingIndex: 23,
+    },
+  ];
+
+  //객체들을 내가 뽑기 좋은 형태로 바꾸는 것
+  function groupBy(objectArray: any[], property: string) {
+    return objectArray.reduce(function (acc, obj) {
+      const key = obj[property]; //스크립트 아이디의 값을 키로 선언
+      //만약 지금 키가 없으면
+      if (!acc[key]) {
+        //키에 대한 배열을 생성함
+        acc[key] = [];
+      }
+      acc[key].push(obj);
+      return acc;
+    }, {});
+  }
+
+  const scriptsIdNum = scripts.map((item) => {
+    return item.id;
+  });
+
+  const hlGroupedById = groupBy(HighlightData, 'scriptId');
+  const spacingGroupedById = groupBy(SpacingData.spacingReturnCollection, 'scriptId');
+
+  //하이라이팅 get
+  useEffect(() => {
+    const hlKeys = Object.keys(hlGroupedById);
+
+    for (let i = 0; i < hlKeys.length; i++) {
+      const hlKey = hlKeys[i];
+      const value = hlGroupedById[hlKey];
+      const hlStartIndexArr = [];
+      const hlEndIndexArr = [];
+      const hlIdArr = [];
+
+      for (let j = 0; j < value.length; j++) {
+        hlStartIndexArr.push(value[j].startingIndex);
+        hlEndIndexArr.push(value[j].endingIndex);
+        hlIdArr.push(value[j].highlightId);
+      }
+
+      //현재 내가 바꿔야하는 문장이 몇번째 childNode인지 알아야함.
+      //How? 지금 받아온 scriptsIdNum 돌면서 +keys[i]와 같은 친구가 몇번째 넘버인 지 확인
+      let nodeNum = 0;
+      scriptsIdNum.map((item, index) => {
+        if (item === +hlKeys[i]) {
+          nodeNum = index;
+        }
+      });
+
+      //받아온 스크립트아이디에 해당하는 노드에 접근해서 하이라이팅 넣어주는 것
+      const currentNode = learnRef.current?.childNodes[nodeNum];
+      if (learnRef.current?.childNodes) {
+        let count = 0;
+        let tempText = '';
+        if (currentNode?.textContent) {
+          for (let j = 0; j < currentNode.textContent?.length; j++) {
+            if (hlStartIndexArr[count] === j) {
+              tempText += '<mark id=' + hlIdArr[count] + '>' + currentNode.textContent[j];
+            } else if (hlEndIndexArr[count] === j) {
+              tempText += currentNode.textContent[j] + '</mark>';
+              count++;
+            } else {
+              tempText += currentNode.textContent[j];
+            }
+          }
+        }
+
+        //HTML로 파싱
+        const frag = document.createDocumentFragment();
+        const div = document.createElement('div');
+        div.innerHTML = tempText;
+        while (div.firstChild) {
+          frag.appendChild(div.firstChild);
+        }
+        if (currentNode?.textContent) {
+          currentNode.textContent = '';
+        }
+        currentNode?.appendChild(frag);
+      }
+    }
+  }, [scripts]);
+
+  useEffect(() => {
+    //스페이싱 ID로 분류된 애들안에서 인덱스배열이랑 아이디배열 만들기
+    const spacingKeys = Object.keys(spacingGroupedById);
+    for (let i = 0; i < spacingKeys.length; i++) {
+      const spacingKey = spacingKeys[i]; // 각각의 키 지금은 스크립트 아이디
+      const value = spacingGroupedById[spacingKey]; // 각각의 키에 해당하는 각각의 값
+      const spacingIndexArr = [];
+      const spacingIdArr = [];
+
+      for (let j = 0; j < value.length; j++) {
+        spacingIndexArr.push(value[j].index);
+        spacingIdArr.push(value[j].spacingId);
+      }
+
+      //현재 내가 바꿔야하는 문장이 몇번째 childNode인지 알아야함.
+      //How? 지금 받아온 scriptsIdNum 돌면서 +keys[i]와 같은 친구가 몇번째 넘버인 지 확인
+      let nodeNum = 0;
+      scriptsIdNum.map((item, index) => {
+        if (item === +spacingKeys[i]) {
+          nodeNum = index;
+        }
+      });
+
+      //받아온 스크립트아이디에 해당하는 노드에 접근해서 / 넣어주는 것
+      const currentNode = learnRef.current?.childNodes[nodeNum];
+      if (currentNode) {
+        //index에 있는 애들 string으로 다 넣고
+        let matchingCount = 0;
+        let textCount = 0;
+        let tempText = '';
+
+        for (let i = 0; i < currentNode.childNodes.length; i++) {
+          const currentChild = currentNode.childNodes[i];
+          //만약에 타입이 텍스트인 경우
+          if (currentChild.nodeName === '#text') {
+            if (currentChild.textContent?.length) {
+              for (let j = 0; j < currentChild.textContent?.length; j++) {
+                //스페이스 인덱스 일때
+                if (spacingIndexArr[matchingCount] === textCount) {
+                  tempText += '<span id=' + spacingIdArr[matchingCount] + '>/</span>' + currentChild.textContent[j];
+                  matchingCount++;
+                  textCount++;
+                } //스페이스 인덱스 아닐때
+                else {
+                  tempText += currentChild.textContent[j];
+                  textCount++;
+                }
+              }
+            }
+          }
+          //타입이 마크인 경우
+          else if (currentChild.nodeName === 'MARK') {
+            const clone = currentChild as HTMLElement;
+            tempText += '<mark id=' + clone.id + '>';
+            if (currentChild.textContent?.length) {
+              for (let j = 0; j < currentChild.textContent?.length; j++) {
+                //스페이스 인덱스 일때
+                if (spacingIndexArr[matchingCount] === textCount) {
+                  tempText += '<span id=' + spacingIdArr[matchingCount] + '>/</span>' + currentChild.textContent[j];
+                  matchingCount++;
+                  textCount++;
+                } //스페이스 인덱스 아닐때
+                else {
+                  tempText += currentChild.textContent[j];
+                  textCount++;
+                }
+              }
+            }
+            tempText += '</mark>';
+          }
+        }
+
+        //HTML로 파싱
+        const frag = document.createDocumentFragment();
+        const div = document.createElement('div');
+        div.innerHTML = tempText;
+        while (div.firstChild) {
+          frag.appendChild(div.firstChild);
+        }
+        //기존의 plain text를 지우고
+        if (currentNode?.textContent) {
+          currentNode.textContent = '';
+        }
+        //HTML있는 문장을 삽입해둠
+        currentNode?.appendChild(frag);
+      }
+    }
+  }, [scripts]);
 
   useEffect(() => {
     if (!player) return;
@@ -109,7 +345,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   }, [clickedScriptId]);
 
   const handleRightClick = (e: React.MouseEvent, id: number) => {
-    if (isisNewMemo) {
+    if (isNewMemo) {
       setClickedScriptId(-1);
       return setIsConfirmOpen(true);
     }
@@ -165,7 +401,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                 {highlightData ? (
                   <MemoList
                     highlightList={highlightData}
-                    isisNewMemo={isisNewMemo}
+                    isNewMemo={isNewMemo}
                     setIsNewMemo={setIsNewMemo}
                     highlightId={clickedHighlightId}
                     keyword={keyword}
@@ -182,7 +418,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
               <h2>아나운서의 목소리를 듣고, 스크립트를 보며 따라 말해보세요.</h2>
             </div>
             <article>
-              <div>
+              <div ref={learnRef}>
                 {!isHighlight &&
                   !isSpacing &&
                   scripts.map(({ id, text, startTime, endTime }) => (
@@ -196,15 +432,21 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                       onClick={() => player?.seekTo(startTime, true)}
                       isActive={startTime <= currentTime && currentTime <= endTime ? true : false}>
                       <p id={id.toString()}>{text}</p>
-                      {clickedScriptId === id && !isisNewMemo && (
+                      {clickedScriptId === id && !isNewMemo && (
                         <ContextMenu points={points} setIsNewMemo={setIsNewMemo} />
                       )}
                     </StScriptText>
                   ))}
-                {(isHighlight || isSpacing) && (
-                  <ScriptEdit scripts={scripts} isHighlight={isHighlight} isSpacing={isSpacing} />
+                {(isHighlight || isSpacing) && hlGroupedById && spacingGroupedById && scriptsIdNum && (
+                  <ScriptEdit
+                    scripts={scripts}
+                    isHighlight={isHighlight}
+                    isSpacing={isSpacing}
+                    scriptsIdNum={scriptsIdNum}
+                    hlGroupedById={hlGroupedById}
+                    spacingGroupedById={spacingGroupedById}
+                  />
                 )}
-                {highlightAlert && <HighlightModal closeModal={() => setHighlightAlert(false)} />}
               </div>
               <div>
                 <ImageDiv onClick={() => setIsModalOpen(true)} src={icGuide} className="guide" layout="fill" alt="?" />
@@ -390,6 +632,29 @@ const StScriptText = styled.div<{ isActive: boolean }>`
   cursor: pointer;
 
   &:hover {
+    color: ${COLOR.MAIN_BLUE};
+    font-weight: 600;
+  }
+
+  & > span {
+    font-size: 3.2rem;
+    font-weight: 600;
+    color: #4e8aff;
+    margin: 0 0.02rem 0 0.02rem;
+  }
+
+  & > mark {
+    background: linear-gradient(259.3deg, #d8d9ff 0%, #a7c5ff 100%);
+    font-weight: ${({ isActive }) => (isActive ? 600 : 400)};
+    color: ${({ isActive }) => (isActive ? COLOR.MAIN_BLUE : COLOR.BLACK)};
+    & > span {
+      font-size: 3.2rem;
+      font-weight: 600;
+      color: #4e8aff;
+    }
+  }
+
+  & > mark:hover {
     color: ${COLOR.MAIN_BLUE};
     font-weight: 600;
   }

@@ -34,3 +34,30 @@ export type HighlightData = {
     content?: string;
   };
 };
+
+export type GroupedObjectKey = {
+  scriptId: string;
+};
+
+export type hlGroupedObjectList = {
+  endingIndex: number;
+  highlightId: number;
+  scriptId: number;
+  startingIndex: number;
+};
+
+export type spacingGroupedObjectList = {
+  spacingId: number;
+  scriptId: number;
+  index: number;
+};
+
+export type hlGroupedObject = {
+  objectIndex: GroupedObjectKey;
+  objectList: hlGroupedObjectList;
+};
+
+export type spacingGroupedObject = {
+  objectIndex: GroupedObjectKey;
+  objectList: spacingGroupedObjectList;
+};

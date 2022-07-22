@@ -27,6 +27,7 @@ function OAuthRedirectHandler() {
           })
           .catch((error) => {
             // 이미 회원이면 로그인
+            console.log(error);
             if (error === '회원가입 실패') {
               postLogin({ access_token: accessToken, user_id: kakaoId.toString() }).then((response) => {
                 localStorage.setItem('token', accessToken);

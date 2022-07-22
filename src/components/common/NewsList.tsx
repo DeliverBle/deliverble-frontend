@@ -33,7 +33,14 @@ function NewsList(props: NewsListProps) {
       {newsList.map(({ id, title, category, channel, thumbnail, reportDate }, index) => (
         <StNewsWrapper key={id} onClick={() => router.push(`/learn/${id}`)}>
           <StThumbnail>
-            <ImageDiv className="thumbnail" src={thumbnail} layout="fill" alt="" />
+            <ImageDiv
+              className="thumbnail"
+              src={thumbnail}
+              blurDataURL={thumbnail}
+              placeholder="blur"
+              layout="fill"
+              alt=""
+            />
             <Like
               isFromList={true}
               isLiked={isLiked[index]}
@@ -42,29 +49,26 @@ function NewsList(props: NewsListProps) {
               //     prev.splice(index, 1, !prev[index]);
               //     return prev;
               //   })
-
               // toggleLike={setIsLiked((prev: boolean[]) => {
               //   prev.splice(index, 1, !prev[index]);
               //   return prev;
               // })}
-
               // setIsLiked={(prev: boolean[]) => {
               //   prev.splice(index, 1, !prev[index]);
               //   return prev;
               // }}
-
               // setIsLiked={() => {
               //   isLiked.splice(index, 1, !isLiked[index]);
               //   console.log('isLiked', isLiked);
               //   return isLiked;
               // }}
-
               setIsLiked={() => {
                 isLiked.splice(index, 1, !isLiked[index]);
                 console.log('isLiked', isLiked);
                 return isLiked;
               }}
             />
+            <Like isFromList={true} />
           </StThumbnail>
           <StTitle>{title}</StTitle>
           <StInfo>
