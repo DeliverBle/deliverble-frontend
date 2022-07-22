@@ -29,7 +29,7 @@ import MemoList from '@src/components/learnDetail/memo/MemoList';
 import Like from '@src/components/common/Like';
 import ContextMenu from '@src/components/learnDetail/ContextMenu';
 
-function LearnDetail({ videoData }: { videoData: VideoData; highlightData: HighlightData[] }) {
+function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highlightData: HighlightData[] }) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
@@ -95,7 +95,7 @@ function LearnDetail({ videoData }: { videoData: VideoData; highlightData: Highl
     ],
   };
 
-  const highlightData = [
+  const HighlightData = [
     {
       scriptId: 32,
       highlightId: 8,
@@ -158,7 +158,7 @@ function LearnDetail({ videoData }: { videoData: VideoData; highlightData: Highl
     return item.id;
   });
 
-  const hlGroupedById = groupBy(highlightData, 'scriptId');
+  const hlGroupedById = groupBy(HighlightData, 'scriptId');
   const spacingGroupedById = groupBy(SpacingData.spacingReturnCollection, 'scriptId');
 
   //하이라이팅 get
