@@ -43,7 +43,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   const [clickedScriptId, setClickedScriptId] = useState<number>();
   const [clickedHighlightId, setClickedHighlightId] = useState<number>();
   const [points, setPoints] = useState({ x: 0, y: 0 });
-  const [isisNewMemo, setIsNewMemo] = useState(false);
+  const [isNewMemo, setIsNewMemo] = useState(false);
   const [keyword, setKeyword] = useState<string>();
   const contextMenuRef = useRef<HTMLDivElement>(null);
 
@@ -109,7 +109,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   }, [clickedScriptId]);
 
   const handleRightClick = (e: React.MouseEvent, id: number) => {
-    if (isisNewMemo) {
+    if (isNewMemo) {
       setClickedScriptId(-1);
       return setIsConfirmOpen(true);
     }
@@ -165,7 +165,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                 {highlightData ? (
                   <MemoList
                     highlightList={highlightData}
-                    isisNewMemo={isisNewMemo}
+                    isNewMemo={isNewMemo}
                     setIsNewMemo={setIsNewMemo}
                     highlightId={clickedHighlightId}
                     keyword={keyword}
@@ -196,7 +196,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                       onClick={() => player?.seekTo(startTime, true)}
                       isActive={startTime <= currentTime && currentTime <= endTime ? true : false}>
                       <p id={id.toString()}>{text}</p>
-                      {clickedScriptId === id && !isisNewMemo && (
+                      {clickedScriptId === id && !isNewMemo && (
                         <ContextMenu points={points} setIsNewMemo={setIsNewMemo} />
                       )}
                     </StScriptText>

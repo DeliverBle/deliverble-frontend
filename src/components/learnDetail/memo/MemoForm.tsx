@@ -6,7 +6,7 @@ import ImageDiv from '../../common/ImageDiv';
 
 interface MemoFormProps {
   content?: string;
-  setIsNewMemo: (isisNewMemo: boolean) => void;
+  setIsNewMemo: (isNewMemo: boolean) => void;
   setEdit: (edit: boolean) => void;
 }
 
