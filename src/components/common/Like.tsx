@@ -5,11 +5,11 @@ import styled, { css } from 'styled-components';
 interface LikeProps {
   isFromList: boolean;
   isLiked: boolean;
-  setIsLiked: (prev: boolean) => void;
+  toggleLike: () => void;
 }
 
 function Like(props: LikeProps) {
-  const { isFromList, isLiked, setIsLiked } = props;
+  const { isFromList, isLiked, toggleLike } = props;
 
   console.log('isLiked2', isLiked);
 
@@ -18,7 +18,7 @@ function Like(props: LikeProps) {
       type="button"
       onClick={(e) => {
         e.stopPropagation();
-        setIsLiked((prev) => !prev);
+        toggleLike();
       }}>
       <StLikeImage isFromList={isFromList}>
         {isLiked ? (

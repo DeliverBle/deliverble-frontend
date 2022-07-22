@@ -7,7 +7,6 @@ import ImageDiv from './ImageDiv';
 import Like from './Like';
 import { useEffect, useState } from 'react';
 import { api } from '@src/services/api';
-import { LikeData } from '@src/services/api/types/like';
 
 interface NewsListProps {
   newsList: VideoData[];
@@ -34,7 +33,6 @@ function NewsList(props: NewsListProps) {
 
   console.log(newsList);
   console.log(newsList.map((news) => news.id)); // 뉴스 전체 아이디
-  
 
   return (
     <StNewsList>
@@ -45,7 +43,7 @@ function NewsList(props: NewsListProps) {
             <StThumbnail>
               <ImageDiv className="thumbnail" src={thumbnail} layout="fill" alt="" />
               {/* <Like isFromList={true} isLiked={likeList.includes(id)} setIsLiked={setIsLiked} /> */}
-              <Like isFromList={true} isLiked={isLiked} setIsLiked={setIsLiked} />
+              <Like isFromList={true} isLiked={isLiked} toggleLike={() => setIsLiked((prev) => !prev)} />
             </StThumbnail>
             <StTitle>{title}</StTitle>
             <StInfo>
