@@ -47,6 +47,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   const [keyword, setKeyword] = useState<string>();
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isfirstClicked, setIsFirstClicked] = useState(false);
 
   const getLoginStatus = () => localStorage.getItem('token') ?? '';
 
@@ -64,83 +65,24 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
 
   const learnRef = useRef<HTMLDivElement>(null);
 
-  const SpacingData = {
-    spacingReturnCollection: [
-      {
-        spacingId: 12,
-        scriptId: 33,
-        index: 4,
-      },
-      {
-        spacingId: 13,
-        scriptId: 33,
-        index: 8,
-      },
-      {
-        spacingId: 11,
-        scriptId: 33,
-        index: 19,
-      },
-      {
-        spacingId: 7,
-        scriptId: 36,
-        index: 9,
-      },
-      {
-        spacingId: 8,
-        scriptId: 36,
-        index: 15,
-      },
-      {
-        spacingId: 10,
-        scriptId: 36,
-        index: 20,
-      },
-    ],
-  };
-
   const HighlightData = [
     {
-      scriptId: 32,
+      scriptId: 6,
       highlightId: 8,
       startingIndex: 0,
       endingIndex: 3,
     },
     {
-      scriptId: 33,
+      scriptId: 7,
       highlightId: 1,
-      startingIndex: 3,
-      endingIndex: 7,
+      startingIndex: 11,
+      endingIndex: 58,
     },
     {
-      scriptId: 34,
+      scriptId: 8,
       highlightId: 3,
-      startingIndex: 5,
-      endingIndex: 13,
-    },
-    {
-      scriptId: 35,
-      highlightId: 6,
       startingIndex: 0,
-      endingIndex: 6,
-    },
-    {
-      scriptId: 33,
-      highlightId: 4,
-      startingIndex: 10,
-      endingIndex: 15,
-    },
-    {
-      scriptId: 33,
-      highlightId: 7,
-      startingIndex: 18,
-      endingIndex: 20,
-    },
-    {
-      scriptId: 34,
-      highlightId: 9,
-      startingIndex: 19,
-      endingIndex: 23,
+      endingIndex: 3,
     },
   ];
 
@@ -163,7 +105,6 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   });
 
   const hlGroupedById = groupBy(HighlightData, 'scriptId');
-  const spacingGroupedById = groupBy(SpacingData.spacingReturnCollection, 'scriptId');
 
   //하이라이팅 get
   useEffect(() => {
@@ -219,95 +160,6 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
         if (currentNode?.textContent) {
           currentNode.textContent = '';
         }
-        currentNode?.appendChild(frag);
-      }
-    }
-  }, [scripts]);
-
-  useEffect(() => {
-    //스페이싱 ID로 분류된 애들안에서 인덱스배열이랑 아이디배열 만들기
-    const spacingKeys = Object.keys(spacingGroupedById);
-    for (let i = 0; i < spacingKeys.length; i++) {
-      const spacingKey = spacingKeys[i]; // 각각의 키 지금은 스크립트 아이디
-      const value = spacingGroupedById[spacingKey]; // 각각의 키에 해당하는 각각의 값
-      const spacingIndexArr = [];
-      const spacingIdArr = [];
-
-      for (let j = 0; j < value.length; j++) {
-        spacingIndexArr.push(value[j].index);
-        spacingIdArr.push(value[j].spacingId);
-      }
-
-      //현재 내가 바꿔야하는 문장이 몇번째 childNode인지 알아야함.
-      //How? 지금 받아온 scriptsIdNum 돌면서 +keys[i]와 같은 친구가 몇번째 넘버인 지 확인
-      let nodeNum = 0;
-      scriptsIdNum.map((item, index) => {
-        if (item === +spacingKeys[i]) {
-          nodeNum = index;
-        }
-      });
-
-      //받아온 스크립트아이디에 해당하는 노드에 접근해서 / 넣어주는 것
-      const currentNode = learnRef.current?.childNodes[nodeNum];
-      if (currentNode) {
-        //index에 있는 애들 string으로 다 넣고
-        let matchingCount = 0;
-        let textCount = 0;
-        let tempText = '';
-
-        for (let i = 0; i < currentNode.childNodes.length; i++) {
-          const currentChild = currentNode.childNodes[i];
-          //만약에 타입이 텍스트인 경우
-          if (currentChild.nodeName === '#text') {
-            if (currentChild.textContent?.length) {
-              for (let j = 0; j < currentChild.textContent?.length; j++) {
-                //스페이스 인덱스 일때
-                if (spacingIndexArr[matchingCount] === textCount) {
-                  tempText += '<span id=' + spacingIdArr[matchingCount] + '>/</span>' + currentChild.textContent[j];
-                  matchingCount++;
-                  textCount++;
-                } //스페이스 인덱스 아닐때
-                else {
-                  tempText += currentChild.textContent[j];
-                  textCount++;
-                }
-              }
-            }
-          }
-          //타입이 마크인 경우
-          else if (currentChild.nodeName === 'MARK') {
-            const clone = currentChild as HTMLElement;
-            tempText += '<mark id=' + clone.id + '>';
-            if (currentChild.textContent?.length) {
-              for (let j = 0; j < currentChild.textContent?.length; j++) {
-                //스페이스 인덱스 일때
-                if (spacingIndexArr[matchingCount] === textCount) {
-                  tempText += '<span id=' + spacingIdArr[matchingCount] + '>/</span>' + currentChild.textContent[j];
-                  matchingCount++;
-                  textCount++;
-                } //스페이스 인덱스 아닐때
-                else {
-                  tempText += currentChild.textContent[j];
-                  textCount++;
-                }
-              }
-            }
-            tempText += '</mark>';
-          }
-        }
-
-        //HTML로 파싱
-        const frag = document.createDocumentFragment();
-        const div = document.createElement('div');
-        div.innerHTML = tempText;
-        while (div.firstChild) {
-          frag.appendChild(div.firstChild);
-        }
-        //기존의 plain text를 지우고
-        if (currentNode?.textContent) {
-          currentNode.textContent = '';
-        }
-        //HTML있는 문장을 삽입해둠
         currentNode?.appendChild(frag);
       }
     }
@@ -423,8 +275,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
             </div>
             <article>
               <div ref={learnRef}>
-                {!isHighlight &&
-                  !isSpacing &&
+                {!isfirstClicked &&
                   scripts.map(({ id, text, startTime, endTime }) => (
                     <StScriptText
                       ref={contextMenuRef}
@@ -441,16 +292,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                       )}
                     </StScriptText>
                   ))}
-                {(isHighlight || isSpacing) && hlGroupedById && spacingGroupedById && scriptsIdNum && (
-                  <ScriptEdit
-                    scripts={scripts}
-                    isHighlight={isHighlight}
-                    isSpacing={isSpacing}
-                    scriptsIdNum={scriptsIdNum}
-                    hlGroupedById={hlGroupedById}
-                    spacingGroupedById={spacingGroupedById}
-                  />
-                )}
+                {isfirstClicked && <ScriptEdit scripts={scripts} isHighlight={isHighlight} isSpacing={isSpacing} />}
               </div>
               <div>
                 <ImageDiv onClick={() => setIsModalOpen(true)} src={icGuide} className="guide" layout="fill" alt="?" />
@@ -463,6 +305,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                       } else {
                         isHighlight ? setIsHighlight(false) : setIsHighlight(true);
                         setIsSpacing(false);
+                        setIsFirstClicked(true);
                       }
                     }}>
                     {isHighlight ? (
@@ -482,6 +325,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                       } else {
                         isSpacing ? setIsSpacing(false) : setIsSpacing(true);
                         setIsHighlight(false);
+                        setIsFirstClicked(true);
                       }
                     }}>
                     {isSpacing ? (
@@ -535,7 +379,6 @@ const StLearnDetail = styled.div`
   min-height: 100vh;
   background: rgba(229, 238, 255, 0.85);
   backdrop-filter: blur(2.8rem);
-
   .close {
     position: fixed;
     top: 2.4rem;
@@ -544,7 +387,6 @@ const StLearnDetail = styled.div`
     height: 4.8rem;
     cursor: pointer;
   }
-
   .guide {
     position: relative;
     width: 3.4rem;
@@ -562,7 +404,6 @@ const StLearnMain = styled.main`
   padding: 8rem 8rem 0 8rem;
   border-radius: 3rem;
   background-color: ${COLOR.WHITE};
-
   overflow: hidden;
 `;
 
@@ -570,7 +411,6 @@ const StLearnSection = styled.section`
   display: flex;
   flex-direction: column;
   padding-bottom: 8rem;
-
   & > div {
     display: flex;
     align-items: center;
@@ -578,18 +418,15 @@ const StLearnSection = styled.section`
     margin-top: 14rem;
     margin-bottom: 2.4rem;
   }
-
   & > div > h2 {
     color: ${COLOR.BLACK};
     ${FONT_STYLES.SB_24_HEADLINE};
   }
-
   .announce {
     position: relative;
     width: 3.2rem;
     height: 3.2rem;
   }
-
   article {
     display: flex;
     flex-direction: column;
@@ -602,29 +439,24 @@ const StLearnSection = styled.section`
     font-size: 2.6rem;
     line-height: 5.8rem;
     word-break: keep-all;
-
     & > div:first-child {
       position: relative;
       flex: 1;
       padding: 0.6rem 1.2rem;
       height: 62.8rem;
       overflow-y: scroll;
-
       &::-webkit-scrollbar {
         width: 1rem;
       }
-
       &::-webkit-scrollbar-thumb {
         background-color: ${COLOR.GRAY_10};
         border-radius: 1.3rem;
       }
-
       &::-webkit-scrollbar-track-piece {
         height: 13.6rem;
         max-height: 13.6rem;
       }
     }
-
     & > div:last-child {
       display: flex;
       align-items: center;
@@ -638,24 +470,20 @@ const StLearnSection = styled.section`
 
 const StScriptText = styled.div<{ isActive: boolean }>`
   position: relative;
-
   font-size: 2.6rem;
   font-weight: ${({ isActive }) => (isActive ? 600 : 400)};
   color: ${({ isActive }) => (isActive ? COLOR.MAIN_BLUE : COLOR.BLACK)};
   cursor: pointer;
-
   &:hover {
     color: ${COLOR.MAIN_BLUE};
     font-weight: 600;
   }
-
   & > span {
     font-size: 3.2rem;
     font-weight: 600;
     color: #4e8aff;
     margin: 0 0.02rem 0 0.02rem;
   }
-
   & > mark {
     background: linear-gradient(259.3deg, #d8d9ff 0%, #a7c5ff 100%);
     font-weight: ${({ isActive }) => (isActive ? 600 : 400)};
@@ -666,7 +494,6 @@ const StScriptText = styled.div<{ isActive: boolean }>`
       color: #4e8aff;
     }
   }
-
   & > mark:hover {
     color: ${COLOR.MAIN_BLUE};
     font-weight: 600;
@@ -682,12 +509,10 @@ const StButtonContainer = styled.div`
 const StButton = styled.button`
   width: 4.8rem;
   height: 4.8rem;
-
   &:hover .default img {
     transition: opacity 1s;
     opacity: 0;
   }
-
   .function-button {
     cursor: pointer;
     position: absolute;
@@ -701,7 +526,6 @@ const StVideoDetail = styled.div`
     color: ${COLOR.GRAY_30};
     ${FONT_STYLES.M_21_BODY};
   }
-
   & > h1 {
     margin-top: 1.2rem;
     margin-bottom: 2rem;
@@ -714,7 +538,6 @@ const StTagContainer = styled.div`
   display: flex;
   gap: 0.8rem;
   margin-bottom: 4.8rem;
-
   & > span {
     padding: 1rem 1.6rem;
     border-radius: 2.4rem;
@@ -731,7 +554,6 @@ const StVideoWrapper = styled.div`
   height: fit-content;
   border-radius: 2.4rem;
   overflow: hidden;
-
   .like-button {
     position: absolute;
     width: 4.8rem;
@@ -740,7 +562,6 @@ const StVideoWrapper = styled.div`
     top: 2.4rem;
     right: 2.4rem;
   }
-
   video {
     position: relative;
     left: 0;
@@ -759,12 +580,10 @@ const StMemoTitle = styled.div`
   align-items: center;
   gap: 0.8rem;
   margin-bottom: 2.4rem;
-
   & > h2 {
     color: ${COLOR.BLACK};
     ${FONT_STYLES.SB_24_HEADLINE};
   }
-
   .memo {
     position: relative;
     width: 3.2rem;
