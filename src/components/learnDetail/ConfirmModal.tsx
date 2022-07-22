@@ -8,7 +8,7 @@ interface ConfirmModalProps {
   subText: string;
   cancelButtonText: string;
   confirmButtonText: string;
-  setIsNewMemo: (newData: boolean) => void;
+  setIsNewMemo: (newMemo: boolean) => void;
 }
 
 function ConfirmModal(props: ConfirmModalProps) {

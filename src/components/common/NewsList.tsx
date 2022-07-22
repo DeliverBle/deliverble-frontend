@@ -17,27 +17,35 @@ function NewsList(props: NewsListProps) {
   const { newsList } = props;
   const router = useRouter();
   const [isLiked, setIsLiked] = useState<boolean>(false);
-  const [likeList, setLikeList] = useState<LikeData[]>([]);
+  const [likeList, setLikeList] = useState<number[]>([]);
 
   useEffect(() => {
     (async () => {
       const { favoriteList } = await api.likeService.getLikeData();
-      // setLikeList(favoriteList.map((like) => like.id));
+      setLikeList(favoriteList.map((like) => like.id));
+      // console.log('favoriteList', favoriteList);
+      // setLikeList(favoriteList);
       console.log('favoriteList', favoriteList);
-      setLikeList(favoriteList);
     })();
   }, []);
 
   console.log('likeList', likeList);
+  console.log('isLiked1', isLiked);
+
+  console.log(newsList);
+  console.log(newsList.map((news) => news.id)); // 뉴스 전체 아이디
+  
 
   return (
     <StNewsList>
       {newsList.map(({ id, title, category, channel, thumbnail, reportDate }) => (
         <StNewsWrapper key={id} onClick={() => router.push(`/learn/${id}`)}>
           <>
+            {/* {setIsLiked(likeList.includes(id))} */}
             <StThumbnail>
               <ImageDiv className="thumbnail" src={thumbnail} layout="fill" alt="" />
-              <Like isFromList={true} isLiked={likeList.includes(id)} setIsLiked={setIsLiked} />
+              {/* <Like isFromList={true} isLiked={likeList.includes(id)} setIsLiked={setIsLiked} /> */}
+              <Like isFromList={true} isLiked={isLiked} setIsLiked={setIsLiked} />
             </StThumbnail>
             <StTitle>{title}</StTitle>
             <StInfo>

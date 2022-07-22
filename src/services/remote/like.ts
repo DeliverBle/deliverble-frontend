@@ -30,7 +30,7 @@ export function likeDataRemote(): LikeService {
   };
 
   const deleteLikeData = async (body: PostLikeRequestBody) => {
-    const response = await privateAPI.post({ url: `/user/favorite/add`, data: body });
+    const response = await privateAPI.post({ url: `/user/favorite/remove`, data: body });
     if (response.status === 200) {
       return {
         favoriteList: response.message
