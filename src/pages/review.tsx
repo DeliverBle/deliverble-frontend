@@ -10,18 +10,25 @@ import { COLOR } from 'src/styles/color';
 import { FONT_STYLES } from 'src/styles/fontStyle';
 import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/review';
+import LoginModal from '@src/components/login/LoginModal';
 
 function Review() {
   const [tab, setTab] = useState('isLiked');
   const [favoriteList, setFavoriteList] = useState<VideoData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     (async () => {
-      setIsLoading(true);
-      const { favoriteNews } = await api.reviewService.getFavoriteVideoList();
-      setFavoriteList(favoriteNews);
-      setIsLoading(false);
+      const getAccessToken = () => localStorage.getItem('token') ?? '';
+      if (getAccessToken()) {
+        setIsLoading(true);
+        const { favoriteNews } = await api.reviewService.getFavoriteVideoList();
+        setFavoriteList(favoriteNews);
+        setIsLoading(false);
+      } else {
+        setIsModalOpen(true);
+      }
     })();
   }, []);
 
@@ -29,6 +36,7 @@ function Review() {
     <>
       <SEO title="복습하기 | Deliverble" />
       <NavigationBar />
+      {isModalOpen && <LoginModal closeModal={() => setIsModalOpen(false)} />}
       <StReview>
         <HeadlineContainer />
         <nav>
