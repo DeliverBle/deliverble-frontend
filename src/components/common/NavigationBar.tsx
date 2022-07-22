@@ -7,12 +7,14 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import ImageDiv from './ImageDiv';
 import LoginModal from '../login/LoginModal';
-import { icButtonMypage } from 'public/assets/icons';
+import { icMypageButton } from 'public/assets/icons';
+import ProfileModal from './ProfileModal';
 
 function NavigationBar() {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loginState, setLoginState] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
   useEffect(() => {
     handleLoginState();
@@ -52,8 +54,17 @@ function NavigationBar() {
             </StTab>
           </StTabList>
         </nav>
-        {loginState && <ImageDiv className="mypage" src={icButtonMypage} layout="fill" alt="mypageButton" />}
+        {loginState && (
+          <ImageDiv
+            onClick={() => setIsProfileModalOpen((prev) => !prev)}
+            className="profile"
+            src={icMypageButton}
+            layout="fill"
+            alt=""
+          />
+        )}
         {!loginState && <StLogin onClick={() => setIsModalOpen(true)}>로그인</StLogin>}
+        {isProfileModalOpen && <ProfileModal />}
       </StNavigationBar>
       {isModalOpen && <LoginModal closeModal={() => setIsModalOpen(false)} />}
     </>
@@ -85,11 +96,13 @@ const StNavigationBar = styled.div`
     margin-right: 5.6rem;
   }
 
-  .mypage {
+  .profile {
     position: absolute;
     right: 6.4rem;
     width: 4rem;
     height: 4rem;
+
+    cursor: pointer;
   }
 `;
 
