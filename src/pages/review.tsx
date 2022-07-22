@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import SEO from '@src/components/common/SEO';
 import NavigationBar from '@src/components/common/NavigationBar';
+import LoginModal from '@src/components/login/LoginModal';
 import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
 import HeadlineContainer from '@src/components/review/HeadlineContainer';
 import VideoContainer from '@src/components/review/VideoContainer';
@@ -10,7 +11,6 @@ import { COLOR } from 'src/styles/color';
 import { FONT_STYLES } from 'src/styles/fontStyle';
 import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/review';
-import LoginModal from '@src/components/login/LoginModal';
 
 function Review() {
   const [tab, setTab] = useState('isLiked');
