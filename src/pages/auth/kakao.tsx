@@ -22,7 +22,7 @@ function OAuthRedirectHandler() {
               localStorage.setItem('userId', kakaoId.toString());
               localStorage.setItem('email', response.email);
               localStorage.setItem('nickname', response.nickname);
-              router.back();
+              router.push('/home');
             });
           })
           .catch((error) => {
@@ -33,7 +33,7 @@ function OAuthRedirectHandler() {
                 localStorage.setItem('userId', kakaoId.toString());
                 localStorage.setItem('email', response.email);
                 localStorage.setItem('nickname', response.nickname);
-                router.back();
+                router.push('/home');
               });
             }
           });
