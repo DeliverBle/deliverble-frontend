@@ -26,8 +26,8 @@ export type VideoData = {
 export type HighlightData = {
   scriptId: number;
   highlightId: number;
-  startingIndex: number;
-  endingIndex: number;
+  startIndex: number;
+  endIndex: number;
   memo: {
     id?: number;
     keyword?: string;

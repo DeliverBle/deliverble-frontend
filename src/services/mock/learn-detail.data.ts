@@ -54,7 +54,7 @@ export const LEARN_DETAIL_DATA = {
     ],
   },
 
-  HIGHLIGHT_DATA: [
+  highlightReturnCollection: [
     {
       scriptId: 1,
       highlightId: 8,

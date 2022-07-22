@@ -9,7 +9,7 @@ export function learnDetailDataMock(): LearnDetailService {
 
   const getHighlightData = async () => {
     await wait(500);
-    return LEARN_DETAIL_DATA.HIGHLIGHT_DATA;
+    return LEARN_DETAIL_DATA.highlightReturnCollection;
   };
 
   return { getVideoData, getHighlightData };

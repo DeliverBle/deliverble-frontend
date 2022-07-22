@@ -1,7 +1,6 @@
 import { LearnDetailService } from '../api/learn-detail';
-import { Script, Tag } from '../api/types/learn-detail';
-import { LEARN_DETAIL_DATA } from '../mock/learn-detail.data';
-import { publicAPI } from './base';
+import { HighlightData, Script, Tag } from '../api/types/learn-detail';
+import { publicAPI, privateAPI } from './base';
 
 export function learnDetailDataRemote(): LearnDetailService {
   const getVideoData = async (id: number) => {
@@ -30,8 +29,25 @@ export function learnDetailDataRemote(): LearnDetailService {
     } else throw '서버 통신 실패';
   };
 
-  const getHighlightData = async () => {
-    return LEARN_DETAIL_DATA.HIGHLIGHT_DATA;
+  const getHighlightData = async (id: number) => {
+    const response = await privateAPI.get({ url: `/highlight?news_id=${id}` });
+    if (response.status === 200) {
+      return {
+        highlightReturnCollection: response.data.highlightReturnCollection
+          ? response.data.highlightReturnCollection.map((highlight: HighlightData) => ({
+              scriptId: highlight.scriptId,
+              highlightId: highlight.highlightId,
+              startIndex: highlight.startIndex,
+              endIndex: highlight.endIndex,
+              memo: {
+                id: highlight.memo.id,
+                keyword: highlight.memo.keyword,
+                content: highlight.memo.content,
+              },
+            }))
+          : [],
+      };
+    } else throw '서버 통신 실패';
   };
 
   return { getVideoData, getHighlightData };

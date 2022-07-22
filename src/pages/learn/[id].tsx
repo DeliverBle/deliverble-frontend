@@ -19,7 +19,6 @@ import {
 import ConfirmModal from '@src/components/learnDetail/ConfirmModal';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import { GetServerSidePropsContext } from 'next';
 import { api } from '@src/services/api';
 import { HighlightData, VideoData } from '@src/services/api/types/learn-detail';
 import YouTube from 'react-youtube';
@@ -29,8 +28,10 @@ import MemoList from '@src/components/learnDetail/memo/MemoList';
 import Like from '@src/components/common/Like';
 import ContextMenu from '@src/components/learnDetail/ContextMenu';
 
-function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highlightData: HighlightData[] }) {
+function LearnDetail() {
   const router = useRouter();
+  const [videoData, setVideoData] = useState<VideoData>([]);
+  const [highlightData, setHighlightData] = useState<HighlightData[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [mainText, setMainText] = useState('');
@@ -45,6 +46,23 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   const [isNewMemo, setIsNewMemo] = useState(false);
   const [keyword, setKeyword] = useState<string>();
   const contextMenuRef = useRef<HTMLDivElement>(null);
+  const [player, setPlayer] = useState<YT.Player | null>();
+  const [videoState, setVideoState] = useState(-1);
+  const [currentTime, setCurrentTime] = useState(0);
+  const { title, category, channel, reportDate, tags, link, startTime, endTime, scripts } = videoData;
+  const learnRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const id = router.query.id;
+    id &&
+      (async () => {
+        const videoData = await api.learnDetailService.getVideoData(+id);
+        setVideoData(videoData);
+        const highlightData = await api.learnDetailService.getHighlightData(+id);
+        setHighlightData(highlightData);
+        console.log(highlightData);
+      })();
+  }, [highlightData, router]);
 
   useEffect(() => {
     setMainText('메모 작성을 취소하시겠습니까?');
@@ -52,13 +70,6 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
     setCancelButtonText('작성하기');
     setConfirmButtonText('작성 취소');
   }, []);
-
-  const [player, setPlayer] = useState<YT.Player | null>();
-  const [videoState, setVideoState] = useState(-1);
-  const [currentTime, setCurrentTime] = useState(0);
-  const { title, category, channel, reportDate, tags, link, startTime, endTime, scripts } = videoData;
-
-  const learnRef = useRef<HTMLDivElement>(null);
 
   const SpacingData = {
     spacingReturnCollection: [
@@ -154,7 +165,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
     }, {});
   }
 
-  const scriptsIdNum = scripts.map((item) => {
+  const scriptsIdNum = scripts?.map((item) => {
     return item.id;
   });
 
@@ -181,7 +192,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
       //현재 내가 바꿔야하는 문장이 몇번째 childNode인지 알아야함.
       //How? 지금 받아온 scriptsIdNum 돌면서 +keys[i]와 같은 친구가 몇번째 넘버인 지 확인
       let nodeNum = 0;
-      scriptsIdNum.map((item, index) => {
+      scriptsIdNum?.map((item, index) => {
         if (item === +hlKeys[i]) {
           nodeNum = index;
         }
@@ -237,7 +248,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
       //현재 내가 바꿔야하는 문장이 몇번째 childNode인지 알아야함.
       //How? 지금 받아온 scriptsIdNum 돌면서 +keys[i]와 같은 친구가 몇번째 넘버인 지 확인
       let nodeNum = 0;
-      scriptsIdNum.map((item, index) => {
+      scriptsIdNum?.map((item, index) => {
         if (item === +spacingKeys[i]) {
           nodeNum = index;
         }
@@ -364,11 +375,11 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
           <aside>
             <StVideoDetail>
               <div>
-                {channel} | {category} | {reportDate.replaceAll('-', '.')}
+                {channel} | {category} | {reportDate?.replaceAll('-', '.')}
               </div>
               <h1>{title}</h1>
               <StTagContainer>
-                {tags.map(({ id, name }) => (
+                {tags?.map(({ id, name }) => (
                   <span key={id}>{name}</span>
                 ))}
               </StTagContainer>
@@ -421,7 +432,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
               <div ref={learnRef}>
                 {!isHighlight &&
                   !isSpacing &&
-                  scripts.map(({ id, text, startTime, endTime }) => (
+                  scripts?.map(({ id, text, startTime, endTime }) => (
                     <StScriptText
                       ref={contextMenuRef}
                       onContextMenu={(e) => {
@@ -503,19 +514,6 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
 }
 
 export default LearnDetail;
-
-export async function getServerSideProps({ params }: GetServerSidePropsContext) {
-  const id = +(params?.id ?? -1);
-  const videoData = await api.learnDetailService.getVideoData(id);
-  const highlightData = await api.learnDetailService.getHighlightData(id);
-
-  if (videoData.id !== id) {
-    return {
-      notFound: true,
-    };
-  }
-  return { props: { videoData: videoData, highlightData: highlightData } };
-}
 
 const StLearnDetail = styled.div`
   padding: 16rem 10rem;
