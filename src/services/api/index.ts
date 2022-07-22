@@ -6,9 +6,9 @@ import { LearnDetailService } from './learn-detail';
 import { learnDetailDataRemote } from '../remote/learn-detail';
 import { ReviewService } from './review';
 import { reviewDataMock } from '../mock/review';
-// import { likeDataRemote } from '../remote/like';
+import { likeDataRemote } from '../remote/like';
 import { LikeService } from './like';
-import { likeDataMock } from '../mock/like';
+// import { likeDataMock } from '../mock/like';
 
 export const api: APIService = getAPIMethod();
 
@@ -21,8 +21,8 @@ function provideMockAPIService(): APIService {
   const learnService = learnDataRemote();
   const learnDetailService = learnDetailDataRemote();
   const reviewService = reviewDataMock();
-  // const likeService = likeDataRemote();
-  const likeService = likeDataMock();
+  const likeService = likeDataRemote();
+  // const likeService = likeDataMock();
   return { homeService, learnService, learnDetailService, reviewService, likeService };
 }
 

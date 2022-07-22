@@ -17,15 +17,18 @@ function NewsList(props: NewsListProps) {
   const { newsList } = props;
   const router = useRouter();
   const [isLiked, setIsLiked] = useState<boolean>(false);
-  const [likeList, setLikeList] = useState<number[]>([]);
+  const [likeList, setLikeList] = useState<LikeData[]>([]);
 
   useEffect(() => {
     (async () => {
-      // const { likeList } = await api.likeService.getLikeData();
-      const likeList = await api.likeService.getLikeData();
-      setLikeList(likeList.map((like) => like.id));
+      const { favoriteList } = await api.likeService.getLikeData();
+      // setLikeList(favoriteList.map((like) => like.id));
+      console.log('favoriteList', favoriteList);
+      setLikeList(favoriteList);
     })();
   }, []);
+
+  console.log('likeList', likeList);
 
   return (
     <StNewsList>

@@ -3,5 +3,5 @@ export type LikeData = {
 };
 
 export type LikeListData = {
-  likeList: LikeData[];
+  favoriteList: LikeData[];
 };

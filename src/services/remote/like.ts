@@ -6,8 +6,9 @@ export function likeDataRemote(): LikeService {
   const getLikeData = async () => {
     const response = await privateAPI.get({ url: `/user/favorite/all` });
     if (response.status === 200) {
+      console.log(response);
       return {
-        likeList: response.message
+        favoriteList: response.message
           ? response.message.favoriteNews.map((like: LikeData) => ({
               id: like.id,
             }))
