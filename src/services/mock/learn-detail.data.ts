@@ -94,8 +94,8 @@ export const LEARN_DETAIL_DATA = {
       endingIndex: 2,
       memo: {
         id: 2,
-        keyword: '군남댐',
-        content: '발음에 주의해서 말한다.',
+        keyword: '북한에 댐을 방류하면 사전 통지해 달라고 요청했지만, 북한은 이에 대한 응답 없이 방류',
+        content: '내가 너무 입을 작게 벌려서 발음하더라 입을 크게 벌려서 말하자 아아아아 ~~~!',
       },
     },
     {
@@ -110,7 +110,11 @@ export const LEARN_DETAIL_DATA = {
       highlightId: 9,
       startingIndex: 5,
       endingIndex: 6,
-      memo: { id: 3, keyword: '한박자', content: '한 박자 쉬고 말한다.' },
+      memo: {
+        id: 3,
+        keyword: '군남댐',
+        content: '발음에 주의해서 말한다.',
+      },
     },
   ],
 };
