@@ -46,7 +46,6 @@ const StProfileModal = styled.div`
   top: 7.6rem;
   right: 4rem;
   width: 38rem;
-  height: 28.5rem;
   background-color: ${COLOR.WHITE};
   box-shadow: 4px 4px 20px 0px #160f3526;
   border-radius: 1.034rem;
@@ -55,8 +54,7 @@ const StProfileModal = styled.div`
 
   .profile-image {
     position: relative;
-    margin: 0 auto;
-    margin-bottom: 2rem;
+    margin: 4rem auto 2rem auto;
     width: 5.6rem;
     height: 5.6rem;
   }
@@ -71,14 +69,13 @@ const StProfileModal = styled.div`
 
 const StProfileInfo = styled.div`
   text-align: center;
-  padding-top: 4rem;
-  height: 21.4rem;
 
   & > p {
     ${FONT_STYLES.SB_20_BODY};
   }
 
   & > div {
+    height: 2.6rem;
     ${FONT_STYLES.R_17_CAPTION};
     color: ${COLOR.GRAY_45};
     margin: 0.4rem 0 4rem 0;
@@ -91,6 +88,7 @@ const StLogoutButton = styled.button`
   align-items: center;
   width: 100%;
   height: 7.1rem;
+  margin-top: 4rem;
   ${FONT_STYLES.R_18_CAPTION};
   color: ${COLOR.GRAY_45};
   border-top: 0.1rem ${COLOR.GRAY_10} solid;
