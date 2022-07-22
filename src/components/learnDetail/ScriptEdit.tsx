@@ -188,8 +188,7 @@ function ScriptEdit(props: ScriptEditProps) {
     }
   }, [scriptsIdNum, spacingGroupedById]);
 
-  const handleClick = (e: any) => {
-    console.log('아ㅣ이디값을 내놔라', e.target.id);
+  const handleClick = () => {
     const selection = window.getSelection();
     const range = selection?.getRangeAt(0);
     const startIdx = range?.startOffset;
@@ -236,11 +235,10 @@ function ScriptEdit(props: ScriptEditProps) {
         text = res;
       }
 
-      const songah = 119;
       if (!text.includes('\n')) {
         const frag = document.createDocumentFragment();
         const div = document.createElement('div');
-        div.innerHTML = '<mark id=' + songah + '>' + text + '</mark>';
+        div.innerHTML = '<mark>' + text + '</mark>';
         while (div.firstChild) {
           frag.appendChild(div.firstChild);
         }
@@ -265,25 +263,28 @@ function ScriptEdit(props: ScriptEditProps) {
     console.log(spacingIdx, currentLine);
   }, [spacingIdx, currentLine]);
 
-  const handleClickIdx = (selection: any) => {
+  const handleClickIdx = (selection: Selection | null) => {
     const range2 = selection?.getRangeAt(0);
 
     let textCount = 0;
-    if (range2.commonAncestorContainer.nodeName === 'DIV') {
-      const innertext = range2.commonAncestorContainer.innerText;
-      const deleteMarks = innertext.split('/');
-
-      for (let i = 0; i < deleteMarks.length - 1; i++) {
-        textCount += deleteMarks[i].length;
-        setSpacingIdx([...spacingIdx, textCount]);
+    if (range2?.commonAncestorContainer.nodeName === 'DIV') {
+      const innertext = range2?.commonAncestorContainer.textContent;
+      const deleteMarks = innertext?.split('/');
+      if (deleteMarks) {
+        for (let i = 0; i < deleteMarks.length - 1; i++) {
+          textCount += deleteMarks[i].length;
+          setSpacingIdx([...spacingIdx, textCount]);
+        }
       }
-    } else if (range2.commonAncestorContainer.nodeName === 'MARK') {
-      const innertext = range2.commonAncestorContainer.parentNode.innerText;
-      const deleteMarks = innertext.split('/');
+    } else if (range2?.commonAncestorContainer.nodeName === 'MARK') {
+      const innertext = range2.commonAncestorContainer.parentNode?.textContent;
+      const deleteMarks = innertext?.split('/');
 
-      for (let i = 0; i < deleteMarks.length - 1; i++) {
-        textCount += deleteMarks[i].length;
-        setSpacingIdx([...spacingIdx, textCount]);
+      if (deleteMarks) {
+        for (let i = 0; i < deleteMarks.length - 1; i++) {
+          textCount += deleteMarks[i].length;
+          setSpacingIdx([...spacingIdx, textCount]);
+        }
       }
     }
   };
@@ -298,20 +299,27 @@ function ScriptEdit(props: ScriptEditProps) {
     console.log(highlightStartIdx, highlightEndIdx, currentLine);
   }, [highlightStartIdx, highlightEndIdx, currentLine]);
 
-  const handleHighlightIdx = (selection: any) => {
+  const handleHighlightIdx = (selection: Selection | null) => {
     const range2 = selection?.getRangeAt(0);
 
     //여기서 node가 children을 가지면 mark태그임.
     let textCount = 0;
-    for (const node of range2.commonAncestorContainer.childNodes) {
-      if (node.length) {
-        textCount += node.length;
-      }
-      if (node.hasChildNodes()) {
-        //하이라이트 발견시작
-        setHighlightStartIdx(textCount);
-        textCount += node.childNodes[0].length;
-        setHighlightEndIdx(textCount);
+    if (range2?.commonAncestorContainer) {
+      if (range2?.commonAncestorContainer?.childNodes) {
+        for (let i = 0; i < range2.commonAncestorContainer.childNodes.length; i++) {
+          const node = range2.commonAncestorContainer.childNodes[i];
+          if (node.textContent?.length) {
+            textCount += node.textContent.length;
+          }
+          if (node.hasChildNodes()) {
+            //하이라이트 발견시작
+            setHighlightStartIdx(textCount);
+            if (node.childNodes[0].textContent?.length) {
+              textCount += node.childNodes[0].textContent?.length;
+            }
+            setHighlightEndIdx(textCount);
+          }
+        }
       }
     }
   };
@@ -320,7 +328,7 @@ function ScriptEdit(props: ScriptEditProps) {
     <>
       <StWrapper
         contentEditable="true"
-        onClick={(e) => handleClick(e)}
+        onClick={handleClick}
         suppressContentEditableWarning={true}
         spellCheck="false"
         onCut={(e) => e.preventDefault()}
