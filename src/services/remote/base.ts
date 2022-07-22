@@ -7,8 +7,7 @@ const getUserId = () => localStorage.getItem('userId') ?? '';
 const getBasePrivateHeaders = () => ({
   Accept: `*/*`,
   'Content-Type': `application/json`,
-  accesstoken: getAccessToken(),
-  userId: getUserId(),
+  Authorization: getAccessToken() + ' ' + getUserId(),
 });
 
 const basePublicHeaders = {

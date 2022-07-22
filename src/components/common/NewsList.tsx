@@ -19,7 +19,14 @@ function NewsList(props: NewsListProps) {
       {newsList.map(({ id, title, category, channel, thumbnail, reportDate }) => (
         <StNewsWrapper key={id} onClick={() => router.push(`/learn/${id}`)}>
           <StThumbnail>
-            <ImageDiv className="thumbnail" src={thumbnail} layout="fill" alt="" />
+            <ImageDiv
+              className="thumbnail"
+              src={thumbnail}
+              blurDataURL={thumbnail}
+              placeholder="blur"
+              layout="fill"
+              alt=""
+            />
             <Like isFromList={true} />
           </StThumbnail>
           <StTitle>{title}</StTitle>
