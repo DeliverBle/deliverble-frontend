@@ -15,41 +15,61 @@ interface NewsListProps {
 function NewsList(props: NewsListProps) {
   const { newsList } = props;
   const router = useRouter();
-  const [isLiked, setIsLiked] = useState<boolean>(false);
+  const [isLiked, setIsLiked] = useState<boolean[]>([]);
   const [likeList, setLikeList] = useState<number[]>([]);
 
   useEffect(() => {
     (async () => {
       const { favoriteList } = await api.likeService.getLikeData();
       setLikeList(favoriteList.map((like) => like.id));
-      // console.log('favoriteList', favoriteList);
-      // setLikeList(favoriteList);
-      console.log('favoriteList', favoriteList);
     })();
+    console.log('test');
+    const newsListId = newsList.map((news) => news.id);
+    setIsLiked(newsListId.map((newsId) => likeList.includes(newsId)));
   }, []);
-
-  console.log('likeList', likeList);
-  console.log('isLiked1', isLiked);
-
-  console.log(newsList);
-  console.log(newsList.map((news) => news.id)); // 뉴스 전체 아이디
 
   return (
     <StNewsList>
-      {newsList.map(({ id, title, category, channel, thumbnail, reportDate }) => (
+      {newsList.map(({ id, title, category, channel, thumbnail, reportDate }, index) => (
         <StNewsWrapper key={id} onClick={() => router.push(`/learn/${id}`)}>
-          <>
-            {/* {setIsLiked(likeList.includes(id))} */}
-            <StThumbnail>
-              <ImageDiv className="thumbnail" src={thumbnail} layout="fill" alt="" />
-              {/* <Like isFromList={true} isLiked={likeList.includes(id)} setIsLiked={setIsLiked} /> */}
-              <Like isFromList={true} isLiked={isLiked} toggleLike={() => setIsLiked((prev) => !prev)} />
-            </StThumbnail>
-            <StTitle>{title}</StTitle>
-            <StInfo>
-              {channel} | {category} | {reportDate.replaceAll('-', '.')}
-            </StInfo>
-          </>
+          <StThumbnail>
+            <ImageDiv className="thumbnail" src={thumbnail} layout="fill" alt="" />
+            <Like
+              isFromList={true}
+              isLiked={isLiked[index]}
+              // toggleLike={() =>
+              //   setIsLiked((prev: boolean[]) => {
+              //     prev.splice(index, 1, !prev[index]);
+              //     return prev;
+              //   })
+
+              // toggleLike={setIsLiked((prev: boolean[]) => {
+              //   prev.splice(index, 1, !prev[index]);
+              //   return prev;
+              // })}
+
+              // setIsLiked={(prev: boolean[]) => {
+              //   prev.splice(index, 1, !prev[index]);
+              //   return prev;
+              // }}
+
+              // setIsLiked={() => {
+              //   isLiked.splice(index, 1, !isLiked[index]);
+              //   console.log('isLiked', isLiked);
+              //   return isLiked;
+              // }}
+
+              setIsLiked={() => {
+                isLiked.splice(index, 1, !isLiked[index]);
+                console.log('isLiked', isLiked);
+                return isLiked;
+              }}
+            />
+          </StThumbnail>
+          <StTitle>{title}</StTitle>
+          <StInfo>
+            {channel} | {category} | {reportDate.replaceAll('-', '.')}
+          </StInfo>
         </StNewsWrapper>
       ))}
     </StNewsList>
