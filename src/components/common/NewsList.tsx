@@ -23,13 +23,12 @@ function NewsList(props: NewsListProps) {
       const { favoriteList } = await api.likeService.getLikeData();
       setLikeList(favoriteList.map((like) => like.id));
     })();
-
-    const newsListId = newsList.map((news) => news.id);
-    setIsLiked(newsListId.map((newsId) => likeList.includes(newsId)));
   }, []);
 
-  console.log('isLiked1 배열', isLiked);
-  console.log('likeList', likeList);
+  useEffect(() => {
+    const newsListId = newsList.map((news) => news.id);
+    setIsLiked(newsListId.map((newsId) => likeList.includes(newsId)));
+  }, [likeList, newsList]);
 
   return (
     <StNewsList>
@@ -49,9 +48,7 @@ function NewsList(props: NewsListProps) {
               isLiked={isLiked[index]}
               toggleLike={() =>
                 setIsLiked((prev: boolean[]) => {
-                  console.log(prev);
                   prev.splice(index, 1, !prev[index]);
-                  console.log(prev);
                   return prev;
                 })
               }

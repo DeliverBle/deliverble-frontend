@@ -1,6 +1,7 @@
 import { icLikeClicked, icLikeHover, icLikeDefault } from 'public/assets/icons';
 import ImageDiv from './ImageDiv';
 import styled, { css } from 'styled-components';
+import { useState } from 'react';
 
 interface LikeProps {
   isFromList: boolean;
@@ -10,8 +11,7 @@ interface LikeProps {
 
 function Like(props: LikeProps) {
   const { isFromList, isLiked, toggleLike } = props;
-
-  // console.log('isLiked2 값', isLiked);
+  const [isLikeStatus, setIsLikeStatus] = useState<boolean>(isLiked);
 
   return (
     <StLike
@@ -19,10 +19,10 @@ function Like(props: LikeProps) {
       onClick={(e) => {
         e.stopPropagation();
         toggleLike();
-        console.log('isLiked2 값', isLiked);
+        setIsLikeStatus((prev) => !prev);
       }}>
       <StLikeImage isFromList={isFromList}>
-        {isLiked ? (
+        {isLiked || isLikeStatus ? (
           <ImageDiv className="like" src={icLikeClicked} alt="like" layout="fill" />
         ) : (
           <>
