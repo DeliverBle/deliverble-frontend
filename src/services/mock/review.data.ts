@@ -1,5 +1,5 @@
 export const REVIEW_DATA = {
-  favoriteVideoList: [
+  favoriteNews: [
     {
       id: 12,
       title: '손님들이 건넨 술 마시고 사망…함께 있던 남성은 사고사',
