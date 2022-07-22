@@ -29,8 +29,8 @@ function ProfileModal() {
       <StProfileInfo>
         <ImageDiv className="profile-image" src={icMypageButton} layout="fill" alt="" />
         <p>{nickname}</p>
-        {email !== 'NO_EMAIL' && <div>{email}</div>}
       </StProfileInfo>
+      <StEmailInfo> {email !== 'NO_EMAIL' && <div>{email}</div>}</StEmailInfo>
       <StLogoutButton onClick={handleLogout}>
         <ImageDiv className="logout" src={icLogout} layout="fill" alt="" />
         로그아웃
@@ -43,10 +43,10 @@ export default ProfileModal;
 
 const StProfileModal = styled.div`
   position: absolute;
+  text-align: center;
   top: 7.6rem;
   right: 4rem;
   width: 38rem;
-  height: 28.5rem;
   background-color: ${COLOR.WHITE};
   box-shadow: 4px 4px 20px 0px #160f3526;
   border-radius: 1.034rem;
@@ -70,19 +70,18 @@ const StProfileModal = styled.div`
 `;
 
 const StProfileInfo = styled.div`
-  text-align: center;
   padding-top: 4rem;
-  height: 21.4rem;
+  height: 14.4rem;
 
   & > p {
     ${FONT_STYLES.SB_20_BODY};
   }
+`;
 
-  & > div {
-    ${FONT_STYLES.R_17_CAPTION};
-    color: ${COLOR.GRAY_45};
-    margin: 0.4rem 0 4rem 0;
-  }
+const StEmailInfo = styled.div`
+  ${FONT_STYLES.R_17_CAPTION};
+  color: ${COLOR.GRAY_45};
+  margin: 0.4rem 0 4rem 0;
 `;
 
 const StLogoutButton = styled.button`
