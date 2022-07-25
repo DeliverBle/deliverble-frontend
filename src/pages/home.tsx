@@ -16,21 +16,9 @@ function Home() {
   const [token, setToken] = useState('');
   const [userId, setUserId] = useState('');
 
-  useEffect(() => {
-    (async () => {
-      const getAccessToken = () => localStorage.getItem('token') ?? '';
-      const getUserId = () => localStorage.getItem('userId') ?? '';
-      if (getAccessToken()) {
-        setToken(getAccessToken());
-      }
-      if (getUserId()) {
-        setUserId(getUserId());
-      }
-    })();
-  }, []);
-
   const getNewsList = async () => {
     setIsLoading(true);
+
     const [{ videoList }, { favoriteList }] = await Promise.all([
       api.homeService.getVideoData(),
       api.likeService.getLikeData(),
@@ -44,6 +32,14 @@ function Home() {
         };
       }),
     );
+
+    setIsLoading(false);
+  };
+
+  const getNewsListWithoutToken = async () => {
+    setIsLoading(true);
+    const { videoList } = await api.homeService.getVideoData();
+    setNewsList(videoList);
     setIsLoading(false);
   };
 
@@ -65,7 +61,25 @@ function Home() {
   };
 
   useEffect(() => {
-    getNewsList();
+    (async () => {
+      const getAccessToken = () => localStorage.getItem('token') ?? '';
+      const getUserId = () => localStorage.getItem('userId') ?? '';
+      if (getAccessToken()) {
+        setToken(getAccessToken());
+      }
+      if (getUserId()) {
+        setUserId(getUserId());
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    const getAccessToken = () => localStorage.getItem('token') ?? '';
+    if (getAccessToken()) {
+      getNewsList();
+    } else {
+      getNewsListWithoutToken();
+    }
   }, []);
 
   return (
