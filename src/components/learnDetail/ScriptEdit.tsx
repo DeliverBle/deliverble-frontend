@@ -14,13 +14,10 @@ interface ScriptEditProps {
   scripts: ScriptType[];
   isHighlight: boolean;
   isSpacing: boolean;
-  scriptsIdNum: number[];
-  hlGroupedById: any;
-  spacingGroupedById: any;
 }
 
 function ScriptEdit(props: ScriptEditProps) {
-  const { scripts, isHighlight, isSpacing, scriptsIdNum, hlGroupedById, spacingGroupedById } = props;
+  const { scripts, isHighlight, isSpacing } = props;
   const [highlightAlert, setHighlightAlert] = useState<boolean>(false);
   const learnRef = useRef<HTMLDivElement>(null);
 
@@ -41,6 +38,48 @@ function ScriptEdit(props: ScriptEditProps) {
     }
   }, [highlightAlert]);
 
+  const HighlightData = [
+    {
+      scriptId: 6,
+      highlightId: 8,
+      startingIndex: 0,
+      endingIndex: 3,
+    },
+    {
+      scriptId: 7,
+      highlightId: 1,
+      startingIndex: 11,
+      endingIndex: 58,
+    },
+    {
+      scriptId: 8,
+      highlightId: 3,
+      startingIndex: 0,
+      endingIndex: 3,
+    },
+  ];
+
+  //객체들을 내가 뽑기 좋은 형태로 바꾸는 것
+  function groupBy(objectArray: any[], property: string) {
+    return objectArray.reduce(function (acc, obj) {
+      const key = obj[property]; //스크립트 아이디의 값을 키로 선언
+      //만약 지금 키가 없으면
+      if (!acc[key]) {
+        //키에 대한 배열을 생성함
+        acc[key] = [];
+      }
+      acc[key].push(obj);
+      return acc;
+    }, {});
+  }
+
+  const scriptsIdNum = scripts.map((item) => {
+    return item.id;
+  });
+
+  const hlGroupedById = groupBy(HighlightData, 'scriptId');
+
+  //하이라이팅 get
   useEffect(() => {
     const hlKeys = Object.keys(hlGroupedById);
 
@@ -97,96 +136,7 @@ function ScriptEdit(props: ScriptEditProps) {
         currentNode?.appendChild(frag);
       }
     }
-  }, [hlGroupedById, scriptsIdNum]);
-
-  useEffect(() => {
-    //스페이싱 ID로 분류된 애들안에서 인덱스배열이랑 아이디배열 만들기
-    const spacingKeys = Object.keys(spacingGroupedById);
-    for (let i = 0; i < spacingKeys.length; i++) {
-      const spacingKey = spacingKeys[i]; // 각각의 키 지금은 스크립트 아이디
-      const value = spacingGroupedById[spacingKey]; // 각각의 키에 해당하는 각각의 값
-      const spacingIndexArr = [];
-      const spacingIdArr = [];
-
-      for (let j = 0; j < value.length; j++) {
-        spacingIndexArr.push(value[j].index);
-        spacingIdArr.push(value[j].spacingId);
-      }
-
-      //현재 내가 바꿔야하는 문장이 몇번째 childNode인지 알아야함.
-      //How? 지금 받아온 scriptsIdNum 돌면서 +keys[i]와 같은 친구가 몇번째 넘버인 지 확인
-      let nodeNum = 0;
-      scriptsIdNum.map((item: number, index: number) => {
-        if (item === +spacingKeys[i]) {
-          nodeNum = index;
-        }
-      });
-
-      //받아온 스크립트아이디에 해당하는 노드에 접근해서 / 넣어주는 것
-      const currentNode = learnRef.current?.childNodes[nodeNum];
-      if (currentNode) {
-        //index에 있는 애들 string으로 다 넣고
-        let matchingCount = 0;
-        let textCount = 0;
-        let tempText = '';
-
-        for (let i = 0; i < currentNode.childNodes.length; i++) {
-          const currentChild = currentNode.childNodes[i];
-          //만약에 타입이 텍스트인 경우
-          if (currentChild.nodeName === '#text') {
-            if (currentChild.textContent?.length) {
-              for (let j = 0; j < currentChild.textContent?.length; j++) {
-                //스페이스 인덱스 일때
-                if (spacingIndexArr[matchingCount] === textCount) {
-                  tempText += '<span id=' + spacingIdArr[matchingCount] + '>/</span>' + currentChild.textContent[j];
-                  matchingCount++;
-                  textCount++;
-                } //스페이스 인덱스 아닐때
-                else {
-                  tempText += currentChild.textContent[j];
-                  textCount++;
-                }
-              }
-            }
-          }
-          //타입이 마크인 경우
-          else if (currentChild.nodeName === 'MARK') {
-            const clone = currentChild as HTMLElement;
-            tempText += '<mark id=' + clone.id + '>';
-            if (currentChild.textContent?.length) {
-              for (let j = 0; j < currentChild.textContent?.length; j++) {
-                //스페이스 인덱스 일때
-                if (spacingIndexArr[matchingCount] === textCount) {
-                  tempText += '<span id=' + spacingIdArr[matchingCount] + '>/</span>' + currentChild.textContent[j];
-                  matchingCount++;
-                  textCount++;
-                } //스페이스 인덱스 아닐때
-                else {
-                  tempText += currentChild.textContent[j];
-                  textCount++;
-                }
-              }
-            }
-            tempText += '</mark>';
-          }
-        }
-
-        //HTML로 파싱
-        const frag = document.createDocumentFragment();
-        const div = document.createElement('div');
-        div.innerHTML = tempText;
-        while (div.firstChild) {
-          frag.appendChild(div.firstChild);
-        }
-        //기존의 plain text를 지우고
-        if (currentNode?.textContent) {
-          currentNode.textContent = '';
-        }
-        //HTML있는 문장을 삽입해둠
-        currentNode?.appendChild(frag);
-      }
-    }
-  }, [scriptsIdNum, spacingGroupedById]);
+  }, [scripts]);
 
   const handleClick = () => {
     const selection = window.getSelection();
@@ -355,11 +305,9 @@ const StWrapper = styled.div`
     outline: none;
   }
   caret-color: transparent;
-
   & > mark {
     background: linear-gradient(259.3deg, #d8d9ff 0%, #a7c5ff 100%);
   }
-
   position: relative;
 `;
 
@@ -368,34 +316,27 @@ const StScriptText = styled.div`
   font-size: 2.6rem;
   color: ${COLOR.BLACK};
   cursor: pointer;
-
   & > span {
     font-size: 3.2rem;
     font-weight: 600;
     color: #4e8aff;
   }
-
   & > .left {
     margin-right: 0.4rem;
   }
-
   & > .right {
     margin-left: 0.4rem;
   }
-
   & > mark {
     background: linear-gradient(259.3deg, #d8d9ff 0%, #a7c5ff 100%);
-
     & > span {
       font-size: 3.2rem;
       font-weight: 600;
       color: #4e8aff;
     }
-
     & > .left {
       margin-right: 0.4rem;
     }
-
     & > .right {
       margin-left: 0.4rem;
     }

@@ -57,16 +57,9 @@ export const LEARN_DETAIL_DATA = {
   HIGHLIGHT_DATA: [
     {
       scriptId: 1,
-      highlightId: 8,
+      highlightId: 0,
       startingIndex: 0,
-      endingIndex: 2,
-      memo: {},
-    },
-    {
-      scriptId: 1,
-      highlightId: 1,
-      startingIndex: 3,
-      endingIndex: 4,
+      endingIndex: 0,
       memo: {
         id: 1,
         keyword: '북한이',
@@ -74,43 +67,26 @@ export const LEARN_DETAIL_DATA = {
       },
     },
     {
-      scriptId: 1,
-      highlightId: 3,
-      startingIndex: 5,
-      endingIndex: 6,
-      memo: {},
-    },
-    {
-      scriptId: 2,
-      highlightId: 6,
-      startingIndex: 0,
-      endingIndex: 2,
-      memo: {},
-    },
-    {
       scriptId: 3,
-      highlightId: 4,
+      highlightId: 0,
       startingIndex: 0,
-      endingIndex: 2,
+      endingIndex: 0,
       memo: {
         id: 2,
-        keyword: '군남댐',
-        content: '발음에 주의해서 말한다.',
+        keyword: '북한에 댐을 방류하면 사전 통지해 달라고 요청했지만, 북한은 이에 대한 응답 없이 방류',
+        content: '내가 너무 입을 작게 벌려서 발음하더라 입을 크게 벌려서 말하자 아아아아 ~~~!',
       },
     },
     {
       scriptId: 4,
-      highlightId: 7,
+      highlightId: 0,
       startingIndex: 0,
-      endingIndex: 2,
-      memo: {},
-    },
-    {
-      scriptId: 4,
-      highlightId: 9,
-      startingIndex: 5,
-      endingIndex: 6,
-      memo: { id: 3, keyword: '한박자', content: '한 박자 쉬고 말한다.' },
+      endingIndex: 0,
+      memo: {
+        id: 3,
+        keyword: '군남댐',
+        content: '발음에 주의해서 말한다.',
+      },
     },
   ],
 };
