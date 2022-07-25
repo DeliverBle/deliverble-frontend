@@ -5,52 +5,19 @@ import { FONT_STYLES } from '@src/styles/fontStyle';
 import { VideoData } from '@src/services/api/types/home';
 import ImageDiv from './ImageDiv';
 import Like from './Like';
-import { useEffect, useState } from 'react';
-import { api } from '@src/services/api';
 
 interface NewsListProps {
   newsList: VideoData[];
+  onClickLike: (id: number, isLiked: boolean) => void;
 }
 
 function NewsList(props: NewsListProps) {
-  const { newsList } = props;
+  const { newsList, onClickLike } = props;
   const router = useRouter();
-  const [token, setToken] = useState('');
-  const [userId, setUserId] = useState('');
-
-  useEffect(() => {
-    (async () => {
-      const getAccessToken = () => localStorage.getItem('token') ?? '';
-      const getUserId = () => localStorage.getItem('userId') ?? '';
-      if (getAccessToken()) {
-        setToken(getAccessToken());
-      }
-      if (getUserId()) {
-        setUserId(getUserId());
-      }
-    })();
-  }, []);
-
-  const handleClick = async (id: number, isLiked?: boolean) => {
-    if (!isLiked) {
-      await api.likeService.postLikeData({
-        news_id: id,
-        access_token: token,
-        user_id: userId,
-      });
-    } else {
-      await api.likeService.deleteLikeData({
-        news_id: id,
-        access_token: token,
-        user_id: userId,
-      });
-    }
-  };
 
   return (
     <StNewsList>
-      {newsList.map(({ id, title, category, channel, thumbnail, reportDate, isLiked }) => {
-        console.log('map 안에서 isLiked : ', isLiked);
+      {newsList.map(({ id, title, category, channel, thumbnail, reportDate, isLiked = false }) => {
         return (
           <StNewsWrapper key={id} onClick={() => router.push(`/learn/${id}`)}>
             <StThumbnail>
@@ -62,7 +29,7 @@ function NewsList(props: NewsListProps) {
                 layout="fill"
                 alt=""
               />
-              <Like isFromList={true} isLiked={isLiked} toggleLike={() => handleClick(id, isLiked)} />
+              <Like isFromList={true} isLiked={isLiked} toggleLike={() => onClickLike(id, isLiked)} />
             </StThumbnail>
             <StTitle>{title}</StTitle>
             <StInfo>

@@ -13,22 +13,59 @@ import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
 function Home() {
   const [newsList, setNewsList] = useState<VideoData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [token, setToken] = useState('');
+  const [userId, setUserId] = useState('');
 
   useEffect(() => {
     (async () => {
-      setIsLoading(true);
-      const { videoList } = await api.homeService.getVideoData();
-      const { favoriteList } = await api.likeService.getLikeData();
-      setNewsList(
-        videoList.map((news) => {
-          return {
-            ...news,
-            isLiked: favoriteList.map((like) => like.id).includes(news.id),
-          };
-        }),
-      );
-      setIsLoading(false);
+      const getAccessToken = () => localStorage.getItem('token') ?? '';
+      const getUserId = () => localStorage.getItem('userId') ?? '';
+      if (getAccessToken()) {
+        setToken(getAccessToken());
+      }
+      if (getUserId()) {
+        setUserId(getUserId());
+      }
     })();
+  }, []);
+
+  const getNewsList = async () => {
+    setIsLoading(true);
+    const [{ videoList }, { favoriteList }] = await Promise.all([
+      api.homeService.getVideoData(),
+      api.likeService.getLikeData(),
+    ]);
+
+    setNewsList(
+      videoList.map((news) => {
+        return {
+          ...news,
+          isLiked: favoriteList.map((like) => like.id).includes(news.id),
+        };
+      }),
+    );
+    setIsLoading(false);
+  };
+
+  const handleClickLike = async (id: number, isLiked?: boolean) => {
+    if (!isLiked) {
+      await api.likeService.postLikeData({
+        news_id: id,
+        access_token: token,
+        user_id: userId,
+      });
+    } else {
+      await api.likeService.deleteLikeData({
+        news_id: id,
+        access_token: token,
+        user_id: userId,
+      });
+    }
+    getNewsList();
+  };
+
+  useEffect(() => {
+    getNewsList();
   }, []);
 
   return (
@@ -46,7 +83,13 @@ function Home() {
       </StHome>
       <StNews>
         <h3>딜리버블의 추천 뉴스를 만나보세요.</h3>
-        <div>{isLoading ? <VideoListSkeleton itemNumber={8} /> : <NewsList newsList={newsList} />}</div>
+        <div>
+          {isLoading ? (
+            <VideoListSkeleton itemNumber={8} />
+          ) : (
+            <NewsList onClickLike={handleClickLike} newsList={newsList} />
+          )}
+        </div>
       </StNews>
       <Footer />
     </>
