@@ -8,7 +8,7 @@ import Like from './Like';
 
 interface NewsListProps {
   newsList: VideoData[];
-  onClickLike: (id: number, isLiked: boolean) => void;
+  onClickLike?: (id: number, isLiked: boolean) => void;
 }
 
 function NewsList(props: NewsListProps) {
@@ -29,7 +29,7 @@ function NewsList(props: NewsListProps) {
                 layout="fill"
                 alt=""
               />
-              <Like isFromList={true} isLiked={isLiked} toggleLike={() => onClickLike(id, isLiked)} />
+              <Like isFromList={true} isLiked={isLiked} toggleLike={() => onClickLike && onClickLike(id, isLiked)} />
             </StThumbnail>
             <StTitle>{title}</StTitle>
             <StInfo>
