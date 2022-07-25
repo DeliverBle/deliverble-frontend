@@ -47,23 +47,13 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   const [keyword, setKeyword] = useState<string>();
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isfirstClicked, setIsFirstClicked] = useState(false);
-
-  const getLoginStatus = () => localStorage.getItem('token') ?? '';
-
-  useEffect(() => {
-    setMainText('메모 작성을 취소하시겠습니까?');
-    setSubText("작성 취소 선택시, 작성된 메모는 저장되지 않습니다.'");
-    setCancelButtonText('작성하기');
-    setConfirmButtonText('작성 취소');
-  }, []);
-
+  const [isFirstClicked, setIsFirstClicked] = useState(false);
   const [player, setPlayer] = useState<YT.Player | null>();
   const [videoState, setVideoState] = useState(-1);
   const [currentTime, setCurrentTime] = useState(0);
-  const { id, title, category, channel, reportDate, tags, link, startTime, endTime, scripts } = videoData;
-
+  const { title, category, channel, reportDate, tags, link, startTime, endTime, scripts } = videoData;
   const learnRef = useRef<HTMLDivElement>(null);
+  const getLoginStatus = () => localStorage.getItem('token') ?? '';
 
   const HighlightData = [
     {
@@ -86,7 +76,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
     },
   ];
 
-  //객체들을 내가 뽑기 좋은 형태로 바꾸는 것
+  // 객체들을 내가 뽑기 좋은 형태로 바꾸는 것
   function groupBy(objectArray: any[], property: string) {
     return objectArray.reduce(function (acc, obj) {
       const key = obj[property]; //스크립트 아이디의 값을 키로 선언
@@ -106,7 +96,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
 
   const hlGroupedById = groupBy(HighlightData, 'scriptId');
 
-  //하이라이팅 get
+  // 하이라이팅 get
   useEffect(() => {
     const hlKeys = Object.keys(hlGroupedById);
 
@@ -123,8 +113,8 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
         hlIdArr.push(value[j].highlightId);
       }
 
-      //현재 내가 바꿔야하는 문장이 몇번째 childNode인지 알아야함.
-      //How? 지금 받아온 scriptsIdNum 돌면서 +keys[i]와 같은 친구가 몇번째 넘버인 지 확인
+      // 현재 내가 바꿔야하는 문장이 몇번째 childNode인지 알아야함.
+      // How? 지금 받아온 scriptsIdNum 돌면서 +keys[i]와 같은 친구가 몇번째 넘버인 지 확인
       let nodeNum = 0;
       scriptsIdNum.map((item, index) => {
         if (item === +hlKeys[i]) {
@@ -132,7 +122,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
         }
       });
 
-      //받아온 스크립트아이디에 해당하는 노드에 접근해서 하이라이팅 넣어주는 것
+      // 받아온 스크립트아이디에 해당하는 노드에 접근해서 하이라이팅 넣어주는 것
       const currentNode = learnRef.current?.childNodes[nodeNum];
       if (learnRef.current?.childNodes) {
         let count = 0;
@@ -150,7 +140,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
           }
         }
 
-        //HTML로 파싱
+        // HTML로 파싱
         const frag = document.createDocumentFragment();
         const div = document.createElement('div');
         div.innerHTML = tempText;
@@ -164,6 +154,27 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
       }
     }
   }, [scripts]);
+
+  const controlPointX = (e: React.MouseEvent) => {
+    const x = e.nativeEvent.offsetX / 10;
+    const y = e.nativeEvent.offsetY / 10;
+
+    if (x > 40) {
+      return { x: x + x * 0.2, y: y + y * 0.5 };
+    }
+    return { x: x + x * 0.5, y: y + y * 0.5 };
+  };
+
+  const handleRightClick = (e: React.MouseEvent, id: number) => {
+    if (isNewMemo) {
+      setClickedScriptId(-1);
+      return setIsConfirmOpen(true);
+    }
+    setClickedScriptId(id);
+    setPoints(controlPointX(e));
+    setClickedHighlightId(() => Number((e.target as HTMLDivElement).id));
+    setKeyword((e.target as HTMLDivElement).innerText);
+  };
 
   useEffect(() => {
     if (!player) return;
@@ -180,16 +191,6 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
     return () => interval && clearInterval(interval);
   }, [player, videoState]);
 
-  const controlPointX = (e: React.MouseEvent) => {
-    const x = e.nativeEvent.offsetX / 10;
-    const y = e.nativeEvent.offsetY / 10;
-
-    if (x > 40) {
-      return { x: x + x * 0.2, y: y + y * 0.5 };
-    }
-    return { x: x + x * 0.5, y: y + y * 0.5 };
-  };
-
   useEffect(() => {
     const handleClickOutside = (e: Event) => {
       const eventTarget = e.target as HTMLElement;
@@ -200,16 +201,12 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
     window.addEventListener('click', handleClickOutside);
   }, [clickedScriptId]);
 
-  const handleRightClick = (e: React.MouseEvent, id: number) => {
-    if (isNewMemo) {
-      setClickedScriptId(-1);
-      return setIsConfirmOpen(true);
-    }
-    setClickedScriptId(id);
-    setPoints(controlPointX(e));
-    setClickedHighlightId(() => Number((e.target as HTMLDivElement).id));
-    setKeyword((e.target as HTMLDivElement).innerText);
-  };
+  useEffect(() => {
+    setMainText('메모 작성을 취소하시겠습니까?');
+    setSubText('작성 취소 선택시, 작성된 메모는 저장되지 않습니다.');
+    setCancelButtonText('작성하기');
+    setConfirmButtonText('작성 취소');
+  }, []);
 
   return (
     <>
@@ -275,7 +272,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
             </div>
             <article>
               <div ref={learnRef}>
-                {!isfirstClicked &&
+                {!isFirstClicked &&
                   scripts.map(({ id, text, startTime, endTime }) => (
                     <StScriptText
                       ref={contextMenuRef}
@@ -292,7 +289,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                       )}
                     </StScriptText>
                   ))}
-                {isfirstClicked && <ScriptEdit scripts={scripts} isHighlight={isHighlight} isSpacing={isSpacing} />}
+                {isFirstClicked && <ScriptEdit scripts={scripts} isHighlight={isHighlight} isSpacing={isSpacing} />}
               </div>
               <div>
                 <ImageDiv onClick={() => setIsModalOpen(true)} src={icGuide} className="guide" layout="fill" alt="?" />
