@@ -8,10 +8,11 @@ import Empty from './Empty';
 interface VideoContainerProps {
   tab: string;
   videoList: VideoData[];
+  onClickLike?: (id: number, isLiked: boolean) => void;
 }
 
 function VideoContainer(props: VideoContainerProps) {
-  const { tab, videoList } = props;
+  const { tab, videoList, onClickLike } = props;
   const videoListLength = videoList.length;
 
   return (
@@ -26,7 +27,7 @@ function VideoContainer(props: VideoContainerProps) {
       <StVideoWrapper>
         {tab === 'isLiked' ? (
           videoList.length ? (
-            <NewsList newsList={videoList} />
+            <NewsList newsList={videoList} onClickLike={onClickLike} />
           ) : (
             <Empty tab={tab} />
           )
