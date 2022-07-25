@@ -10,13 +10,6 @@ interface LikeProps {
 
 function Like(props: LikeProps) {
   const { isFromList, isLiked, toggleLike } = props;
-  // const [isLikedTemp, setIsLikedTemp] = useState<boolean>(isLiked);
-
-  // useEffect(() => {
-  //   setIsLikedTemp(isLiked);
-  // }, []);
-
-  console.log('isLiked2', isLiked);
 
   return (
     <StLike

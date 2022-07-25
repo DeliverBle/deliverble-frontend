@@ -18,7 +18,15 @@ function Home() {
     (async () => {
       setIsLoading(true);
       const { videoList } = await api.homeService.getVideoData();
-      setNewsList(videoList);
+      const { favoriteList } = await api.likeService.getLikeData();
+      setNewsList(
+        videoList.map((news) => {
+          return {
+            ...news,
+            isLiked: favoriteList.map((like) => like.id).includes(news.id),
+          };
+        }),
+      );
       setIsLoading(false);
     })();
   }, []);

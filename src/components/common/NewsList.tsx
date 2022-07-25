@@ -15,36 +15,8 @@ interface NewsListProps {
 function NewsList(props: NewsListProps) {
   const { newsList } = props;
   const router = useRouter();
-  // const [likeList, setLikeList] = useState<number[]>([]);
   const [token, setToken] = useState('');
   const [userId, setUserId] = useState('');
-
-  const [, setUpdateState] = useState<number>(0);
-
-  useEffect(() => {
-    (async () => {
-      const { favoriteList } = await api.likeService.getLikeData();
-      // setLikeList(favoriteList.map((like) => like.id));
-      console.log('favoriteList', favoriteList);
-      newsList.map((news) => {
-        news.isLiked = favoriteList.map((like) => like.id).includes(news.id) ? true : false;
-      });
-      // console.log('newsList2', newsList);
-      setUpdateState(1);
-    })();
-  }, []);
-
-  // useEffect(() => {
-  //   console.log('likeList', likeList);
-  //   // const tempList = JSON.parse(JSON.stringify(newsList));
-  //   // temp?.map((news: any) => {
-  //   //   news.isLiked = likeList?.includes(news.id) ? true : false;
-  //   // });
-  //   newsList?.map((news) => {
-  //     news.isLiked = likeList?.includes(news.id) ? true : false;
-  //   });
-  //   console.log('newsLisdsft', newsList[0].isLiked);
-  // }, [likeList, newsList]);
 
   useEffect(() => {
     (async () => {
@@ -61,14 +33,12 @@ function NewsList(props: NewsListProps) {
 
   const handleClick = async (id: number, isLiked?: boolean) => {
     if (!isLiked) {
-      console.log('데이터 추가 요청');
       await api.likeService.postLikeData({
         news_id: id,
         access_token: token,
         user_id: userId,
       });
     } else {
-      console.log('데이터 삭제 요청');
       await api.likeService.deleteLikeData({
         news_id: id,
         access_token: token,
@@ -77,14 +47,13 @@ function NewsList(props: NewsListProps) {
     }
   };
 
-  // 버튼 클릭 -> 빈 버튼이었으면 즐찾 추가 (post) -> response를 가지고 화면에 꽉찬 하트 보여줌
-
   return (
     <StNewsList>
-      {newsList.map(({ id, title, category, channel, thumbnail, reportDate, isLiked }) => (
-        <StNewsWrapper key={id} onClick={() => router.push(`/learn/${id}`)}>
-          <StThumbnail>
-            <>
+      {newsList.map(({ id, title, category, channel, thumbnail, reportDate, isLiked }) => {
+        console.log('map 안에서 isLiked : ', isLiked);
+        return (
+          <StNewsWrapper key={id} onClick={() => router.push(`/learn/${id}`)}>
+            <StThumbnail>
               <ImageDiv
                 className="thumbnail"
                 src={thumbnail}
@@ -93,16 +62,15 @@ function NewsList(props: NewsListProps) {
                 layout="fill"
                 alt=""
               />
-              {console.log('isLiked', isLiked)}
               <Like isFromList={true} isLiked={isLiked} toggleLike={() => handleClick(id, isLiked)} />
-            </>
-          </StThumbnail>
-          <StTitle>{title}</StTitle>
-          <StInfo>
-            {channel} | {category} | {reportDate.replaceAll('-', '.')}
-          </StInfo>
-        </StNewsWrapper>
-      ))}
+            </StThumbnail>
+            <StTitle>{title}</StTitle>
+            <StInfo>
+              {channel} | {category} | {reportDate.replaceAll('-', '.')}
+            </StInfo>
+          </StNewsWrapper>
+        );
+      })}
     </StNewsList>
   );
 }
