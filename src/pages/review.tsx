@@ -18,18 +18,47 @@ function Review() {
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const getFavoriteNewsList = async () => {
+    const getAccessToken = () => localStorage.getItem('token') ?? '';
+    if (getAccessToken()) {
+      setIsLoading(true);
+      const { favoriteNews } = await api.reviewService.getFavoriteVideoList();
+      setFavoriteList(
+        favoriteNews.map((news) => {
+          return {
+            ...news,
+            isLiked: favoriteNews.map((like) => like.id).includes(news.id),
+          };
+        }),
+      );
+      setIsLoading(false);
+    } else {
+      setIsModalOpen(true);
+    }
+  };
+
+  const handleClickLike = async (id: number, isLiked?: boolean) => {
+    const getAccessToken = () => localStorage.getItem('token') ?? '';
+    const getUserId = () => localStorage.getItem('userId') ?? '';
+
+    if (!isLiked) {
+      await api.likeService.postLikeData({
+        news_id: id,
+        access_token: getAccessToken(),
+        user_id: getUserId(),
+      });
+    } else {
+      await api.likeService.deleteLikeData({
+        news_id: id,
+        access_token: getAccessToken(),
+        user_id: getUserId(),
+      });
+    }
+    getFavoriteNewsList();
+  };
+
   useEffect(() => {
-    (async () => {
-      const getAccessToken = () => localStorage.getItem('token') ?? '';
-      if (getAccessToken()) {
-        setIsLoading(true);
-        const { favoriteNews } = await api.reviewService.getFavoriteVideoList();
-        setFavoriteList(favoriteNews);
-        setIsLoading(false);
-      } else {
-        setIsModalOpen(true);
-      }
-    })();
+    getFavoriteNewsList();
   }, []);
 
   return (
@@ -50,7 +79,11 @@ function Review() {
             </StButton>
           </StTab>
         </nav>
-        {isLoading ? <VideoListSkeleton itemNumber={12} /> : <VideoContainer tab={tab} videoList={favoriteList} />}
+        {isLoading ? (
+          <VideoListSkeleton itemNumber={12} />
+        ) : (
+          <VideoContainer tab={tab} videoList={favoriteList} onClickLike={handleClickLike} />
+        )}
       </StReview>
       <Footer />
     </>

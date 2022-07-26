@@ -5,35 +5,22 @@ import { FONT_STYLES } from '@src/styles/fontStyle';
 import { VideoData } from '@src/services/api/types/home';
 import ImageDiv from './ImageDiv';
 import Like from './Like';
-import { useEffect, useState } from 'react';
-import { api } from '@src/services/api';
 
 interface NewsListProps {
   newsList: VideoData[];
+  onClickLike?: (id: number, isLiked: boolean) => void;
 }
 
 function NewsList(props: NewsListProps) {
-  const { newsList } = props;
+  const { newsList, onClickLike } = props;
   const router = useRouter();
-  const [, setUpdateState] = useState(0);
-
-  useEffect(() => {
-    (async () => {
-      const { favoriteList } = await api.likeService.getLikeData();
-      console.log('favoriteList', favoriteList);
-      newsList.map((news) => {
-        news.isLiked = favoriteList.map((like) => like.id).includes(news.id) ? true : false;
-      });
-      setUpdateState(1);
-    })();
-  }, []);
 
   return (
     <StNewsList>
-      {newsList.map(({ id, title, category, channel, thumbnail, reportDate, isLiked }) => (
-        <StNewsWrapper key={id} onClick={() => router.push(`/learn/${id}`)}>
-          <StThumbnail>
-            <>
+      {newsList.map(({ id, title, category, channel, thumbnail, reportDate, isLiked = false }) => {
+        return (
+          <StNewsWrapper key={id} onClick={() => router.push(`/learn/${id}`)}>
+            <StThumbnail>
               <ImageDiv
                 className="thumbnail"
                 src={thumbnail}
@@ -42,15 +29,15 @@ function NewsList(props: NewsListProps) {
                 layout="fill"
                 alt=""
               />
-              <Like isFromList={true} newsId={id} isLiked={isLiked} />
-            </>
-          </StThumbnail>
-          <StTitle>{title}</StTitle>
-          <StInfo>
-            {channel} | {category} | {reportDate.replaceAll('-', '.')}
-          </StInfo>
-        </StNewsWrapper>
-      ))}
+              <Like isFromList={true} isLiked={isLiked} toggleLike={() => onClickLike && onClickLike(id, isLiked)} />
+            </StThumbnail>
+            <StTitle>{title}</StTitle>
+            <StInfo>
+              {channel} | {category} | {reportDate.replaceAll('-', '.')}
+            </StInfo>
+          </StNewsWrapper>
+        );
+      })}
     </StNewsList>
   );
 }
