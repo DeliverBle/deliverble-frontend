@@ -183,7 +183,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
       player &&
       setInterval(() => {
         setCurrentTime(player.getCurrentTime());
-      }, 1000);
+      }, 100);
 
     if (videoState === 2 || videoState === 5) {
       interval && clearInterval(interval);
@@ -282,7 +282,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                       }}
                       key={id}
                       onClick={() => player?.seekTo(startTime, true)}
-                      isActive={startTime <= currentTime && currentTime <= endTime ? true : false}>
+                      isActive={startTime <= currentTime && currentTime < endTime ? true : false}>
                       <p id={id.toString()}>{text}</p>
                       {clickedScriptId === id && !isNewMemo && (
                         <ContextMenu points={points} setIsNewMemo={setIsNewMemo} />
