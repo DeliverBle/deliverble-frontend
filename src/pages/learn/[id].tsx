@@ -114,7 +114,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
         hlIdArr.push(value[j].highlightId);
       }
 
-      // 현재 내가 바꿔야하는 문장이 몇번째 childNode인지 알아야함.
+      // 현재 내가 바꿔야 하는 문장이 몇 번째 childNode인지 알아야 함.
       // How? 지금 받아온 scriptsIdNum 돌면서 +keys[i]와 같은 친구가 몇 번째 넘버인지 확인
       let nodeNum = 0;
       scriptsIdNum.map((item, index) => {
@@ -218,7 +218,16 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
           <aside>
             <VideoDetail {...videoData} />
             <StVideoWrapper>
-              <Like isFromList={false} />
+              <Like
+                isFromList={false}
+                toggleLike={() => {
+                  if (getLoginStatus() === '') {
+                    setIsLoginModalOpen(true);
+                  } else {
+                    // 즐겨찾기 API 연결하는 코드
+                  }
+                }}
+              />
               <YouTube
                 videoId={link}
                 opts={{
