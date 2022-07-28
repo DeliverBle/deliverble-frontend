@@ -1,10 +1,12 @@
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 import styled from 'styled-components';
+import LoginModal from '../login/LoginModal';
+import ImageDiv from './ImageDiv';
+import Like from './Like';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { VideoData } from '@src/services/api/types/home';
-import ImageDiv from './ImageDiv';
-import Like from './Like';
 
 interface NewsListProps {
   newsList: VideoData[];
@@ -14,6 +16,8 @@ interface NewsListProps {
 function NewsList(props: NewsListProps) {
   const { newsList, onClickLike } = props;
   const router = useRouter();
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const getLoginStatus = () => localStorage.getItem('token') ?? '';
 
   return (
     <StNewsList>
@@ -29,7 +33,17 @@ function NewsList(props: NewsListProps) {
                 layout="fill"
                 alt=""
               />
-              <Like isFromList={true} isLiked={isLiked} toggleLike={() => onClickLike && onClickLike(id, isLiked)} />
+              <Like
+                isFromList={true}
+                isLiked={isLiked}
+                toggleLike={() => {
+                  if (getLoginStatus() === '') {
+                    setIsLoginModalOpen(true);
+                  } else {
+                    onClickLike && onClickLike(id, isLiked);
+                  }
+                }}
+              />
             </StThumbnail>
             <StTitle>{title}</StTitle>
             <StInfo>
@@ -38,6 +52,7 @@ function NewsList(props: NewsListProps) {
           </StNewsWrapper>
         );
       })}
+      {isLoginModalOpen && <LoginModal closeModal={() => setIsLoginModalOpen(false)} />}
     </StNewsList>
   );
 }
