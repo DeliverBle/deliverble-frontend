@@ -443,6 +443,10 @@ const StLearnSection = styled.section`
     line-height: 5.8rem;
     word-break: keep-all;
 
+    div::selection {
+      background: transparent;
+    }
+
     & > div:first-child {
       position: relative;
       flex: 1;
