@@ -80,9 +80,9 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   function groupBy(objectArray: any[], property: string) {
     return objectArray.reduce(function (acc, obj) {
       const key = obj[property]; //스크립트 아이디의 값을 키로 선언
-      //만약 지금 키가 없으면
+      // 만약 지금 키가 없으면
       if (!acc[key]) {
-        //키에 대한 배열을 생성함
+        // 키에 대한 배열을 생성함
         acc[key] = [];
       }
       acc[key].push(obj);
@@ -96,7 +96,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
 
   const hlGroupedById = groupBy(HighlightData, 'scriptId');
 
-  // 하이라이팅 get
+  // 하이라이트 get
   useEffect(() => {
     const hlKeys = Object.keys(hlGroupedById);
 
@@ -114,7 +114,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
       }
 
       // 현재 내가 바꿔야하는 문장이 몇번째 childNode인지 알아야함.
-      // How? 지금 받아온 scriptsIdNum 돌면서 +keys[i]와 같은 친구가 몇번째 넘버인 지 확인
+      // How? 지금 받아온 scriptsIdNum 돌면서 +keys[i]와 같은 친구가 몇 번째 넘버인지 확인
       let nodeNum = 0;
       scriptsIdNum.map((item, index) => {
         if (item === +hlKeys[i]) {
@@ -122,7 +122,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
         }
       });
 
-      // 받아온 스크립트아이디에 해당하는 노드에 접근해서 하이라이팅 넣어주는 것
+      // 받아온 스크립트 아이디에 해당하는 노드에 접근해서 하이라이트 넣어주는 것
       const currentNode = learnRef.current?.childNodes[nodeNum];
       if (learnRef.current?.childNodes) {
         let count = 0;
@@ -236,7 +236,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                   playerVars: {
                     modestbranding: 1,
                     start: startTime,
-                    end: endTime,
+                    end: Math.ceil(endTime),
                     controls: 0,
                   },
                 }}
