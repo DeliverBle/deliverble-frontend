@@ -376,6 +376,7 @@ const StLearnDetail = styled.div`
   min-height: 100vh;
   background: rgba(229, 238, 255, 0.85);
   backdrop-filter: blur(2.8rem);
+
   .close {
     position: fixed;
     top: 2.4rem;
@@ -384,6 +385,7 @@ const StLearnDetail = styled.div`
     height: 4.8rem;
     cursor: pointer;
   }
+
   .guide {
     position: relative;
     width: 3.4rem;
@@ -408,22 +410,26 @@ const StLearnSection = styled.section`
   display: flex;
   flex-direction: column;
   padding-bottom: 8rem;
+
   & > div {
     display: flex;
     align-items: center;
     gap: 1.2rem;
     margin-top: 14rem;
     margin-bottom: 2.4rem;
+
+    h2 {
+      color: ${COLOR.BLACK};
+      ${FONT_STYLES.SB_24_HEADLINE};
+    }
   }
-  & > div > h2 {
-    color: ${COLOR.BLACK};
-    ${FONT_STYLES.SB_24_HEADLINE};
-  }
+
   .announce {
     position: relative;
     width: 3.2rem;
     height: 3.2rem;
   }
+
   article {
     display: flex;
     flex-direction: column;
@@ -436,24 +442,29 @@ const StLearnSection = styled.section`
     font-size: 2.6rem;
     line-height: 5.8rem;
     word-break: keep-all;
+
     & > div:first-child {
       position: relative;
       flex: 1;
       padding: 0.6rem 1.2rem;
       height: 62.8rem;
       overflow-y: scroll;
+
       &::-webkit-scrollbar {
         width: 1rem;
       }
+
       &::-webkit-scrollbar-thumb {
         background-color: ${COLOR.GRAY_10};
         border-radius: 1.3rem;
       }
+
       &::-webkit-scrollbar-track-piece {
         height: 13.6rem;
         max-height: 13.6rem;
       }
     }
+
     & > div:last-child {
       display: flex;
       align-items: center;
@@ -471,22 +482,26 @@ const StScriptText = styled.div<{ isActive: boolean }>`
   font-weight: ${({ isActive }) => (isActive ? 600 : 400)};
   color: ${({ isActive }) => (isActive ? COLOR.MAIN_BLUE : COLOR.BLACK)};
   cursor: pointer;
+
   & > span {
     font-size: 3.2rem;
     font-weight: 600;
-    color: #4e8aff;
+    color: ${COLOR.MAIN_BLUE};
     margin: 0 0.02rem 0 0.02rem;
   }
+
   & > mark {
     background: linear-gradient(259.3deg, #d8d9ff 0%, #a7c5ff 100%);
     font-weight: ${({ isActive }) => (isActive ? 600 : 400)};
     color: ${({ isActive }) => (isActive ? COLOR.MAIN_BLUE : COLOR.BLACK)};
+
     & > span {
       font-size: 3.2rem;
       font-weight: 600;
-      color: #4e8aff;
+      color: ${COLOR.MAIN_BLUE};
     }
   }
+
   & > mark:hover {
     color: ${COLOR.MAIN_BLUE};
     font-weight: 600;
@@ -502,10 +517,12 @@ const StButtonContainer = styled.div`
 const StButton = styled.button`
   width: 4.8rem;
   height: 4.8rem;
+
   &:hover .default img {
     transition: opacity 1s;
     opacity: 0;
   }
+
   .function-button {
     cursor: pointer;
     position: absolute;
@@ -520,6 +537,7 @@ const StVideoWrapper = styled.div`
   height: fit-content;
   border-radius: 2.4rem;
   overflow: hidden;
+
   .like-button {
     position: absolute;
     width: 4.8rem;
@@ -528,6 +546,7 @@ const StVideoWrapper = styled.div`
     top: 2.4rem;
     right: 2.4rem;
   }
+
   video {
     position: relative;
     left: 0;
@@ -546,10 +565,12 @@ const StMemoTitle = styled.div`
   align-items: center;
   gap: 0.8rem;
   margin-bottom: 2.4rem;
+
   & > h2 {
     color: ${COLOR.BLACK};
     ${FONT_STYLES.SB_24_HEADLINE};
   }
+
   .memo {
     position: relative;
     width: 3.2rem;

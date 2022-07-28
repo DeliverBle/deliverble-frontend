@@ -1,17 +1,11 @@
-import styled from 'styled-components';
 import { useEffect, useRef, useState } from 'react';
-import { COLOR } from '@src/styles/color';
+import { Script } from '@src/services/api/types/learn-detail';
 import HighlightModal from './HighlightModal';
-
-interface ScriptType {
-  id: number;
-  text: string;
-  startTime: number;
-  endTime: number;
-}
+import styled from 'styled-components';
+import { COLOR } from '@src/styles/color';
 
 interface ScriptEditProps {
-  scripts: ScriptType[];
+  scripts: Script[];
   isHighlight: boolean;
   isSpacing: boolean;
 }
@@ -59,13 +53,13 @@ function ScriptEdit(props: ScriptEditProps) {
     },
   ];
 
-  //객체들을 내가 뽑기 좋은 형태로 바꾸는 것
+  // 객체들을 내가 뽑기 좋은 형태로 바꾸는 것
   function groupBy(objectArray: any[], property: string) {
     return objectArray.reduce(function (acc, obj) {
-      const key = obj[property]; //스크립트 아이디의 값을 키로 선언
-      //만약 지금 키가 없으면
+      const key = obj[property]; // 스크립트 아이디의 값을 키로 선언
+      // 만약 지금 키가 없으면
       if (!acc[key]) {
-        //키에 대한 배열을 생성함
+        // 키에 대한 배열을 생성함
         acc[key] = [];
       }
       acc[key].push(obj);
@@ -79,7 +73,7 @@ function ScriptEdit(props: ScriptEditProps) {
 
   const hlGroupedById = groupBy(HighlightData, 'scriptId');
 
-  //하이라이팅 get
+  // 하이라이트 get
   useEffect(() => {
     const hlKeys = Object.keys(hlGroupedById);
 
@@ -96,8 +90,8 @@ function ScriptEdit(props: ScriptEditProps) {
         hlIdArr.push(value[j].highlightId);
       }
 
-      //현재 내가 바꿔야하는 문장이 몇번째 childNode인지 알아야함.
-      //How? 지금 받아온 scriptsIdNum 돌면서 +keys[i]와 같은 친구가 몇번째 넘버인 지 확인
+      // 현재 내가 바꿔야 하는 문장이 몇 번째 childNode인지 알아야 함.
+      // How? 지금 받아온 scriptsIdNum 돌면서 +keys[i]와 같은 친구가 몇 번째 넘버인지 확인
       let nodeNum = 0;
       scriptsIdNum.map((item, index) => {
         if (item === +hlKeys[i]) {
@@ -105,7 +99,7 @@ function ScriptEdit(props: ScriptEditProps) {
         }
       });
 
-      //받아온 스크립트아이디에 해당하는 노드에 접근해서 하이라이팅 넣어주는 것
+      // 받아온 스크립트 아이디에 해당하는 노드에 접근해서 하이라이트 넣어주는 것
       const currentNode = learnRef.current?.childNodes[nodeNum];
       if (learnRef.current?.childNodes) {
         let count = 0;
@@ -123,7 +117,7 @@ function ScriptEdit(props: ScriptEditProps) {
           }
         }
 
-        //HTML로 파싱
+        // HTML로 파싱
         const frag = document.createDocumentFragment();
         const div = document.createElement('div');
         div.innerHTML = tempText;
@@ -153,10 +147,10 @@ function ScriptEdit(props: ScriptEditProps) {
 
     let isOverlap = false;
     if (selection?.type === 'Range') {
-      //중복여부를 검사하자
+      // 중복 여부 검사
       const marks = document.getElementsByTagName('mark'); //mark라는 태그를 모두 담은 html collection
 
-      //marks를 돌면서 현재 셀렉션이 marks와 겹치는 애가 있는 지 확인
+      // marks를 돌면서 현재 셀렉션 중 marks와 겹치는 것이 있는지 확인
       for (let i = 0; i < marks.length; i++) {
         if (selection?.containsNode(marks[i], true) === true) {
           isOverlap = true;
@@ -194,22 +188,22 @@ function ScriptEdit(props: ScriptEditProps) {
         }
         range?.deleteContents();
         range?.insertNode(frag);
-        handleHighlightIdx(selection); //하이라이트의 인덱스를 구하는 함수
+        handleHighlightIdx(selection); // 하이라이트의 인덱스를 구하는 함수
       }
     }
     selection?.collapseToEnd();
   };
 
-  const [currentLine, setCurrentLine] = useState<number>(); //현재 스크립트 아이디
+  const [currentLine, setCurrentLine] = useState<number>(); // 현재 스크립트 아이디
 
-  //끊어읽기 인덱스 구하기
-  // 끊어읽기는 두가지 경우 존재 1.plain 텍스트 안에 있는 경우 2.하이라이트 안에 있는 경우
-  //spacingIdx는 text로 접근해서 위치를 구해야해서 state를 사용했다.
+  // 끊어 읽기 인덱스 구하기
+  // 끊어 읽기는 두가지 경우 존재 1.plain 텍스트 안에 있는 경우 2.하이라이트 안에 있는 경우
+  // spacingIdx는 text로 접근해서 위치를 구해야 해서 state를 사용
   const [spacingIdx, setSpacingIdx] = useState<number[]>([]);
 
   useEffect(() => {
-    //서버에서 받아온 인덱스와 비교 후 post하는 함수 들어갈 예정
-    //currentLine이 겹쳐서 관련 조건 넣어주어야할듯
+    // 서버에서 받아온 인덱스와 비교 후 post하는 함수 들어갈 예정
+    // currentLine이 겹쳐서 관련 조건 넣어주어야할듯
     console.log(spacingIdx, currentLine);
   }, [spacingIdx, currentLine]);
 
@@ -239,20 +233,20 @@ function ScriptEdit(props: ScriptEditProps) {
     }
   };
 
-  //하이라이트 인덱스 구하기
+  // 하이라이트 인덱스 구하기
   const [highlightStartIdx, setHighlightStartIdx] = useState<number>();
   const [highlightEndIdx, setHighlightEndIdx] = useState<number>();
 
   useEffect(() => {
-    //서버에서 받아온 인덱스와 비교 후 post하는 함수 들어갈 예정
-    //currentLine이 겹쳐서 관련 조건 넣어주어야할듯
+    // 서버에서 받아온 인덱스와 비교 후 post하는 함수 들어갈 예정
+    // currentLine이 겹쳐서 관련 조건 넣어주어야 할 듯
     console.log(highlightStartIdx, highlightEndIdx, currentLine);
   }, [highlightStartIdx, highlightEndIdx, currentLine]);
 
   const handleHighlightIdx = (selection: Selection | null) => {
     const range2 = selection?.getRangeAt(0);
 
-    //여기서 node가 children을 가지면 mark태그임.
+    // 여기서 node가 children을 가지면 mark 태그
     let textCount = 0;
     if (range2?.commonAncestorContainer) {
       if (range2?.commonAncestorContainer?.childNodes) {
@@ -262,7 +256,7 @@ function ScriptEdit(props: ScriptEditProps) {
             textCount += node.textContent.length;
           }
           if (node.hasChildNodes()) {
-            //하이라이트 발견시작
+            // 하이라이트 발견 시작
             setHighlightStartIdx(textCount);
             if (node.childNodes[0].textContent?.length) {
               textCount += node.childNodes[0].textContent?.length;
@@ -300,15 +294,17 @@ function ScriptEdit(props: ScriptEditProps) {
 export default ScriptEdit;
 
 const StWrapper = styled.div`
+  position: relative;
+  caret-color: transparent;
   cursor: pointer;
+
   :focus {
     outline: none;
   }
-  caret-color: transparent;
+
   & > mark {
     background: linear-gradient(259.3deg, #d8d9ff 0%, #a7c5ff 100%);
   }
-  position: relative;
 `;
 
 const StScriptText = styled.div`
@@ -316,27 +312,34 @@ const StScriptText = styled.div`
   font-size: 2.6rem;
   color: ${COLOR.BLACK};
   cursor: pointer;
+
   & > span {
     font-size: 3.2rem;
     font-weight: 600;
     color: #4e8aff;
   }
+
   & > .left {
     margin-right: 0.4rem;
   }
+
   & > .right {
     margin-left: 0.4rem;
   }
+
   & > mark {
     background: linear-gradient(259.3deg, #d8d9ff 0%, #a7c5ff 100%);
+
     & > span {
       font-size: 3.2rem;
       font-weight: 600;
-      color: #4e8aff;
+      color: ${COLOR.MAIN_BLUE};
     }
+
     & > .left {
       margin-right: 0.4rem;
     }
+
     & > .right {
       margin-left: 0.4rem;
     }
