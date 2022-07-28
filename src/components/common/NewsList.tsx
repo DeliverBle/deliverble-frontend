@@ -67,7 +67,6 @@ const StThumbnail = styled.div`
 
   &:hover {
     transition: background-color 0.2s ease-in-out;
-    /* background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 100%); */
     background-color: rgba(0, 0, 0, 0.15);
   }
 
