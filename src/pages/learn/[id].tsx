@@ -80,7 +80,8 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   // 객체들을 내가 뽑기 좋은 형태로 바꾸는 것
   function groupBy(objectArray: any[], property: string) {
     return objectArray.reduce(function (acc, obj) {
-      const key = obj[property]; //스크립트 아이디의 값을 키로 선언
+      // 스크립트 아이디의 값을 키로 선언
+      const key = obj[property];
       // 만약 지금 키가 없으면
       if (!acc[key]) {
         // 키에 대한 배열을 생성함
