@@ -471,10 +471,6 @@ const StScriptText = styled.div<{ isActive: boolean }>`
   font-weight: ${({ isActive }) => (isActive ? 600 : 400)};
   color: ${({ isActive }) => (isActive ? COLOR.MAIN_BLUE : COLOR.BLACK)};
   cursor: pointer;
-  &:hover {
-    color: ${COLOR.MAIN_BLUE};
-    font-weight: 600;
-  }
   & > span {
     font-size: 3.2rem;
     font-weight: 600;
