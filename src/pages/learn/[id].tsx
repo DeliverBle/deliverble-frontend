@@ -445,7 +445,8 @@ const StLearnSection = styled.section`
     word-break: keep-all;
 
     div::selection {
-      background: transparent;
+      background: ${COLOR.SUB_BLUE_30};
+      color: ${COLOR.MAIN_BLUE};
     }
 
     & > div:first-child {
