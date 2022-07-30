@@ -446,7 +446,6 @@ const StLearnSection = styled.section`
 
     div::selection {
       background: ${COLOR.SUB_BLUE_30};
-      color: ${COLOR.MAIN_BLUE};
     }
 
     & > div:first-child {
