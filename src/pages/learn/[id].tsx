@@ -1,9 +1,23 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
-import ImageDiv from '../../components/common/ImageDiv';
+import YouTube from 'react-youtube';
+import SEO from '@src/components/common/SEO';
+import ImageDiv from '@src/components/common/ImageDiv';
+import Like from '@src/components/common/Like';
 import GuideModal from '@src/components/learnDetail/GuideModal';
+import EmptyMemo from '@src/components/learnDetail/memo/EmptyMemo';
+import MemoList from '@src/components/learnDetail/memo/MemoList';
 import ScriptEdit from '@src/components/learnDetail/ScriptEdit';
+import ContextMenu from '@src/components/learnDetail/ContextMenu';
+import VideoDetail from '@src/components/learnDetail/VideoDetail';
+import ConfirmModal from '@src/components/learnDetail/ConfirmModal';
+import LoginModal from '@src/components/login/LoginModal';
+import { api } from '@src/services/api';
+import { HighlightData, VideoData } from '@src/services/api/types/learn-detail';
+import { COLOR } from '@src/styles/color';
+import { FONT_STYLES } from '@src/styles/fontStyle';
 import {
   icXButton,
   icGuide,
@@ -16,19 +30,6 @@ import {
   icSpacingHover,
   icSpacingClicked,
 } from 'public/assets/icons';
-import ConfirmModal from '@src/components/learnDetail/ConfirmModal';
-import { COLOR } from '@src/styles/color';
-import { FONT_STYLES } from '@src/styles/fontStyle';
-import { GetServerSidePropsContext } from 'next';
-import { api } from '@src/services/api';
-import { HighlightData, VideoData } from '@src/services/api/types/learn-detail';
-import YouTube from 'react-youtube';
-import EmptyMemo from '@src/components/learnDetail/memo/EmptyMemo';
-import SEO from '@src/components/common/SEO';
-import MemoList from '@src/components/learnDetail/memo/MemoList';
-import Like from '@src/components/common/Like';
-import ContextMenu from '@src/components/learnDetail/ContextMenu';
-import LoginModal from '@src/components/login/LoginModal';
 
 function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highlightData: HighlightData[] }) {
   const router = useRouter();
@@ -51,7 +52,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   const [player, setPlayer] = useState<YT.Player | null>();
   const [videoState, setVideoState] = useState(-1);
   const [currentTime, setCurrentTime] = useState(0);
-  const { title, category, channel, reportDate, tags, link, startTime, endTime, scripts } = videoData;
+  const { link, startTime, endTime, scripts } = videoData;
   const learnRef = useRef<HTMLDivElement>(null);
   const getLoginStatus = () => localStorage.getItem('token') ?? '';
 
@@ -79,10 +80,11 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   // 객체들을 내가 뽑기 좋은 형태로 바꾸는 것
   function groupBy(objectArray: any[], property: string) {
     return objectArray.reduce(function (acc, obj) {
-      const key = obj[property]; //스크립트 아이디의 값을 키로 선언
-      //만약 지금 키가 없으면
+      // 스크립트 아이디의 값을 키로 선언
+      const key = obj[property];
+      // 만약 지금 키가 없으면
       if (!acc[key]) {
-        //키에 대한 배열을 생성함
+        // 키에 대한 배열을 생성함
         acc[key] = [];
       }
       acc[key].push(obj);
@@ -96,7 +98,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
 
   const hlGroupedById = groupBy(HighlightData, 'scriptId');
 
-  // 하이라이팅 get
+  // 하이라이트 get
   useEffect(() => {
     const hlKeys = Object.keys(hlGroupedById);
 
@@ -113,8 +115,8 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
         hlIdArr.push(value[j].highlightId);
       }
 
-      // 현재 내가 바꿔야하는 문장이 몇번째 childNode인지 알아야함.
-      // How? 지금 받아온 scriptsIdNum 돌면서 +keys[i]와 같은 친구가 몇번째 넘버인 지 확인
+      // 현재 내가 바꿔야 하는 문장이 몇 번째 childNode인지 알아야 함.
+      // How? 지금 받아온 scriptsIdNum 돌면서 +keys[i]와 같은 친구가 몇 번째 넘버인지 확인
       let nodeNum = 0;
       scriptsIdNum.map((item, index) => {
         if (item === +hlKeys[i]) {
@@ -122,7 +124,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
         }
       });
 
-      // 받아온 스크립트아이디에 해당하는 노드에 접근해서 하이라이팅 넣어주는 것
+      // 받아온 스크립트 아이디에 해당하는 노드에 접근해서 하이라이트 넣어주는 것
       const currentNode = learnRef.current?.childNodes[nodeNum];
       if (learnRef.current?.childNodes) {
         let count = 0;
@@ -183,7 +185,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
       player &&
       setInterval(() => {
         setCurrentTime(player.getCurrentTime());
-      }, 1000);
+      }, 100);
 
     if (videoState === 2 || videoState === 5) {
       interval && clearInterval(interval);
@@ -215,19 +217,18 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
         <ImageDiv onClick={() => router.back()} src={icXButton} className="close" layout="fill" alt="x" />
         <StLearnMain>
           <aside>
-            <StVideoDetail>
-              <div>
-                {channel} | {category} | {reportDate.replaceAll('-', '.')}
-              </div>
-              <h1>{title}</h1>
-              <StTagContainer>
-                {tags.map(({ id, name }) => (
-                  <span key={id}>{name}</span>
-                ))}
-              </StTagContainer>
-            </StVideoDetail>
+            <VideoDetail {...videoData} />
             <StVideoWrapper>
-              <Like isFromList={false} />
+              <Like
+                isFromList={false}
+                toggleLike={() => {
+                  if (getLoginStatus() === '') {
+                    setIsLoginModalOpen(true);
+                  } else {
+                    // 즐겨찾기 API 연결하는 코드
+                  }
+                }}
+              />
               <YouTube
                 videoId={link}
                 opts={{
@@ -236,7 +237,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                   playerVars: {
                     modestbranding: 1,
                     start: startTime,
-                    end: endTime,
+                    end: Math.ceil(endTime),
                     controls: 0,
                   },
                 }}
@@ -282,7 +283,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                       }}
                       key={id}
                       onClick={() => player?.seekTo(startTime, true)}
-                      isActive={startTime <= currentTime && currentTime <= endTime ? true : false}>
+                      isActive={startTime <= currentTime && currentTime < endTime ? true : false}>
                       <p id={id.toString()}>{text}</p>
                       {clickedScriptId === id && !isNewMemo && (
                         <ContextMenu points={points} setIsNewMemo={setIsNewMemo} />
@@ -376,6 +377,7 @@ const StLearnDetail = styled.div`
   min-height: 100vh;
   background: rgba(229, 238, 255, 0.85);
   backdrop-filter: blur(2.8rem);
+
   .close {
     position: fixed;
     top: 2.4rem;
@@ -384,6 +386,7 @@ const StLearnDetail = styled.div`
     height: 4.8rem;
     cursor: pointer;
   }
+
   .guide {
     position: relative;
     width: 3.4rem;
@@ -408,22 +411,26 @@ const StLearnSection = styled.section`
   display: flex;
   flex-direction: column;
   padding-bottom: 8rem;
+
   & > div {
     display: flex;
     align-items: center;
     gap: 1.2rem;
     margin-top: 14rem;
     margin-bottom: 2.4rem;
+
+    h2 {
+      color: ${COLOR.BLACK};
+      ${FONT_STYLES.SB_24_HEADLINE};
+    }
   }
-  & > div > h2 {
-    color: ${COLOR.BLACK};
-    ${FONT_STYLES.SB_24_HEADLINE};
-  }
+
   .announce {
     position: relative;
     width: 3.2rem;
     height: 3.2rem;
   }
+
   article {
     display: flex;
     flex-direction: column;
@@ -436,24 +443,33 @@ const StLearnSection = styled.section`
     font-size: 2.6rem;
     line-height: 5.8rem;
     word-break: keep-all;
+
+    div::selection {
+      background: ${COLOR.SUB_BLUE_30};
+    }
+
     & > div:first-child {
       position: relative;
       flex: 1;
       padding: 0.6rem 1.2rem;
       height: 62.8rem;
       overflow-y: scroll;
+
       &::-webkit-scrollbar {
         width: 1rem;
       }
+
       &::-webkit-scrollbar-thumb {
         background-color: ${COLOR.GRAY_10};
         border-radius: 1.3rem;
       }
+
       &::-webkit-scrollbar-track-piece {
         height: 13.6rem;
         max-height: 13.6rem;
       }
     }
+
     & > div:last-child {
       display: flex;
       align-items: center;
@@ -471,26 +487,26 @@ const StScriptText = styled.div<{ isActive: boolean }>`
   font-weight: ${({ isActive }) => (isActive ? 600 : 400)};
   color: ${({ isActive }) => (isActive ? COLOR.MAIN_BLUE : COLOR.BLACK)};
   cursor: pointer;
-  &:hover {
-    color: ${COLOR.MAIN_BLUE};
-    font-weight: 600;
-  }
+
   & > span {
     font-size: 3.2rem;
     font-weight: 600;
-    color: #4e8aff;
+    color: ${COLOR.MAIN_BLUE};
     margin: 0 0.02rem 0 0.02rem;
   }
+
   & > mark {
     background: linear-gradient(259.3deg, #d8d9ff 0%, #a7c5ff 100%);
     font-weight: ${({ isActive }) => (isActive ? 600 : 400)};
     color: ${({ isActive }) => (isActive ? COLOR.MAIN_BLUE : COLOR.BLACK)};
+
     & > span {
       font-size: 3.2rem;
       font-weight: 600;
-      color: #4e8aff;
+      color: ${COLOR.MAIN_BLUE};
     }
   }
+
   & > mark:hover {
     color: ${COLOR.MAIN_BLUE};
     font-weight: 600;
@@ -506,41 +522,16 @@ const StButtonContainer = styled.div`
 const StButton = styled.button`
   width: 4.8rem;
   height: 4.8rem;
+
   &:hover .default img {
     transition: opacity 1s;
     opacity: 0;
   }
+
   .function-button {
     cursor: pointer;
     position: absolute;
     top: 0;
-  }
-`;
-
-const StVideoDetail = styled.div`
-  & > div {
-    display: flex;
-    color: ${COLOR.GRAY_30};
-    ${FONT_STYLES.M_21_BODY};
-  }
-  & > h1 {
-    margin-top: 1.2rem;
-    margin-bottom: 2rem;
-    color: ${COLOR.BLACK};
-    ${FONT_STYLES.SB_32_HEADLINE};
-  }
-`;
-
-const StTagContainer = styled.div`
-  display: flex;
-  gap: 0.8rem;
-  margin-bottom: 4.8rem;
-  & > span {
-    padding: 1rem 1.6rem;
-    border-radius: 2.4rem;
-    color: ${COLOR.WHITE};
-    background-color: ${COLOR.MAIN_BLUE};
-    ${FONT_STYLES.SB_18_CAPTION};
   }
 `;
 
@@ -551,6 +542,7 @@ const StVideoWrapper = styled.div`
   height: fit-content;
   border-radius: 2.4rem;
   overflow: hidden;
+
   .like-button {
     position: absolute;
     width: 4.8rem;
@@ -559,6 +551,7 @@ const StVideoWrapper = styled.div`
     top: 2.4rem;
     right: 2.4rem;
   }
+
   video {
     position: relative;
     left: 0;
@@ -577,10 +570,12 @@ const StMemoTitle = styled.div`
   align-items: center;
   gap: 0.8rem;
   margin-bottom: 2.4rem;
+
   & > h2 {
     color: ${COLOR.BLACK};
     ${FONT_STYLES.SB_24_HEADLINE};
   }
+
   .memo {
     position: relative;
     width: 3.2rem;
