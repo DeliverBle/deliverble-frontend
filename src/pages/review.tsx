@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import SEO from '@src/components/common/SEO';
 import NavigationBar from '@src/components/common/NavigationBar';
-import LoginModal from '@src/components/login/LoginModal';
 import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
 import HeadlineContainer from '@src/components/review/HeadlineContainer';
 import VideoContainer from '@src/components/review/VideoContainer';
@@ -16,7 +15,6 @@ function Review() {
   const [tab, setTab] = useState('isLiked');
   const [favoriteList, setFavoriteList] = useState<VideoData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const getFavoriteNewsList = async () => {
     const getAccessToken = () => localStorage.getItem('token') ?? '';
@@ -32,8 +30,6 @@ function Review() {
         }),
       );
       setIsLoading(false);
-    } else {
-      setIsModalOpen(true);
     }
   };
 
@@ -65,7 +61,6 @@ function Review() {
     <>
       <SEO title="복습하기 | Deliverble" />
       <NavigationBar />
-      {isModalOpen && <LoginModal closeModal={() => setIsModalOpen(false)} />}
       <StReview>
         <HeadlineContainer />
         <nav>
