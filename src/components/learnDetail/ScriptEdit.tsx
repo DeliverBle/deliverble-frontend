@@ -21,13 +21,9 @@ function ScriptEdit(props: ScriptEditProps) {
       const timeSaved = Number(localStorage.getItem('timeClicked'));
       if (timeSaved) {
         const gapHour = (now - timeSaved) / 1000 / 60 / 60;
-        if (gapHour > 72) {
-          setHighlightAlert(true);
-        } else {
+        if (gapHour < 72) {
           setHighlightAlert(false);
         }
-      } else {
-        setHighlightAlert(true);
       }
     }
   }, [highlightAlert]);
