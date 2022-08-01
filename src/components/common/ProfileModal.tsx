@@ -5,9 +5,8 @@ import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import React from 'react';
 
-const ProfileModal = (ref) => {
+const ProfileModal = () => {
   const router = useRouter();
   const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
@@ -26,7 +25,7 @@ const ProfileModal = (ref) => {
   };
 
   return (
-    <StProfileModal ref={ref}>
+    <StProfileModal>
       <StProfileInfo>
         <ImageDiv className="profile-image" src={icMypageButton} layout="fill" alt="" />
         <p>{nickname}</p>
@@ -40,9 +39,7 @@ const ProfileModal = (ref) => {
   );
 };
 
-const profileModalRef = React.forwardRef(ProfileModal);
-
-export default profileModalRef;
+export default ProfileModal;
 
 const StProfileModal = styled.div`
   position: absolute;

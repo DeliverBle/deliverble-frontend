@@ -1,20 +1,22 @@
+import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import styled, { css } from 'styled-components';
+import ImageDiv from './ImageDiv';
+import LoginModal from '../login/LoginModal';
+import ProfileModal from './ProfileModal';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { imgLogo } from 'public/assets/images';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import ImageDiv from './ImageDiv';
-import LoginModal from '../login/LoginModal';
 import { icMypageButton } from 'public/assets/icons';
-import ProfileModal from './ProfileModal';
 
 function NavigationBar() {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loginState, setLoginState] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const profileModalRef = useRef<HTMLDivElement>(null);
+  const profileImageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     handleLoginState();
@@ -30,11 +32,19 @@ function NavigationBar() {
   useEffect(() => {
     const handleClickOutside = (e: Event) => {
       const eventTarget = e.target as HTMLElement;
-      if (isProfileModalOpen && !profileModalRef?.current?.contains(eventTarget)) {
+      if (
+        isProfileModalOpen &&
+        !profileModalRef?.current?.contains(eventTarget) &&
+        !profileImageRef?.current?.contains(eventTarget)
+      ) {
         setIsProfileModalOpen(false);
       }
     };
+
     window.addEventListener('click', handleClickOutside);
+    return () => {
+      window.removeEventListener('click', handleClickOutside);
+    };
   }, [isProfileModalOpen]);
 
   return (
@@ -65,16 +75,22 @@ function NavigationBar() {
           </StTabList>
         </nav>
         {loginState && (
-          <ImageDiv
-            onClick={() => setIsProfileModalOpen((prev) => !prev)}
-            className="profile"
-            src={icMypageButton}
-            layout="fill"
-            alt=""
-          />
+          <StProfileImage ref={profileImageRef}>
+            <ImageDiv
+              onClick={() => setIsProfileModalOpen((prev) => !prev)}
+              className="profile"
+              src={icMypageButton}
+              layout="fill"
+              alt=""
+            />
+          </StProfileImage>
         )}
         {!loginState && <StLogin onClick={() => setIsModalOpen(true)}>로그인</StLogin>}
-        {isProfileModalOpen && <ProfileModal ref={ref} />}
+        {isProfileModalOpen && (
+          <div ref={profileModalRef}>
+            <ProfileModal />
+          </div>
+        )}
       </StNavigationBar>
       {isModalOpen && <LoginModal closeModal={() => setIsModalOpen(false)} />}
     </>
@@ -107,13 +123,16 @@ const StNavigationBar = styled.div`
   }
 
   .profile {
-    position: absolute;
-    right: 6.4rem;
+    position: relative;
     width: 4rem;
     height: 4rem;
-
     cursor: pointer;
   }
+`;
+
+const StProfileImage = styled.div`
+  position: absolute;
+  right: 6.4rem;
 `;
 
 const StTabList = styled.ul`
