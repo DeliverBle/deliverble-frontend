@@ -74,7 +74,7 @@ function NavigationBar() {
           />
         )}
         {!loginState && <StLogin onClick={() => setIsModalOpen(true)}>로그인</StLogin>}
-        {isProfileModalOpen && <ProfileModal />}
+        {isProfileModalOpen && <ProfileModal ref={ref} />}
       </StNavigationBar>
       {isModalOpen && <LoginModal closeModal={() => setIsModalOpen(false)} />}
     </>
