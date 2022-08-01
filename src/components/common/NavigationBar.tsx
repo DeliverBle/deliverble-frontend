@@ -27,6 +27,16 @@ function NavigationBar() {
     }
   };
 
+  useEffect(() => {
+    const handleClickOutside = (e: Event) => {
+      const eventTarget = e.target as HTMLElement;
+      if (isProfileModalOpen && !profileModalRef?.current?.contains(eventTarget)) {
+        setIsProfileModalOpen(false);
+      }
+    };
+    window.addEventListener('click', handleClickOutside);
+  }, [isProfileModalOpen]);
+
   return (
     <>
       <StNavigationBar>
