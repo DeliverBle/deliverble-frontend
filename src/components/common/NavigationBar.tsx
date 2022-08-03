@@ -40,8 +40,10 @@ function NavigationBar() {
         setIsProfileModalOpen(false);
       }
     };
-
     window.addEventListener('click', handleClickOutside);
+    return () => {
+      window.removeEventListener('click', handleClickOutside);
+    };
   }, [isProfileModalOpen]);
 
   return (
