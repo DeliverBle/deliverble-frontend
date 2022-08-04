@@ -12,12 +12,15 @@ import ProfileModal from './ProfileModal';
 
 function NavigationBar() {
   const router = useRouter();
+  const storage = globalThis?.sessionStorage;
+  const prevLink = storage.getItem('currentPath') || '/';
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loginState, setLoginState] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
   useEffect(() => {
     handleLoginState();
+    console.log(prevLink);
   }, []);
 
   const handleLoginState = () => {
@@ -65,6 +68,7 @@ function NavigationBar() {
         )}
         {!loginState && <StLogin onClick={() => setIsModalOpen(true)}>로그인</StLogin>}
         {isProfileModalOpen && <ProfileModal />}
+        <div onClick={() => router.push(prevLink)}>이전 페이지로 이동하기</div>
       </StNavigationBar>
       {isModalOpen && <LoginModal closeModal={() => setIsModalOpen(false)} />}
     </>
@@ -102,6 +106,10 @@ const StNavigationBar = styled.div`
     width: 4rem;
     height: 4rem;
 
+    cursor: pointer;
+  }
+
+  & > div {
     cursor: pointer;
   }
 `;
