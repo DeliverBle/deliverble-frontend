@@ -83,7 +83,6 @@ const StSelectBox = styled.div<{ isClicked: boolean }>`
     color: ${COLOR.GRAY_30};
     ${FONT_STYLES.SB_16_CAPTION};
     margin-left: 1.2rem;
-    margin-bottom: 1rem;
   }
 
   .arrow {
@@ -153,6 +152,7 @@ const StCategoryButton = styled.button`
   border-radius: 1.4rem;
   gap: 0.8rem;
   overflow: hidden;
+  margin-top: 1rem;
 
   &:hover {
     border: 0.2rem solid ${COLOR.MAIN_BLUE};
