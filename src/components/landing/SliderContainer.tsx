@@ -55,6 +55,7 @@ function SliderContainer(props: SliderContainerProps) {
       clickedSlideRef &&
         clickedSlideRef.current?.scrollIntoView({
           block: 'start',
+          behavior: 'smooth',
         });
     };
     moveToElement(slideNumber);
