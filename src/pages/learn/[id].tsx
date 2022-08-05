@@ -517,6 +517,7 @@ const StButtonContainer = styled.div`
   display: flex;
   gap: 0.8rem;
   position: relative;
+  padding-right: 0.8rem;
 `;
 
 const StButton = styled.button`
