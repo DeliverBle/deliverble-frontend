@@ -106,7 +106,7 @@ const StThumbnail = styled.div`
 
 const StTitle = styled.p`
   width: fit-content;
-
+  height: 5.8rem;
   ${FONT_STYLES.M_21_BODY};
   color: ${COLOR.BLACK};
   cursor: pointer;
