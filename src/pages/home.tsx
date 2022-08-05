@@ -117,8 +117,8 @@ const StHome = styled.div`
   align-items: center;
 
   width: 100%;
-  height: 73rem; // 68.8rem
-  margin: 4.8rem 0 16rem 0;
+  height: 73rem;
+  margin: 4.8rem 0 14.4rem 0;
 
   background: no-repeat url('/assets/images/img_banner.svg');
   background-size: cover;
@@ -151,7 +151,7 @@ const StNews = styled.div`
   }
 
   & > h3 {
-    margin-bottom: 2.8rem;
+    margin-bottom: 7.2rem;
 
     ${FONT_STYLES.SB_32_HEADLINE}
     color: ${COLOR.BLACK};
