@@ -87,8 +87,8 @@ const StSelectBox = styled.div<{ isClicked: boolean }>`
 
   .arrow {
     position: relative;
-    width: 0.8rem;
-    height: 0.4rem;
+    width: 2.4rem;
+    height: 2.4rem;
     transition: 0.3s all ease;
   }
 
