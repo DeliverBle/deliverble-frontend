@@ -97,6 +97,10 @@ const StTab = styled.ul`
   ${FONT_STYLES.SB_28_HEADLINE};
   color: ${COLOR.GRAY_30};
   margin-bottom: 14.8rem;
+
+  & > span {
+    font-weight: 400;
+  }
 `;
 
 const StButton = styled.li<{ isActive: boolean }>`
