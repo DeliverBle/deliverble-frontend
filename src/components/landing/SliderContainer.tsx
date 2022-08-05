@@ -16,17 +16,19 @@ import { useSlideObserver } from 'src/components/landing/useSlideObserver';
 interface SliderContainerProps {
   slideNumber: number;
   setSlideNumber: (slideNumber: number) => void;
+  stopObserve: boolean;
+  setStopObserve: (stopObserve: boolean) => void;
 }
 
 function SliderContainer(props: SliderContainerProps) {
-  const { slideNumber, setSlideNumber } = props;
+  const { slideNumber, setSlideNumber, stopObserve, setStopObserve } = props;
 
-  const firstSlideRef = useSlideObserver(setSlideNumber, 1);
-  const secondSlideRef = useSlideObserver(setSlideNumber, 2);
-  const thirdSlideRef = useSlideObserver(setSlideNumber, 3);
-  const fourthSlideRef = useSlideObserver(setSlideNumber, 4);
-  const fifthSlideRef = useSlideObserver(setSlideNumber, 5);
-  const sixthSlideRef = useSlideObserver(setSlideNumber, 6);
+  const firstSlideRef = useSlideObserver(setSlideNumber, 1, stopObserve);
+  const secondSlideRef = useSlideObserver(setSlideNumber, 2, stopObserve);
+  const thirdSlideRef = useSlideObserver(setSlideNumber, 3, stopObserve);
+  const fourthSlideRef = useSlideObserver(setSlideNumber, 4, stopObserve);
+  const fifthSlideRef = useSlideObserver(setSlideNumber, 5, stopObserve);
+  const sixthSlideRef = useSlideObserver(setSlideNumber, 6, stopObserve);
 
   useEffect(() => {
     const moveToElement = (slideNumber: number) => {
@@ -59,7 +61,19 @@ function SliderContainer(props: SliderContainerProps) {
         });
     };
     moveToElement(slideNumber);
-  }, [fifthSlideRef, firstSlideRef, fourthSlideRef, secondSlideRef, sixthSlideRef, slideNumber, thirdSlideRef]);
+    setTimeout(() => {
+      setStopObserve(false);
+    }, 5000);
+  }, [
+    fifthSlideRef,
+    firstSlideRef,
+    fourthSlideRef,
+    secondSlideRef,
+    setStopObserve,
+    sixthSlideRef,
+    slideNumber,
+    thirdSlideRef,
+  ]);
 
   return (
     <StSliderContainer>
