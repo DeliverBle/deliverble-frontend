@@ -110,6 +110,6 @@ const StNumberButton = styled.button<{ isActive: boolean }>`
   ${FONT_STYLES.SB_20_BODY};
 
   &:hover {
-    color: ${COLOR.BLACK};
+    color: ${COLOR.GRAY_60};
   }
 `;
