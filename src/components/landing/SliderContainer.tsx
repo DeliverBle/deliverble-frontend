@@ -63,7 +63,7 @@ function SliderContainer(props: SliderContainerProps) {
     moveToElement(slideNumber);
     setTimeout(() => {
       setStopObserve(false);
-    }, 5000);
+    }, 500);
   }, [
     fifthSlideRef,
     firstSlideRef,
