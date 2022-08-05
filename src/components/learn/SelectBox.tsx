@@ -149,6 +149,7 @@ const StCategoryButton = styled.button`
   color: ${COLOR.BLACK};
   ${FONT_STYLES.SB_18_CAPTION};
   box-shadow: 0.4rem 0.4rem 2rem rgba(22, 15, 53, 0.05);
+  border: 0.2rem solid ${COLOR.GRAY_5};
   border-radius: 1.4rem;
   gap: 0.8rem;
   overflow: hidden;
