@@ -1,12 +1,15 @@
 import { getAccessTokenAndId, postJoin, postLogin } from '@src/services/api/login-user';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { constSelector } from 'recoil';
 
 function OAuthRedirectHandler() {
   const router = useRouter();
 
   useEffect(() => {
     const code = new URL(window.location.href).searchParams.get('code') ?? '';
+    const storage = globalThis?.sessionStorage;
+    const prevLink = storage.getItem('currentPath') || '/';
 
     getAccessTokenAndId(code).then((response) => {
       if (response?.tokenInfo && response?.userInfo) {
@@ -22,19 +25,19 @@ function OAuthRedirectHandler() {
               localStorage.setItem('userId', kakaoId.toString());
               localStorage.setItem('email', response.email);
               localStorage.setItem('nickname', response.nickname);
-              router.push('/home');
+              router.push(prevLink);
             });
           })
           .catch((error) => {
-            // 이미 회원이면 로그인
             console.log(error);
+            // 이미 회원이면 로그인
             if (error === '회원가입 실패') {
               postLogin({ access_token: accessToken, user_id: kakaoId.toString() }).then((response) => {
                 localStorage.setItem('token', accessToken);
                 localStorage.setItem('userId', kakaoId.toString());
                 localStorage.setItem('email', response.email);
                 localStorage.setItem('nickname', response.nickname);
-                router.push('/home');
+                router.push(prevLink);
               });
             }
           });
