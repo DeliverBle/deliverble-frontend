@@ -1,7 +1,6 @@
 import { getAccessTokenAndId, postJoin, postLogin } from '@src/services/api/login-user';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { constSelector } from 'recoil';
 
 function OAuthRedirectHandler() {
   const router = useRouter();
