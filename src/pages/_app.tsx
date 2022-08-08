@@ -14,7 +14,9 @@ function MyApp({ Component, pageProps }: AppProps) {
   const storePathValues = () => {
     const storage = globalThis?.sessionStorage;
     if (!storage) return;
+    const prevprevPath = storage.getItem('prevPath');
     const prevPath = storage.getItem('currentPath');
+    storage.setItem('prevprevPath', prevprevPath || '');
     storage.setItem('prevPath', prevPath || '');
     storage.setItem('currentPath', globalThis.location.pathname);
   };
