@@ -104,10 +104,6 @@ const StNavigationBar = styled.div`
 
     cursor: pointer;
   }
-
-  & > div {
-    cursor: pointer;
-  }
 `;
 
 const StTabList = styled.ul`
