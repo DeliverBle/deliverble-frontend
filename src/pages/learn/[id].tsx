@@ -217,7 +217,19 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
     <>
       <SEO title="학습하기 | Deliverble" />
       <StLearnDetail>
-        <ImageDiv onClick={() => router.push(prevLink)} src={icXButton} className="close" layout="fill" alt="x" />
+        <ImageDiv
+          onClick={() => {
+            if (getLoginStatus() === '') {
+              router.back();
+            } else {
+              router.push(prevLink);
+            }
+          }}
+          src={icXButton}
+          className="close"
+          layout="fill"
+          alt="x"
+        />
         <StLearnMain>
           <aside>
             <VideoDetail {...videoData} />
