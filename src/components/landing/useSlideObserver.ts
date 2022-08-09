@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react';
 export const useSlideObserver = (
   setState: (stateNumber: number) => void,
   stateNumber: number,
+  stopObserve: boolean,
 ): React.MutableRefObject<HTMLElement | null> => {
   const isRef = useRef<HTMLElement | null>(null);
 
@@ -17,7 +18,7 @@ export const useSlideObserver = (
       });
     };
 
-    if (isRef.current) {
+    if (isRef.current && !stopObserve) {
       observer = new IntersectionObserver(observePoint, {
         threshold: 0.9,
       });
@@ -26,7 +27,7 @@ export const useSlideObserver = (
     return () => {
       observer && observer.disconnect();
     };
-  }, [setState, stateNumber]);
+  }, [setState, stateNumber, stopObserve]);
 
   return isRef;
 };

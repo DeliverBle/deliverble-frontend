@@ -1,20 +1,13 @@
-import styled from 'styled-components';
 import { useEffect, useRef, useState } from 'react';
-import { COLOR } from '@src/styles/color';
+import { Script } from '@src/services/api/types/learn-detail';
 import HighlightModal from './HighlightModal';
-
-interface ScriptType {
-  id: number;
-  text: string;
-  startTime: number;
-  endTime: number;
-}
+import styled from 'styled-components';
+import { COLOR } from '@src/styles/color';
 
 interface ScriptEditProps {
-  scripts: ScriptType[];
+  scripts: Script[];
   isHighlight: boolean;
   isSpacing: boolean;
-  scriptsIdNum: number[];
 }
 
 function ScriptEdit(props: ScriptEditProps) {
@@ -28,13 +21,9 @@ function ScriptEdit(props: ScriptEditProps) {
       const timeSaved = Number(localStorage.getItem('timeClicked'));
       if (timeSaved) {
         const gapHour = (now - timeSaved) / 1000 / 60 / 60;
-        if (gapHour > 72) {
-          setHighlightAlert(true);
-        } else {
+        if (gapHour < 72) {
           setHighlightAlert(false);
         }
-      } else {
-        setHighlightAlert(true);
       }
     }
   }, [highlightAlert]);
@@ -54,10 +43,10 @@ function ScriptEdit(props: ScriptEditProps) {
 
     let isOverlap = false;
     if (selection?.type === 'Range') {
-      //중복여부를 검사하자
+      // 중복 여부 검사
       const marks = document.getElementsByTagName('mark'); //mark라는 태그를 모두 담은 html collection
 
-      //marks를 돌면서 현재 셀렉션이 marks와 겹치는 애가 있는 지 확인
+      // marks를 돌면서 현재 셀렉션 중 marks와 겹치는 것이 있는지 확인
       for (let i = 0; i < marks.length; i++) {
         if (selection?.containsNode(marks[i], true) === true) {
           isOverlap = true;
@@ -95,22 +84,22 @@ function ScriptEdit(props: ScriptEditProps) {
         }
         range?.deleteContents();
         range?.insertNode(frag);
-        handleHighlightIdx(selection); //하이라이트의 인덱스를 구하는 함수
+        handleHighlightIdx(selection); // 하이라이트의 인덱스를 구하는 함수
       }
     }
     selection?.collapseToEnd();
   };
 
-  const [currentLine, setCurrentLine] = useState<number>(); //현재 스크립트 아이디
+  const [currentLine, setCurrentLine] = useState<number>(); // 현재 스크립트 아이디
 
-  //끊어읽기 인덱스 구하기
-  // 끊어읽기는 두가지 경우 존재 1.plain 텍스트 안에 있는 경우 2.하이라이트 안에 있는 경우
-  //spacingIdx는 text로 접근해서 위치를 구해야해서 state를 사용했다.
+  // 끊어 읽기 인덱스 구하기
+  // 끊어 읽기는 두가지 경우 존재 1.plain 텍스트 안에 있는 경우 2.하이라이트 안에 있는 경우
+  // spacingIdx는 text로 접근해서 위치를 구해야 해서 state를 사용
   const [spacingIdx, setSpacingIdx] = useState<number[]>([]);
 
   useEffect(() => {
-    //서버에서 받아온 인덱스와 비교 후 post하는 함수 들어갈 예정
-    //currentLine이 겹쳐서 관련 조건 넣어주어야할듯
+    // 서버에서 받아온 인덱스와 비교 후 post하는 함수 들어갈 예정
+    // currentLine이 겹쳐서 관련 조건 넣어주어야할듯
     console.log(spacingIdx, currentLine);
   }, [spacingIdx, currentLine]);
 
@@ -140,20 +129,20 @@ function ScriptEdit(props: ScriptEditProps) {
     }
   };
 
-  //하이라이트 인덱스 구하기
+  // 하이라이트 인덱스 구하기
   const [highlightStartIdx, setHighlightStartIdx] = useState<number>();
   const [highlightEndIdx, setHighlightEndIdx] = useState<number>();
 
   useEffect(() => {
-    //서버에서 받아온 인덱스와 비교 후 post하는 함수 들어갈 예정
-    //currentLine이 겹쳐서 관련 조건 넣어주어야할듯
+    // 서버에서 받아온 인덱스와 비교 후 post하는 함수 들어갈 예정
+    // currentLine이 겹쳐서 관련 조건 넣어주어야 할 듯
     console.log(highlightStartIdx, highlightEndIdx, currentLine);
   }, [highlightStartIdx, highlightEndIdx, currentLine]);
 
   const handleHighlightIdx = (selection: Selection | null) => {
     const range2 = selection?.getRangeAt(0);
 
-    //여기서 node가 children을 가지면 mark태그임.
+    // 여기서 node가 children을 가지면 mark 태그
     let textCount = 0;
     if (range2?.commonAncestorContainer) {
       if (range2?.commonAncestorContainer?.childNodes) {
@@ -163,7 +152,7 @@ function ScriptEdit(props: ScriptEditProps) {
             textCount += node.textContent.length;
           }
           if (node.hasChildNodes()) {
-            //하이라이트 발견시작
+            // 하이라이트 발견 시작
             setHighlightStartIdx(textCount);
             if (node.childNodes[0].textContent?.length) {
               textCount += node.childNodes[0].textContent?.length;
@@ -201,17 +190,17 @@ function ScriptEdit(props: ScriptEditProps) {
 export default ScriptEdit;
 
 const StWrapper = styled.div`
+  position: relative;
+  caret-color: transparent;
   cursor: pointer;
+
   :focus {
     outline: none;
   }
-  caret-color: transparent;
 
   & > mark {
     background: linear-gradient(259.3deg, #d8d9ff 0%, #a7c5ff 100%);
   }
-
-  position: relative;
 `;
 
 const StScriptText = styled.div`
@@ -240,7 +229,7 @@ const StScriptText = styled.div`
     & > span {
       font-size: 3.2rem;
       font-weight: 600;
-      color: #4e8aff;
+      color: ${COLOR.MAIN_BLUE};
     }
 
     & > .left {

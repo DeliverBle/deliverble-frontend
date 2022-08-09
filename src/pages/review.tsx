@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import SEO from '@src/components/common/SEO';
 import NavigationBar from '@src/components/common/NavigationBar';
-import LoginModal from '@src/components/login/LoginModal';
 import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
 import HeadlineContainer from '@src/components/review/HeadlineContainer';
 import VideoContainer from '@src/components/review/VideoContainer';
@@ -16,27 +15,52 @@ function Review() {
   const [tab, setTab] = useState('isLiked');
   const [favoriteList, setFavoriteList] = useState<VideoData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const getFavoriteNewsList = async () => {
+    const getAccessToken = () => localStorage.getItem('token') ?? '';
+    if (getAccessToken()) {
+      setIsLoading(true);
+      const { favoriteNews } = await api.reviewService.getFavoriteVideoList();
+      setFavoriteList(
+        favoriteNews.map((news) => {
+          return {
+            ...news,
+            isLiked: favoriteNews.map((like) => like.id).includes(news.id),
+          };
+        }),
+      );
+      setIsLoading(false);
+    }
+  };
+
+  const handleClickLike = async (id: number, isLiked?: boolean) => {
+    const getAccessToken = () => localStorage.getItem('token') ?? '';
+    const getUserId = () => localStorage.getItem('userId') ?? '';
+
+    if (!isLiked) {
+      await api.likeService.postLikeData({
+        news_id: id,
+        access_token: getAccessToken(),
+        user_id: getUserId(),
+      });
+    } else {
+      await api.likeService.deleteLikeData({
+        news_id: id,
+        access_token: getAccessToken(),
+        user_id: getUserId(),
+      });
+    }
+    getFavoriteNewsList();
+  };
 
   useEffect(() => {
-    (async () => {
-      const getAccessToken = () => localStorage.getItem('token') ?? '';
-      if (getAccessToken()) {
-        setIsLoading(true);
-        const { favoriteNews } = await api.reviewService.getFavoriteVideoList();
-        setFavoriteList(favoriteNews);
-        setIsLoading(false);
-      } else {
-        setIsModalOpen(true);
-      }
-    })();
+    getFavoriteNewsList();
   }, []);
 
   return (
     <>
       <SEO title="복습하기 | Deliverble" />
       <NavigationBar />
-      {isModalOpen && <LoginModal closeModal={() => setIsModalOpen(false)} />}
       <StReview>
         <HeadlineContainer />
         <nav>
@@ -50,7 +74,11 @@ function Review() {
             </StButton>
           </StTab>
         </nav>
-        {isLoading ? <VideoListSkeleton itemNumber={12} /> : <VideoContainer tab={tab} videoList={favoriteList} />}
+        {isLoading ? (
+          <VideoListSkeleton itemNumber={12} />
+        ) : (
+          <VideoContainer tab={tab} videoList={favoriteList} onClickLike={handleClickLike} />
+        )}
       </StReview>
       <Footer />
     </>
@@ -69,6 +97,10 @@ const StTab = styled.ul`
   ${FONT_STYLES.SB_28_HEADLINE};
   color: ${COLOR.GRAY_30};
   margin-bottom: 14.8rem;
+
+  & > span {
+    font-weight: 400;
+  }
 `;
 
 const StButton = styled.li<{ isActive: boolean }>`

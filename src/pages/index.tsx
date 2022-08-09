@@ -10,6 +10,8 @@ function Landing() {
   const [isFirstScrolled, setIsFirstScrolled] = useState<boolean>(false);
   const [isSecondScrolled, setIsSecondScrolled] = useState<boolean>(false);
   const [slideNumber, setSlideNumber] = useState<number>(1);
+  const [stopObserve, setStopObserve] = useState<boolean>(false);
+
   const router = useRouter();
 
   const scrollListener = () => {
@@ -33,9 +35,14 @@ function Landing() {
   return (
     <StLanding>
       <SEO title="Deliverble" />
-      <ScrollControl slideNumber={slideNumber} setSlideNumber={setSlideNumber} />
+      <ScrollControl slideNumber={slideNumber} setSlideNumber={setSlideNumber} setStopObserve={setStopObserve} />
       <Nav isFirstScrolled={isFirstScrolled} isSecondScrolled={isSecondScrolled} />
-      <SliderContainer slideNumber={slideNumber} setSlideNumber={setSlideNumber} />
+      <SliderContainer
+        slideNumber={slideNumber}
+        setSlideNumber={setSlideNumber}
+        stopObserve={stopObserve}
+        setStopObserve={setStopObserve}
+      />
     </StLanding>
   );
 }

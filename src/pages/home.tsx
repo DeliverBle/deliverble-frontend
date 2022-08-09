@@ -13,14 +13,73 @@ import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
 function Home() {
   const [newsList, setNewsList] = useState<VideoData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [token, setToken] = useState('');
+  const [userId, setUserId] = useState('');
+
+  const getNewsList = async () => {
+    setIsLoading(true);
+
+    const [{ videoList }, { favoriteList }] = await Promise.all([
+      api.homeService.getVideoData(),
+      api.likeService.getLikeData(),
+    ]);
+
+    setNewsList(
+      videoList.map((news) => {
+        return {
+          ...news,
+          isLiked: favoriteList.map((like) => like.id).includes(news.id),
+        };
+      }),
+    );
+
+    setIsLoading(false);
+  };
+
+  const getNewsListWithoutToken = async () => {
+    setIsLoading(true);
+    const { videoList } = await api.homeService.getVideoData();
+    setNewsList(videoList);
+    setIsLoading(false);
+  };
+
+  const handleClickLike = async (id: number, isLiked?: boolean) => {
+    if (!isLiked) {
+      await api.likeService.postLikeData({
+        news_id: id,
+        access_token: token,
+        user_id: userId,
+      });
+    } else {
+      await api.likeService.deleteLikeData({
+        news_id: id,
+        access_token: token,
+        user_id: userId,
+      });
+    }
+    getNewsList();
+  };
 
   useEffect(() => {
     (async () => {
-      setIsLoading(true);
-      const { videoList } = await api.homeService.getVideoData();
-      setNewsList(videoList);
-      setIsLoading(false);
+      const getAccessToken = () => localStorage.getItem('token') ?? '';
+      const getUserId = () => localStorage.getItem('userId') ?? '';
+      if (getAccessToken()) {
+        setToken(getAccessToken());
+      }
+      if (getUserId()) {
+        setUserId(getUserId());
+      }
     })();
+  }, []);
+
+  useEffect(() => {
+    const getAccessToken = () => localStorage.getItem('token') ?? '';
+    if (getAccessToken()) {
+      getNewsList();
+    } else {
+      getNewsListWithoutToken();
+    }
   }, []);
 
   return (
@@ -38,7 +97,13 @@ function Home() {
       </StHome>
       <StNews>
         <h3>딜리버블의 추천 뉴스를 만나보세요.</h3>
-        <div>{isLoading ? <VideoListSkeleton itemNumber={8} /> : <NewsList newsList={newsList} />}</div>
+        <div>
+          {isLoading ? (
+            <VideoListSkeleton itemNumber={8} />
+          ) : (
+            <NewsList onClickLike={handleClickLike} newsList={newsList} />
+          )}
+        </div>
       </StNews>
       <Footer />
     </>
@@ -52,8 +117,8 @@ const StHome = styled.div`
   align-items: center;
 
   width: 100%;
-  height: 73rem; // 68.8rem
-  margin: 4.8rem 0 16rem 0;
+  height: 73rem;
+  margin: 4.8rem 0 14.4rem 0;
 
   background: no-repeat url('/assets/images/img_banner.svg');
   background-size: cover;
@@ -86,7 +151,7 @@ const StNews = styled.div`
   }
 
   & > h3 {
-    margin-bottom: 2.8rem;
+    margin-bottom: 7.2rem;
 
     ${FONT_STYLES.SB_32_HEADLINE}
     color: ${COLOR.BLACK};

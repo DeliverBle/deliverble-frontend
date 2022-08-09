@@ -83,13 +83,12 @@ const StSelectBox = styled.div<{ isClicked: boolean }>`
     color: ${COLOR.GRAY_30};
     ${FONT_STYLES.SB_16_CAPTION};
     margin-left: 1.2rem;
-    margin-bottom: 1rem;
   }
 
   .arrow {
     position: relative;
-    width: 0.8rem;
-    height: 0.4rem;
+    width: 2.4rem;
+    height: 2.4rem;
     transition: 0.3s all ease;
   }
 
@@ -150,9 +149,11 @@ const StCategoryButton = styled.button`
   color: ${COLOR.BLACK};
   ${FONT_STYLES.SB_18_CAPTION};
   box-shadow: 0.4rem 0.4rem 2rem rgba(22, 15, 53, 0.05);
+  border: 0.2rem solid ${COLOR.GRAY_5};
   border-radius: 1.4rem;
   gap: 0.8rem;
   overflow: hidden;
+  margin-top: 1rem;
 
   &:hover {
     border: 0.2rem solid ${COLOR.MAIN_BLUE};

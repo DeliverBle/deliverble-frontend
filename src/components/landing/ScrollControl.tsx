@@ -2,10 +2,11 @@ import styled, { css } from 'styled-components';
 interface ScrollContainerProps {
   slideNumber: number;
   setSlideNumber: (slideNumber: number) => void;
+  setStopObserve: (stopObserve: boolean) => void;
 }
 
 function ScrollContainer(props: ScrollContainerProps) {
-  const { slideNumber, setSlideNumber } = props;
+  const { slideNumber, setSlideNumber, setStopObserve } = props;
   const slideNumberList = [1, 2, 3, 4, 5, 6];
 
   return (
@@ -15,7 +16,10 @@ function ScrollContainer(props: ScrollContainerProps) {
           <StListItem
             key={number}
             isActive={slideNumber === number}
-            onClick={() => setSlideNumber(number)}></StListItem>
+            onClick={() => {
+              setSlideNumber(number);
+              setStopObserve(true);
+            }}></StListItem>
         );
       })}
     </StScrollContainer>

@@ -1,40 +1,58 @@
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 import styled from 'styled-components';
+import LoginModal from '../login/LoginModal';
+import ImageDiv from './ImageDiv';
+import Like from './Like';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { VideoData } from '@src/services/api/types/home';
-import ImageDiv from './ImageDiv';
-import Like from './Like';
 
 interface NewsListProps {
   newsList: VideoData[];
+  onClickLike?: (id: number, isLiked: boolean) => void;
 }
 
 function NewsList(props: NewsListProps) {
-  const { newsList } = props;
+  const { newsList, onClickLike } = props;
   const router = useRouter();
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const getLoginStatus = () => localStorage.getItem('token') ?? '';
 
   return (
     <StNewsList>
-      {newsList.map(({ id, title, category, channel, thumbnail, reportDate }) => (
-        <StNewsWrapper key={id} onClick={() => router.push(`/learn/${id}`)}>
-          <StThumbnail>
-            <ImageDiv
-              className="thumbnail"
-              src={thumbnail}
-              blurDataURL={thumbnail}
-              placeholder="blur"
-              layout="fill"
-              alt=""
-            />
-            <Like isFromList={true} />
-          </StThumbnail>
-          <StTitle>{title}</StTitle>
-          <StInfo>
-            {channel} | {category} | {reportDate.replaceAll('-', '.')}
-          </StInfo>
-        </StNewsWrapper>
-      ))}
+      {newsList.map(({ id, title, category, channel, thumbnail, reportDate, isLiked = false }) => {
+        return (
+          <StNewsWrapper key={id} onClick={() => router.push(`/learn/${id}`)}>
+            <StThumbnail>
+              <ImageDiv
+                className="thumbnail"
+                src={thumbnail}
+                blurDataURL={thumbnail}
+                placeholder="blur"
+                layout="fill"
+                alt=""
+              />
+              <Like
+                isFromList={true}
+                isLiked={isLiked}
+                toggleLike={() => {
+                  if (getLoginStatus() === '') {
+                    setIsLoginModalOpen(true);
+                  } else {
+                    onClickLike && onClickLike(id, isLiked);
+                  }
+                }}
+              />
+            </StThumbnail>
+            <StTitle>{title}</StTitle>
+            <StInfo>
+              {channel} | {category} | {reportDate.replaceAll('-', '.')}
+            </StInfo>
+          </StNewsWrapper>
+        );
+      })}
+      {isLoginModalOpen && <LoginModal closeModal={() => setIsLoginModalOpen(false)} />}
     </StNewsList>
   );
 }
@@ -63,8 +81,8 @@ const StThumbnail = styled.div`
   cursor: pointer;
 
   &:hover {
-    transition: 0.5s ease-in-out;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 100%);
+    transition: background-color 0.2s ease-in-out;
+    background-color: rgba(0, 0, 0, 0.15);
   }
 
   &:hover .like {
@@ -88,7 +106,7 @@ const StThumbnail = styled.div`
 
 const StTitle = styled.p`
   width: fit-content;
-
+  height: 5.8rem;
   ${FONT_STYLES.M_21_BODY};
   color: ${COLOR.BLACK};
   cursor: pointer;

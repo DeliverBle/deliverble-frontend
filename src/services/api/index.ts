@@ -5,6 +5,8 @@ import { learnDataRemote } from '../remote/learn';
 import { LearnDetailService } from './learn-detail';
 import { learnDetailDataRemote } from '../remote/learn-detail';
 import { ReviewService } from './review';
+import { likeDataRemote } from '../remote/like';
+import { LikeService } from './like';
 import { reviewDataRemote } from '../remote/review';
 
 export const api: APIService = getAPIMethod();
@@ -17,8 +19,9 @@ function provideMockAPIService(): APIService {
   const homeService = homeDataRemote();
   const learnService = learnDataRemote();
   const learnDetailService = learnDetailDataRemote();
+  const likeService = likeDataRemote();
   const reviewService = reviewDataRemote();
-  return { homeService, learnService, learnDetailService, reviewService };
+  return { homeService, learnService, learnDetailService, reviewService, likeService };
 }
 
 export interface APIService {
@@ -26,4 +29,5 @@ export interface APIService {
   learnService: LearnService;
   learnDetailService: LearnDetailService;
   reviewService: ReviewService;
+  likeService: LikeService;
 }
