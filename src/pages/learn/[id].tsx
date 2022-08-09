@@ -1,12 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
-import styled from 'styled-components';
-import ImageDiv from '../../components/common/ImageDiv';
+import styled, { css } from 'styled-components';
+import YouTube from 'react-youtube';
+import SEO from '@src/components/common/SEO';
+import ImageDiv from '@src/components/common/ImageDiv';
+import Like from '@src/components/common/Like';
 import GuideModal from '@src/components/learnDetail/GuideModal';
+import EmptyMemo from '@src/components/learnDetail/memo/EmptyMemo';
+import MemoList from '@src/components/learnDetail/memo/MemoList';
 import ScriptEdit from '@src/components/learnDetail/ScriptEdit';
+import ContextMenu from '@src/components/learnDetail/ContextMenu';
+import VideoDetail from '@src/components/learnDetail/VideoDetail';
+import ConfirmModal from '@src/components/learnDetail/ConfirmModal';
+import LoginModal from '@src/components/login/LoginModal';
+import { api } from '@src/services/api';
+import { HighlightData, VideoData } from '@src/services/api/types/learn-detail';
+import { COLOR } from '@src/styles/color';
+import { FONT_STYLES } from '@src/styles/fontStyle';
 import {
   icXButton,
-  icGuide,
   icMemo,
   icAnnounce,
   icHighlighterDefault,
@@ -16,19 +29,6 @@ import {
   icSpacingHover,
   icSpacingClicked,
 } from 'public/assets/icons';
-import ConfirmModal from '@src/components/learnDetail/ConfirmModal';
-import { COLOR } from '@src/styles/color';
-import { FONT_STYLES } from '@src/styles/fontStyle';
-import { GetServerSidePropsContext } from 'next';
-import { api } from '@src/services/api';
-import { HighlightData, VideoData } from '@src/services/api/types/learn-detail';
-import YouTube from 'react-youtube';
-import EmptyMemo from '@src/components/learnDetail/memo/EmptyMemo';
-import SEO from '@src/components/common/SEO';
-import MemoList from '@src/components/learnDetail/memo/MemoList';
-import Like from '@src/components/common/Like';
-import ContextMenu from '@src/components/learnDetail/ContextMenu';
-import LoginModal from '@src/components/login/LoginModal';
 
 function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highlightData: HighlightData[] }) {
   const router = useRouter();
@@ -47,41 +47,13 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   const [keyword, setKeyword] = useState<string>();
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-
-  const getLoginStatus = () => localStorage.getItem('token') ?? '';
-
-  useEffect(() => {
-    setMainText('메모 작성을 취소하시겠습니까?');
-    setSubText("작성 취소 선택시, 작성된 메모는 저장되지 않습니다.'");
-    setCancelButtonText('작성하기');
-    setConfirmButtonText('작성 취소');
-  }, []);
-
+  const [isFirstClicked, setIsFirstClicked] = useState(false);
   const [player, setPlayer] = useState<YT.Player | null>();
   const [videoState, setVideoState] = useState(-1);
   const [currentTime, setCurrentTime] = useState(0);
-  const { title, category, channel, reportDate, tags, link, startTime, endTime, scripts } = videoData;
-
+  const { link, startTime, endTime, scripts } = videoData;
   const learnRef = useRef<HTMLDivElement>(null);
-
-  const scriptsIdNum = scripts.map((item) => {
-    return item.id;
-  });
-
-  useEffect(() => {
-    if (!player) return;
-
-    const interval =
-      player &&
-      setInterval(() => {
-        setCurrentTime(player.getCurrentTime());
-      }, 1000);
-
-    if (videoState === 2 || videoState === 5) {
-      interval && clearInterval(interval);
-    }
-    return () => interval && clearInterval(interval);
-  }, [player, videoState]);
+  const getLoginStatus = () => localStorage.getItem('token') ?? '';
 
   const controlPointX = (e: React.MouseEvent) => {
     const x = e.nativeEvent.offsetX / 10;
@@ -92,16 +64,6 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
     }
     return { x: x + x * 0.5, y: y + y * 0.5 };
   };
-
-  useEffect(() => {
-    const handleClickOutside = (e: Event) => {
-      const eventTarget = e.target as HTMLElement;
-      if (clickedScriptId && !contextMenuRef?.current?.contains(eventTarget)) {
-        setClickedScriptId(-1);
-      }
-    };
-    window.addEventListener('click', handleClickOutside);
-  }, [clickedScriptId]);
 
   const handleRightClick = (e: React.MouseEvent, id: number) => {
     if (isNewMemo) {
@@ -114,6 +76,38 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
     setKeyword((e.target as HTMLDivElement).innerText);
   };
 
+  useEffect(() => {
+    if (!player) return;
+
+    const interval =
+      player &&
+      setInterval(() => {
+        setCurrentTime(player.getCurrentTime());
+      }, 100);
+
+    if (videoState === 2 || videoState === 5) {
+      interval && clearInterval(interval);
+    }
+    return () => interval && clearInterval(interval);
+  }, [player, videoState]);
+
+  useEffect(() => {
+    const handleClickOutside = (e: Event) => {
+      const eventTarget = e.target as HTMLElement;
+      if (clickedScriptId && !contextMenuRef?.current?.contains(eventTarget)) {
+        setClickedScriptId(-1);
+      }
+    };
+    window.addEventListener('click', handleClickOutside);
+  }, [clickedScriptId]);
+
+  useEffect(() => {
+    setMainText('메모 작성을 취소하시겠습니까?');
+    setSubText('작성 취소 선택시, 작성된 메모는 저장되지 않습니다.');
+    setCancelButtonText('작성하기');
+    setConfirmButtonText('작성 취소');
+  }, []);
+
   return (
     <>
       <SEO title="학습하기 | Deliverble" />
@@ -121,19 +115,18 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
         <ImageDiv onClick={() => router.back()} src={icXButton} className="close" layout="fill" alt="x" />
         <StLearnMain>
           <aside>
-            <StVideoDetail>
-              <div>
-                {channel} | {category} | {reportDate.replaceAll('-', '.')}
-              </div>
-              <h1>{title}</h1>
-              <StTagContainer>
-                {tags.map(({ id, name }) => (
-                  <span key={id}>{name}</span>
-                ))}
-              </StTagContainer>
-            </StVideoDetail>
+            <VideoDetail {...videoData} />
             <StVideoWrapper>
-              <Like isFromList={false} />
+              <Like
+                isFromList={false}
+                toggleLike={() => {
+                  if (getLoginStatus() === '') {
+                    setIsLoginModalOpen(true);
+                  } else {
+                    // 즐겨찾기 API 연결하는 코드
+                  }
+                }}
+              />
               <YouTube
                 videoId={link}
                 opts={{
@@ -142,7 +135,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                   playerVars: {
                     modestbranding: 1,
                     start: startTime,
-                    end: endTime,
+                    end: Math.ceil(endTime),
                     controls: 0,
                   },
                 }}
@@ -178,8 +171,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
             </div>
             <article>
               <div ref={learnRef}>
-                {!isHighlight &&
-                  !isSpacing &&
+                {!isFirstClicked &&
                   scripts.map(({ id, text, startTime, endTime }) => (
                     <StScriptText
                       ref={contextMenuRef}
@@ -189,24 +181,17 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                       }}
                       key={id}
                       onClick={() => player?.seekTo(startTime, true)}
-                      isActive={startTime <= currentTime && currentTime <= endTime ? true : false}>
+                      isActive={startTime <= currentTime && currentTime < endTime ? true : false}>
                       <p id={id.toString()}>{text}</p>
                       {clickedScriptId === id && !isNewMemo && (
                         <ContextMenu points={points} setIsNewMemo={setIsNewMemo} />
                       )}
                     </StScriptText>
                   ))}
-                {(isHighlight || isSpacing) && scriptsIdNum && (
-                  <ScriptEdit
-                    scripts={scripts}
-                    isHighlight={isHighlight}
-                    isSpacing={isSpacing}
-                    scriptsIdNum={scriptsIdNum}
-                  />
-                )}
+                {isFirstClicked && <ScriptEdit scripts={scripts} isHighlight={isHighlight} isSpacing={isSpacing} />}
               </div>
               <div>
-                <ImageDiv onClick={() => setIsModalOpen(true)} src={icGuide} className="guide" layout="fill" alt="?" />
+                <StGuideButton onClick={() => setIsModalOpen(true)} isModalOpen={isModalOpen} />
                 <StButtonContainer>
                   <StButton
                     onClick={(e) => {
@@ -216,6 +201,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                       } else {
                         isHighlight ? setIsHighlight(false) : setIsHighlight(true);
                         setIsSpacing(false);
+                        setIsFirstClicked(true);
                       }
                     }}>
                     {isHighlight ? (
@@ -235,6 +221,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                       } else {
                         isSpacing ? setIsSpacing(false) : setIsSpacing(true);
                         setIsHighlight(false);
+                        setIsFirstClicked(true);
                       }
                     }}>
                     {isSpacing ? (
@@ -306,6 +293,25 @@ const StLearnDetail = styled.div`
   }
 `;
 
+const StGuideButton = styled.button<{ isModalOpen: boolean }>`
+  width: 3.2rem;
+  height: 3.2rem;
+  padding: 0;
+
+  &:hover {
+    background-image: url('/assets/icons/ic_guide_hover.svg');
+  }
+
+  ${({ isModalOpen }) =>
+    isModalOpen
+      ? css`
+          background-image: url('/assets/icons/ic_guide_clicked.svg');
+        `
+      : css`
+          background-image: url('/assets/icons/ic_guide.svg');
+        `}
+`;
+
 const StLearnMain = styled.main`
   display: flex;
   margin: 0 auto;
@@ -315,7 +321,6 @@ const StLearnMain = styled.main`
   padding: 8rem 8rem 0 8rem;
   border-radius: 3rem;
   background-color: ${COLOR.WHITE};
-
   overflow: hidden;
 `;
 
@@ -330,11 +335,11 @@ const StLearnSection = styled.section`
     gap: 1.2rem;
     margin-top: 14rem;
     margin-bottom: 2.4rem;
-  }
 
-  & > div > h2 {
-    color: ${COLOR.BLACK};
-    ${FONT_STYLES.SB_24_HEADLINE};
+    h2 {
+      color: ${COLOR.BLACK};
+      ${FONT_STYLES.SB_24_HEADLINE};
+    }
   }
 
   .announce {
@@ -355,6 +360,10 @@ const StLearnSection = styled.section`
     font-size: 2.6rem;
     line-height: 5.8rem;
     word-break: keep-all;
+
+    div::selection {
+      background: ${COLOR.SUB_BLUE_30};
+    }
 
     & > div:first-child {
       position: relative;
@@ -391,21 +400,15 @@ const StLearnSection = styled.section`
 
 const StScriptText = styled.div<{ isActive: boolean }>`
   position: relative;
-
   font-size: 2.6rem;
   font-weight: ${({ isActive }) => (isActive ? 600 : 400)};
   color: ${({ isActive }) => (isActive ? COLOR.MAIN_BLUE : COLOR.BLACK)};
   cursor: pointer;
 
-  &:hover {
-    color: ${COLOR.MAIN_BLUE};
-    font-weight: 600;
-  }
-
   & > span {
     font-size: 3.2rem;
     font-weight: 600;
-    color: #4e8aff;
+    color: ${COLOR.MAIN_BLUE};
     margin: 0 0.02rem 0 0.02rem;
   }
 
@@ -413,10 +416,11 @@ const StScriptText = styled.div<{ isActive: boolean }>`
     background: linear-gradient(259.3deg, #d8d9ff 0%, #a7c5ff 100%);
     font-weight: ${({ isActive }) => (isActive ? 600 : 400)};
     color: ${({ isActive }) => (isActive ? COLOR.MAIN_BLUE : COLOR.BLACK)};
+
     & > span {
       font-size: 3.2rem;
       font-weight: 600;
-      color: #4e8aff;
+      color: ${COLOR.MAIN_BLUE};
     }
   }
 
@@ -430,6 +434,7 @@ const StButtonContainer = styled.div`
   display: flex;
   gap: 0.8rem;
   position: relative;
+  padding-right: 0.8rem;
 `;
 
 const StButton = styled.button`
@@ -445,35 +450,6 @@ const StButton = styled.button`
     cursor: pointer;
     position: absolute;
     top: 0;
-  }
-`;
-
-const StVideoDetail = styled.div`
-  & > div {
-    display: flex;
-    color: ${COLOR.GRAY_30};
-    ${FONT_STYLES.M_21_BODY};
-  }
-
-  & > h1 {
-    margin-top: 1.2rem;
-    margin-bottom: 2rem;
-    color: ${COLOR.BLACK};
-    ${FONT_STYLES.SB_32_HEADLINE};
-  }
-`;
-
-const StTagContainer = styled.div`
-  display: flex;
-  gap: 0.8rem;
-  margin-bottom: 4.8rem;
-
-  & > span {
-    padding: 1rem 1.6rem;
-    border-radius: 2.4rem;
-    color: ${COLOR.WHITE};
-    background-color: ${COLOR.MAIN_BLUE};
-    ${FONT_STYLES.SB_18_CAPTION};
   }
 `;
 
