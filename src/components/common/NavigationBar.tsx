@@ -48,8 +48,6 @@ function NavigationBar() {
     };
   }, [isProfileModalOpen]);
 
-  useEffect(() => {});
-
   return (
     <>
       <StNavigationBar>
