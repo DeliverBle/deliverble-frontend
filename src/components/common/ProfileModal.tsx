@@ -6,7 +6,7 @@ import { FONT_STYLES } from '@src/styles/fontStyle';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
-const ProfileModal = () => {
+function ProfileModal() {
   const router = useRouter();
   const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
@@ -37,7 +37,7 @@ const ProfileModal = () => {
       </StLogoutButton>
     </StProfileModal>
   );
-};
+}
 
 export default ProfileModal;
 
