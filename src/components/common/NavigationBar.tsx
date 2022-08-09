@@ -29,22 +29,27 @@ function NavigationBar() {
     }
   };
 
+  const handleClickOutside = (e: Event) => {
+    const eventTarget = e.target as HTMLElement;
+    if (
+      isProfileModalOpen &&
+      !profileModalRef?.current?.contains(eventTarget) &&
+      !profileImageRef?.current?.contains(eventTarget)
+    ) {
+      setIsProfileModalOpen(false);
+    }
+  };
+
   useEffect(() => {
-    const handleClickOutside = (e: Event) => {
-      const eventTarget = e.target as HTMLElement;
-      if (
-        isProfileModalOpen &&
-        !profileModalRef?.current?.contains(eventTarget) &&
-        !profileImageRef?.current?.contains(eventTarget)
-      ) {
-        setIsProfileModalOpen(false);
-      }
-    };
-    window.addEventListener('click', handleClickOutside);
+    if (isProfileModalOpen) {
+      window.addEventListener('click', handleClickOutside);
+    }
     return () => {
       window.removeEventListener('click', handleClickOutside);
     };
   }, [isProfileModalOpen]);
+
+  useEffect(() => {});
 
   return (
     <>
