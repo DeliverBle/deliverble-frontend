@@ -48,6 +48,7 @@ const StCountVideo = styled.div`
 
   & > span {
     color: ${COLOR.MAIN_BLUE};
+    font-weight: 600;
   }
 `;
 

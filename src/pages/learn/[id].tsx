@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import YouTube from 'react-youtube';
 import SEO from '@src/components/common/SEO';
 import ImageDiv from '@src/components/common/ImageDiv';
@@ -20,7 +20,6 @@ import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import {
   icXButton,
-  icGuide,
   icMemo,
   icAnnounce,
   icHighlighterDefault,
@@ -293,7 +292,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                 {isFirstClicked && <ScriptEdit scripts={scripts} isHighlight={isHighlight} isSpacing={isSpacing} />}
               </div>
               <div>
-                <ImageDiv onClick={() => setIsModalOpen(true)} src={icGuide} className="guide" layout="fill" alt="?" />
+                <StGuideButton onClick={() => setIsModalOpen(true)} isModalOpen={isModalOpen} />
                 <StButtonContainer>
                   <StButton
                     onClick={(e) => {
@@ -393,6 +392,25 @@ const StLearnDetail = styled.div`
     height: 3.4rem;
     cursor: pointer;
   }
+`;
+
+const StGuideButton = styled.button<{ isModalOpen: boolean }>`
+  width: 3.2rem;
+  height: 3.2rem;
+  padding: 0;
+
+  &:hover {
+    background-image: url('/assets/icons/ic_guide_hover.svg');
+  }
+
+  ${({ isModalOpen }) =>
+    isModalOpen
+      ? css`
+          background-image: url('/assets/icons/ic_guide_clicked.svg');
+        `
+      : css`
+          background-image: url('/assets/icons/ic_guide.svg');
+        `}
 `;
 
 const StLearnMain = styled.main`
@@ -517,6 +535,7 @@ const StButtonContainer = styled.div`
   display: flex;
   gap: 0.8rem;
   position: relative;
+  padding-right: 0.8rem;
 `;
 
 const StButton = styled.button`

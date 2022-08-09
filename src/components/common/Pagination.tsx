@@ -81,12 +81,18 @@ const StLeftArrowButton = styled(StArrowButton)`
   &:hover {
     background-image: url('/assets/icons/ic_left_arrow_hover.svg');
   }
+  &:active {
+    background-image: url('/assets/icons/ic_left_arrow_clicked.svg');
+  }
 `;
 
 const StRightArrowButton = styled(StArrowButton)`
   background-image: url('/assets/icons/ic_right_arrow.svg');
   &:hover {
     background-image: url('/assets/icons/ic_right_arrow_hover.svg');
+  }
+  &:active {
+    background-image: url('/assets/icons/ic_right_arrow_clicked.svg');
   }
 `;
 
@@ -95,12 +101,18 @@ const StDoubleLeftArrowButton = styled(StArrowButton)`
   &:hover {
     background-image: url('/assets/icons/ic_double_left_arrow_hover.svg');
   }
+  &:active {
+    background-image: url('/assets/icons/ic_double_left_arrow_clicked.svg');
+  }
 `;
 
 const StDoubleRightArrowButton = styled(StArrowButton)`
   background-image: url('/assets/icons/ic_double_right_arrow.svg');
   &:hover {
     background-image: url('/assets/icons/ic_double_right_arrow_hover.svg');
+  }
+  &:active {
+    background-image: url('/assets/icons/ic_double_right_arrow_clicked.svg');
   }
 `;
 
@@ -110,6 +122,6 @@ const StNumberButton = styled.button<{ isActive: boolean }>`
   ${FONT_STYLES.SB_20_BODY};
 
   &:hover {
-    color: ${COLOR.BLACK};
+    color: ${COLOR.GRAY_60};
   }
 `;
