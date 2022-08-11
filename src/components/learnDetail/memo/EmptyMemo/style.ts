@@ -1,22 +1,8 @@
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import { imgMemoEmpty } from 'public/assets/images';
 import styled from 'styled-components';
-import ImageDiv from '../../common/ImageDiv';
 
-function EmptyMemo() {
-  return (
-    <StEmptyMemo>
-      <ImageDiv src={imgMemoEmpty} className="memo-empty" layout="fill" />
-      <p>저장된 메모가 없습니다.</p>
-      <p>메모를 추가해보세요!</p>
-    </StEmptyMemo>
-  );
-}
-
-export default EmptyMemo;
-
-const StEmptyMemo = styled.div`
+export const StEmptyMemo = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;

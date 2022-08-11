@@ -2,28 +2,7 @@ import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import styled from 'styled-components';
 
-interface MemoPopupProps {
-  edit: () => void;
-}
-
-function MemoPopup(props: MemoPopupProps) {
-  const { edit } = props;
-
-  return (
-    <>
-      <StMemoPopup>
-        <button type="button" onClick={edit}>
-          메모 수정
-        </button>
-        <button type="button">메모 삭제</button>
-      </StMemoPopup>
-    </>
-  );
-}
-
-export default MemoPopup;
-
-const StMemoPopup = styled.div`
+export const StMemoPopup = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
