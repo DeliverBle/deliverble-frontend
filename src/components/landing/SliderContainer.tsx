@@ -11,7 +11,7 @@ import { imgLandingEar, imgLandingMic, imgLandingFist } from 'public/assets/imag
 import { COLOR } from 'src/styles/color';
 import { FONT_STYLES } from 'src/styles/fontStyle';
 import ImageDiv from '../common/ImageDiv';
-import { useSlideObserver } from 'src/components/landing/useSlideObserver';
+import { useSlideObserver } from '@src/hooks/useSlideObserver';
 
 interface SliderContainerProps {
   slideNumber: number;
