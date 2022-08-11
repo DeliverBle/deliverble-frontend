@@ -11,7 +11,7 @@ interface MemoFormProps {
 }
 
 function MemoForm(props: MemoFormProps) {
-  const { setIsNewMemo, content } = props;
+  const { setIsNewMemo, setEdit, content } = props;
 
   return (
     <>
@@ -23,7 +23,12 @@ function MemoForm(props: MemoFormProps) {
         <StForm maxLength={70} rows={3} autoFocus></StForm>
       )}
       <StButtonContainer>
-        <button type="button" onClick={() => setIsNewMemo(false)}>
+        <button
+          type="button"
+          onClick={() => {
+            setIsNewMemo(false);
+            setEdit(false);
+          }}>
           <ImageDiv src={icMemoXButton} alt="x" />
         </button>
         <button type="button">

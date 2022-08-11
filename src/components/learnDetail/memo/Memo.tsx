@@ -7,7 +7,7 @@ import MemoDotButton from './MemoPopupButton';
 
 interface MemoProps {
   isNewMemo: boolean;
-  setIsNewMemo: (cancel: boolean) => void;
+  setIsNewMemo: (isNewMemo: boolean) => void;
   keyword?: string;
   content?: string;
 }
