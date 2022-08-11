@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
-import SliderContainer from '@src/components/landing/SliderContainer';
+import SliderContainer from '@src/components/landing/SliderContainer/SliderContainer';
 import SEO from '@src/components/common/SEO';
 import Nav from '@src/components/landing/Nav';
 import ScrollControl from '@src/components/landing/ScrollControl';
