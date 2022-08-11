@@ -210,7 +210,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
     setCancelButtonText('작성하기');
     setConfirmButtonText('작성 취소');
     const storage = globalThis?.sessionStorage;
-    setPrevLink(storage.getItem('prevprevPath') || '/');
+    setPrevLink(storage.getItem('prevPrevPath') || '/');
   }, []);
 
   return (
