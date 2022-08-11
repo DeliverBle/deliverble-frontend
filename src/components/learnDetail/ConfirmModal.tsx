@@ -2,7 +2,41 @@ import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 
-export const StConfirmModal = styled.div`
+interface ConfirmModalProps {
+  closeModal: (close: boolean) => void;
+  mainText: string;
+  subText: string;
+  cancelButtonText: string;
+  confirmButtonText: string;
+  setIsNewMemo: (newMemo: boolean) => void;
+}
+
+function ConfirmModal(props: ConfirmModalProps) {
+  const { closeModal, mainText, subText, cancelButtonText, confirmButtonText, setIsNewMemo } = props;
+
+  return (
+    <StConfirmModal>
+      <StDescription>
+        <h2>{mainText}</h2>
+        <p>{subText}</p>
+      </StDescription>
+      <StButtonContainer>
+        <button onClick={() => closeModal(false)}>{cancelButtonText}</button>
+        <button
+          onClick={() => {
+            setIsNewMemo(false);
+            closeModal(false);
+          }}>
+          {confirmButtonText}
+        </button>
+      </StButtonContainer>
+    </StConfirmModal>
+  );
+}
+
+export default ConfirmModal;
+
+const StConfirmModal = styled.div`
   position: absolute;
   top: 1.6rem;
   left: 50%;
@@ -15,7 +49,7 @@ export const StConfirmModal = styled.div`
   box-shadow: 0.2rem 0.4rem 4rem 0 rgba(22, 15, 53, 0.15);
 `;
 
-export const StDescription = styled.div`
+const StDescription = styled.div`
   margin: 4rem 0 0 4rem;
   & > h2 {
     margin-bottom: 0.8rem;
@@ -29,7 +63,7 @@ export const StDescription = styled.div`
   }
 `;
 
-export const StButtonContainer = styled.div`
+const StButtonContainer = styled.div`
   position: absolute;
   right: 2.4rem;
   bottom: 2.4rem;
