@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import YouTube from 'react-youtube';
 import SEO from '@src/components/common/SEO';
 import ImageDiv from '@src/components/common/ImageDiv';
@@ -20,7 +20,6 @@ import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import {
   icXButton,
-  icGuide,
   icMemo,
   icAnnounce,
   icHighlighterDefault,
@@ -56,107 +55,6 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   const learnRef = useRef<HTMLDivElement>(null);
   const getLoginStatus = () => localStorage.getItem('token') ?? '';
   const [prevLink, setPrevLink] = useState('');
-
-  const HighlightData = [
-    {
-      scriptId: 6,
-      highlightId: 8,
-      startingIndex: 0,
-      endingIndex: 3,
-    },
-    {
-      scriptId: 7,
-      highlightId: 1,
-      startingIndex: 11,
-      endingIndex: 58,
-    },
-    {
-      scriptId: 8,
-      highlightId: 3,
-      startingIndex: 0,
-      endingIndex: 3,
-    },
-  ];
-
-  // 객체들을 내가 뽑기 좋은 형태로 바꾸는 것
-  function groupBy(objectArray: any[], property: string) {
-    return objectArray.reduce(function (acc, obj) {
-      // 스크립트 아이디의 값을 키로 선언
-      const key = obj[property];
-      // 만약 지금 키가 없으면
-      if (!acc[key]) {
-        // 키에 대한 배열을 생성함
-        acc[key] = [];
-      }
-      acc[key].push(obj);
-      return acc;
-    }, {});
-  }
-
-  const scriptsIdNum = scripts.map((item) => {
-    return item.id;
-  });
-
-  const hlGroupedById = groupBy(HighlightData, 'scriptId');
-
-  // 하이라이트 get
-  useEffect(() => {
-    const hlKeys = Object.keys(hlGroupedById);
-
-    for (let i = 0; i < hlKeys.length; i++) {
-      const hlKey = hlKeys[i];
-      const value = hlGroupedById[hlKey];
-      const hlStartIndexArr = [];
-      const hlEndIndexArr = [];
-      const hlIdArr = [];
-
-      for (let j = 0; j < value.length; j++) {
-        hlStartIndexArr.push(value[j].startingIndex);
-        hlEndIndexArr.push(value[j].endingIndex);
-        hlIdArr.push(value[j].highlightId);
-      }
-
-      // 현재 내가 바꿔야 하는 문장이 몇 번째 childNode인지 알아야 함.
-      // How? 지금 받아온 scriptsIdNum 돌면서 +keys[i]와 같은 친구가 몇 번째 넘버인지 확인
-      let nodeNum = 0;
-      scriptsIdNum.map((item, index) => {
-        if (item === +hlKeys[i]) {
-          nodeNum = index;
-        }
-      });
-
-      // 받아온 스크립트 아이디에 해당하는 노드에 접근해서 하이라이트 넣어주는 것
-      const currentNode = learnRef.current?.childNodes[nodeNum];
-      if (learnRef.current?.childNodes) {
-        let count = 0;
-        let tempText = '';
-        if (currentNode?.textContent) {
-          for (let j = 0; j < currentNode.textContent?.length; j++) {
-            if (hlStartIndexArr[count] === j) {
-              tempText += '<mark id=' + hlIdArr[count] + '>' + currentNode.textContent[j];
-            } else if (hlEndIndexArr[count] === j) {
-              tempText += currentNode.textContent[j] + '</mark>';
-              count++;
-            } else {
-              tempText += currentNode.textContent[j];
-            }
-          }
-        }
-
-        // HTML로 파싱
-        const frag = document.createDocumentFragment();
-        const div = document.createElement('div');
-        div.innerHTML = tempText;
-        while (div.firstChild) {
-          frag.appendChild(div.firstChild);
-        }
-        if (currentNode?.textContent) {
-          currentNode.textContent = '';
-        }
-        currentNode?.appendChild(frag);
-      }
-    }
-  }, [scripts]);
 
   const controlPointX = (e: React.MouseEvent) => {
     const x = e.nativeEvent.offsetX / 10;
@@ -308,7 +206,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                 {isFirstClicked && <ScriptEdit scripts={scripts} isHighlight={isHighlight} isSpacing={isSpacing} />}
               </div>
               <div>
-                <ImageDiv onClick={() => setIsModalOpen(true)} src={icGuide} className="guide" layout="fill" alt="?" />
+                <StGuideButton onClick={() => setIsModalOpen(true)} isModalOpen={isModalOpen} />
                 <StButtonContainer>
                   <StButton
                     onClick={(e) => {
@@ -408,6 +306,25 @@ const StLearnDetail = styled.div`
     height: 3.4rem;
     cursor: pointer;
   }
+`;
+
+const StGuideButton = styled.button<{ isModalOpen: boolean }>`
+  width: 3.2rem;
+  height: 3.2rem;
+  padding: 0;
+
+  &:hover {
+    background-image: url('/assets/icons/ic_guide_hover.svg');
+  }
+
+  ${({ isModalOpen }) =>
+    isModalOpen
+      ? css`
+          background-image: url('/assets/icons/ic_guide_clicked.svg');
+        `
+      : css`
+          background-image: url('/assets/icons/ic_guide.svg');
+        `}
 `;
 
 const StLearnMain = styled.main`
@@ -532,6 +449,7 @@ const StButtonContainer = styled.div`
   display: flex;
   gap: 0.8rem;
   position: relative;
+  padding-right: 0.8rem;
 `;
 
 const StButton = styled.button`

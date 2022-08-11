@@ -56,6 +56,6 @@ const StTagContainer = styled.div`
     border-radius: 2.4rem;
     color: ${COLOR.WHITE};
     background-color: ${COLOR.MAIN_BLUE};
-    ${FONT_STYLES.SB_18_CAPTION};
+    ${FONT_STYLES.M_18_CAPTION};
   }
 `;

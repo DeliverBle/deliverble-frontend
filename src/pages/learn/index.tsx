@@ -172,12 +172,13 @@ const StSelectBoxContainer = styled.div`
 
 const StResult = styled.div`
   & > h2 {
-    ${FONT_STYLES.SB_20_BODY};
+    ${FONT_STYLES.M_20_BODY};
     color: ${COLOR.GRAY_30};
     margin-bottom: 2.3rem;
 
     span {
       color: ${COLOR.MAIN_BLUE};
+      font-weight: 600;
     }
   }
 
