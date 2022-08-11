@@ -6,7 +6,7 @@ import Footer from '@src/components/common/Footer';
 import SEO from '@src/components/common/SEO';
 import { useEffect, useState } from 'react';
 import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
-import { StBannerText, StHome, StNews } from './style';
+import { StBannerText, StHome, StNews } from '../../styles/home/style';
 
 function Home() {
   const [newsList, setNewsList] = useState<VideoData[]>([]);
