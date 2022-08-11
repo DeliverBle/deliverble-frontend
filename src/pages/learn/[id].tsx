@@ -54,6 +54,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   const { link, startTime, endTime, scripts } = videoData;
   const learnRef = useRef<HTMLDivElement>(null);
   const getLoginStatus = () => localStorage.getItem('token') ?? '';
+  const [prevLink, setPrevLink] = useState('');
 
   const controlPointX = (e: React.MouseEvent) => {
     const x = e.nativeEvent.offsetX / 10;
@@ -106,13 +107,27 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
     setSubText('작성 취소 선택시, 작성된 메모는 저장되지 않습니다.');
     setCancelButtonText('작성하기');
     setConfirmButtonText('작성 취소');
+    const storage = globalThis?.sessionStorage;
+    setPrevLink(storage.getItem('prevPrevPath') || '/');
   }, []);
 
   return (
     <>
       <SEO title="학습하기 | Deliverble" />
       <StLearnDetail>
-        <ImageDiv onClick={() => router.back()} src={icXButton} className="close" layout="fill" alt="x" />
+        <ImageDiv
+          onClick={() => {
+            if (getLoginStatus() === '') {
+              router.back();
+            } else {
+              router.push(prevLink);
+            }
+          }}
+          src={icXButton}
+          className="close"
+          layout="fill"
+          alt="x"
+        />
         <StLearnMain>
           <aside>
             <VideoDetail {...videoData} />
