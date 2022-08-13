@@ -4,11 +4,11 @@ import { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import MemoPopup from './MemoPopup';
 
-interface MemoPopupButtonProps {
+interface MemoDotButtonProps {
   edit: () => void;
 }
 
-function MemoPopupButton(props: MemoPopupButtonProps) {
+function MemoDotButton(props: MemoDotButtonProps) {
   const { edit } = props;
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const memoPopupRef = useRef<HTMLButtonElement>(null);
@@ -34,7 +34,7 @@ function MemoPopupButton(props: MemoPopupButtonProps) {
   );
 }
 
-export default MemoPopupButton;
+export default MemoDotButton;
 
 const StMemoDotButton = styled.button`
   position: absolute;
