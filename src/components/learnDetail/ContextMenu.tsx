@@ -7,24 +7,38 @@ interface ContextMenuProps {
     x: number;
     y: number;
   };
-  setIsNewMemo: (create: boolean) => void;
+  hasMemo: boolean;
+  id: number;
+  setEditMemoHighlightId: (id: number) => void;
+  setIsNewMemo: (isNewMemo: boolean) => void;
 }
 
 function ContextMenu(props: ContextMenuProps) {
-  const { points, setIsNewMemo } = props;
+  const { points, hasMemo, id, setEditMemoHighlightId, setIsNewMemo } = props;
 
   return (
     <StContextMenu top={points.y} left={points.x} className="test">
       <ul>
         <li>
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsNewMemo(true);
-            }}>
-            메모 추가
-          </button>
+          {hasMemo ? (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setEditMemoHighlightId(id);
+              }}>
+              메모 수정
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsNewMemo(true);
+              }}>
+              메모 추가
+            </button>
+          )}
         </li>
         <li>
           <button type="button">하이라이트 삭제</button>

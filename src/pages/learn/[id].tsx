@@ -40,10 +40,11 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   const [confirmButtonText, setConfirmButtonText] = useState('');
   const [isHighlight, setIsHighlight] = useState(false);
   const [isSpacing, setIsSpacing] = useState(false);
-  const [clickedScriptId, setClickedScriptId] = useState<number>();
   const [clickedHighlightId, setClickedHighlightId] = useState<number>();
   const [points, setPoints] = useState({ x: 0, y: 0 });
   const [isNewMemo, setIsNewMemo] = useState(false);
+  const [editMemoHighlightId, setEditMemoHighlightId] = useState<number>();
+  const [hasMemo, setHasMemo] = useState(false);
   const [keyword, setKeyword] = useState<string>();
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -67,14 +68,19 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   };
 
   const handleRightClick = (e: React.MouseEvent, id: number) => {
-    if (isNewMemo) {
-      setClickedScriptId(-1);
-      return setIsConfirmOpen(true);
+    if (highlightData) {
+      const index = highlightData.findIndex((item) => item.highlightId === id);
+      if (index !== undefined && index !== -1) {
+        setHasMemo(Object.keys(highlightData[index].memo).length > 0);
+      }
+      if (isNewMemo) {
+        setClickedHighlightId(-1);
+        return setIsConfirmOpen(true);
+      }
+      setPoints(controlPointX(e));
+      setClickedHighlightId(() => Number((e.target as HTMLDivElement).id));
+      setKeyword((e.target as HTMLDivElement).innerText);
     }
-    setClickedScriptId(id);
-    setPoints(controlPointX(e));
-    setClickedHighlightId(() => Number((e.target as HTMLDivElement).id));
-    setKeyword((e.target as HTMLDivElement).innerText);
   };
 
   useEffect(() => {
@@ -95,12 +101,12 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   useEffect(() => {
     const handleClickOutside = (e: Event) => {
       const eventTarget = e.target as HTMLElement;
-      if (clickedScriptId && !contextMenuRef?.current?.contains(eventTarget)) {
-        setClickedScriptId(-1);
+      if (clickedHighlightId && !contextMenuRef?.current?.contains(eventTarget)) {
+        setClickedHighlightId(-1);
       }
     };
     window.addEventListener('click', handleClickOutside);
-  }, [clickedScriptId]);
+  }, [clickedHighlightId]);
 
   useEffect(() => {
     setMainText('메모 작성을 취소하시겠습니까?');
@@ -168,7 +174,9 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                 {highlightData ? (
                   <MemoList
                     highlightList={highlightData}
+                    editMemoHighlightId={editMemoHighlightId}
                     isNewMemo={isNewMemo}
+                    setEditMemoHighlightId={setEditMemoHighlightId}
                     setIsNewMemo={setIsNewMemo}
                     highlightId={clickedHighlightId}
                     keyword={keyword}
@@ -198,8 +206,14 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                       onClick={() => player?.seekTo(startTime, true)}
                       isActive={startTime <= currentTime && currentTime < endTime ? true : false}>
                       <p id={id.toString()}>{text}</p>
-                      {clickedScriptId === id && !isNewMemo && (
-                        <ContextMenu points={points} setIsNewMemo={setIsNewMemo} />
+                      {clickedHighlightId === id && (
+                        <ContextMenu
+                          points={points}
+                          hasMemo={hasMemo}
+                          id={id}
+                          setEditMemoHighlightId={setEditMemoHighlightId}
+                          setIsNewMemo={setIsNewMemo}
+                        />
                       )}
                     </StScriptText>
                   ))}

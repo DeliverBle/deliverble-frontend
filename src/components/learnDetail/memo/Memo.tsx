@@ -3,9 +3,11 @@ import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { useState } from 'react';
 import MemoForm from './MemoForm';
-import MemoDotButton from './MemoPopupButton';
+import MemoDotButton from './MemoDotButton';
 
 interface MemoProps {
+  isEditMemo: boolean;
+  setEditMemoHighlightId: (id: number) => void;
   isNewMemo: boolean;
   setIsNewMemo: (isNewMemo: boolean) => void;
   keyword?: string;
@@ -13,9 +15,9 @@ interface MemoProps {
 }
 
 function Memo(props: MemoProps) {
-  const { isNewMemo, setIsNewMemo, keyword, content } = props;
+  const { isEditMemo, setEditMemoHighlightId, isNewMemo, setIsNewMemo, keyword, content } = props;
   const [moreButton, setMoreButton] = useState(false);
-  const [edit, setEdit] = useState(false);
+  const [clickedPopupEdit, setClickedPopupEdit] = useState(false);
 
   const CONTENT_MAX = 30;
   const KEYWORD_MAX = 28;
@@ -41,12 +43,17 @@ function Memo(props: MemoProps) {
           {keyword.length <= KEYWORD_MAX || moreButton || isNewMemo ? keyword : `${keyword.slice(0, 27)}...`}
         </StKeyword>
       )}
-      {!content || edit ? (
-        <MemoForm content={content} setIsNewMemo={setIsNewMemo} setEdit={setEdit} />
+      {!content || clickedPopupEdit || isEditMemo ? (
+        <MemoForm
+          content={content}
+          setEditMemoHighlightId={setEditMemoHighlightId}
+          setIsNewMemo={setIsNewMemo}
+          setClickedPopupEdit={setClickedPopupEdit}
+        />
       ) : (
         <StContent>
           {showContent()}
-          <MemoDotButton edit={() => setEdit(true)} />
+          <MemoDotButton edit={() => setClickedPopupEdit(true)} />
         </StContent>
       )}
     </StMemo>

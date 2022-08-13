@@ -7,18 +7,17 @@ import ImageDiv from '../../common/ImageDiv';
 interface MemoFormProps {
   content?: string;
   setIsNewMemo: (isNewMemo: boolean) => void;
-  setEdit: (edit: boolean) => void;
+  setClickedPopupEdit: (clicked: boolean) => void;
+  setEditMemoHighlightId: (id: number) => void;
 }
 
 function MemoForm(props: MemoFormProps) {
-  const { setIsNewMemo, setEdit, content } = props;
+  const { setIsNewMemo, setClickedPopupEdit, setEditMemoHighlightId, content } = props;
 
   return (
     <>
       {content ? (
-        <StForm maxLength={70} rows={Math.ceil(content.length / 30)}>
-          {content}
-        </StForm>
+        <StForm maxLength={70} rows={Math.ceil(content.length / 30)} defaultValue={content} />
       ) : (
         <StForm maxLength={70} rows={3} autoFocus></StForm>
       )}
@@ -27,7 +26,8 @@ function MemoForm(props: MemoFormProps) {
           type="button"
           onClick={() => {
             setIsNewMemo(false);
-            setEdit(false);
+            setClickedPopupEdit(false);
+            setEditMemoHighlightId(-1);
           }}>
           <ImageDiv src={icMemoXButton} alt="x" />
         </button>
