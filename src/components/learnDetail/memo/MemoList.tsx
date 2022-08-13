@@ -22,18 +22,12 @@ function MemoList(props: MemoListProps) {
   useEffect(() => {
     setIndex(highlightList.findIndex((item) => item.highlightId === highlightId));
   }, [highlightId, highlightList, index]);
-  console.log('index', index);
-  console.log('isNewMemo', isNewMemo);
 
-  if (index !== undefined && index !== -1 && isNewMemo) {
-    highlightList[index].memo = { keyword: keyword };
-  }
-
-  if (index !== undefined && index !== -1 && !isNewMemo) {
-    if (Object.keys(highlightList[index].memo).includes(`keyword`)) {
-      if (!Object.keys(highlightList[index].memo).includes(`content`)) {
-        highlightList[index].memo = {};
-      }
+  if (index !== undefined && index !== -1) {
+    if (isNewMemo) {
+      highlightList[index].memo = { keyword: keyword };
+    } else if (Object.keys(highlightList[index].memo).length == 1) {
+      highlightList[index].memo = {};
     }
   }
 
