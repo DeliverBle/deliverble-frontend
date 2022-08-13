@@ -206,7 +206,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                       onClick={() => player?.seekTo(startTime, true)}
                       isActive={startTime <= currentTime && currentTime < endTime ? true : false}>
                       <p id={id.toString()}>{text}</p>
-                      {clickedHighlightId === id && (
+                      {clickedHighlightId === id && !isNewMemo && !editMemoHighlightId ? (
                         <ContextMenu
                           points={points}
                           hasMemo={hasMemo}
@@ -214,7 +214,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                           setEditMemoHighlightId={setEditMemoHighlightId}
                           setIsNewMemo={setIsNewMemo}
                         />
-                      )}
+                      ) : null}
                     </StScriptText>
                   ))}
                 {isFirstClicked && <ScriptEdit scripts={scripts} isHighlight={isHighlight} isSpacing={isSpacing} />}

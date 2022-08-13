@@ -18,17 +18,23 @@ function MemoList(props: MemoListProps) {
   const { highlightList, editMemoHighlightId, setEditMemoHighlightId, isNewMemo, setIsNewMemo, highlightId, keyword } =
     props;
   const [index, setIndex] = useState<number>();
+  const [deleteMemo, setDeleteMemo] = useState<number>();
 
   useEffect(() => {
     setIndex(highlightList.findIndex((item) => item.highlightId === highlightId));
-  }, [highlightId, highlightList, index]);
+    setDeleteMemo(highlightList.findIndex((item) => Object.keys(item.memo).length === 1));
+  }, [highlightId, highlightList]);
 
-  if (index !== undefined && index !== -1) {
+  if (index && index !== -1) {
     if (isNewMemo) {
       highlightList[index].memo = { keyword: keyword };
-    } else if (Object.keys(highlightList[index].memo).length == 1) {
+    } else if (Object.keys(highlightList[index].memo).length === 1) {
       highlightList[index].memo = {};
     }
+  }
+
+  if (deleteMemo && deleteMemo !== -1 && !isNewMemo) {
+    highlightList[deleteMemo].memo = {};
   }
 
   return (

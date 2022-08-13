@@ -19,7 +19,7 @@ function MemoForm(props: MemoFormProps) {
       {content ? (
         <StForm maxLength={70} rows={Math.ceil(content.length / 30)} defaultValue={content} />
       ) : (
-        <StForm maxLength={70} rows={3} autoFocus></StForm>
+        <StForm maxLength={70} rows={3} autoFocus />
       )}
       <StButtonContainer>
         <button
@@ -27,7 +27,7 @@ function MemoForm(props: MemoFormProps) {
           onClick={() => {
             setIsNewMemo(false);
             setClickedPopupEdit(false);
-            setEditMemoHighlightId(-1);
+            setEditMemoHighlightId(0);
           }}>
           <ImageDiv src={icMemoXButton} alt="x" />
         </button>
