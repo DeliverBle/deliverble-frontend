@@ -1,6 +1,7 @@
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { icCheckButton, icMemoXButton } from 'public/assets/icons';
+import { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import ImageDiv from '../../common/ImageDiv';
 
@@ -14,12 +15,27 @@ interface MemoFormProps {
 function MemoForm(props: MemoFormProps) {
   const { setNewMemoHighlightId, setClickedPopupEdit, setEditMemoHighlightId, content } = props;
 
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const autoResizeTextarea = () => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = '1px';
+      textareaRef.current.style.height = 12 + textareaRef.current.scrollHeight + 'px';
+    }
+  };
+
   return (
     <>
       {content ? (
         <StForm maxLength={70} rows={Math.ceil(content.length / 30)} defaultValue={content} />
       ) : (
-        <StForm maxLength={70} rows={3} autoFocus />
+        <StForm
+          ref={textareaRef}
+          rows={1}
+          maxLength={70}
+          autoFocus
+          onKeyDown={autoResizeTextarea}
+          onKeyUp={autoResizeTextarea}
+        />
       )}
       <StButtonContainer>
         <button
@@ -53,10 +69,13 @@ const StForm = styled.textarea`
   ${FONT_STYLES.R_23_MEMO};
   color: ${COLOR.GRAY_80};
 
-  overflow-y: hidden;
   resize: none;
   &:focus {
     outline: none;
+  }
+  &::-webkit-scrollbar {
+    width: 1rem;
+    background-color: transparent;
   }
 `;
 
