@@ -14,6 +14,11 @@ interface ConfirmModalProps {
 function ConfirmModal(props: ConfirmModalProps) {
   const { closeModal, mainText, subText, cancelButtonText, confirmButtonText, setIsNewMemo } = props;
 
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth',
+  });
+
   return (
     <StConfirmModal>
       <StDescription>
