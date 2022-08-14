@@ -1,7 +1,7 @@
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { icCheckButton, icMemoXButton } from 'public/assets/icons';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import styled from 'styled-components';
 import ImageDiv from '../../common/ImageDiv';
 
@@ -18,8 +18,8 @@ function MemoForm(props: MemoFormProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const autoResizeTextarea = () => {
     if (textareaRef.current) {
-      textareaRef.current.style.height = '1px';
-      textareaRef.current.style.height = 12 + textareaRef.current.scrollHeight + 'px';
+      textareaRef.current.style.height = '0.1rem';
+      textareaRef.current.style.height = (12 + textareaRef.current.scrollHeight) / 10 + 'rem';
     }
   };
 
@@ -61,7 +61,7 @@ const StForm = styled.textarea`
   padding: 0.8rem 0.8rem 0.8rem 1.2rem;
   width: 60.6rem;
 
-  border: 2px solid ${COLOR.SUB_BLUE_50};
+  border: 0.2rem solid ${COLOR.SUB_BLUE_50};
   border-radius: 1.2rem;
   background-color: transparent;
 

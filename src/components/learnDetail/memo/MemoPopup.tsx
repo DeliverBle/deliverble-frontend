@@ -37,7 +37,7 @@ const StMemoPopup = styled.div`
   width: 10.3rem;
   height: 8rem;
 
-  border: 1px solid ${COLOR.GRAY_10};
+  border: 0.1rem solid ${COLOR.GRAY_10};
   border-radius: 1.2rem;
   background-color: ${COLOR.WHITE};
   box-shadow: 0.4rem 0.4rem 2rem rgba(22, 15, 53, 0.15);
