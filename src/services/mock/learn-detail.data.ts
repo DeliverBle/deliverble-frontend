@@ -56,7 +56,7 @@ export const LEARN_DETAIL_DATA = {
 
   HIGHLIGHT_DATA: [
     {
-      scriptId: 1,
+      scriptId: 6,
       highlightId: 6,
       startingIndex: 0,
       endingIndex: 2,
@@ -67,7 +67,7 @@ export const LEARN_DETAIL_DATA = {
       },
     },
     {
-      scriptId: 3,
+      scriptId: 7,
       highlightId: 7,
       startingIndex: 0,
       endingIndex: 47,
@@ -79,7 +79,7 @@ export const LEARN_DETAIL_DATA = {
       },
     },
     {
-      scriptId: 4,
+      scriptId: 8,
       highlightId: 8,
       startingIndex: 0,
       endingIndex: 2,

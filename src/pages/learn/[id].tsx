@@ -72,14 +72,14 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
       const index = highlightData.findIndex((item) => item.highlightId === id);
       if (index !== undefined && index !== -1) {
         setHasMemo(Object.keys(highlightData[index].memo).length > 0);
+        setPoints(controlPointX(e));
+        setClickedHighlightId(() => Number((e.target as HTMLDivElement).id));
+        setKeyword((e.target as HTMLDivElement).innerText);
       }
       if (newMemoHighlightId) {
         setClickedHighlightId(-1);
         return setIsConfirmOpen(true);
       }
-      setPoints(controlPointX(e));
-      setClickedHighlightId(() => Number((e.target as HTMLDivElement).id));
-      setKeyword((e.target as HTMLDivElement).innerText);
     }
   };
 
