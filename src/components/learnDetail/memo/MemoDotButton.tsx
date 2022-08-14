@@ -21,6 +21,7 @@ function MemoDotButton(props: MemoDotButtonProps) {
       }
     };
     window.addEventListener('click', handleClickOutside);
+    window.addEventListener('contextmenu', handleClickOutside);
   }, [isPopupOpen]);
 
   return (
