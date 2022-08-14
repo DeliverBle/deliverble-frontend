@@ -6,13 +6,13 @@ import ImageDiv from '../../common/ImageDiv';
 
 interface MemoFormProps {
   content?: string;
-  setIsNewMemo: (isNewMemo: boolean) => void;
+  setNewMemoHighlightId: (id: number) => void;
   setClickedPopupEdit: (clicked: boolean) => void;
   setEditMemoHighlightId: (id: number) => void;
 }
 
 function MemoForm(props: MemoFormProps) {
-  const { setIsNewMemo, setClickedPopupEdit, setEditMemoHighlightId, content } = props;
+  const { setNewMemoHighlightId, setClickedPopupEdit, setEditMemoHighlightId, content } = props;
 
   return (
     <>
@@ -25,7 +25,7 @@ function MemoForm(props: MemoFormProps) {
         <button
           type="button"
           onClick={() => {
-            setIsNewMemo(false);
+            setNewMemoHighlightId(0);
             setClickedPopupEdit(false);
             setEditMemoHighlightId(0);
           }}>

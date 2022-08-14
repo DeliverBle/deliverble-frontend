@@ -9,13 +9,13 @@ interface MemoProps {
   isEditMemo: boolean;
   setEditMemoHighlightId: (id: number) => void;
   isNewMemo: boolean;
-  setIsNewMemo: (isNewMemo: boolean) => void;
+  setNewMemoHighlightId: (id: number) => void;
   keyword?: string;
   content?: string;
 }
 
 function Memo(props: MemoProps) {
-  const { isEditMemo, setEditMemoHighlightId, isNewMemo, setIsNewMemo, keyword, content } = props;
+  const { isEditMemo, setEditMemoHighlightId, isNewMemo, setNewMemoHighlightId, keyword, content } = props;
   const [moreButton, setMoreButton] = useState(false);
   const [clickedPopupEdit, setClickedPopupEdit] = useState(false);
 
@@ -47,7 +47,7 @@ function Memo(props: MemoProps) {
         <MemoForm
           content={content}
           setEditMemoHighlightId={setEditMemoHighlightId}
-          setIsNewMemo={setIsNewMemo}
+          setNewMemoHighlightId={setNewMemoHighlightId}
           setClickedPopupEdit={setClickedPopupEdit}
         />
       ) : (

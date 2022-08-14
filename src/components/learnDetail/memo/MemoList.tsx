@@ -8,15 +8,22 @@ interface MemoListProps {
   highlightList: HighlightData[];
   editMemoHighlightId?: number;
   setEditMemoHighlightId: (id: number) => void;
-  isNewMemo: boolean;
-  setIsNewMemo: (isNewMemo: boolean) => void;
+  newMemoHighlightId?: number;
+  setNewMemoHighlightId: (id: number) => void;
   highlightId?: number;
   keyword?: string;
 }
 
 function MemoList(props: MemoListProps) {
-  const { highlightList, editMemoHighlightId, setEditMemoHighlightId, isNewMemo, setIsNewMemo, highlightId, keyword } =
-    props;
+  const {
+    highlightList,
+    editMemoHighlightId,
+    setEditMemoHighlightId,
+    newMemoHighlightId,
+    setNewMemoHighlightId,
+    highlightId,
+    keyword,
+  } = props;
   const [index, setIndex] = useState<number>();
   const [deleteMemo, setDeleteMemo] = useState<number>();
 
@@ -26,14 +33,14 @@ function MemoList(props: MemoListProps) {
   }, [highlightId, highlightList]);
 
   if (index && index !== -1) {
-    if (isNewMemo) {
+    if (newMemoHighlightId) {
       highlightList[index].memo = { keyword: keyword };
     } else if (Object.keys(highlightList[index].memo).length === 1) {
       highlightList[index].memo = {};
     }
   }
 
-  if (deleteMemo && deleteMemo !== -1 && !isNewMemo) {
+  if (deleteMemo && deleteMemo !== -1 && !newMemoHighlightId) {
     highlightList[deleteMemo].memo = {};
   }
 
@@ -46,8 +53,8 @@ function MemoList(props: MemoListProps) {
               key={highlightId}
               isEditMemo={editMemoHighlightId == highlightId}
               setEditMemoHighlightId={setEditMemoHighlightId}
-              isNewMemo={isNewMemo}
-              setIsNewMemo={setIsNewMemo}
+              isNewMemo={newMemoHighlightId == highlightId}
+              setNewMemoHighlightId={setNewMemoHighlightId}
               keyword={memo.keyword}
               content={memo.content}
             />
