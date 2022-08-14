@@ -72,10 +72,8 @@ const StMemo = styled.div`
   background-color: ${COLOR.SUB_BLUE_8};
   border-radius: 2.5rem;
 
-  &:not(:hover) {
-    .dot {
-      opacity: 0;
-    }
+  &:hover .dot {
+    opacity: 1;
   }
 `;
 

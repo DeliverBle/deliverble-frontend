@@ -25,7 +25,7 @@ function MemoDotButton(props: MemoDotButtonProps) {
 
   return (
     <StMemoDotButton ref={memoPopupRef} type="button" onClick={() => setIsPopupOpen((prev) => !prev)}>
-      <StMemoDotImage>
+      <StMemoDotImage isPopupOpen={isPopupOpen}>
         <ImageDiv className="dot" src={icDotHover} alt="dot" />
         <ImageDiv className="dot default" src={icDotDefault} alt="like" />
       </StMemoDotImage>
@@ -47,11 +47,17 @@ const StMemoDotButton = styled.button`
   padding: 0;
 `;
 
-const StMemoDotImage = styled.div`
+const StMemoDotImage = styled.div<{ isPopupOpen: boolean }>`
   position: relative;
 
   .dot {
     position: absolute;
     top: -2rem;
+    opacity: ${({ isPopupOpen }) => (isPopupOpen ? 1 : 0)};
+  }
+
+  &:hover .default img {
+    transition: opacity 0.3s;
+    opacity: 0;
   }
 `;
