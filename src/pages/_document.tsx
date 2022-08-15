@@ -29,7 +29,9 @@ export default class MyDocument extends Document {
     return (
       <Html>
         <Head>
-          <link rel="icon" href="/favicon.ico" />
+          <link rel="icon" type="image/png" href="/assets/favicon/fav_16.png" sizes="16x16" />
+          <link rel="icon" type="image/png" href="/assets/favicon/fav_32.png" sizes="32x32" />
+          <link rel="icon" type="image/png" href="/assets/favicon/fav_64.png" sizes="64x64" />
           <link
             rel="stylesheet"
             as="style"
