@@ -295,8 +295,8 @@ const StLearnDetail = styled.div`
 
   .close {
     position: fixed;
-    top: 2.4rem;
-    right: 10rem;
+    top: 7rem;
+    right: 11.2rem;
     width: 4.8rem;
     height: 4.8rem;
     cursor: pointer;
