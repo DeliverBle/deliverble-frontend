@@ -51,6 +51,7 @@ const StLeft = styled.div`
   }
 
   & > h1 {
+    width: 135rem;
     margin-top: 1.2rem;
     margin-bottom: 2rem;
     color: ${COLOR.BLACK};
