@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import YouTube from 'react-youtube';
 import SEO from '@src/components/common/SEO';
 import NavigationBar from '@src/components/common/NavigationBar';
@@ -130,125 +130,130 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
           alt="x"
         />
         <StLearnMain>
-          <aside>
-            <VideoDetail {...videoData} />
-            <StVideoWrapper>
-              <Like
-                isFromList={false}
-                toggleLike={() => {
-                  if (getLoginStatus() === '') {
-                    setIsLoginModalOpen(true);
-                  } else {
-                    // 즐겨찾기 API 연결하는 코드
-                  }
-                }}
-              />
-              <YouTube
-                videoId={link}
-                opts={{
-                  width: '670',
-                  height: '376',
-                  playerVars: {
-                    modestbranding: 1,
-                    start: startTime,
-                    end: Math.ceil(endTime),
-                    controls: 0,
-                  },
-                }}
-                onReady={(e) => setPlayer(e.target)}
-                onStateChange={(e) => setVideoState(e.target.getPlayerState())}
-                onEnd={(e) => e.target.seekTo(startTime)}
-              />
-            </StVideoWrapper>
-            <StMemoContainer>
-              <StMemoTitle>
-                <ImageDiv src={icMemo} className="memo" layout="fill" />
-                <h2>메모</h2>
-              </StMemoTitle>
-              <StMemoWrapper>
-                {highlightData ? (
-                  <MemoList
-                    highlightList={highlightData}
-                    isNewMemo={isNewMemo}
-                    setIsNewMemo={setIsNewMemo}
-                    highlightId={clickedHighlightId}
-                    keyword={keyword}
-                  />
-                ) : (
-                  <EmptyMemo />
-                )}
-              </StMemoWrapper>
-            </StMemoContainer>
-          </aside>
-          <StLearnSection>
-            <article>
-              <div ref={learnRef}>
-                {!isFirstClicked &&
-                  scripts.map(({ id, text, startTime, endTime }) => (
-                    <StScriptText
-                      ref={contextMenuRef}
-                      onContextMenu={(e) => {
-                        e.preventDefault();
-                        handleRightClick(e, id);
-                      }}
-                      key={id}
-                      onClick={() => player?.seekTo(startTime, true)}
-                      isActive={startTime <= currentTime && currentTime < endTime ? true : false}>
-                      <p id={id.toString()}>{text}</p>
-                      {clickedScriptId === id && !isNewMemo && (
-                        <ContextMenu points={points} setIsNewMemo={setIsNewMemo} />
+          <VideoDetail {...videoData} setIsModalOpen={setIsModalOpen} />
+          <div>
+            <aside>
+              <StVideoWrapper>
+                <Like
+                  isFromList={false}
+                  toggleLike={() => {
+                    if (getLoginStatus() === '') {
+                      setIsLoginModalOpen(true);
+                    } else {
+                      // 즐겨찾기 API 연결하는 코드
+                    }
+                  }}
+                />
+                <YouTube
+                  videoId={link}
+                  opts={{
+                    width: '670',
+                    height: '376',
+                    playerVars: {
+                      modestbranding: 1,
+                      start: startTime,
+                      end: Math.ceil(endTime),
+                      controls: 0,
+                    },
+                  }}
+                  onReady={(e) => setPlayer(e.target)}
+                  onStateChange={(e) => setVideoState(e.target.getPlayerState())}
+                  onEnd={(e) => e.target.seekTo(startTime)}
+                />
+              </StVideoWrapper>
+              <StMemoContainer>
+                <StMemoTitle>
+                  <ImageDiv src={icMemo} className="memo" layout="fill" />
+                  <h2>메모</h2>
+                </StMemoTitle>
+                <StMemoWrapper>
+                  {highlightData ? (
+                    <MemoList
+                      highlightList={highlightData}
+                      isNewMemo={isNewMemo}
+                      setIsNewMemo={setIsNewMemo}
+                      highlightId={clickedHighlightId}
+                      keyword={keyword}
+                    />
+                  ) : (
+                    <EmptyMemo />
+                  )}
+                </StMemoWrapper>
+              </StMemoContainer>
+            </aside>
+            <StLearnSection>
+              <article>
+                <div ref={learnRef}>
+                  {!isFirstClicked &&
+                    scripts.map(({ id, text, startTime, endTime }) => (
+                      <StScriptText
+                        ref={contextMenuRef}
+                        onContextMenu={(e) => {
+                          e.preventDefault();
+                          handleRightClick(e, id);
+                        }}
+                        key={id}
+                        onClick={() => player?.seekTo(startTime, true)}
+                        isActive={startTime <= currentTime && currentTime < endTime ? true : false}>
+                        <p id={id.toString()}>{text}</p>
+                        {clickedScriptId === id && !isNewMemo && (
+                          <ContextMenu points={points} setIsNewMemo={setIsNewMemo} />
+                        )}
+                      </StScriptText>
+                    ))}
+                  {isFirstClicked && <ScriptEdit scripts={scripts} isHighlight={isHighlight} isSpacing={isSpacing} />}
+                </div>
+                <div>
+                  <StButtonContainer>
+                    <StButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (getLoginStatus() === '') {
+                          setIsLoginModalOpen(true);
+                        } else {
+                          isHighlight ? setIsHighlight(false) : setIsHighlight(true);
+                          setIsSpacing(false);
+                          setIsFirstClicked(true);
+                        }
+                      }}>
+                      {isHighlight ? (
+                        <ImageDiv className="function-button" src={icHighlighterClicked} alt="하이라이트" />
+                      ) : (
+                        <>
+                          <ImageDiv className="function-button" src={icHighlighterHover} alt="하이라이트" />
+                          <ImageDiv className="default function-button" src={icHighlighterDefault} alt="하이라이트" />
+                        </>
                       )}
-                    </StScriptText>
-                  ))}
-                {isFirstClicked && <ScriptEdit scripts={scripts} isHighlight={isHighlight} isSpacing={isSpacing} />}
-              </div>
-              <div>
-                <StGuideButton onClick={() => setIsModalOpen(true)} isModalOpen={isModalOpen} />
-                <StButtonContainer>
-                  <StButton
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (getLoginStatus() === '') {
-                        setIsLoginModalOpen(true);
-                      } else {
-                        isHighlight ? setIsHighlight(false) : setIsHighlight(true);
-                        setIsSpacing(false);
-                        setIsFirstClicked(true);
-                      }
-                    }}>
-                    {isHighlight ? (
-                      <ImageDiv className="function-button" src={icHighlighterClicked} alt="하이라이트" />
-                    ) : (
-                      <>
-                        <ImageDiv className="function-button" src={icHighlighterHover} alt="하이라이트" />
-                        <ImageDiv className="default function-button" src={icHighlighterDefault} alt="하이라이트" />
-                      </>
-                    )}
-                  </StButton>
-                  <StButton
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (getLoginStatus() === '') {
-                        setIsLoginModalOpen(true);
-                      } else {
-                        isSpacing ? setIsSpacing(false) : setIsSpacing(true);
-                        setIsHighlight(false);
-                        setIsFirstClicked(true);
-                      }
-                    }}>
-                    {isSpacing ? (
-                      <ImageDiv className="spacing function-button" src={icSpacingClicked} alt="끊어 읽기" />
-                    ) : (
-                      <>
-                        <ImageDiv className="spacing function-button" src={icSpacingHover} alt="끊어 읽기" />
-                        <ImageDiv className="spacing default function-button" src={icSpacingDefault} alt="끊어 읽기" />
-                      </>
-                    )}
-                  </StButton>
-                </StButtonContainer>
-              </div>
-            </article>
-          </StLearnSection>
+                    </StButton>
+                    <StButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (getLoginStatus() === '') {
+                          setIsLoginModalOpen(true);
+                        } else {
+                          isSpacing ? setIsSpacing(false) : setIsSpacing(true);
+                          setIsHighlight(false);
+                          setIsFirstClicked(true);
+                        }
+                      }}>
+                      {isSpacing ? (
+                        <ImageDiv className="spacing function-button" src={icSpacingClicked} alt="끊어 읽기" />
+                      ) : (
+                        <>
+                          <ImageDiv className="spacing function-button" src={icSpacingHover} alt="끊어 읽기" />
+                          <ImageDiv
+                            className="spacing default function-button"
+                            src={icSpacingDefault}
+                            alt="끊어 읽기"
+                          />
+                        </>
+                      )}
+                    </StButton>
+                  </StButtonContainer>
+                </div>
+              </article>
+            </StLearnSection>
+          </div>
         </StLearnMain>
         {isModalOpen && <GuideModal closeModal={() => setIsModalOpen(false)} />}
         {isConfirmOpen && (
@@ -305,27 +310,9 @@ const StLearnDetail = styled.div`
   }
 `;
 
-const StGuideButton = styled.button<{ isModalOpen: boolean }>`
-  width: 3.2rem;
-  height: 3.2rem;
-  padding: 0;
-
-  &:hover {
-    background-image: url('/assets/icons/ic_guide_hover.svg');
-  }
-
-  ${({ isModalOpen }) =>
-    isModalOpen
-      ? css`
-          background-image: url('/assets/icons/ic_guide_clicked.svg');
-        `
-      : css`
-          background-image: url('/assets/icons/ic_guide.svg');
-        `}
-`;
-
 const StLearnMain = styled.main`
   display: flex;
+  flex-direction: column;
   margin: 0 auto;
   gap: 4rem;
   width: 172rem;
@@ -334,6 +321,10 @@ const StLearnMain = styled.main`
   border-radius: 3rem;
   background-color: ${COLOR.WHITE};
   overflow: hidden;
+
+  & > div:last-child {
+    display: flex;
+  }
 `;
 
 const StLearnSection = styled.section`

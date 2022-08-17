@@ -9,22 +9,28 @@ interface VideoDetailProps {
   reportDate: string;
   title: string;
   tags: Tag[];
+  setIsModalOpen: (isOpen: boolean) => void;
 }
 
 function VideoDetail(props: VideoDetailProps) {
-  const { channel, category, reportDate, title, tags } = props;
+  const { channel, category, reportDate, title, tags, setIsModalOpen } = props;
 
   return (
     <StVideoDetail>
-      <div>
-        {channel} | {category} | {reportDate.replaceAll('-', '.')}
-      </div>
-      <h1>{title}</h1>
-      <StTagContainer>
-        {tags.map(({ id, name }) => (
-          <span key={id}>{name}</span>
-        ))}
-      </StTagContainer>
+      <StLeft>
+        <div>
+          {channel} | {category} | {reportDate.replaceAll('-', '.')}
+        </div>
+        <h1>{title}</h1>
+        <StTagContainer>
+          {tags.map(({ id, name }) => (
+            <span key={id}>{name}</span>
+          ))}
+        </StTagContainer>
+      </StLeft>
+      <StRight>
+        <button onClick={() => setIsModalOpen(true)}>어떻게 학습하나요?</button>
+      </StRight>
     </StVideoDetail>
   );
 }
@@ -32,6 +38,12 @@ function VideoDetail(props: VideoDetailProps) {
 export default VideoDetail;
 
 const StVideoDetail = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+`;
+
+const StLeft = styled.div`
   & > div {
     display: flex;
     color: ${COLOR.GRAY_30};
@@ -57,5 +69,17 @@ const StTagContainer = styled.div`
     color: ${COLOR.WHITE};
     background-color: ${COLOR.MAIN_BLUE};
     ${FONT_STYLES.R_18_CAPTION};
+  }
+`;
+
+const StRight = styled.div`
+  padding-top: 0.4rem;
+
+  & > button {
+    padding: 0;
+    color: ${COLOR.MAIN_BLUE};
+    ${FONT_STYLES.SB_18_CAPTION};
+    text-decoration: underline;
+    text-underline-position: under;
   }
 `;
