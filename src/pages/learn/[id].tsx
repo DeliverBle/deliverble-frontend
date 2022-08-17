@@ -301,13 +301,6 @@ const StLearnDetail = styled.div`
     height: 4.8rem;
     cursor: pointer;
   }
-
-  .guide {
-    position: relative;
-    width: 3.4rem;
-    height: 3.4rem;
-    cursor: pointer;
-  }
 `;
 
 const StLearnMain = styled.main`
