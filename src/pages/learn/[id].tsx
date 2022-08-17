@@ -374,7 +374,7 @@ const StLearnSection = styled.section`
     & > div:last-child {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: flex-end;
       padding-top: 1.8rem;
       margin-top: 2.4rem;
       border-top: 0.2rem solid ${COLOR.GRAY_10};
