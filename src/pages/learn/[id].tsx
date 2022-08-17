@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import styled, { css } from 'styled-components';
 import YouTube from 'react-youtube';
 import SEO from '@src/components/common/SEO';
+import NavigationBar from '@src/components/common/NavigationBar';
 import ImageDiv from '@src/components/common/ImageDiv';
 import Like from '@src/components/common/Like';
 import GuideModal from '@src/components/learnDetail/GuideModal';
@@ -21,7 +22,6 @@ import { FONT_STYLES } from '@src/styles/fontStyle';
 import {
   icXButton,
   icMemo,
-  icAnnounce,
   icHighlighterDefault,
   icHighlighterHover,
   icHighlighterClicked,
@@ -114,6 +114,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   return (
     <>
       <SEO title="학습하기 | Deliverble" />
+      <NavigationBar />
       <StLearnDetail>
         <ImageDiv
           onClick={() => {
