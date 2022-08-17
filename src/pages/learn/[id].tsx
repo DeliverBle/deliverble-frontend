@@ -132,55 +132,6 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
         <StLearnMain>
           <VideoDetail {...videoData} setIsModalOpen={setIsModalOpen} />
           <div>
-            <aside>
-              <StVideoWrapper>
-                <Like
-                  isFromList={false}
-                  toggleLike={() => {
-                    if (getLoginStatus() === '') {
-                      setIsLoginModalOpen(true);
-                    } else {
-                      // 즐겨찾기 API 연결하는 코드
-                    }
-                  }}
-                />
-                <YouTube
-                  videoId={link}
-                  opts={{
-                    width: '670',
-                    height: '376',
-                    playerVars: {
-                      modestbranding: 1,
-                      start: startTime,
-                      end: Math.ceil(endTime),
-                      controls: 0,
-                    },
-                  }}
-                  onReady={(e) => setPlayer(e.target)}
-                  onStateChange={(e) => setVideoState(e.target.getPlayerState())}
-                  onEnd={(e) => e.target.seekTo(startTime)}
-                />
-              </StVideoWrapper>
-              <StMemoContainer>
-                <StMemoTitle>
-                  <ImageDiv src={icMemo} className="memo" layout="fill" />
-                  <h2>메모</h2>
-                </StMemoTitle>
-                <StMemoWrapper>
-                  {highlightData ? (
-                    <MemoList
-                      highlightList={highlightData}
-                      isNewMemo={isNewMemo}
-                      setIsNewMemo={setIsNewMemo}
-                      highlightId={clickedHighlightId}
-                      keyword={keyword}
-                    />
-                  ) : (
-                    <EmptyMemo />
-                  )}
-                </StMemoWrapper>
-              </StMemoContainer>
-            </aside>
             <StLearnSection>
               <article>
                 <div ref={learnRef}>
@@ -253,6 +204,55 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                 </div>
               </article>
             </StLearnSection>
+            <aside>
+              <StVideoWrapper>
+                <Like
+                  isFromList={false}
+                  toggleLike={() => {
+                    if (getLoginStatus() === '') {
+                      setIsLoginModalOpen(true);
+                    } else {
+                      // 즐겨찾기 API 연결하는 코드
+                    }
+                  }}
+                />
+                <YouTube
+                  videoId={link}
+                  opts={{
+                    width: '670',
+                    height: '376',
+                    playerVars: {
+                      modestbranding: 1,
+                      start: startTime,
+                      end: Math.ceil(endTime),
+                      controls: 0,
+                    },
+                  }}
+                  onReady={(e) => setPlayer(e.target)}
+                  onStateChange={(e) => setVideoState(e.target.getPlayerState())}
+                  onEnd={(e) => e.target.seekTo(startTime)}
+                />
+              </StVideoWrapper>
+              <StMemoContainer>
+                <StMemoTitle>
+                  <ImageDiv src={icMemo} className="memo" layout="fill" />
+                  <h2>메모</h2>
+                </StMemoTitle>
+                <StMemoWrapper>
+                  {highlightData ? (
+                    <MemoList
+                      highlightList={highlightData}
+                      isNewMemo={isNewMemo}
+                      setIsNewMemo={setIsNewMemo}
+                      highlightId={clickedHighlightId}
+                      keyword={keyword}
+                    />
+                  ) : (
+                    <EmptyMemo />
+                  )}
+                </StMemoWrapper>
+              </StMemoContainer>
+            </aside>
           </div>
         </StLearnMain>
         {isModalOpen && <GuideModal closeModal={() => setIsModalOpen(false)} />}
@@ -314,9 +314,8 @@ const StLearnMain = styled.main`
   display: flex;
   flex-direction: column;
   margin: 0 auto;
-  gap: 4rem;
   width: 172rem;
-  height: 111.9rem;
+  height: 123.6rem;
   padding: 8rem 8rem 0 8rem;
   border-radius: 3rem;
   background-color: ${COLOR.WHITE};
@@ -324,6 +323,7 @@ const StLearnMain = styled.main`
 
   & > div:last-child {
     display: flex;
+    gap: 4.8rem;
   }
 `;
 
@@ -336,7 +336,7 @@ const StLearnSection = styled.section`
     display: flex;
     flex-direction: column;
     width: 84.2rem;
-    height: 76rem;
+    height: 87.7rem;
     padding: 1.8rem 1.2rem 1.8rem 2rem;
     border: 0.2rem solid ${COLOR.GRAY_10};
     border-radius: 2.4rem;
