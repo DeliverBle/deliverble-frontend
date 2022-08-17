@@ -180,10 +180,6 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
             </StMemoContainer>
           </aside>
           <StLearnSection>
-            <div>
-              <ImageDiv src={icAnnounce} className="announce" layout="fill" />
-              <h2>아나운서의 목소리를 듣고, 스크립트를 보며 따라 말해보세요.</h2>
-            </div>
             <article>
               <div ref={learnRef}>
                 {!isFirstClicked &&
@@ -343,25 +339,6 @@ const StLearnSection = styled.section`
   display: flex;
   flex-direction: column;
   padding-bottom: 8rem;
-
-  & > div {
-    display: flex;
-    align-items: center;
-    gap: 1.2rem;
-    margin-top: 14rem;
-    margin-bottom: 2.4rem;
-
-    h2 {
-      color: ${COLOR.BLACK};
-      ${FONT_STYLES.SB_24_HEADLINE};
-    }
-  }
-
-  .announce {
-    position: relative;
-    width: 3.2rem;
-    height: 3.2rem;
-  }
 
   article {
     display: flex;
