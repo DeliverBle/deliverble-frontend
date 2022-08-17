@@ -288,7 +288,7 @@ export async function getServerSideProps({ params }: GetServerSidePropsContext) 
 }
 
 const StLearnDetail = styled.div`
-  padding: 16rem 10rem;
+  padding: 14.8rem 10rem 15rem 10rem;
   min-height: 100vh;
   background: rgba(229, 238, 255, 0.85);
   backdrop-filter: blur(2.8rem);
