@@ -56,6 +56,7 @@ const StLeft = styled.div`
     margin-bottom: 2rem;
     color: ${COLOR.BLACK};
     ${FONT_STYLES.SB_32_HEADLINE};
+    word-break: keep-all;
   }
 `;
 
