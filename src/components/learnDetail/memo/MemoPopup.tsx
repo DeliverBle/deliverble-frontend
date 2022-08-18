@@ -3,20 +3,17 @@ import { FONT_STYLES } from '@src/styles/fontStyle';
 import styled from 'styled-components';
 
 interface MemoPopupProps {
-  // edit: () => void;
-  setEditMemoHighlightId: (id: number) => void;
+  setMemoHighlightId: (idList: number[]) => void;
   highlightId: number;
 }
 
 function MemoPopup(props: MemoPopupProps) {
-  // const { edit } = props;
-  const { setEditMemoHighlightId, highlightId } = props;
+  const { setMemoHighlightId, highlightId } = props;
 
   return (
     <>
       <StMemoPopup>
-        {/* <button type="button" onClick={edit}> */}
-        <button type="button" onClick={() => setEditMemoHighlightId(highlightId)}>
+        <button type="button" onClick={() => setMemoHighlightId([0, highlightId])}>
           메모 수정
         </button>
         <button type="button">메모 삭제</button>

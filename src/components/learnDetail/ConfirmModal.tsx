@@ -8,20 +8,11 @@ interface ConfirmModalProps {
   subText: string;
   cancelButtonText: string;
   confirmButtonText: string;
-  setNewMemoHighlightId: (id: number) => void;
-  setEditMemoHighlightId: (id: number) => void;
+  setMemoHighlightId: (idList: number[]) => void;
 }
 
 function ConfirmModal(props: ConfirmModalProps) {
-  const {
-    closeModal,
-    mainText,
-    subText,
-    cancelButtonText,
-    confirmButtonText,
-    setNewMemoHighlightId,
-    setEditMemoHighlightId,
-  } = props;
+  const { closeModal, mainText, subText, cancelButtonText, confirmButtonText, setMemoHighlightId } = props;
 
   window.scrollTo({
     top: 0,
@@ -38,8 +29,7 @@ function ConfirmModal(props: ConfirmModalProps) {
         <button onClick={() => closeModal(false)}>{cancelButtonText}</button>
         <button
           onClick={() => {
-            setNewMemoHighlightId(0);
-            setEditMemoHighlightId(0);
+            setMemoHighlightId([0, 0]);
             closeModal(false);
           }}>
           {confirmButtonText}

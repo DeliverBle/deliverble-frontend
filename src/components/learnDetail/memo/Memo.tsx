@@ -7,15 +7,14 @@ import MemoDotButton from './MemoDotButton';
 
 interface MemoProps {
   isEditMemo: boolean;
-  setEditMemoHighlightId: (id: number) => void;
-  setNewMemoHighlightId: (id: number) => void;
+  setMemoHighlightId: (idList: number[]) => void;
   keyword?: string;
   content?: string;
   highlightId: number;
 }
 
 function Memo(props: MemoProps) {
-  const { isEditMemo, highlightId, setEditMemoHighlightId, setNewMemoHighlightId, keyword, content } = props;
+  const { isEditMemo, highlightId, setMemoHighlightId, keyword, content } = props;
   const [moreButton, setMoreButton] = useState(false);
 
   const CONTENT_MAX = 30;
@@ -38,15 +37,11 @@ function Memo(props: MemoProps) {
     <StMemo>
       {keyword && <StKeyword>{keyword}</StKeyword>}
       {!content || isEditMemo ? (
-        <MemoForm
-          content={content}
-          setEditMemoHighlightId={setEditMemoHighlightId}
-          setNewMemoHighlightId={setNewMemoHighlightId}
-        />
+        <MemoForm content={content} setMemoHighlightId={setMemoHighlightId} />
       ) : (
         <StContent>
           {showContent()}
-          <MemoDotButton highlightId={highlightId} setEditMemoHighlightId={setEditMemoHighlightId} />
+          <MemoDotButton highlightId={highlightId} setMemoHighlightId={setMemoHighlightId} />
         </StContent>
       )}
     </StMemo>

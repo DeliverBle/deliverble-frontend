@@ -42,8 +42,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   const [isSpacing, setIsSpacing] = useState(false);
   const [clickedHighlightId, setClickedHighlightId] = useState<number>();
   const [points, setPoints] = useState({ x: 0, y: 0 });
-  const [newMemoHighlightId, setNewMemoHighlightId] = useState<number>();
-  const [editMemoHighlightId, setEditMemoHighlightId] = useState<number>();
+  const [memoHighlightId, setMemoHighlightId] = useState([0, 0]);
   const [hasMemo, setHasMemo] = useState(false);
   const [keyword, setKeyword] = useState<string>();
   const contextMenuRef = useRef<HTMLDivElement>(null);
@@ -76,7 +75,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
         setClickedHighlightId(() => Number((e.target as HTMLDivElement).id));
         setKeyword((e.target as HTMLDivElement).innerText);
       }
-      if (newMemoHighlightId || editMemoHighlightId) {
+      if (memoHighlightId[0] || memoHighlightId[1]) {
         setClickedHighlightId(-1);
         return setIsConfirmOpen(true);
       }
@@ -154,20 +153,18 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                         onClick={() => player?.seekTo(startTime, true)}
                         isActive={startTime <= currentTime && currentTime < endTime ? true : false}>
                         <p id={id.toString()}>{text}</p>
-                        {clickedHighlightId === id && !newMemoHighlightId && !editMemoHighlightId ? (
+                        {clickedHighlightId === id && !memoHighlightId[0] && !memoHighlightId[1] ? (
                           <ContextMenu
                             points={points}
                             hasMemo={hasMemo}
                             id={id}
-                            setEditMemoHighlightId={setEditMemoHighlightId}
-                            setNewMemoHighlightId={setNewMemoHighlightId}
+                            setMemoHighlightId={setMemoHighlightId}
                           />
                         ) : null}
                       </StScriptText>
                     ))}
                   {isFirstClicked && <ScriptEdit scripts={scripts} isHighlight={isHighlight} isSpacing={isSpacing} />}
                 </div>
-
                 <div>
                   <StButtonContainer>
                     <StButton
@@ -257,10 +254,8 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                     <>
                       <MemoList
                         highlightList={highlightData}
-                        editMemoHighlightId={editMemoHighlightId}
-                        newMemoHighlightId={newMemoHighlightId}
-                        setEditMemoHighlightId={setEditMemoHighlightId}
-                        setNewMemoHighlightId={setNewMemoHighlightId}
+                        memoHighlightId={memoHighlightId}
+                        setMemoHighlightId={setMemoHighlightId}
                         highlightId={clickedHighlightId}
                         keyword={keyword}
                       />
@@ -282,8 +277,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
             subText={subText}
             cancelButtonText={cancelButtonText}
             confirmButtonText={confirmButtonText}
-            setNewMemoHighlightId={setNewMemoHighlightId}
-            setEditMemoHighlightId={setEditMemoHighlightId}
+            setMemoHighlightId={setMemoHighlightId}
           />
         )}
         {isLoginModalOpen && <LoginModal closeModal={() => setIsLoginModalOpen(false)} />}

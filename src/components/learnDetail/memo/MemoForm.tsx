@@ -7,12 +7,11 @@ import ImageDiv from '../../common/ImageDiv';
 
 interface MemoFormProps {
   content?: string;
-  setNewMemoHighlightId: (id: number) => void;
-  setEditMemoHighlightId: (id: number) => void;
+  setMemoHighlightId: (idList: number[]) => void;
 }
 
 function MemoForm(props: MemoFormProps) {
-  const { setNewMemoHighlightId, setEditMemoHighlightId, content } = props;
+  const { setMemoHighlightId, content } = props;
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const autoResizeTextarea = () => {
@@ -47,8 +46,7 @@ function MemoForm(props: MemoFormProps) {
         <button
           type="button"
           onClick={() => {
-            setNewMemoHighlightId(0);
-            setEditMemoHighlightId(0);
+            setMemoHighlightId([0, 0]);
           }}>
           <ImageDiv src={icMemoXButton} alt="x" />
         </button>

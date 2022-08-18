@@ -9,12 +9,11 @@ interface ContextMenuProps {
   };
   hasMemo: boolean;
   id: number;
-  setEditMemoHighlightId: (id: number) => void;
-  setNewMemoHighlightId: (id: number) => void;
+  setMemoHighlightId: (idList: number[]) => void;
 }
 
 function ContextMenu(props: ContextMenuProps) {
-  const { points, hasMemo, id, setEditMemoHighlightId, setNewMemoHighlightId } = props;
+  const { points, hasMemo, id, setMemoHighlightId } = props;
 
   return (
     <StContextMenu top={points.y} left={points.x} className="test">
@@ -25,7 +24,7 @@ function ContextMenu(props: ContextMenuProps) {
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
-                setEditMemoHighlightId(id);
+                setMemoHighlightId([0, id]);
               }}>
               메모 수정
             </button>
@@ -34,7 +33,7 @@ function ContextMenu(props: ContextMenuProps) {
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
-                setNewMemoHighlightId(id);
+                setMemoHighlightId([id, 0]);
               }}>
               메모 추가
             </button>

@@ -5,12 +5,12 @@ import styled from 'styled-components';
 import MemoPopup from './MemoPopup';
 
 interface MemoDotButtonProps {
-  setEditMemoHighlightId: (id: number) => void;
+  setMemoHighlightId: (idList: number[]) => void;
   highlightId: number;
 }
 
 function MemoDotButton(props: MemoDotButtonProps) {
-  const { setEditMemoHighlightId, highlightId } = props;
+  const { setMemoHighlightId, highlightId } = props;
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const memoPopupRef = useRef<HTMLButtonElement>(null);
@@ -32,7 +32,7 @@ function MemoDotButton(props: MemoDotButtonProps) {
         <ImageDiv className="dot" src={icDotHover} alt="dot" />
         <ImageDiv className="dot default" src={icDotDefault} alt="like" />
       </StMemoDotImage>
-      {isPopupOpen && <MemoPopup highlightId={highlightId} setEditMemoHighlightId={setEditMemoHighlightId} />}
+      {isPopupOpen && <MemoPopup highlightId={highlightId} setMemoHighlightId={setMemoHighlightId} />}
     </StMemoDotButton>
   );
 }
