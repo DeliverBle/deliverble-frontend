@@ -108,7 +108,12 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
     setCancelButtonText('작성하기');
     setConfirmButtonText('작성 취소');
     const storage = globalThis?.sessionStorage;
-    setPrevLink(storage.getItem('prevPrevPath') || '/');
+    const prevPath = storage.getItem('prevPath');
+    if (prevPath?.includes('/learn/')) {
+      setPrevLink(storage.getItem('prevPrevPath') || '/');
+    } else {
+      setPrevLink(prevPath || '/');
+    }
   }, []);
 
   return (
@@ -118,11 +123,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
       <StLearnDetail>
         <ImageDiv
           onClick={() => {
-            if (getLoginStatus() === '') {
-              router.back();
-            } else {
-              router.push(prevLink);
-            }
+            router.push(prevLink);
           }}
           src={icXButton}
           className="close"
