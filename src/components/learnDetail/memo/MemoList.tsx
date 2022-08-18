@@ -51,6 +51,7 @@ function MemoList(props: MemoListProps) {
           Object.keys(memo).length > 0 && (
             <Memo
               key={highlightId}
+              highlightId={highlightId}
               isEditMemo={editMemoHighlightId == highlightId}
               setEditMemoHighlightId={setEditMemoHighlightId}
               setNewMemoHighlightId={setNewMemoHighlightId}

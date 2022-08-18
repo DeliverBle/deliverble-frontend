@@ -11,12 +11,12 @@ interface MemoProps {
   setNewMemoHighlightId: (id: number) => void;
   keyword?: string;
   content?: string;
+  highlightId: number;
 }
 
 function Memo(props: MemoProps) {
-  const { isEditMemo, setEditMemoHighlightId, setNewMemoHighlightId, keyword, content } = props;
+  const { isEditMemo, highlightId, setEditMemoHighlightId, setNewMemoHighlightId, keyword, content } = props;
   const [moreButton, setMoreButton] = useState(false);
-  const [clickedPopupEdit, setClickedPopupEdit] = useState(false);
 
   const CONTENT_MAX = 30;
 
@@ -37,17 +37,16 @@ function Memo(props: MemoProps) {
   return (
     <StMemo>
       {keyword && <StKeyword>{keyword}</StKeyword>}
-      {!content || clickedPopupEdit || isEditMemo ? (
+      {!content || isEditMemo ? (
         <MemoForm
           content={content}
           setEditMemoHighlightId={setEditMemoHighlightId}
           setNewMemoHighlightId={setNewMemoHighlightId}
-          setClickedPopupEdit={setClickedPopupEdit}
         />
       ) : (
         <StContent>
           {showContent()}
-          <MemoDotButton edit={() => setClickedPopupEdit(true)} />
+          <MemoDotButton highlightId={highlightId} setEditMemoHighlightId={setEditMemoHighlightId} />
         </StContent>
       )}
     </StMemo>

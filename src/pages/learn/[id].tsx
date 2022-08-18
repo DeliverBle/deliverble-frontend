@@ -76,7 +76,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
         setClickedHighlightId(() => Number((e.target as HTMLDivElement).id));
         setKeyword((e.target as HTMLDivElement).innerText);
       }
-      if (newMemoHighlightId) {
+      if (newMemoHighlightId || editMemoHighlightId) {
         setClickedHighlightId(-1);
         return setIsConfirmOpen(true);
       }
@@ -283,6 +283,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
             cancelButtonText={cancelButtonText}
             confirmButtonText={confirmButtonText}
             setNewMemoHighlightId={setNewMemoHighlightId}
+            setEditMemoHighlightId={setEditMemoHighlightId}
           />
         )}
         {isLoginModalOpen && <LoginModal closeModal={() => setIsLoginModalOpen(false)} />}
