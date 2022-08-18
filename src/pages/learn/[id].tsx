@@ -172,15 +172,18 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
               </StMemoTitle>
               <StMemoWrapper>
                 {highlightData ? (
-                  <MemoList
-                    highlightList={highlightData}
-                    editMemoHighlightId={editMemoHighlightId}
-                    newMemoHighlightId={newMemoHighlightId}
-                    setEditMemoHighlightId={setEditMemoHighlightId}
-                    setNewMemoHighlightId={setNewMemoHighlightId}
-                    highlightId={clickedHighlightId}
-                    keyword={keyword}
-                  />
+                  <>
+                    <MemoList
+                      highlightList={highlightData}
+                      editMemoHighlightId={editMemoHighlightId}
+                      newMemoHighlightId={newMemoHighlightId}
+                      setEditMemoHighlightId={setEditMemoHighlightId}
+                      setNewMemoHighlightId={setNewMemoHighlightId}
+                      highlightId={clickedHighlightId}
+                      keyword={keyword}
+                    />
+                    <StMemoFooter />
+                  </>
                 ) : (
                   <EmptyMemo />
                 )}
@@ -532,5 +535,16 @@ const StMemoTitle = styled.div`
 
 const StMemoWrapper = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  position: relative;
+`;
+
+const StMemoFooter = styled.div`
+  position: absolute;
+  bottom: 0;
+  width: 67rem;
+  height: 8rem;
+
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #ffffff 100%);
 `;
