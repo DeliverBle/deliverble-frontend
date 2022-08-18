@@ -156,7 +156,7 @@ const StSearch = styled.div`
   & > button {
     background-color: ${COLOR.MAIN_BLUE};
     color: ${COLOR.WHITE};
-    ${FONT_STYLES.B_20_BODY};
+    ${FONT_STYLES.SB_20_BODY};
     padding: 1.4rem 4rem 1.4rem 3.9rem;
     border-radius: 1.4rem;
     margin-left: 4rem;
