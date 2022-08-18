@@ -53,7 +53,6 @@ function MemoList(props: MemoListProps) {
               key={highlightId}
               isEditMemo={editMemoHighlightId == highlightId}
               setEditMemoHighlightId={setEditMemoHighlightId}
-              isNewMemo={newMemoHighlightId == highlightId}
               setNewMemoHighlightId={setNewMemoHighlightId}
               keyword={memo.keyword}
               content={memo.content}

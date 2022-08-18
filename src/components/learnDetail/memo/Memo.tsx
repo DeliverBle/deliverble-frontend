@@ -8,19 +8,17 @@ import MemoDotButton from './MemoDotButton';
 interface MemoProps {
   isEditMemo: boolean;
   setEditMemoHighlightId: (id: number) => void;
-  isNewMemo: boolean;
   setNewMemoHighlightId: (id: number) => void;
   keyword?: string;
   content?: string;
 }
 
 function Memo(props: MemoProps) {
-  const { isEditMemo, setEditMemoHighlightId, isNewMemo, setNewMemoHighlightId, keyword, content } = props;
+  const { isEditMemo, setEditMemoHighlightId, setNewMemoHighlightId, keyword, content } = props;
   const [moreButton, setMoreButton] = useState(false);
   const [clickedPopupEdit, setClickedPopupEdit] = useState(false);
 
   const CONTENT_MAX = 30;
-  const KEYWORD_MAX = 28;
 
   const showContent = () => {
     if (content && content.length > CONTENT_MAX && !moreButton) {
@@ -38,11 +36,7 @@ function Memo(props: MemoProps) {
 
   return (
     <StMemo>
-      {keyword && (
-        <StKeyword>
-          {keyword.length <= KEYWORD_MAX || moreButton || isNewMemo ? keyword : `${keyword.slice(0, 27)}...`}
-        </StKeyword>
-      )}
+      {keyword && <StKeyword>{keyword}</StKeyword>}
       {!content || clickedPopupEdit || isEditMemo ? (
         <MemoForm
           content={content}
