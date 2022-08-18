@@ -509,6 +509,7 @@ const StMemoFooter = styled.div`
   bottom: 0;
   width: 67rem;
   height: 8rem;
+  pointer-events: none;
 
   background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #ffffff 100%);
 `;

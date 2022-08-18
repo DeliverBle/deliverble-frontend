@@ -26,7 +26,14 @@ function MemoForm(props: MemoFormProps) {
   return (
     <>
       {content ? (
-        <StForm maxLength={70} rows={Math.ceil(content.length / 30)} defaultValue={content} />
+        <StForm
+          ref={textareaRef}
+          maxLength={70}
+          rows={Math.ceil(content.length / 30)}
+          defaultValue={content}
+          onKeyDown={autoResizeTextarea}
+          onKeyUp={autoResizeTextarea}
+        />
       ) : (
         <StForm
           ref={textareaRef}
