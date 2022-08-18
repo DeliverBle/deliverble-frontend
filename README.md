@@ -62,6 +62,7 @@
 ┣ 📂.github
 ┣ 📂public
 ┃ ┣ 📂assets
+┃ ┃ ┣ 📂favicon
 ┃ ┃ ┣ 📂icons
 ┃ ┃ ┣ 📂images
 ┃ ┃ ┗ 📂lottie

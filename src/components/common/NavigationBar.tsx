@@ -63,7 +63,7 @@ function NavigationBar() {
                 <a>홈</a>
               </Link>
             </StTab>
-            <StTab isActive={router.pathname === '/learn'}>
+            <StTab isActive={router.pathname.includes('/learn')}>
               <Link href="/learn">
                 <a>학습하기</a>
               </Link>
