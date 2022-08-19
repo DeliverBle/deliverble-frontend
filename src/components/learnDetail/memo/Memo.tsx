@@ -55,15 +55,15 @@ function Memo(props: MemoProps) {
           setConfirmModalText={setConfirmModalText}
         />
       ) : (
-        <StContent>
-          {showContent()}
+        <>
+          <StContent>{showContent()}</StContent>
           <MemoDotButton
             highlightId={highlightId}
             setMemoHighlightId={setMemoHighlightId}
             setIsConfirmOpen={setIsConfirmOpen}
             setConfirmModalText={setConfirmModalText}
           />
-        </StContent>
+        </>
       )}
     </StMemo>
   );
@@ -93,7 +93,7 @@ const StKeyword = styled.h1`
   ${FONT_STYLES.SB_25_MEMO};
 `;
 
-const StContent = styled.p`
+const StContent = styled.div`
   color: ${COLOR.GRAY_80};
   ${FONT_STYLES.R_23_MEMO};
 

@@ -15,7 +15,7 @@ function MemoDotButton(props: MemoDotButtonProps) {
   const { highlightId, setMemoHighlightId, setIsConfirmOpen, setConfirmModalText } = props;
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const memoPopupRef = useRef<HTMLButtonElement>(null);
+  const memoPopupRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (e: Event) => {
@@ -29,10 +29,10 @@ function MemoDotButton(props: MemoDotButtonProps) {
   }, [isPopupOpen]);
 
   return (
-    <StMemoDotButton ref={memoPopupRef} type="button" onClick={() => setIsPopupOpen((prev) => !prev)}>
+    <StMemoDotButton ref={memoPopupRef} onClick={() => setIsPopupOpen((prev) => !prev)}>
       <StMemoDotImage isPopupOpen={isPopupOpen}>
-        <ImageDiv className="dot" src={icDotHover} alt="dot" />
-        <ImageDiv className="dot default" src={icDotDefault} alt="like" />
+        <ImageDiv className="dot" src={icDotHover} alt="dot" layout="fill" />
+        <ImageDiv className="dot default" src={icDotDefault} alt="like" layout="fill" />
       </StMemoDotImage>
       {isPopupOpen && (
         <MemoPopup
@@ -48,7 +48,7 @@ function MemoDotButton(props: MemoDotButtonProps) {
 
 export default MemoDotButton;
 
-const StMemoDotButton = styled.button`
+const StMemoDotButton = styled.div`
   position: absolute;
   top: 1.2rem;
   right: 1.2rem;
@@ -57,14 +57,12 @@ const StMemoDotButton = styled.button`
   width: 4rem;
   height: 4rem;
   padding: 0;
+
+  cursor: pointer;
 `;
 
 const StMemoDotImage = styled.div<{ isPopupOpen: boolean }>`
-  position: relative;
-
   .dot {
-    position: absolute;
-    top: -2rem;
     opacity: ${({ isPopupOpen }) => (isPopupOpen ? 1 : 0)};
   }
 
