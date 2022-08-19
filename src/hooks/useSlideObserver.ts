@@ -20,7 +20,7 @@ export const useSlideObserver = (
 
     if (isRef.current && !stopObserve) {
       observer = new IntersectionObserver(observePoint, {
-        threshold: 0.9,
+        threshold: 0.8,
       });
       observer.observe(isRef.current);
     }
