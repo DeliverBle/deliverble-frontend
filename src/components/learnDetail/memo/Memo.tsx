@@ -5,13 +5,20 @@ import { useState } from 'react';
 import MemoForm from './MemoForm';
 import MemoDotButton from './MemoDotButton';
 
+interface IConfirmModalText {
+  mainText: string;
+  subText: string;
+  confirmText: string;
+  cancelText: string;
+}
+
 interface MemoProps {
   highlightId: number;
   memoData: (string | undefined)[];
   isEditMemo: boolean;
   setMemoHighlightId: (idList: number[]) => void;
   setIsConfirmOpen: (open: boolean) => void;
-  setConfirmModalText: (textList: string[]) => void;
+  setConfirmModalText: (text: IConfirmModalText) => void;
 }
 
 function Memo(props: MemoProps) {

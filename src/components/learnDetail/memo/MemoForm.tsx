@@ -4,12 +4,20 @@ import { icCheckButton, icMemoXButton } from 'public/assets/icons';
 import { useRef } from 'react';
 import styled from 'styled-components';
 import ImageDiv from '../../common/ImageDiv';
+import { NEW_MEMO_CONFIRM_MODAL_TEXT, EDIT_MEMO_CONFIRM_MODAL_TEXT } from '@src/utils/constant';
+
+interface IConfirmModalText {
+  mainText: string;
+  subText: string;
+  confirmText: string;
+  cancelText: string;
+}
 
 interface MemoFormProps {
   content?: string;
   setMemoHighlightId: (idList: number[]) => void;
   setIsConfirmOpen: (open: boolean) => void;
-  setConfirmModalText: (textList: string[]) => void;
+  setConfirmModalText: (text: IConfirmModalText) => void;
 }
 
 function MemoForm(props: MemoFormProps) {
@@ -22,6 +30,14 @@ function MemoForm(props: MemoFormProps) {
     if (formRef) {
       formRef.style.height = '0.1rem';
       formRef.style.height = (12 + formRef.scrollHeight) / 10 + 'rem';
+    }
+  };
+
+  const changeModalText = () => {
+    if (newFormRef.current?.value) {
+      setConfirmModalText(NEW_MEMO_CONFIRM_MODAL_TEXT);
+    } else if (editFormRef.current?.value !== content) {
+      setConfirmModalText(EDIT_MEMO_CONFIRM_MODAL_TEXT);
     }
   };
 
@@ -50,13 +66,7 @@ function MemoForm(props: MemoFormProps) {
         <button
           type="button"
           onClick={() => {
-            editFormRef.current?.value !== content &&
-              setConfirmModalText([
-                '메모 수정을 취소하시겠습니까?',
-                '수정 취소 선택시, 작성된 메모는 저장되지 않습니다.',
-                '계속하기',
-                '수정 취소',
-              ]);
+            changeModalText();
             newFormRef.current?.value || editFormRef.current?.value !== content
               ? setIsConfirmOpen(true)
               : setMemoHighlightId([0, 0]);

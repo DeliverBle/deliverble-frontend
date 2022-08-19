@@ -4,6 +4,13 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Memo from './Memo';
 
+interface IConfirmModalText {
+  mainText: string;
+  subText: string;
+  confirmText: string;
+  cancelText: string;
+}
+
 interface MemoListProps {
   highlightList: HighlightData[];
   highlightId?: number;
@@ -11,7 +18,7 @@ interface MemoListProps {
   memoHighlightId: number[];
   setMemoHighlightId: (idList: number[]) => void;
   setIsConfirmOpen: (open: boolean) => void;
-  setConfirmModalText: (textList: string[]) => void;
+  setConfirmModalText: (text: IConfirmModalText) => void;
 }
 
 function MemoList(props: MemoListProps) {

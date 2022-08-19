@@ -17,6 +17,7 @@ import ConfirmModal from '@src/components/learnDetail/ConfirmModal';
 import LoginModal from '@src/components/login/LoginModal';
 import { api } from '@src/services/api';
 import { HighlightData, VideoData } from '@src/services/api/types/learn-detail';
+import { NEW_MEMO_CONFIRM_MODAL_TEXT, EDIT_MEMO_CONFIRM_MODAL_TEXT } from '@src/utils/constant';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import {
@@ -34,12 +35,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  const [confirmModalText, setConfirmModalText] = useState<string[]>([
-    '메모 작성을 취소하시겠습니까?',
-    '작성 취소 선택시, 작성된 메모는 저장되지 않습니다.',
-    '작성하기',
-    '작성 취소',
-  ]);
+  const [confirmModalText, setConfirmModalText] = useState(NEW_MEMO_CONFIRM_MODAL_TEXT);
   const [isHighlight, setIsHighlight] = useState(false);
   const [isSpacing, setIsSpacing] = useState(false);
   const [clickedHighlightId, setClickedHighlightId] = useState<number>();
@@ -78,6 +74,8 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
         setKeyword((e.target as HTMLDivElement).innerText);
       }
       if (memoHighlightId[0] || memoHighlightId[1]) {
+        memoHighlightId[0] && setConfirmModalText(NEW_MEMO_CONFIRM_MODAL_TEXT);
+        memoHighlightId[1] && setConfirmModalText(EDIT_MEMO_CONFIRM_MODAL_TEXT);
         setClickedHighlightId(-1);
         return setIsConfirmOpen(true);
       }

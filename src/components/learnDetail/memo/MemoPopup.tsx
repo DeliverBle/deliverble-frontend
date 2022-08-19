@@ -1,12 +1,20 @@
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import styled from 'styled-components';
+import { DELETE_MEMO_CONFIRM_MODAL_TEXT } from '@src/utils/constant';
+
+interface IConfirmModalText {
+  mainText: string;
+  subText: string;
+  confirmText: string;
+  cancelText: string;
+}
 
 interface MemoPopupProps {
   highlightId: number;
   setMemoHighlightId: (idList: number[]) => void;
   setIsConfirmOpen: (open: boolean) => void;
-  setConfirmModalText: (textList: string[]) => void;
+  setConfirmModalText: (text: IConfirmModalText) => void;
 }
 
 function MemoPopup(props: MemoPopupProps) {
@@ -22,7 +30,7 @@ function MemoPopup(props: MemoPopupProps) {
           type="button"
           onClick={() => {
             setIsConfirmOpen(true);
-            setConfirmModalText(['메모를 삭제하시겠습니까?', '', '취소', '삭제하기']);
+            setConfirmModalText(DELETE_MEMO_CONFIRM_MODAL_TEXT);
           }}>
           메모 삭제
         </button>

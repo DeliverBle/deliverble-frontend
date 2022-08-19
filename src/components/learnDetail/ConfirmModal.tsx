@@ -2,10 +2,17 @@ import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 
+interface IConfirmModalText {
+  mainText: string;
+  subText: string;
+  confirmText: string;
+  cancelText: string;
+}
+
 interface ConfirmModalProps {
   closeModal: (close: boolean) => void;
   setMemoHighlightId: (idList: number[]) => void;
-  confirmModalText: string[];
+  confirmModalText: IConfirmModalText;
 }
 
 function ConfirmModal(props: ConfirmModalProps) {
@@ -19,17 +26,17 @@ function ConfirmModal(props: ConfirmModalProps) {
   return (
     <StConfirmModal>
       <StDescription>
-        <h2>{confirmModalText[0]}</h2>
-        <p>{confirmModalText[1]}</p>
+        <h2>{confirmModalText.mainText}</h2>
+        <p>{confirmModalText.subText}</p>
       </StDescription>
       <StButtonContainer>
-        <button onClick={() => closeModal(false)}>{confirmModalText[2]}</button>
+        <button onClick={() => closeModal(false)}>{confirmModalText.cancelText}</button>
         <button
           onClick={() => {
             setMemoHighlightId([0, 0]);
             closeModal(false);
           }}>
-          {confirmModalText[3]}
+          {confirmModalText.confirmText}
         </button>
       </StButtonContainer>
     </StConfirmModal>
