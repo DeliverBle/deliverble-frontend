@@ -18,10 +18,10 @@ function MemoForm(props: MemoFormProps) {
   const newFormRef = useRef<HTMLTextAreaElement>(null);
   const editFormRef = useRef<HTMLTextAreaElement>(null);
   const autoResizeTextarea = () => {
-    const formRef = newFormRef || editFormRef;
-    if (formRef.current) {
-      formRef.current.style.height = '0.1rem';
-      formRef.current.style.height = (12 + formRef.current.scrollHeight) / 10 + 'rem';
+    const formRef = newFormRef.current || editFormRef.current;
+    if (formRef) {
+      formRef.style.height = '0.1rem';
+      formRef.style.height = (12 + formRef.scrollHeight) / 10 + 'rem';
     }
   };
 
@@ -50,7 +50,7 @@ function MemoForm(props: MemoFormProps) {
         <button
           type="button"
           onClick={() => {
-            editFormRef &&
+            editFormRef.current?.value !== content &&
               setConfirmModalText([
                 '메모 수정을 취소하시겠습니까?',
                 '수정 취소 선택시, 작성된 메모는 저장되지 않습니다.',
