@@ -6,18 +6,17 @@ import MemoForm from './MemoForm';
 import MemoDotButton from './MemoDotButton';
 
 interface MemoProps {
+  highlightId: number;
+  memoData: (string | undefined)[];
   isEditMemo: boolean;
   setMemoHighlightId: (idList: number[]) => void;
-  keyword?: string;
-  content?: string;
-  highlightId: number;
   setIsConfirmOpen: (open: boolean) => void;
   setConfirmModalText: (textList: string[]) => void;
 }
 
 function Memo(props: MemoProps) {
-  const { isEditMemo, highlightId, setMemoHighlightId, keyword, content, setIsConfirmOpen, setConfirmModalText } =
-    props;
+  const { highlightId, memoData, isEditMemo, setMemoHighlightId, setIsConfirmOpen, setConfirmModalText } = props;
+  const [keyword, content] = memoData;
   const [moreButton, setMoreButton] = useState(false);
 
   const CONTENT_MAX = 30;
@@ -27,8 +26,17 @@ function Memo(props: MemoProps) {
       return (
         <>
           {content.slice(0, 26)}
-          <button type="button" onClick={() => setMoreButton(true)}>
+          <button type="button" onClick={() => setMoreButton((prev) => !prev)}>
             ... 더보기
+          </button>
+        </>
+      );
+    } else if (moreButton) {
+      return (
+        <>
+          {content}
+          <button type="button" onClick={() => setMoreButton((prev) => !prev)}>
+            접기
           </button>
         </>
       );

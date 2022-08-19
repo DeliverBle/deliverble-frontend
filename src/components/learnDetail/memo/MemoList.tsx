@@ -6,10 +6,10 @@ import Memo from './Memo';
 
 interface MemoListProps {
   highlightList: HighlightData[];
-  memoHighlightId: number[];
-  setMemoHighlightId: (idList: number[]) => void;
   highlightId?: number;
   keyword?: string;
+  memoHighlightId: number[];
+  setMemoHighlightId: (idList: number[]) => void;
   setIsConfirmOpen: (open: boolean) => void;
   setConfirmModalText: (textList: string[]) => void;
 }
@@ -17,10 +17,10 @@ interface MemoListProps {
 function MemoList(props: MemoListProps) {
   const {
     highlightList,
-    memoHighlightId,
-    setMemoHighlightId,
     highlightId,
     keyword,
+    memoHighlightId,
+    setMemoHighlightId,
     setIsConfirmOpen,
     setConfirmModalText,
   } = props;
@@ -52,10 +52,9 @@ function MemoList(props: MemoListProps) {
             <Memo
               key={highlightId}
               highlightId={highlightId}
+              memoData={[memo.keyword, memo.content]}
               isEditMemo={memoHighlightId[1] == highlightId}
               setMemoHighlightId={setMemoHighlightId}
-              keyword={memo.keyword}
-              content={memo.content}
               setIsConfirmOpen={setIsConfirmOpen}
               setConfirmModalText={setConfirmModalText}
             />
