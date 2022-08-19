@@ -30,13 +30,13 @@ function ConfirmModal(props: ConfirmModalProps) {
         <p>{confirmModalText.subText}</p>
       </StDescription>
       <StButtonContainer>
-        <button onClick={() => closeModal(false)}>{confirmModalText.cancelText}</button>
+        <button onClick={() => closeModal(false)}>{confirmModalText.confirmText}</button>
         <button
           onClick={() => {
             setMemoHighlightId([0, 0]);
             closeModal(false);
           }}>
-          {confirmModalText.confirmText}
+          {confirmModalText.cancelText}
         </button>
       </StButtonContainer>
     </StConfirmModal>
