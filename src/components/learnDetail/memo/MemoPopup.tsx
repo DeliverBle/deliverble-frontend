@@ -3,12 +3,14 @@ import { FONT_STYLES } from '@src/styles/fontStyle';
 import styled from 'styled-components';
 
 interface MemoPopupProps {
-  setMemoHighlightId: (idList: number[]) => void;
   highlightId: number;
+  setMemoHighlightId: (idList: number[]) => void;
+  setIsConfirmOpen: (open: boolean) => void;
+  setConfirmModalText: (textList: string[]) => void;
 }
 
 function MemoPopup(props: MemoPopupProps) {
-  const { setMemoHighlightId, highlightId } = props;
+  const { setMemoHighlightId, highlightId, setIsConfirmOpen, setConfirmModalText } = props;
 
   return (
     <>
@@ -16,7 +18,14 @@ function MemoPopup(props: MemoPopupProps) {
         <button type="button" onClick={() => setMemoHighlightId([0, highlightId])}>
           메모 수정
         </button>
-        <button type="button">메모 삭제</button>
+        <button
+          type="button"
+          onClick={() => {
+            setIsConfirmOpen(true);
+            setConfirmModalText(['메모를 삭제하시겠습니까?', '', '취소', '삭제하기']);
+          }}>
+          메모 삭제
+        </button>
       </StMemoPopup>
     </>
   );

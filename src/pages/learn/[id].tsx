@@ -34,10 +34,12 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  const [mainText, setMainText] = useState('');
-  const [subText, setSubText] = useState('');
-  const [cancelButtonText, setCancelButtonText] = useState('');
-  const [confirmButtonText, setConfirmButtonText] = useState('');
+  const [confirmModalText, setConfirmModalText] = useState<string[]>([
+    '메모 작성을 취소하시겠습니까?',
+    '작성 취소 선택시, 작성된 메모는 저장되지 않습니다.',
+    '작성하기',
+    '작성 취소',
+  ]);
   const [isHighlight, setIsHighlight] = useState(false);
   const [isSpacing, setIsSpacing] = useState(false);
   const [clickedHighlightId, setClickedHighlightId] = useState<number>();
@@ -108,10 +110,6 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   }, [clickedHighlightId]);
 
   useEffect(() => {
-    setMainText('메모 작성을 취소하시겠습니까?');
-    setSubText('작성 취소 선택시, 작성된 메모는 저장되지 않습니다.');
-    setCancelButtonText('작성하기');
-    setConfirmButtonText('작성 취소');
     const storage = globalThis?.sessionStorage;
     const prevPath = storage.getItem('prevPath');
     if (prevPath?.includes('/learn/')) {
@@ -258,6 +256,8 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                         setMemoHighlightId={setMemoHighlightId}
                         highlightId={clickedHighlightId}
                         keyword={keyword}
+                        setIsConfirmOpen={setIsConfirmOpen}
+                        setConfirmModalText={setConfirmModalText}
                       />
                       <StMemoFooter />
                     </>
@@ -273,10 +273,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
         {isConfirmOpen && (
           <ConfirmModal
             closeModal={setIsConfirmOpen}
-            mainText={mainText}
-            subText={subText}
-            cancelButtonText={cancelButtonText}
-            confirmButtonText={confirmButtonText}
+            confirmModalText={confirmModalText}
             setMemoHighlightId={setMemoHighlightId}
           />
         )}

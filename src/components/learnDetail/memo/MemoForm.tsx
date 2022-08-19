@@ -8,16 +8,20 @@ import ImageDiv from '../../common/ImageDiv';
 interface MemoFormProps {
   content?: string;
   setMemoHighlightId: (idList: number[]) => void;
+  setIsConfirmOpen: (open: boolean) => void;
+  setConfirmModalText: (textList: string[]) => void;
 }
 
 function MemoForm(props: MemoFormProps) {
-  const { setMemoHighlightId, content } = props;
+  const { setMemoHighlightId, content, setIsConfirmOpen, setConfirmModalText } = props;
 
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const newFormRef = useRef<HTMLTextAreaElement>(null);
+  const editFormRef = useRef<HTMLTextAreaElement>(null);
   const autoResizeTextarea = () => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = '0.1rem';
-      textareaRef.current.style.height = (12 + textareaRef.current.scrollHeight) / 10 + 'rem';
+    const formRef = newFormRef || editFormRef;
+    if (formRef.current) {
+      formRef.current.style.height = '0.1rem';
+      formRef.current.style.height = (12 + formRef.current.scrollHeight) / 10 + 'rem';
     }
   };
 
@@ -25,7 +29,7 @@ function MemoForm(props: MemoFormProps) {
     <>
       {content ? (
         <StForm
-          ref={textareaRef}
+          ref={editFormRef}
           maxLength={70}
           rows={Math.ceil(content.length / 30)}
           defaultValue={content}
@@ -34,9 +38,9 @@ function MemoForm(props: MemoFormProps) {
         />
       ) : (
         <StForm
-          ref={textareaRef}
-          rows={1}
+          ref={newFormRef}
           maxLength={70}
+          rows={1}
           autoFocus
           onKeyDown={autoResizeTextarea}
           onKeyUp={autoResizeTextarea}
@@ -46,7 +50,16 @@ function MemoForm(props: MemoFormProps) {
         <button
           type="button"
           onClick={() => {
-            setMemoHighlightId([0, 0]);
+            editFormRef &&
+              setConfirmModalText([
+                '메모 수정을 취소하시겠습니까?',
+                '수정 취소 선택시, 작성된 메모는 저장되지 않습니다.',
+                '계속하기',
+                '수정 취소',
+              ]);
+            newFormRef.current?.value || editFormRef.current?.value !== content
+              ? setIsConfirmOpen(true)
+              : setMemoHighlightId([0, 0]);
           }}>
           <ImageDiv src={icMemoXButton} alt="x" />
         </button>

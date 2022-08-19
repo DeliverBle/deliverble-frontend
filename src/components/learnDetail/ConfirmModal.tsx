@@ -4,15 +4,12 @@ import { FONT_STYLES } from '@src/styles/fontStyle';
 
 interface ConfirmModalProps {
   closeModal: (close: boolean) => void;
-  mainText: string;
-  subText: string;
-  cancelButtonText: string;
-  confirmButtonText: string;
   setMemoHighlightId: (idList: number[]) => void;
+  confirmModalText: string[];
 }
 
 function ConfirmModal(props: ConfirmModalProps) {
-  const { closeModal, mainText, subText, cancelButtonText, confirmButtonText, setMemoHighlightId } = props;
+  const { closeModal, setMemoHighlightId, confirmModalText } = props;
 
   window.scrollTo({
     top: 0,
@@ -22,17 +19,17 @@ function ConfirmModal(props: ConfirmModalProps) {
   return (
     <StConfirmModal>
       <StDescription>
-        <h2>{mainText}</h2>
-        <p>{subText}</p>
+        <h2>{confirmModalText[0]}</h2>
+        <p>{confirmModalText[1]}</p>
       </StDescription>
       <StButtonContainer>
-        <button onClick={() => closeModal(false)}>{cancelButtonText}</button>
+        <button onClick={() => closeModal(false)}>{confirmModalText[2]}</button>
         <button
           onClick={() => {
             setMemoHighlightId([0, 0]);
             closeModal(false);
           }}>
-          {confirmButtonText}
+          {confirmModalText[3]}
         </button>
       </StButtonContainer>
     </StConfirmModal>

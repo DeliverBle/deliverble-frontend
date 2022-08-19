@@ -10,10 +10,20 @@ interface MemoListProps {
   setMemoHighlightId: (idList: number[]) => void;
   highlightId?: number;
   keyword?: string;
+  setIsConfirmOpen: (open: boolean) => void;
+  setConfirmModalText: (textList: string[]) => void;
 }
 
 function MemoList(props: MemoListProps) {
-  const { highlightList, memoHighlightId, setMemoHighlightId, highlightId, keyword } = props;
+  const {
+    highlightList,
+    memoHighlightId,
+    setMemoHighlightId,
+    highlightId,
+    keyword,
+    setIsConfirmOpen,
+    setConfirmModalText,
+  } = props;
   const [index, setIndex] = useState<number>();
   const [deleteMemo, setDeleteMemo] = useState<number>();
 
@@ -46,6 +56,8 @@ function MemoList(props: MemoListProps) {
               setMemoHighlightId={setMemoHighlightId}
               keyword={memo.keyword}
               content={memo.content}
+              setIsConfirmOpen={setIsConfirmOpen}
+              setConfirmModalText={setConfirmModalText}
             />
           ),
       )}

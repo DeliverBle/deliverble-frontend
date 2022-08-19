@@ -11,10 +11,13 @@ interface MemoProps {
   keyword?: string;
   content?: string;
   highlightId: number;
+  setIsConfirmOpen: (open: boolean) => void;
+  setConfirmModalText: (textList: string[]) => void;
 }
 
 function Memo(props: MemoProps) {
-  const { isEditMemo, highlightId, setMemoHighlightId, keyword, content } = props;
+  const { isEditMemo, highlightId, setMemoHighlightId, keyword, content, setIsConfirmOpen, setConfirmModalText } =
+    props;
   const [moreButton, setMoreButton] = useState(false);
 
   const CONTENT_MAX = 30;
@@ -37,11 +40,21 @@ function Memo(props: MemoProps) {
     <StMemo>
       {keyword && <StKeyword>{keyword}</StKeyword>}
       {!content || isEditMemo ? (
-        <MemoForm content={content} setMemoHighlightId={setMemoHighlightId} />
+        <MemoForm
+          content={content}
+          setMemoHighlightId={setMemoHighlightId}
+          setIsConfirmOpen={setIsConfirmOpen}
+          setConfirmModalText={setConfirmModalText}
+        />
       ) : (
         <StContent>
           {showContent()}
-          <MemoDotButton highlightId={highlightId} setMemoHighlightId={setMemoHighlightId} />
+          <MemoDotButton
+            highlightId={highlightId}
+            setMemoHighlightId={setMemoHighlightId}
+            setIsConfirmOpen={setIsConfirmOpen}
+            setConfirmModalText={setConfirmModalText}
+          />
         </StContent>
       )}
     </StMemo>
