@@ -62,7 +62,12 @@ const StMemoDotButton = styled.div`
 `;
 
 const StMemoDotImage = styled.div<{ isPopupOpen: boolean }>`
+  position: relative;
+
   .dot {
+    position: absolute;
+    width: 4rem;
+    height: 4rem;
     opacity: ${({ isPopupOpen }) => (isPopupOpen ? 1 : 0)};
   }
 
