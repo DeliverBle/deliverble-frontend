@@ -8,7 +8,7 @@ function Footer() {
   return (
     <StFooter>
       <StLogo>
-        <ImageDiv className="logo" src={icLogoFooter} alt="DeliverBle" />
+        <ImageDiv className="logo" src={icLogoFooter} alt="" />
         <h4>
           언제 어디서나 당당할 당신의 말하기를
           <br />
@@ -35,7 +35,7 @@ function Footer() {
         <StSocial>
           <StInfoTitle>Social</StInfoTitle>
           <a target="_blank" href="https://www.instagram.com/deliverble_official/" rel="noreferrer">
-            <ImageDiv className="social-link" src={icSocial} alt="instagram" />
+            <ImageDiv className="social-link" src={icSocial} alt="인스타그램 링크" />
           </a>
         </StSocial>
       </StInfo>

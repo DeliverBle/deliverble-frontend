@@ -55,10 +55,10 @@ function MemoForm(props: MemoFormProps) {
               ? setIsConfirmOpen(true)
               : setMemoHighlightId([0, 0]);
           }}>
-          <ImageDiv src={icMemoXButton} alt="x" />
+          <ImageDiv src={icMemoXButton} alt="취소" />
         </button>
         <button type="button">
-          <ImageDiv src={icCheckButton} alt="ok" />
+          <ImageDiv src={icCheckButton} alt="수정" />
         </button>
       </StButtonContainer>
     </>
