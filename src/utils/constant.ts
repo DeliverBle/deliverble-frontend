@@ -17,3 +17,5 @@ export const DELETE_MEMO_CONFIRM_MODAL_TEXT = {
   confirmText: '삭제하기',
   cancelText: '취소',
 };
+
+export const MEMO_CONTENT_MAX = 30;

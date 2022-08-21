@@ -5,6 +5,7 @@ import { useState } from 'react';
 import MemoForm from './MemoForm';
 import MemoDotButton from './MemoDotButton';
 import { IConfirmModalText } from '../ConfirmModal';
+import { MEMO_CONTENT_MAX } from '@src/utils/constant';
 
 interface MemoProps {
   highlightId: number;
@@ -20,10 +21,8 @@ function Memo(props: MemoProps) {
   const [keyword, content] = memoData;
   const [moreButton, setMoreButton] = useState(false);
 
-  const CONTENT_MAX = 30;
-
   const showContent = () => {
-    if (content && content.length > CONTENT_MAX && !moreButton) {
+    if (content && content.length > MEMO_CONTENT_MAX && !moreButton) {
       return (
         <>
           {content.slice(0, 26)}
