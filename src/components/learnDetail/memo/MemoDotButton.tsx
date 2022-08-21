@@ -53,11 +53,9 @@ const StMemoDotButton = styled.div`
   position: absolute;
   top: 1.2rem;
   right: 1.2rem;
-  display: inline-block;
 
   width: 4rem;
   height: 4rem;
-  padding: 0;
 
   cursor: pointer;
 `;

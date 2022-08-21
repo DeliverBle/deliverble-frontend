@@ -67,7 +67,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   const handleRightClick = (e: React.MouseEvent, id: number) => {
     if (highlightData) {
       const index = highlightData.findIndex((item) => item.highlightId === id);
-      if (index !== undefined && index !== -1) {
+      if (index !== -1) {
         setHasMemo(Object.keys(highlightData[index].memo).length > 0);
         setPoints(controlPointX(e));
         setClickedHighlightId(() => Number((e.target as HTMLDivElement).id));
