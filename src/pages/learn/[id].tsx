@@ -13,7 +13,7 @@ import MemoList from '@src/components/learnDetail/memo/MemoList';
 import ScriptEdit from '@src/components/learnDetail/ScriptEdit';
 import ContextMenu from '@src/components/learnDetail/ContextMenu';
 import VideoDetail from '@src/components/learnDetail/VideoDetail';
-import ConfirmModal from '@src/components/learnDetail/ConfirmModal';
+import ConfirmModal, { IConfirmModalText } from '@src/components/learnDetail/ConfirmModal';
 import LoginModal from '@src/components/login/LoginModal';
 import { api } from '@src/services/api';
 import { HighlightData, VideoData } from '@src/services/api/types/learn-detail';
@@ -35,7 +35,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  const [confirmModalText, setConfirmModalText] = useState(NEW_MEMO_CONFIRM_MODAL_TEXT);
+  const [confirmModalText, setConfirmModalText] = useState<IConfirmModalText>(NEW_MEMO_CONFIRM_MODAL_TEXT);
   const [isHighlight, setIsHighlight] = useState(false);
   const [isSpacing, setIsSpacing] = useState(false);
   const [clickedHighlightId, setClickedHighlightId] = useState<number>();
@@ -68,10 +68,11 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
     if (highlightData) {
       const index = highlightData.findIndex((item) => item.highlightId === id);
       if (index !== -1) {
+        const target = e.target as HTMLDivElement;
         setHasMemo(Object.keys(highlightData[index].memo).length > 0);
         setPoints(controlPointX(e));
-        setClickedHighlightId(() => Number((e.target as HTMLDivElement).id));
-        setKeyword((e.target as HTMLDivElement).innerText);
+        setClickedHighlightId(() => Number(target.id));
+        setKeyword(target.innerText);
       }
       if (memoHighlightId[0] || memoHighlightId[1]) {
         memoHighlightId[0] && setConfirmModalText(NEW_MEMO_CONFIRM_MODAL_TEXT);
@@ -149,14 +150,14 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                         onClick={() => player?.seekTo(startTime, true)}
                         isActive={startTime <= currentTime && currentTime < endTime ? true : false}>
                         <p id={id.toString()}>{text}</p>
-                        {clickedHighlightId === id && !memoHighlightId[0] && !memoHighlightId[1] ? (
+                        {clickedHighlightId === id && !memoHighlightId[0] && !memoHighlightId[1] && (
                           <ContextMenu
                             points={points}
                             hasMemo={hasMemo}
                             id={id}
                             setMemoHighlightId={setMemoHighlightId}
                           />
-                        ) : null}
+                        )}
                       </StScriptText>
                     ))}
                   {isFirstClicked && <ScriptEdit scripts={scripts} isHighlight={isHighlight} isSpacing={isSpacing} />}

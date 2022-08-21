@@ -26,11 +26,11 @@ function MemoList(props: MemoListProps) {
     setConfirmModalText,
   } = props;
   const [index, setIndex] = useState<number>();
-  const [deleteMemo, setDeleteMemo] = useState<number>();
+  const [memoIndexToDelete, setMemoIndexToDelete] = useState<number>();
 
   useEffect(() => {
     setIndex(highlightList.findIndex((item) => item.highlightId === highlightId));
-    setDeleteMemo(highlightList.findIndex((item) => Object.keys(item.memo).length === 1));
+    setMemoIndexToDelete(highlightList.findIndex((item) => Object.keys(item.memo).length === 1));
   }, [highlightId, highlightList]);
 
   if (index && index !== -1) {
@@ -41,8 +41,8 @@ function MemoList(props: MemoListProps) {
     }
   }
 
-  if (deleteMemo && deleteMemo !== -1 && !memoHighlightId[0]) {
-    highlightList[deleteMemo].memo = {};
+  if (memoIndexToDelete && memoIndexToDelete !== -1 && !memoHighlightId[0]) {
+    highlightList[memoIndexToDelete].memo = {};
   }
 
   return (
