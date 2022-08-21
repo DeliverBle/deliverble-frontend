@@ -37,25 +37,15 @@ function MemoForm(props: MemoFormProps) {
 
   return (
     <>
-      {content ? (
-        <StForm
-          ref={editFormRef}
-          maxLength={70}
-          rows={Math.ceil(content.length / 30)}
-          defaultValue={content}
-          onKeyDown={autoResizeTextarea}
-          onKeyUp={autoResizeTextarea}
-        />
-      ) : (
-        <StForm
-          ref={newFormRef}
-          maxLength={70}
-          rows={1}
-          autoFocus
-          onKeyDown={autoResizeTextarea}
-          onKeyUp={autoResizeTextarea}
-        />
-      )}
+      <StForm
+        ref={content ? editFormRef : newFormRef}
+        maxLength={70}
+        rows={content ? Math.ceil(content.length / 30) : 1}
+        autoFocus={content ? false : true}
+        defaultValue={content}
+        onKeyDown={autoResizeTextarea}
+        onKeyUp={autoResizeTextarea}
+      />
       <StButtonContainer>
         <button
           type="button"

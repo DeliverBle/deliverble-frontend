@@ -19,25 +19,14 @@ function ContextMenu(props: ContextMenuProps) {
     <StContextMenu top={points.y} left={points.x} className="test">
       <ul>
         <li>
-          {hasMemo ? (
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                setMemoHighlightId([0, id]);
-              }}>
-              메모 수정
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                setMemoHighlightId([id, 0]);
-              }}>
-              메모 추가
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              hasMemo ? setMemoHighlightId([0, id]) : setMemoHighlightId([id, 0]);
+            }}>
+            {hasMemo ? '메모 수정' : '메모 추가'}
+          </button>
         </li>
         <li>
           <button type="button">하이라이트 삭제</button>
