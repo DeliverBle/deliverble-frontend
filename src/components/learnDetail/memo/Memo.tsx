@@ -4,13 +4,7 @@ import { FONT_STYLES } from '@src/styles/fontStyle';
 import { useState } from 'react';
 import MemoForm from './MemoForm';
 import MemoDotButton from './MemoDotButton';
-
-interface IConfirmModalText {
-  mainText: string;
-  subText: string;
-  confirmText: string;
-  cancelText: string;
-}
+import { IConfirmModalText } from '../ConfirmModal';
 
 interface MemoProps {
   highlightId: number;

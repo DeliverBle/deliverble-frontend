@@ -3,13 +3,7 @@ import { icDotDefault, icDotHover } from 'public/assets/icons';
 import { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import MemoPopup from './MemoPopup';
-
-interface IConfirmModalText {
-  mainText: string;
-  subText: string;
-  confirmText: string;
-  cancelText: string;
-}
+import { IConfirmModalText } from '../ConfirmModal';
 
 interface MemoDotButtonProps {
   highlightId: number;

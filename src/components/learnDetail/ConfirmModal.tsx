@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 
-interface IConfirmModalText {
+export interface IConfirmModalText {
   mainText: string;
   subText: string;
   confirmText: string;

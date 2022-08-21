@@ -3,13 +3,7 @@ import { COLOR } from '@src/styles/color';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Memo from './Memo';
-
-interface IConfirmModalText {
-  mainText: string;
-  subText: string;
-  confirmText: string;
-  cancelText: string;
-}
+import { IConfirmModalText } from '../ConfirmModal';
 
 interface MemoListProps {
   highlightList: HighlightData[];

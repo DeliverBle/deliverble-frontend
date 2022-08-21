@@ -5,13 +5,7 @@ import { useRef } from 'react';
 import styled from 'styled-components';
 import ImageDiv from '../../common/ImageDiv';
 import { NEW_MEMO_CONFIRM_MODAL_TEXT, EDIT_MEMO_CONFIRM_MODAL_TEXT } from '@src/utils/constant';
-
-interface IConfirmModalText {
-  mainText: string;
-  subText: string;
-  confirmText: string;
-  cancelText: string;
-}
+import { IConfirmModalText } from '../ConfirmModal';
 
 interface MemoFormProps {
   content?: string;

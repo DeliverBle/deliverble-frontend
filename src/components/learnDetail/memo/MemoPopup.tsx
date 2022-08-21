@@ -2,13 +2,7 @@ import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import styled from 'styled-components';
 import { DELETE_MEMO_CONFIRM_MODAL_TEXT } from '@src/utils/constant';
-
-interface IConfirmModalText {
-  mainText: string;
-  subText: string;
-  confirmText: string;
-  cancelText: string;
-}
+import { IConfirmModalText } from '../ConfirmModal';
 
 interface MemoPopupProps {
   highlightId: number;
