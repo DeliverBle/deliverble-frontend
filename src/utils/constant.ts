@@ -14,7 +14,6 @@ export const EDIT_MEMO_CONFIRM_MODAL_TEXT = {
 
 export const DELETE_MEMO_CONFIRM_MODAL_TEXT = {
   mainText: '메모를 삭제하시겠습니까?',
-  subText: '',
   confirmText: '삭제하기',
   cancelText: '취소',
 };

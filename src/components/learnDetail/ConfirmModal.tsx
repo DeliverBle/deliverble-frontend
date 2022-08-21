@@ -4,7 +4,7 @@ import { FONT_STYLES } from '@src/styles/fontStyle';
 
 export interface IConfirmModalText {
   mainText: string;
-  subText: string;
+  subText?: string;
   confirmText: string;
   cancelText: string;
 }
