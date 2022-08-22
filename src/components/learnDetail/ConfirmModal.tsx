@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { IMemoHighlightId } from '@src/pages/learn/[id]';
+import { useEffect } from 'react';
 
 export interface IConfirmModalText {
   mainText: string;
@@ -19,10 +20,12 @@ interface ConfirmModalProps {
 function ConfirmModal(props: ConfirmModalProps) {
   const { closeModal, setMemoHighlightId, confirmModalText } = props;
 
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth',
-  });
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  }, []);
 
   return (
     <StConfirmModal>
