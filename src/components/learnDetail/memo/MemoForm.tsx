@@ -6,10 +6,11 @@ import styled from 'styled-components';
 import ImageDiv from '../../common/ImageDiv';
 import { NEW_MEMO_CONFIRM_MODAL_TEXT, EDIT_MEMO_CONFIRM_MODAL_TEXT } from '@src/utils/constant';
 import { IConfirmModalText } from '../ConfirmModal';
+import { IMemoHighlightId } from '@src/pages/learn/[id]';
 
 interface MemoFormProps {
   content?: string;
-  setMemoHighlightId: (idList: number[]) => void;
+  setMemoHighlightId: (id: IMemoHighlightId) => void;
   setIsConfirmOpen: (open: boolean) => void;
   setConfirmModalText: (text: IConfirmModalText) => void;
 }
@@ -56,7 +57,7 @@ function MemoForm(props: MemoFormProps) {
           type="button"
           onClick={() => {
             changeModalText();
-            (content ? text !== '' : text) ? setIsConfirmOpen(true) : setMemoHighlightId([0, 0]);
+            (content ? text !== '' : text) ? setIsConfirmOpen(true) : setMemoHighlightId({ new: 0, edit: 0 });
           }}>
           <ImageDiv src={icMemoXButton} alt="취소" />
         </button>

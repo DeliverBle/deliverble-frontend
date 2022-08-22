@@ -4,13 +4,14 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Memo from './Memo';
 import { IConfirmModalText } from '../ConfirmModal';
+import { IMemoHighlightId } from '@src/pages/learn/[id]';
 
 interface MemoListProps {
   highlightList: HighlightData[];
   highlightId?: number;
   keyword?: string;
-  memoHighlightId: number[];
-  setMemoHighlightId: (idList: number[]) => void;
+  memoHighlightId: IMemoHighlightId;
+  setMemoHighlightId: (id: IMemoHighlightId) => void;
   setIsConfirmOpen: (open: boolean) => void;
   setConfirmModalText: (text: IConfirmModalText) => void;
 }
@@ -34,14 +35,14 @@ function MemoList(props: MemoListProps) {
   }, [highlightId, highlightList]);
 
   if (index && index !== -1) {
-    if (memoHighlightId[0]) {
+    if (memoHighlightId.new) {
       highlightList[index].memo = { keyword: keyword };
     } else if (Object.keys(highlightList[index].memo).length === 1) {
       highlightList[index].memo = {};
     }
   }
 
-  if (memoIndexToDelete && memoIndexToDelete !== -1 && !memoHighlightId[0]) {
+  if (memoIndexToDelete && memoIndexToDelete !== -1 && !memoHighlightId.new) {
     highlightList[memoIndexToDelete].memo = {};
   }
 
@@ -54,7 +55,7 @@ function MemoList(props: MemoListProps) {
               key={highlightId}
               highlightId={highlightId}
               memoData={[memo.keyword, memo.content]}
-              isEditMemo={memoHighlightId[1] == highlightId}
+              isEditMemo={memoHighlightId.edit == highlightId}
               setMemoHighlightId={setMemoHighlightId}
               setIsConfirmOpen={setIsConfirmOpen}
               setConfirmModalText={setConfirmModalText}

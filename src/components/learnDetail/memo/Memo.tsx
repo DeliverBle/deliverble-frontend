@@ -6,12 +6,13 @@ import MemoForm from './MemoForm';
 import MemoDotButton from './MemoDotButton';
 import { IConfirmModalText } from '../ConfirmModal';
 import { MEMO_CONTENT_MAX } from '@src/utils/constant';
+import { IMemoHighlightId } from '@src/pages/learn/[id]';
 
 interface MemoProps {
   highlightId: number;
   memoData: (string | undefined)[];
   isEditMemo: boolean;
-  setMemoHighlightId: (idList: number[]) => void;
+  setMemoHighlightId: (id: IMemoHighlightId) => void;
   setIsConfirmOpen: (open: boolean) => void;
   setConfirmModalText: (text: IConfirmModalText) => void;
 }

@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
+import { IMemoHighlightId } from '@src/pages/learn/[id]';
 
 export interface IConfirmModalText {
   mainText: string;
@@ -11,7 +12,7 @@ export interface IConfirmModalText {
 
 interface ConfirmModalProps {
   closeModal: (close: boolean) => void;
-  setMemoHighlightId: (idList: number[]) => void;
+  setMemoHighlightId: (id: IMemoHighlightId) => void;
   confirmModalText: IConfirmModalText;
 }
 
@@ -33,7 +34,7 @@ function ConfirmModal(props: ConfirmModalProps) {
         <button onClick={() => closeModal(false)}>{confirmModalText.confirmText}</button>
         <button
           onClick={() => {
-            setMemoHighlightId([0, 0]);
+            setMemoHighlightId({ new: 0, edit: 0 });
             closeModal(false);
           }}>
           {confirmModalText.cancelText}

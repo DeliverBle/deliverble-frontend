@@ -31,6 +31,11 @@ import {
   icSpacingClicked,
 } from 'public/assets/icons';
 
+export interface IMemoHighlightId {
+  new: number;
+  edit: number;
+}
+
 function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highlightData: HighlightData[] }) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -40,7 +45,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   const [isSpacing, setIsSpacing] = useState(false);
   const [clickedHighlightId, setClickedHighlightId] = useState<number>();
   const [points, setPoints] = useState({ x: 0, y: 0 });
-  const [memoHighlightId, setMemoHighlightId] = useState([0, 0]);
+  const [memoHighlightId, setMemoHighlightId] = useState<IMemoHighlightId>({ new: 0, edit: 0 });
   const [hasMemo, setHasMemo] = useState(false);
   const [keyword, setKeyword] = useState<string>();
   const contextMenuRef = useRef<HTMLDivElement>(null);
@@ -74,9 +79,9 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
         setClickedHighlightId(() => Number(target.id));
         setKeyword(target.innerText);
       }
-      if (memoHighlightId[0] || memoHighlightId[1]) {
-        memoHighlightId[0] && setConfirmModalText(NEW_MEMO_CONFIRM_MODAL_TEXT);
-        memoHighlightId[1] && setConfirmModalText(EDIT_MEMO_CONFIRM_MODAL_TEXT);
+      if (memoHighlightId.new || memoHighlightId.edit) {
+        memoHighlightId.new && setConfirmModalText(NEW_MEMO_CONFIRM_MODAL_TEXT);
+        memoHighlightId.edit && setConfirmModalText(EDIT_MEMO_CONFIRM_MODAL_TEXT);
         setClickedHighlightId(-1);
         return setIsConfirmOpen(true);
       }
@@ -150,7 +155,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                         onClick={() => player?.seekTo(startTime, true)}
                         isActive={startTime <= currentTime && currentTime < endTime ? true : false}>
                         <p id={id.toString()}>{text}</p>
-                        {clickedHighlightId === id && !memoHighlightId[0] && !memoHighlightId[1] && (
+                        {clickedHighlightId === id && !memoHighlightId.new && !memoHighlightId.edit && (
                           <ContextMenu
                             points={points}
                             hasMemo={hasMemo}

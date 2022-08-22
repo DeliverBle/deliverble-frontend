@@ -3,10 +3,11 @@ import { FONT_STYLES } from '@src/styles/fontStyle';
 import styled from 'styled-components';
 import { DELETE_MEMO_CONFIRM_MODAL_TEXT } from '@src/utils/constant';
 import { IConfirmModalText } from '../ConfirmModal';
+import { IMemoHighlightId } from '@src/pages/learn/[id]';
 
 interface MemoPopupProps {
   highlightId: number;
-  setMemoHighlightId: (idList: number[]) => void;
+  setMemoHighlightId: (id: IMemoHighlightId) => void;
   setIsConfirmOpen: (open: boolean) => void;
   setConfirmModalText: (text: IConfirmModalText) => void;
 }
@@ -17,7 +18,7 @@ function MemoPopup(props: MemoPopupProps) {
   return (
     <>
       <StMemoPopup>
-        <button type="button" onClick={() => setMemoHighlightId([0, highlightId])}>
+        <button type="button" onClick={() => setMemoHighlightId({ new: 0, edit: highlightId })}>
           메모 수정
         </button>
         <button

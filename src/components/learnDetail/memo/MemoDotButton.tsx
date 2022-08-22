@@ -4,10 +4,11 @@ import { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import MemoPopup from './MemoPopup';
 import { IConfirmModalText } from '../ConfirmModal';
+import { IMemoHighlightId } from '@src/pages/learn/[id]';
 
 interface MemoDotButtonProps {
   highlightId: number;
-  setMemoHighlightId: (idList: number[]) => void;
+  setMemoHighlightId: (id: IMemoHighlightId) => void;
   setIsConfirmOpen: (open: boolean) => void;
   setConfirmModalText: (text: IConfirmModalText) => void;
 }

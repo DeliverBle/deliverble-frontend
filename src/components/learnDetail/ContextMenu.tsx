@@ -1,3 +1,4 @@
+import { IMemoHighlightId } from '@src/pages/learn/[id]';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import styled, { css } from 'styled-components';
@@ -9,7 +10,7 @@ interface ContextMenuProps {
   };
   hasMemo: boolean;
   id: number;
-  setMemoHighlightId: (idList: number[]) => void;
+  setMemoHighlightId: (id: IMemoHighlightId) => void;
 }
 
 function ContextMenu(props: ContextMenuProps) {
@@ -23,7 +24,7 @@ function ContextMenu(props: ContextMenuProps) {
             type="button"
             onClick={(e) => {
               e.stopPropagation();
-              hasMemo ? setMemoHighlightId([0, id]) : setMemoHighlightId([id, 0]);
+              hasMemo ? setMemoHighlightId({ new: 0, edit: id }) : setMemoHighlightId({ new: id, edit: id });
             }}>
             {hasMemo ? '메모 수정' : '메모 추가'}
           </button>
