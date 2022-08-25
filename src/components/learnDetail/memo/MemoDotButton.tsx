@@ -3,14 +3,14 @@ import { icDotDefault, icDotHover } from 'public/assets/icons';
 import { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import MemoPopup from './MemoPopup';
-import { IConfirmModalText } from '../ConfirmModal';
-import { IMemoHighlightId } from '@src/pages/learn/[id]';
+import { ConfirmModalText } from '../ConfirmModal';
+import { MemoHighlightId } from '@src/pages/learn/[id]';
 
 interface MemoDotButtonProps {
   highlightId: number;
-  setMemoHighlightId: (id: IMemoHighlightId) => void;
+  setMemoHighlightId: (id: MemoHighlightId) => void;
   setIsConfirmOpen: (open: boolean) => void;
-  setConfirmModalText: (text: IConfirmModalText) => void;
+  setConfirmModalText: (text: ConfirmModalText) => void;
 }
 
 function MemoDotButton(props: MemoDotButtonProps) {

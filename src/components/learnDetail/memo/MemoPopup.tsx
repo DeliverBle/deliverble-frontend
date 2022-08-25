@@ -2,14 +2,14 @@ import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import styled from 'styled-components';
 import { DELETE_MEMO_CONFIRM_MODAL_TEXT } from '@src/utils/constant';
-import { IConfirmModalText } from '../ConfirmModal';
-import { IMemoHighlightId } from '@src/pages/learn/[id]';
+import { ConfirmModalText } from '../ConfirmModal';
+import { MemoHighlightId } from '@src/pages/learn/[id]';
 
 interface MemoPopupProps {
   highlightId: number;
-  setMemoHighlightId: (id: IMemoHighlightId) => void;
+  setMemoHighlightId: (id: MemoHighlightId) => void;
   setIsConfirmOpen: (open: boolean) => void;
-  setConfirmModalText: (text: IConfirmModalText) => void;
+  setConfirmModalText: (text: ConfirmModalText) => void;
 }
 
 function MemoPopup(props: MemoPopupProps) {

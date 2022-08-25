@@ -5,14 +5,14 @@ import { useRef } from 'react';
 import styled from 'styled-components';
 import ImageDiv from '../../common/ImageDiv';
 import { NEW_MEMO_CONFIRM_MODAL_TEXT, EDIT_MEMO_CONFIRM_MODAL_TEXT } from '@src/utils/constant';
-import { IConfirmModalText } from '../ConfirmModal';
-import { IMemoHighlightId } from '@src/pages/learn/[id]';
+import { ConfirmModalText } from '../ConfirmModal';
+import { MemoHighlightId } from '@src/pages/learn/[id]';
 
 interface MemoFormProps {
   content?: string;
-  setMemoHighlightId: (id: IMemoHighlightId) => void;
+  setMemoHighlightId: (id: MemoHighlightId) => void;
   setIsConfirmOpen: (open: boolean) => void;
-  setConfirmModalText: (text: IConfirmModalText) => void;
+  setConfirmModalText: (text: ConfirmModalText) => void;
 }
 
 function MemoForm(props: MemoFormProps) {

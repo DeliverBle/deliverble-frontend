@@ -4,17 +4,17 @@ import { FONT_STYLES } from '@src/styles/fontStyle';
 import { useState } from 'react';
 import MemoForm from './MemoForm';
 import MemoDotButton from './MemoDotButton';
-import { IConfirmModalText } from '../ConfirmModal';
+import { ConfirmModalText } from '../ConfirmModal';
 import { MEMO_CONTENT_MAX } from '@src/utils/constant';
-import { IMemoHighlightId } from '@src/pages/learn/[id]';
+import { MemoHighlightId } from '@src/pages/learn/[id]';
 
 interface MemoProps {
   highlightId: number;
   memoData: (string | undefined)[];
   isEditMemo: boolean;
-  setMemoHighlightId: (id: IMemoHighlightId) => void;
+  setMemoHighlightId: (id: MemoHighlightId) => void;
   setIsConfirmOpen: (open: boolean) => void;
-  setConfirmModalText: (text: IConfirmModalText) => void;
+  setConfirmModalText: (text: ConfirmModalText) => void;
 }
 
 function Memo(props: MemoProps) {

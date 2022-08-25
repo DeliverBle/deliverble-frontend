@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import { IMemoHighlightId } from '@src/pages/learn/[id]';
+import { MemoHighlightId } from '@src/pages/learn/[id]';
 import { useEffect } from 'react';
 
-export interface IConfirmModalText {
+export interface ConfirmModalText {
   mainText: string;
   subText?: string;
   confirmText: string;
@@ -13,8 +13,8 @@ export interface IConfirmModalText {
 
 interface ConfirmModalProps {
   closeModal: (close: boolean) => void;
-  setMemoHighlightId: (id: IMemoHighlightId) => void;
-  confirmModalText: IConfirmModalText;
+  setMemoHighlightId: (id: MemoHighlightId) => void;
+  confirmModalText: ConfirmModalText;
 }
 
 function ConfirmModal(props: ConfirmModalProps) {

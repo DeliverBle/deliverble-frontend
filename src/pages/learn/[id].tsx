@@ -13,7 +13,7 @@ import MemoList from '@src/components/learnDetail/memo/MemoList';
 import ScriptEdit from '@src/components/learnDetail/ScriptEdit';
 import ContextMenu from '@src/components/learnDetail/ContextMenu';
 import VideoDetail from '@src/components/learnDetail/VideoDetail';
-import ConfirmModal, { IConfirmModalText } from '@src/components/learnDetail/ConfirmModal';
+import ConfirmModal, { ConfirmModalText } from '@src/components/learnDetail/ConfirmModal';
 import LoginModal from '@src/components/login/LoginModal';
 import { api } from '@src/services/api';
 import { HighlightData, VideoData } from '@src/services/api/types/learn-detail';
@@ -31,7 +31,7 @@ import {
   icSpacingClicked,
 } from 'public/assets/icons';
 
-export interface IMemoHighlightId {
+export interface MemoHighlightId {
   new: number;
   edit: number;
 }
@@ -40,12 +40,12 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  const [confirmModalText, setConfirmModalText] = useState<IConfirmModalText>(NEW_MEMO_CONFIRM_MODAL_TEXT);
+  const [confirmModalText, setConfirmModalText] = useState<ConfirmModalText>(NEW_MEMO_CONFIRM_MODAL_TEXT);
   const [isHighlight, setIsHighlight] = useState(false);
   const [isSpacing, setIsSpacing] = useState(false);
   const [clickedHighlightId, setClickedHighlightId] = useState<number>();
   const [points, setPoints] = useState({ x: 0, y: 0 });
-  const [memoHighlightId, setMemoHighlightId] = useState<IMemoHighlightId>({ new: 0, edit: 0 });
+  const [memoHighlightId, setMemoHighlightId] = useState<MemoHighlightId>({ new: 0, edit: 0 });
   const [hasMemo, setHasMemo] = useState(false);
   const [keyword, setKeyword] = useState<string>();
   const contextMenuRef = useRef<HTMLDivElement>(null);

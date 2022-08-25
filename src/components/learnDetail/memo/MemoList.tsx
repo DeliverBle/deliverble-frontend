@@ -3,17 +3,17 @@ import { COLOR } from '@src/styles/color';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Memo from './Memo';
-import { IConfirmModalText } from '../ConfirmModal';
-import { IMemoHighlightId } from '@src/pages/learn/[id]';
+import { ConfirmModalText } from '../ConfirmModal';
+import { MemoHighlightId } from '@src/pages/learn/[id]';
 
 interface MemoListProps {
   highlightList: HighlightData[];
   highlightId?: number;
   keyword?: string;
-  memoHighlightId: IMemoHighlightId;
-  setMemoHighlightId: (id: IMemoHighlightId) => void;
+  memoHighlightId: MemoHighlightId;
+  setMemoHighlightId: (id: MemoHighlightId) => void;
   setIsConfirmOpen: (open: boolean) => void;
-  setConfirmModalText: (text: IConfirmModalText) => void;
+  setConfirmModalText: (text: ConfirmModalText) => void;
 }
 
 function MemoList(props: MemoListProps) {

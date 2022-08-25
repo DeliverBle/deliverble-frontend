@@ -1,4 +1,4 @@
-import { IMemoHighlightId } from '@src/pages/learn/[id]';
+import { MemoHighlightId } from '@src/pages/learn/[id]';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import styled, { css } from 'styled-components';
@@ -10,7 +10,7 @@ interface ContextMenuProps {
   };
   hasMemo: boolean;
   id: number;
-  setMemoHighlightId: (id: IMemoHighlightId) => void;
+  setMemoHighlightId: (id: MemoHighlightId) => void;
 }
 
 function ContextMenu(props: ContextMenuProps) {
