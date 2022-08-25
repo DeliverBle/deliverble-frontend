@@ -1,7 +1,7 @@
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { icCheckButton, icMemoXButton } from 'public/assets/icons';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import styled from 'styled-components';
 import ImageDiv from '../../common/ImageDiv';
 import { NEW_MEMO_CONFIRM_MODAL_TEXT, EDIT_MEMO_CONFIRM_MODAL_TEXT } from '@src/utils/constant';
@@ -17,12 +17,15 @@ interface MemoFormProps {
 
 function MemoForm(props: MemoFormProps) {
   const { setMemoHighlightId, content, setIsConfirmOpen, setConfirmModalText } = props;
+  const [textLength, setTextLength] = useState(0);
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
-  const autoResizeTextarea = () => {
+  const handleChange = () => {
     if (textAreaRef.current) {
       textAreaRef.current.style.height = '0.1rem';
       textAreaRef.current.style.height = (12 + textAreaRef.current.scrollHeight) / 10 + 'rem';
+
+      setTextLength(textAreaRef.current.value.length);
     }
   };
 
@@ -35,15 +38,16 @@ function MemoForm(props: MemoFormProps) {
   };
 
   return (
-    <>
+    <StMemoForm>
       <StForm
         ref={textAreaRef}
         maxLength={70}
         rows={content ? Math.ceil(content.length / 30) : 1}
         autoFocus={content ? false : true}
         defaultValue={content}
-        onChange={autoResizeTextarea}
+        onChange={handleChange}
       />
+      <StTextCounter>{textLength}/70</StTextCounter>
       <StButtonContainer>
         <button
           type="button"
@@ -59,14 +63,18 @@ function MemoForm(props: MemoFormProps) {
           <ImageDiv src={icCheckButton} alt="수정" />
         </button>
       </StButtonContainer>
-    </>
+    </StMemoForm>
   );
 }
 
 export default MemoForm;
 
+const StMemoForm = styled.div`
+  position: relative;
+`;
+
 const StForm = styled.textarea`
-  padding: 0.8rem 0.8rem 0.8rem 1.2rem;
+  padding: 0.8rem 0.8rem 4.9rem 1.2rem;
   width: 60.6rem;
 
   border: 0.2rem solid ${COLOR.SUB_BLUE_50};
@@ -85,6 +93,21 @@ const StForm = styled.textarea`
     width: 1rem;
     background-color: transparent;
   }
+`;
+
+const StTextCounter = styled.div`
+  position: absolute;
+  right: 1.2rem;
+  bottom: 5rem;
+
+  display: flex;
+  justify-content: right;
+
+  width: 6.3rem;
+  height: 3.7rem;
+
+  ${FONT_STYLES.R_23_MEMO};
+  color: ${COLOR.GRAY_30};
 `;
 
 const StButtonContainer = styled.div`
