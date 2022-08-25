@@ -7,6 +7,8 @@ import MemoDotButton from './MemoDotButton';
 import { ConfirmModalText } from '../ConfirmModal';
 import { MEMO_CONTENT_MAX } from '@src/utils/constant';
 import { MemoHighlightId } from '@src/pages/learn/[id]';
+import ImageDiv from '@src/components/common/ImageDiv';
+import { icArrowUp } from 'public/assets/icons';
 
 interface MemoProps {
   highlightId: number;
@@ -20,25 +22,23 @@ interface MemoProps {
 function Memo(props: MemoProps) {
   const { highlightId, memoData, isEditMemo, setMemoHighlightId, setIsConfirmOpen, setConfirmModalText } = props;
   const [keyword, content] = memoData;
-  const [moreButton, setMoreButton] = useState(false);
+  const [foldButton, setFoldButton] = useState(false);
 
   const showContent = () => {
-    if (content && content.length > MEMO_CONTENT_MAX && !moreButton) {
+    if (content && content.length > MEMO_CONTENT_MAX) {
       return (
         <>
-          {content.slice(0, 26)}
-          <button type="button" onClick={() => setMoreButton((prev) => !prev)}>
-            ... 더보기
-          </button>
-        </>
-      );
-    } else if (moreButton) {
-      return (
-        <>
-          {content}
-          <button type="button" onClick={() => setMoreButton((prev) => !prev)}>
-            접기
-          </button>
+          {foldButton ? content : content.slice(0, 26)}
+          <StFoldbutton onClick={() => setFoldButton((prev) => !prev)} fold={foldButton}>
+            {foldButton ? (
+              <>
+                <ImageDiv src={icArrowUp} className="fold" alt="" />
+                {'접기'}
+              </>
+            ) : (
+              '...더보기'
+            )}
+          </StFoldbutton>
         </>
       );
     }
@@ -97,13 +97,23 @@ const StKeyword = styled.h1`
 const StContent = styled.div`
   color: ${COLOR.GRAY_80};
   ${FONT_STYLES.R_23_MEMO};
+`;
 
-  & > button {
-    color: ${COLOR.GRAY_30};
-    ${FONT_STYLES.R_23_MEMO};
+const StFoldbutton = styled.div<{ fold: boolean }>`
+  position: absolute;
+  right: 3.2rem;
+  bottom: 2.8rem;
 
-    &:hover {
-      color: ${COLOR.MAIN_BLUE};
-    }
+  display: flex;
+  .fold {
+    display: flex;
+    align-items: center;
   }
+
+  color: ${({ fold }) => (fold ? COLOR.MAIN_BLUE : COLOR.GRAY_30)};
+  ${FONT_STYLES.R_23_MEMO};
+  &:hover {
+    color: ${({ fold }) => !fold && COLOR.MAIN_BLUE};
+  }
+  cursor: pointer;
 `;
