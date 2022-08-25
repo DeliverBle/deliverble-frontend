@@ -8,7 +8,7 @@ function Footer() {
   return (
     <StFooter>
       <StLogo>
-        <ImageDiv className="logo" src={icLogoFooter} alt="" />
+        <ImageDiv className="logo" src={icLogoFooter} alt="DeliverBle" />
         <h4>
           언제 어디서나 당당할 당신의 말하기를
           <br />

@@ -111,7 +111,12 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
         setClickedHighlightId(-1);
       }
     };
-    window.addEventListener('click', handleClickOutside);
+    if (clickedHighlightId) {
+      window.addEventListener('click', handleClickOutside);
+    }
+    return () => {
+      window.removeEventListener('click', handleClickOutside);
+    };
   }, [clickedHighlightId]);
 
   useEffect(() => {

@@ -21,13 +21,20 @@ function MemoDotButton(props: MemoDotButtonProps) {
 
   useEffect(() => {
     const handleClickOutside = (e: Event) => {
+      console.log('바깥 클릭 테스트');
       const eventTarget = e.target as HTMLElement;
       if (isPopupOpen && !memoPopupRef?.current?.contains(eventTarget)) {
         setIsPopupOpen(false);
       }
     };
-    window.addEventListener('click', handleClickOutside);
-    window.addEventListener('contextmenu', handleClickOutside);
+    if (isPopupOpen) {
+      window.addEventListener('click', handleClickOutside);
+      window.addEventListener('contextmenu', handleClickOutside);
+    }
+    return () => {
+      window.removeEventListener('click', handleClickOutside);
+      window.removeEventListener('contextmenu', handleClickOutside);
+    };
   }, [isPopupOpen]);
 
   return (
