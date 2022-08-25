@@ -1,7 +1,7 @@
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { icCheckButton, icMemoXButton } from 'public/assets/icons';
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import styled from 'styled-components';
 import ImageDiv from '../../common/ImageDiv';
 import { NEW_MEMO_CONFIRM_MODAL_TEXT, EDIT_MEMO_CONFIRM_MODAL_TEXT } from '@src/utils/constant';
@@ -18,27 +18,20 @@ interface MemoFormProps {
 function MemoForm(props: MemoFormProps) {
   const { setMemoHighlightId, content, setIsConfirmOpen, setConfirmModalText } = props;
 
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  const autoResizeTextarea = () => {
+    if (textAreaRef.current) {
+      textAreaRef.current.style.height = '0.1rem';
+      textAreaRef.current.style.height = (12 + textAreaRef.current.scrollHeight) / 10 + 'rem';
+    }
+  };
+
   const changeModalText = () => {
     if (!content && textAreaRef.current?.value) {
       setConfirmModalText(NEW_MEMO_CONFIRM_MODAL_TEXT);
     } else if (textAreaRef.current?.value !== content) {
       setConfirmModalText(EDIT_MEMO_CONFIRM_MODAL_TEXT);
     }
-  };
-
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
-  const [text, setText] = useState('');
-  const [textAreaHeight, setTextAreaHeight] = useState('auto');
-
-  useEffect(() => {
-    if (textAreaRef.current) {
-      setTextAreaHeight((12 + textAreaRef.current.scrollHeight) / 10 + 'rem');
-    }
-  }, [text]);
-
-  const onChangeHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setTextAreaHeight('auto');
-    setText(e.target.value);
   };
 
   return (
@@ -49,15 +42,16 @@ function MemoForm(props: MemoFormProps) {
         rows={content ? Math.ceil(content.length / 30) : 1}
         autoFocus={content ? false : true}
         defaultValue={content}
-        onChange={onChangeHandler}
-        textAreaHeight={textAreaHeight}
+        onChange={autoResizeTextarea}
       />
       <StButtonContainer>
         <button
           type="button"
           onClick={() => {
             changeModalText();
-            (content ? text !== '' : text) ? setIsConfirmOpen(true) : setMemoHighlightId({ new: 0, edit: 0 });
+            (content ? textAreaRef.current?.value !== '' : textAreaRef.current?.value !== content)
+              ? setIsConfirmOpen(true)
+              : setMemoHighlightId({ new: 0, edit: 0 });
           }}>
           <ImageDiv src={icMemoXButton} alt="취소" />
         </button>
@@ -71,18 +65,17 @@ function MemoForm(props: MemoFormProps) {
 
 export default MemoForm;
 
-const StForm = styled.textarea<{ textAreaHeight: string }>`
+const StForm = styled.textarea`
   padding: 0.8rem 0.8rem 0.8rem 1.2rem;
   width: 60.6rem;
 
   border: 0.2rem solid ${COLOR.SUB_BLUE_50};
   border-radius: 1.2rem;
   background-color: transparent;
+
   font-family: 'Pretendard';
   ${FONT_STYLES.R_23_MEMO};
   color: ${COLOR.GRAY_80};
-
-  height: ${({ textAreaHeight }) => textAreaHeight};
 
   resize: none;
   &:focus {
