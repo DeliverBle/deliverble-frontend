@@ -58,6 +58,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   const learnRef = useRef<HTMLDivElement>(null);
   const getLoginStatus = () => localStorage.getItem('token') ?? '';
   const [prevLink, setPrevLink] = useState('');
+  const { new: newMemoHighlightId, edit: editMemoHighlightId } = memoHighlightId;
 
   const controlPointX = (e: React.MouseEvent) => {
     const x = e.nativeEvent.offsetX / 10;
@@ -79,9 +80,9 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
         setClickedHighlightId(() => Number(target.id));
         setKeyword(target.innerText);
       }
-      if (memoHighlightId.new || memoHighlightId.edit) {
-        memoHighlightId.new && setConfirmModalText(NEW_MEMO_CONFIRM_MODAL_TEXT);
-        memoHighlightId.edit && setConfirmModalText(EDIT_MEMO_CONFIRM_MODAL_TEXT);
+      if (newMemoHighlightId || editMemoHighlightId) {
+        newMemoHighlightId && setConfirmModalText(NEW_MEMO_CONFIRM_MODAL_TEXT);
+        editMemoHighlightId && setConfirmModalText(EDIT_MEMO_CONFIRM_MODAL_TEXT);
         setClickedHighlightId(-1);
         return setIsConfirmOpen(true);
       }
@@ -155,7 +156,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                         onClick={() => player?.seekTo(startTime, true)}
                         isActive={startTime <= currentTime && currentTime < endTime ? true : false}>
                         <p id={id.toString()}>{text}</p>
-                        {clickedHighlightId === id && !memoHighlightId.new && !memoHighlightId.edit && (
+                        {clickedHighlightId === id && !newMemoHighlightId && !editMemoHighlightId && (
                           <ContextMenu
                             points={points}
                             hasMemo={hasMemo}
