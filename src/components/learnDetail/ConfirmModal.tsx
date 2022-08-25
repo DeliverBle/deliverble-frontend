@@ -19,6 +19,7 @@ interface ConfirmModalProps {
 
 function ConfirmModal(props: ConfirmModalProps) {
   const { closeModal, setMemoHighlightId, confirmModalText } = props;
+  const { mainText, subText, confirmText, cancelText } = confirmModalText;
 
   useEffect(() => {
     window.scrollTo({
@@ -30,17 +31,17 @@ function ConfirmModal(props: ConfirmModalProps) {
   return (
     <StConfirmModal>
       <StDescription>
-        <h2>{confirmModalText.mainText}</h2>
-        <p>{confirmModalText.subText}</p>
+        <h2>{mainText}</h2>
+        <p>{subText}</p>
       </StDescription>
       <StButtonContainer>
-        <button onClick={() => closeModal(false)}>{confirmModalText.confirmText}</button>
+        <button onClick={() => closeModal(false)}>{confirmText}</button>
         <button
           onClick={() => {
             setMemoHighlightId({ new: 0, edit: 0 });
             closeModal(false);
           }}>
-          {confirmModalText.cancelText}
+          {cancelText}
         </button>
       </StButtonContainer>
     </StConfirmModal>
