@@ -35,7 +35,7 @@ function Footer() {
         <StSocial>
           <StInfoTitle>Social</StInfoTitle>
           <a target="_blank" href="https://www.instagram.com/deliverble_official/" rel="noreferrer">
-            <ImageDiv className="social-link" src={icSocial} alt="instagram" />
+            <ImageDiv className="social-link" src={icSocial} alt="인스타그램 링크" />
           </a>
         </StSocial>
       </StInfo>

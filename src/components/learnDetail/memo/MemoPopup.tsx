@@ -1,21 +1,34 @@
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import styled from 'styled-components';
+import { DELETE_MEMO_CONFIRM_MODAL_TEXT } from '@src/utils/constant';
+import { ConfirmModalText } from '../ConfirmModal';
+import { MemoHighlightId } from '@src/pages/learn/[id]';
 
 interface MemoPopupProps {
-  edit: () => void;
+  highlightId: number;
+  setMemoHighlightId: (id: MemoHighlightId) => void;
+  setIsConfirmOpen: (open: boolean) => void;
+  setConfirmModalText: (text: ConfirmModalText) => void;
 }
 
 function MemoPopup(props: MemoPopupProps) {
-  const { edit } = props;
+  const { setMemoHighlightId, highlightId, setIsConfirmOpen, setConfirmModalText } = props;
 
   return (
     <>
       <StMemoPopup>
-        <button type="button" onClick={edit}>
+        <button type="button" onClick={() => setMemoHighlightId({ new: 0, edit: highlightId })}>
           메모 수정
         </button>
-        <button type="button">메모 삭제</button>
+        <button
+          type="button"
+          onClick={() => {
+            setIsConfirmOpen(true);
+            setConfirmModalText(DELETE_MEMO_CONFIRM_MODAL_TEXT);
+          }}>
+          메모 삭제
+        </button>
       </StMemoPopup>
     </>
   );
@@ -37,7 +50,7 @@ const StMemoPopup = styled.div`
   width: 10.3rem;
   height: 8rem;
 
-  border: 1px solid ${COLOR.GRAY_10};
+  border: 0.1rem solid ${COLOR.GRAY_10};
   border-radius: 1.2rem;
   background-color: ${COLOR.WHITE};
   box-shadow: 0.4rem 0.4rem 2rem rgba(22, 15, 53, 0.15);

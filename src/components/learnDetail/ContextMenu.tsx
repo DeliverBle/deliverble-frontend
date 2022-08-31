@@ -1,3 +1,4 @@
+import { MemoHighlightId } from '@src/pages/learn/[id]';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import styled, { css } from 'styled-components';
@@ -7,11 +8,13 @@ interface ContextMenuProps {
     x: number;
     y: number;
   };
-  setIsNewMemo: (create: boolean) => void;
+  hasMemo: boolean;
+  id: number;
+  setMemoHighlightId: (id: MemoHighlightId) => void;
 }
 
 function ContextMenu(props: ContextMenuProps) {
-  const { points, setIsNewMemo } = props;
+  const { points, hasMemo, id, setMemoHighlightId } = props;
 
   return (
     <StContextMenu top={points.y} left={points.x} className="test">
@@ -21,9 +24,9 @@ function ContextMenu(props: ContextMenuProps) {
             type="button"
             onClick={(e) => {
               e.stopPropagation();
-              setIsNewMemo(true);
+              hasMemo ? setMemoHighlightId({ new: 0, edit: id }) : setMemoHighlightId({ new: id, edit: id });
             }}>
-            메모 추가
+            {hasMemo ? '메모 수정' : '메모 추가'}
           </button>
         </li>
         <li>
@@ -48,7 +51,7 @@ const StContextMenu = styled.div<{ top: number; left: number }>`
   z-index: 1;
 
   border-radius: 1.2rem;
-  border: 1px solid ${COLOR.GRAY_10};
+  border: 0.1rem solid ${COLOR.GRAY_10};
   background-color: ${COLOR.WHITE};
   box-shadow: 0.4rem 0.4rem 2rem rgba(22, 15, 53, 0.15);
 

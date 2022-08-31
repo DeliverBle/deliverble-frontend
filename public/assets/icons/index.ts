@@ -1,4 +1,5 @@
 export { default as icArrow } from './ic_arrow.svg';
+export { default as icArrowUp } from './ic_arrow_up.svg';
 export { default as icDelete } from './ic_delete.svg';
 export { default as icSearch } from './ic_search.svg';
 export { default as icGuideHighlight } from './ic_guide_highlight.svg';

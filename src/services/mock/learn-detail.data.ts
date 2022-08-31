@@ -56,37 +56,35 @@ export const LEARN_DETAIL_DATA = {
 
   HIGHLIGHT_DATA: [
     {
-      scriptId: 1,
-      highlightId: 1,
+      scriptId: 6,
+      highlightId: 6,
       startingIndex: 0,
       endingIndex: 2,
       memo: {
         id: 1,
-        keyword: '북한이',
-        content: '한에 강세를 주어 말한다.',
+        keyword: '북한이 호우로 임진강 상류 황강댐 수문을 개방한 것으로 판단하고 있다고 군 소식통이 오늘 밝혔습니다.',
+        content: '강세를 주어 말한다.',
       },
     },
     {
-      scriptId: 3,
-      highlightId: 3,
+      scriptId: 7,
+      highlightId: 7,
       startingIndex: 0,
       endingIndex: 47,
       memo: {
         id: 2,
-        keyword: '북한에 댐을 방류하면 사전 통지해 달라고 요청했지만, 북한은 이에 대한 응답 없이 방류',
-        content: '내가 너무 입을 작게 벌려서 발음하더라 입을 크게 벌려서 말하자 아아아아 ~~~!',
+        keyword:
+          '정부는 지난 28일 북한에 댐을 방류하면 사전 통지해 달라고 요청했지만, 북한은 이에 대한 응답 없이 방류에 나선 것으로 보입니다.',
+        content:
+          '내가 너무 입을 작게 벌려서 발음하더라 입을 크게 벌려서 말하자 아아아아 내가 너무 입을 작게 벌려서 발음하더라',
       },
     },
     {
-      scriptId: 4,
-      highlightId: 5,
+      scriptId: 8,
+      highlightId: 8,
       startingIndex: 0,
       endingIndex: 2,
-      memo: {
-        id: 3,
-        keyword: '군남댐',
-        content: '발음에 주의해서 말한다.',
-      },
+      memo: {},
     },
   ],
 };

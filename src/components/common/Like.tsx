@@ -20,11 +20,11 @@ function Like(props: LikeProps) {
       }}>
       <StLikeImage isFromList={isFromList}>
         {isLiked ? (
-          <ImageDiv className="like" src={icLikeClicked} alt="like" layout="fill" />
+          <ImageDiv className="like" src={icLikeClicked} alt="좋아요" layout="fill" />
         ) : (
           <>
-            <ImageDiv className="like" src={icLikeHover} alt="like" layout="fill" />
-            <ImageDiv className="like default" src={icLikeDefault} alt="like" layout="fill" />
+            <ImageDiv className="like" src={icLikeHover} alt="좋아요" layout="fill" />
+            <ImageDiv className="like default" src={icLikeDefault} alt="좋아요" layout="fill" />
           </>
         )}
       </StLikeImage>
