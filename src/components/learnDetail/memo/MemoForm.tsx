@@ -1,7 +1,7 @@
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { icCheckButton, icMemoXButton } from 'public/assets/icons';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import ImageDiv from '../../common/ImageDiv';
 import { NEW_MEMO_CONFIRM_MODAL_TEXT, EDIT_MEMO_CONFIRM_MODAL_TEXT } from '@src/utils/constant';
@@ -18,6 +18,12 @@ interface MemoFormProps {
 function MemoForm(props: MemoFormProps) {
   const { setMemoHighlightId, content, setIsConfirmOpen, setConfirmModalText } = props;
   const [textLength, setTextLength] = useState(0);
+
+  useEffect(() => {
+    if (content) {
+      setTextLength(content.length);
+    }
+  }, []);
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const handleChange = () => {
