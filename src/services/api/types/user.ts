@@ -1,27 +1,15 @@
-type TokenInfo = {
-  access_token: string;
-};
-
-type UserIdInfo = {
-  kakaoId: number;
-};
-
-export type JoinAndLoginRequestBody = {
-  access_token: string;
-  user_id: string;
-};
-
-export type JoinResponseBody = {
-  userId: string;
-};
-
-export interface TokenAndUserInfo {
-  tokenInfo: TokenInfo;
-  userInfo: UserIdInfo;
+//로그인 요청시 보내는 인가 코드
+export interface LoginRequestBody {
+  code: string;
 }
 
-export interface LoginUser {
-  kakaoId: string;
+//인가 코드 보내고 받는 엑세스 토큰
+export interface LoginResponseBody {
+  access_token: string;
+}
+
+export interface UserData {
+  // kakaoId: string;
   nickname: string;
   email?: string;
   gender?: string;

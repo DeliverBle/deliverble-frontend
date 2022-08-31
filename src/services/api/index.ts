@@ -8,6 +8,8 @@ import { ReviewService } from './review';
 import { likeDataRemote } from '../remote/like';
 import { LikeService } from './like';
 import { reviewDataRemote } from '../remote/review';
+import { LoginUserService } from './login-user';
+import { loginUserDataMock } from '../mock/user';
 
 export const api: APIService = getAPIMethod();
 
@@ -21,7 +23,8 @@ function provideMockAPIService(): APIService {
   const learnDetailService = learnDetailDataRemote();
   const likeService = likeDataRemote();
   const reviewService = reviewDataRemote();
-  return { homeService, learnService, learnDetailService, reviewService, likeService };
+  const loginUserService = loginUserDataMock();
+  return { homeService, learnService, learnDetailService, reviewService, likeService, loginUserService };
 }
 
 export interface APIService {
@@ -30,4 +33,5 @@ export interface APIService {
   learnDetailService: LearnDetailService;
   reviewService: ReviewService;
   likeService: LikeService;
+  loginUserService: LoginUserService;
 }
