@@ -5,17 +5,22 @@ import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { api } from '@src/services/api';
 
 function ProfileModal() {
   const router = useRouter();
   const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
   useEffect(() => {
-    const userNickname = localStorage.getItem('nickname');
-    const userEmail = localStorage.getItem('email');
-    if (userNickname && userEmail) {
-      setNickname(userNickname);
-      setEmail(userEmail);
+    const access_token = localStorage.getItem('token');
+    if (access_token) {
+      api.loginUserService
+        .getUserInfo({ access_token })
+        .then((response) => {
+          setNickname(response.nickname);
+          setEmail(response.email ?? 'NO_EMAIL');
+        })
+        .catch((error) => console.error(error));
     }
   }, []);
 
