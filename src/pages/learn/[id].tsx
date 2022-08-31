@@ -269,6 +269,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                         setIsConfirmOpen={setIsConfirmOpen}
                         setConfirmModalText={setConfirmModalText}
                       />
+                      <StMemoGradient />
                       <StMemoFooter />
                     </>
                   ) : (
@@ -506,12 +507,22 @@ const StMemoWrapper = styled.div`
   position: relative;
 `;
 
+const StMemoGradient = styled.div`
+  position: absolute;
+  bottom: 0;
+  width: 67rem;
+  height: 7rem;
+  pointer-events: none;
+
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #ffffff 100%);
+`;
+
 const StMemoFooter = styled.div`
   position: absolute;
   bottom: 0;
   width: 67rem;
-  height: 8rem;
+  height: 2.4rem;
   pointer-events: none;
 
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #ffffff 100%);
+  background: ${COLOR.WHITE};
 `;
