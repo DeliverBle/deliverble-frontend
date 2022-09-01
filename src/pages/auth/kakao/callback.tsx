@@ -11,7 +11,7 @@ function OAuthRedirectHandler() {
     const prevLink = storage.getItem('currentPath') || '/';
 
     api.loginUserService
-      .requestLogin({ code })
+      .requestLogin(code)
       .then((response) => {
         localStorage.setItem('token', response.access_token);
       })
