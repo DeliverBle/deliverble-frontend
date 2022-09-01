@@ -9,7 +9,7 @@ import { likeDataRemote } from '../remote/like';
 import { LikeService } from './like';
 import { reviewDataRemote } from '../remote/review';
 import { LoginUserService } from './login-user';
-import { loginUserDataMock } from '../mock/user';
+import { loginUserRemote } from '../remote/login-user';
 
 export const api: APIService = getAPIMethod();
 
@@ -23,7 +23,7 @@ function provideMockAPIService(): APIService {
   const learnDetailService = learnDetailDataRemote();
   const likeService = likeDataRemote();
   const reviewService = reviewDataRemote();
-  const loginUserService = loginUserDataMock();
+  const loginUserService = loginUserRemote();
   return { homeService, learnService, learnDetailService, reviewService, likeService, loginUserService };
 }
 

@@ -1,6 +1,6 @@
-import { UserData } from './types/user';
+import { AccessToken, UserData } from './types/user';
 
 export interface LoginUserService {
-  requestLogin(code: string): Promise<string>;
-  getUserInfo(access_token: string): Promise<UserData>;
+  requestLogin(code: string): Promise<AccessToken>;
+  getUserInfo(accessToken: string): Promise<UserData>;
 }

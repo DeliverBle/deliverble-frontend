@@ -3,7 +3,7 @@ export const USER_DATA_CODE = {
 };
 
 export const USER_DATA_TOKEN = {
-  access_token: 'abcdefghijk1234567890ThisIsToken',
+  accessToken: 'abcdefghijk1234567890ThisIsToken',
 };
 
 export const USER_DATA = {
