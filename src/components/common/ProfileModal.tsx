@@ -15,7 +15,7 @@ function ProfileModal() {
     const access_token = localStorage.getItem('token');
     if (access_token) {
       api.loginUserService
-        .getUserInfo({ access_token })
+        .getUserInfo(access_token)
         .then((response) => {
           setNickname(response.nickname);
           setEmail(response.email ?? 'NO_EMAIL');

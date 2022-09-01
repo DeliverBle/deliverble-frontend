@@ -18,7 +18,7 @@ function OAuthRedirectHandler() {
   const code = router.query.code as string;
   const { data: accessToken } = useQuery(['accessToken'], () => api.loginUserService.requestLogin(code), {
     onSuccess: (data) => {
-      accessToken && localStorage.setItem('token', data.accessToken);
+      localStorage.setItem('token', data.accessToken);
       console.log('로그인 성공 !!!');
       if (localStorage.getItem('token')) setIsLoggedIn(true);
       router.push(prevLink);

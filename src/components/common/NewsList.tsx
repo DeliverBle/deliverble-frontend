@@ -7,6 +7,8 @@ import Like from './Like';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { VideoData } from '@src/services/api/types/home';
+import { useRecoilValue } from 'recoil';
+import { LoginState } from 'src/stores/LoginState';
 
 interface NewsListProps {
   newsList: VideoData[];
@@ -17,7 +19,7 @@ function NewsList(props: NewsListProps) {
   const { newsList, onClickLike } = props;
   const router = useRouter();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const getLoginStatus = () => localStorage.getItem('token') ?? '';
+  const loginState = useRecoilValue(LoginState);
 
   return (
     <StNewsList>
@@ -37,7 +39,7 @@ function NewsList(props: NewsListProps) {
                 isFromList={true}
                 isLiked={isLiked}
                 toggleLike={() => {
-                  if (getLoginStatus() === '') {
+                  if (!loginState) {
                     setIsLoginModalOpen(true);
                   } else {
                     onClickLike && onClickLike(id, isLiked);
