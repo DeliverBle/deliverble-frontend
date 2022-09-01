@@ -9,25 +9,16 @@ import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { imgLogo } from 'public/assets/images';
 import { icMypageButton } from 'public/assets/icons';
+import { useRecoilValue } from 'recoil';
+import { LoginState } from 'src/stores/LoginState';
 
 function NavigationBar() {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [loginState, setLoginState] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const profileModalRef = useRef<HTMLDivElement>(null);
   const profileImageRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    handleLoginState();
-  }, []);
-
-  const handleLoginState = () => {
-    const tokenValue = localStorage.getItem('token');
-    if (tokenValue) {
-      setLoginState(true);
-    }
-  };
+  const loginState = useRecoilValue(LoginState);
 
   useEffect(() => {
     const handleClickOutside = (e: Event) => {

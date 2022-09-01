@@ -2,10 +2,13 @@ import { api } from '@src/services/api';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import { useRecoilState } from 'recoil';
+import { LoginState } from 'src/stores/LoginState';
 
 function OAuthRedirectHandler() {
   const router = useRouter();
   const [prevLink, setPrevLink] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useRecoilState(LoginState);
 
   useEffect(() => {
     const storage = globalThis?.sessionStorage;
@@ -17,7 +20,8 @@ function OAuthRedirectHandler() {
     onSuccess: (data) => {
       accessToken && localStorage.setItem('token', data.accessToken);
       console.log('로그인 성공 !!!');
-      // router.push(prevLink);
+      if (localStorage.getItem('token')) setIsLoggedIn(true);
+      router.push(prevLink);
     },
     onError: () => {
       console.log('로그인 에러');
