@@ -4,9 +4,9 @@
 // }
 
 //인가 코드 보내고 받는 엑세스 토큰
-export interface AccessToken {
-  access_token: string;
-}
+// export interface AccessToken {
+//   accessToken: string;
+// }
 
 export interface UserData {
   nickname: string;
