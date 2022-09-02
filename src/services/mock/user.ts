@@ -2,7 +2,7 @@ import { LoginUserService } from '../api/login-user';
 import { USER_DATA, USER_DATA_TOKEN } from './user.data';
 
 export function loginUserDataMock(): LoginUserService {
-  const requestLogin = async (code: string) => {
+  const requestLogin = async () => {
     await wait(500);
     return USER_DATA_TOKEN;
   };

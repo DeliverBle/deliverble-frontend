@@ -1,7 +1,3 @@
-export const USER_DATA_CODE = {
-  code: '1234567890abcdefghijkThisIsCode',
-};
-
 export const USER_DATA_TOKEN = {
   accessToken: 'abcdefghijk1234567890ThisIsToken',
 };

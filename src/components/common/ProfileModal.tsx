@@ -15,10 +15,10 @@ function ProfileModal() {
   const [email, setEmail] = useState('');
   const setIsLoggedIn = useSetRecoilState(LoginState);
   useEffect(() => {
-    const access_token = localStorage.getItem('token');
-    if (access_token) {
+    const accessToken = localStorage.getItem('token');
+    if (accessToken) {
       api.loginUserService
-        .getUserInfo(access_token)
+        .getUserInfo(accessToken)
         .then((response) => {
           setNickname(response.nickname);
           setEmail(response.email ?? 'NO_EMAIL');

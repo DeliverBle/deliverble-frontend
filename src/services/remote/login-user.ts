@@ -14,15 +14,10 @@ export function loginUserRemote(): LoginUserService {
     }
   };
 
+  //임시 목 데이터
   const getUserInfo = async () => {
     return USER_DATA;
   };
-
-  // const requestLogin = (code: string) => {
-  //   return {
-  //     accessToken: '12313213',
-  //   };
-  // };
 
   return { requestLogin, getUserInfo };
 }
