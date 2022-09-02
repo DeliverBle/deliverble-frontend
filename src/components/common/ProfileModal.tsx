@@ -6,11 +6,14 @@ import { FONT_STYLES } from '@src/styles/fontStyle';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { api } from '@src/services/api';
+import { useSetRecoilState } from 'recoil';
+import { LoginState } from 'src/stores/LoginState';
 
 function ProfileModal() {
   const router = useRouter();
   const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
+  const setIsLoggedIn = useSetRecoilState(LoginState);
   useEffect(() => {
     const access_token = localStorage.getItem('token');
     if (access_token) {
@@ -25,7 +28,8 @@ function ProfileModal() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.clear();
+    localStorage.removeItem('token');
+    setIsLoggedIn(false);
     router.reload();
   };
 
