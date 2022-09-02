@@ -3,31 +3,42 @@ import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { useState } from 'react';
 import MemoForm from './MemoForm';
-import MemoDotButton from './MemoPopupButton';
+import MemoDotButton from './MemoDotButton';
+import { ConfirmModalText } from '../ConfirmModal';
+import { MEMO_CONTENT_MAX } from '@src/utils/constant';
+import { MemoHighlightId } from '@src/pages/learn/[id]';
+import ImageDiv from '@src/components/common/ImageDiv';
+import { icArrowUp } from 'public/assets/icons';
 
 interface MemoProps {
-  isNewMemo: boolean;
-  setIsNewMemo: (cancel: boolean) => void;
-  keyword?: string;
-  content?: string;
+  highlightId: number;
+  memoData: (string | undefined)[];
+  isEditMemo: boolean;
+  setMemoHighlightId: (id: MemoHighlightId) => void;
+  setIsConfirmOpen: (open: boolean) => void;
+  setConfirmModalText: (text: ConfirmModalText) => void;
 }
 
 function Memo(props: MemoProps) {
-  const { isNewMemo, setIsNewMemo, keyword, content } = props;
-  const [moreButton, setMoreButton] = useState(false);
-  const [edit, setEdit] = useState(false);
-
-  const CONTENT_MAX = 30;
-  const KEYWORD_MAX = 28;
+  const { highlightId, memoData, isEditMemo, setMemoHighlightId, setIsConfirmOpen, setConfirmModalText } = props;
+  const [keyword, content] = memoData;
+  const [foldButton, setFoldButton] = useState(false);
 
   const showContent = () => {
-    if (content && content.length > CONTENT_MAX && !moreButton) {
+    if (content && content.length > MEMO_CONTENT_MAX) {
       return (
         <>
-          {content.slice(0, 26)}
-          <button type="button" onClick={() => setMoreButton(true)}>
-            ... 더보기
-          </button>
+          {foldButton ? content : content.slice(0, 26)}
+          <StFoldbutton onClick={() => setFoldButton((prev) => !prev)} fold={foldButton}>
+            {foldButton ? (
+              <>
+                <ImageDiv src={icArrowUp} className="fold" alt="" />
+                {'접기'}
+              </>
+            ) : (
+              '...더보기'
+            )}
+          </StFoldbutton>
         </>
       );
     }
@@ -36,18 +47,24 @@ function Memo(props: MemoProps) {
 
   return (
     <StMemo>
-      {keyword && (
-        <StKeyword>
-          {keyword.length <= KEYWORD_MAX || moreButton || isNewMemo ? keyword : `${keyword.slice(0, 27)}...`}
-        </StKeyword>
-      )}
-      {!content || edit ? (
-        <MemoForm content={content} setIsNewMemo={setIsNewMemo} setEdit={setEdit} />
+      {keyword && <StKeyword>{keyword}</StKeyword>}
+      {!content || isEditMemo ? (
+        <MemoForm
+          content={content}
+          setMemoHighlightId={setMemoHighlightId}
+          setIsConfirmOpen={setIsConfirmOpen}
+          setConfirmModalText={setConfirmModalText}
+        />
       ) : (
-        <StContent>
-          {showContent()}
-          <MemoDotButton edit={() => setEdit(true)} />
-        </StContent>
+        <>
+          <StContent>{showContent()}</StContent>
+          <MemoDotButton
+            highlightId={highlightId}
+            setMemoHighlightId={setMemoHighlightId}
+            setIsConfirmOpen={setIsConfirmOpen}
+            setConfirmModalText={setConfirmModalText}
+          />
+        </>
       )}
     </StMemo>
   );
@@ -65,10 +82,8 @@ const StMemo = styled.div`
   background-color: ${COLOR.SUB_BLUE_8};
   border-radius: 2.5rem;
 
-  &:not(:hover) {
-    .dot {
-      opacity: 0;
-    }
+  &:hover .dot {
+    opacity: 1;
   }
 `;
 
@@ -79,16 +94,26 @@ const StKeyword = styled.h1`
   ${FONT_STYLES.SB_25_MEMO};
 `;
 
-const StContent = styled.p`
+const StContent = styled.div`
   color: ${COLOR.GRAY_80};
   ${FONT_STYLES.R_23_MEMO};
+`;
 
-  & > button {
-    color: ${COLOR.GRAY_30};
-    ${FONT_STYLES.R_23_MEMO};
+const StFoldbutton = styled.div<{ fold: boolean }>`
+  position: absolute;
+  right: 3.2rem;
+  bottom: 2.8rem;
 
-    &:hover {
-      color: ${COLOR.MAIN_BLUE};
-    }
+  display: flex;
+  .fold {
+    display: flex;
+    align-items: center;
   }
+
+  color: ${({ fold }) => (fold ? COLOR.MAIN_BLUE : COLOR.GRAY_30)};
+  ${FONT_STYLES.R_23_MEMO};
+  &:hover {
+    color: ${({ fold }) => !fold && COLOR.MAIN_BLUE};
+  }
+  cursor: pointer;
 `;

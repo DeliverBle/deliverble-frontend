@@ -13,10 +13,11 @@ import MemoList from '@src/components/learnDetail/memo/MemoList';
 import ScriptEdit from '@src/components/learnDetail/ScriptEdit';
 import ContextMenu from '@src/components/learnDetail/ContextMenu';
 import VideoDetail from '@src/components/learnDetail/VideoDetail';
-import ConfirmModal from '@src/components/learnDetail/ConfirmModal';
+import ConfirmModal, { ConfirmModalText } from '@src/components/learnDetail/ConfirmModal';
 import LoginModal from '@src/components/login/LoginModal';
 import { api } from '@src/services/api';
 import { HighlightData, VideoData } from '@src/services/api/types/learn-detail';
+import { NEW_MEMO_CONFIRM_MODAL_TEXT, EDIT_MEMO_CONFIRM_MODAL_TEXT } from '@src/utils/constant';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import {
@@ -30,20 +31,22 @@ import {
   icSpacingClicked,
 } from 'public/assets/icons';
 
+export interface MemoHighlightId {
+  new: number;
+  edit: number;
+}
+
 function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highlightData: HighlightData[] }) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  const [mainText, setMainText] = useState('');
-  const [subText, setSubText] = useState('');
-  const [cancelButtonText, setCancelButtonText] = useState('');
-  const [confirmButtonText, setConfirmButtonText] = useState('');
+  const [confirmModalText, setConfirmModalText] = useState<ConfirmModalText>(NEW_MEMO_CONFIRM_MODAL_TEXT);
   const [isHighlight, setIsHighlight] = useState(false);
   const [isSpacing, setIsSpacing] = useState(false);
-  const [clickedScriptId, setClickedScriptId] = useState<number>();
   const [clickedHighlightId, setClickedHighlightId] = useState<number>();
   const [points, setPoints] = useState({ x: 0, y: 0 });
-  const [isNewMemo, setIsNewMemo] = useState(false);
+  const [memoHighlightId, setMemoHighlightId] = useState<MemoHighlightId>({ new: 0, edit: 0 });
+  const [hasMemo, setHasMemo] = useState(false);
   const [keyword, setKeyword] = useState<string>();
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -55,6 +58,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   const learnRef = useRef<HTMLDivElement>(null);
   const getLoginStatus = () => localStorage.getItem('token') ?? '';
   const [prevLink, setPrevLink] = useState('');
+  const { new: newMemoHighlightId, edit: editMemoHighlightId } = memoHighlightId;
 
   const controlPointX = (e: React.MouseEvent) => {
     const x = e.nativeEvent.offsetX / 10;
@@ -67,14 +71,22 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   };
 
   const handleRightClick = (e: React.MouseEvent, id: number) => {
-    if (isNewMemo) {
-      setClickedScriptId(-1);
-      return setIsConfirmOpen(true);
+    if (highlightData) {
+      const index = highlightData.findIndex((item) => item.highlightId === id);
+      if (index !== -1) {
+        const target = e.target as HTMLDivElement;
+        setHasMemo(Object.keys(highlightData[index].memo).length > 0);
+        setPoints(controlPointX(e));
+        setClickedHighlightId(() => Number(target.id));
+        setKeyword(target.innerText);
+      }
+      if (newMemoHighlightId || editMemoHighlightId) {
+        newMemoHighlightId && setConfirmModalText(NEW_MEMO_CONFIRM_MODAL_TEXT);
+        editMemoHighlightId && setConfirmModalText(EDIT_MEMO_CONFIRM_MODAL_TEXT);
+        setClickedHighlightId(-1);
+        return setIsConfirmOpen(true);
+      }
     }
-    setClickedScriptId(id);
-    setPoints(controlPointX(e));
-    setClickedHighlightId(() => Number((e.target as HTMLDivElement).id));
-    setKeyword((e.target as HTMLDivElement).innerText);
   };
 
   useEffect(() => {
@@ -95,18 +107,19 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   useEffect(() => {
     const handleClickOutside = (e: Event) => {
       const eventTarget = e.target as HTMLElement;
-      if (clickedScriptId && !contextMenuRef?.current?.contains(eventTarget)) {
-        setClickedScriptId(-1);
+      if (clickedHighlightId && !contextMenuRef?.current?.contains(eventTarget)) {
+        setClickedHighlightId(-1);
       }
     };
-    window.addEventListener('click', handleClickOutside);
-  }, [clickedScriptId]);
+    if (clickedHighlightId) {
+      window.addEventListener('click', handleClickOutside);
+    }
+    return () => {
+      window.removeEventListener('click', handleClickOutside);
+    };
+  }, [clickedHighlightId]);
 
   useEffect(() => {
-    setMainText('메모 작성을 취소하시겠습니까?');
-    setSubText('작성 취소 선택시, 작성된 메모는 저장되지 않습니다.');
-    setCancelButtonText('작성하기');
-    setConfirmButtonText('작성 취소');
     const storage = globalThis?.sessionStorage;
     const prevPath = storage.getItem('prevPath');
     if (prevPath?.includes('/learn/')) {
@@ -148,8 +161,13 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                         onClick={() => player?.seekTo(startTime, true)}
                         isActive={startTime <= currentTime && currentTime < endTime ? true : false}>
                         <p id={id.toString()}>{text}</p>
-                        {clickedScriptId === id && !isNewMemo && (
-                          <ContextMenu points={points} setIsNewMemo={setIsNewMemo} />
+                        {clickedHighlightId === id && !newMemoHighlightId && !editMemoHighlightId && (
+                          <ContextMenu
+                            points={points}
+                            hasMemo={hasMemo}
+                            id={id}
+                            setMemoHighlightId={setMemoHighlightId}
+                          />
                         )}
                       </StScriptText>
                     ))}
@@ -241,13 +259,19 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                 </StMemoTitle>
                 <StMemoWrapper>
                   {highlightData ? (
-                    <MemoList
-                      highlightList={highlightData}
-                      isNewMemo={isNewMemo}
-                      setIsNewMemo={setIsNewMemo}
-                      highlightId={clickedHighlightId}
-                      keyword={keyword}
-                    />
+                    <>
+                      <MemoList
+                        highlightList={highlightData}
+                        memoHighlightId={memoHighlightId}
+                        setMemoHighlightId={setMemoHighlightId}
+                        highlightId={clickedHighlightId}
+                        keyword={keyword}
+                        setIsConfirmOpen={setIsConfirmOpen}
+                        setConfirmModalText={setConfirmModalText}
+                      />
+                      <StMemoGradient />
+                      <StMemoFooter />
+                    </>
                   ) : (
                     <EmptyMemo />
                   )}
@@ -260,11 +284,8 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
         {isConfirmOpen && (
           <ConfirmModal
             closeModal={setIsConfirmOpen}
-            mainText={mainText}
-            subText={subText}
-            cancelButtonText={cancelButtonText}
-            confirmButtonText={confirmButtonText}
-            setIsNewMemo={setIsNewMemo}
+            confirmModalText={confirmModalText}
+            setMemoHighlightId={setMemoHighlightId}
           />
         )}
         {isLoginModalOpen && <LoginModal closeModal={() => setIsLoginModalOpen(false)} />}
@@ -481,5 +502,27 @@ const StMemoTitle = styled.div`
 
 const StMemoWrapper = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  position: relative;
+`;
+
+const StMemoGradient = styled.div`
+  position: absolute;
+  bottom: 0;
+  width: 67rem;
+  height: 7rem;
+  pointer-events: none;
+
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #ffffff 100%);
+`;
+
+const StMemoFooter = styled.div`
+  position: absolute;
+  bottom: 0;
+  width: 67rem;
+  height: 2.4rem;
+  pointer-events: none;
+
+  background: ${COLOR.WHITE};
 `;

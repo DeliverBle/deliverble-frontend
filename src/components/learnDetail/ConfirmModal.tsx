@@ -1,18 +1,32 @@
 import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
+import { MemoHighlightId } from '@src/pages/learn/[id]';
+import { useEffect } from 'react';
+
+export interface ConfirmModalText {
+  mainText: string;
+  subText?: string;
+  confirmText: string;
+  cancelText: string;
+}
 
 interface ConfirmModalProps {
   closeModal: (close: boolean) => void;
-  mainText: string;
-  subText: string;
-  cancelButtonText: string;
-  confirmButtonText: string;
-  setIsNewMemo: (newMemo: boolean) => void;
+  setMemoHighlightId: (id: MemoHighlightId) => void;
+  confirmModalText: ConfirmModalText;
 }
 
 function ConfirmModal(props: ConfirmModalProps) {
-  const { closeModal, mainText, subText, cancelButtonText, confirmButtonText, setIsNewMemo } = props;
+  const { closeModal, setMemoHighlightId, confirmModalText } = props;
+  const { mainText, subText, confirmText, cancelText } = confirmModalText;
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  }, []);
 
   return (
     <StConfirmModal>
@@ -21,13 +35,13 @@ function ConfirmModal(props: ConfirmModalProps) {
         <p>{subText}</p>
       </StDescription>
       <StButtonContainer>
-        <button onClick={() => closeModal(false)}>{cancelButtonText}</button>
+        <button onClick={() => closeModal(false)}>{confirmText}</button>
         <button
           onClick={() => {
-            setIsNewMemo(false);
+            setMemoHighlightId({ new: 0, edit: 0 });
             closeModal(false);
           }}>
-          {confirmButtonText}
+          {cancelText}
         </button>
       </StButtonContainer>
     </StConfirmModal>

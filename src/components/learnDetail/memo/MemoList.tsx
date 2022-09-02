@@ -3,25 +3,47 @@ import { COLOR } from '@src/styles/color';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Memo from './Memo';
+import { ConfirmModalText } from '../ConfirmModal';
+import { MemoHighlightId } from '@src/pages/learn/[id]';
 
 interface MemoListProps {
   highlightList: HighlightData[];
-  isNewMemo: boolean;
-  setIsNewMemo: (isNewMemo: boolean) => void;
   highlightId?: number;
   keyword?: string;
+  memoHighlightId: MemoHighlightId;
+  setMemoHighlightId: (id: MemoHighlightId) => void;
+  setIsConfirmOpen: (open: boolean) => void;
+  setConfirmModalText: (text: ConfirmModalText) => void;
 }
 
 function MemoList(props: MemoListProps) {
-  const { highlightList, isNewMemo, setIsNewMemo, highlightId, keyword } = props;
+  const {
+    highlightList,
+    highlightId,
+    keyword,
+    memoHighlightId,
+    setMemoHighlightId,
+    setIsConfirmOpen,
+    setConfirmModalText,
+  } = props;
   const [index, setIndex] = useState<number>();
+  const [memoIndexToDelete, setMemoIndexToDelete] = useState<number>();
 
   useEffect(() => {
     setIndex(highlightList.findIndex((item) => item.highlightId === highlightId));
-  }, [highlightId, highlightList, index]);
+    setMemoIndexToDelete(highlightList.findIndex((item) => Object.keys(item.memo).length === 1));
+  }, [highlightId, highlightList]);
 
-  if (index !== undefined && index !== -1) {
-    highlightList[index].memo = isNewMemo ? { keyword: keyword } : {};
+  if (index && index !== -1) {
+    if (memoHighlightId.new) {
+      highlightList[index].memo = { keyword: keyword };
+    } else if (Object.keys(highlightList[index].memo).length === 1) {
+      highlightList[index].memo = {};
+    }
+  }
+
+  if (memoIndexToDelete && memoIndexToDelete !== -1 && !memoHighlightId.new) {
+    highlightList[memoIndexToDelete].memo = {};
   }
 
   return (
@@ -31,10 +53,12 @@ function MemoList(props: MemoListProps) {
           Object.keys(memo).length > 0 && (
             <Memo
               key={highlightId}
-              isNewMemo={isNewMemo}
-              setIsNewMemo={setIsNewMemo}
-              keyword={memo.keyword}
-              content={memo.content}
+              highlightId={highlightId}
+              memoData={[memo.keyword, memo.content]}
+              isEditMemo={memoHighlightId.edit == highlightId}
+              setMemoHighlightId={setMemoHighlightId}
+              setIsConfirmOpen={setIsConfirmOpen}
+              setConfirmModalText={setConfirmModalText}
             />
           ),
       )}
