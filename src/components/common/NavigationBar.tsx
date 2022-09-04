@@ -53,7 +53,7 @@ function NavigationBar() {
       <StNavigationBar>
         <Link href="/home">
           <a>
-            <ImageDiv className="logo" priority src={icDeliverbleNav} layout="fill" alt="DeliverBle" />
+            <ImageDiv className="logo" priority src={icDeliverbleNav} layout="fill" alt="딜리버블" />
           </a>
         </Link>
         <nav>

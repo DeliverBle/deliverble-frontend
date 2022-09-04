@@ -18,7 +18,12 @@ function Nav(props: NavProps) {
   return (
     <>
       <StNav isSecondScrolled={isSecondScrolled}>
-        <ImageDiv src={isFirstScrolled ? icDeliverbleBlue : icDeliverbleWhite} className="logo" layout="fill" alt="" />
+        <ImageDiv
+          src={isFirstScrolled ? icDeliverbleBlue : icDeliverbleWhite}
+          className="logo"
+          layout="fill"
+          alt="딜리버블"
+        />
 
         <StLogin isFirstScrolled={isFirstScrolled} onClick={() => setIsModalOpen(true)}>
           로그인
