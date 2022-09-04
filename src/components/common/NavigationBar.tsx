@@ -7,7 +7,7 @@ import LoginModal from '../login/LoginModal';
 import ProfileModal from './ProfileModal';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import { imgLogo } from 'public/assets/images';
+import { icDeliverbleNav } from 'public/assets/icons';
 import { icMypageButton } from 'public/assets/icons';
 
 function NavigationBar() {
@@ -53,7 +53,7 @@ function NavigationBar() {
       <StNavigationBar>
         <Link href="/home">
           <a>
-            <ImageDiv className="logo" priority src={imgLogo} layout="fill" alt="DeliverBle" />
+            <ImageDiv className="logo" priority src={icDeliverbleNav} layout="fill" alt="DeliverBle" />
           </a>
         </Link>
         <nav>

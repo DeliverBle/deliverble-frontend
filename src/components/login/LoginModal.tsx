@@ -3,7 +3,7 @@ import { FONT_STYLES } from '@src/styles/fontStyle';
 import ImageDiv from '../common/ImageDiv';
 import Link from 'next/link';
 import { icXButton, icKakao, icMicrophone } from 'public/assets/icons';
-import { imgLogo } from 'public/assets/images';
+import { icDeliverbleBlue } from 'public/assets/icons';
 import { COLOR } from '@src/styles/color';
 import { KAKAO_AUTH_URL } from './OAuth';
 
@@ -18,7 +18,7 @@ function LoginModal(props: LoginModalProps) {
       <StLoginModalBackground />
       <StLoginModalContent>
         <ImageDiv onClick={closeModal} src={icXButton} className="x-button" layout="fill" alt="x" />
-        <ImageDiv src={imgLogo} className="logo" layout="fill" alt="DeliverBle" />
+        <ImageDiv src={icDeliverbleBlue} className="logo" layout="fill" alt="DeliverBle" />
         <p>로그인하고 더 다양한 기능을 누려보세요.</p>
         <ImageDiv src={icMicrophone} className="microphone" layout="fill" alt="마이크" />
         <Link href={KAKAO_AUTH_URL}>

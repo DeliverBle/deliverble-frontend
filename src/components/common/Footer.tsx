@@ -1,6 +1,6 @@
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import { icLogoFooter, icSocial } from 'public/assets/icons';
+import { icDeliverbleBlue, icSocial } from 'public/assets/icons';
 import styled from 'styled-components';
 import ImageDiv from './ImageDiv';
 
@@ -8,7 +8,7 @@ function Footer() {
   return (
     <StFooter>
       <StLogo>
-        <ImageDiv className="logo" src={icLogoFooter} alt="DeliverBle" />
+        <ImageDiv className="logo" src={icDeliverbleBlue} alt="DeliverBle" />
         <h4>
           언제 어디서나 당당할 당신의 말하기를
           <br />

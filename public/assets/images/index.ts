@@ -1,4 +1,3 @@
-export { default as imgLogo } from './img_logo.svg';
 export { default as imgLandingBgFirst } from './img_landing_first_bg.svg';
 export { default as imgLandingBgSecond } from './img_landing_second_bg.svg';
 export { default as imgLandingBgLast } from './img_landing_last_bg.svg';
