@@ -117,9 +117,9 @@ const StNavigationBar = styled.div`
   .logo {
     position: relative;
 
-    width: 14rem;
-    height: 5.6rem;
-    margin-right: 5.6rem;
+    width: 11.9rem;
+    height: 3.7rem;
+    margin-right: 7.7rem;
   }
 
   .profile {
@@ -145,13 +145,13 @@ const StTab = styled.li<{ isActive: boolean }>`
   width: 9rem;
 
   &:first-of-type {
-    width: 4rem;
+    width: 4.4rem;
   }
 
   & > a {
     display: block;
     text-align: center;
-    padding: 2.7rem 0 2.5rem 0;
+    padding: 2.6rem 0 2.5rem 0;
 
     color: ${COLOR.GRAY_30};
     :hover {
@@ -162,7 +162,7 @@ const StTab = styled.li<{ isActive: boolean }>`
   ${({ isActive }) =>
     isActive &&
     css`
-      border-bottom: 0.45rem solid transparent;
+      border-bottom: 0.3rem solid transparent;
       border-image: linear-gradient(45deg, ${COLOR.SUB_PURPLE}, ${COLOR.MAIN_BLUE});
       border-image-slice: 1;
       & > a {
