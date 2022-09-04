@@ -63,7 +63,12 @@ const StFooter = styled.div`
 `;
 
 const StLogo = styled.div`
-  padding: 12.6rem 0 12.6rem 16rem;
+  padding: 12.4rem 0 0rem 16rem;
+
+  .logo {
+    width: 19.4rem;
+    height: 6rem;
+  }
 
   & > h4 {
     margin-top: 1.6rem;
