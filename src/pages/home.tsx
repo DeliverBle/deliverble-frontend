@@ -9,6 +9,8 @@ import Footer from '@src/components/common/Footer';
 import SEO from '@src/components/common/SEO';
 import { useEffect, useState } from 'react';
 import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
+import ImageDiv from '@src/components/common/ImageDiv';
+import { imgBannerMic } from 'public/assets/images';
 
 function Home() {
   const [newsList, setNewsList] = useState<VideoData[]>([]);
@@ -94,6 +96,7 @@ function Home() {
           </h1>
           <p>딜리버블과 함께 잘 말하는 법을 배워봐요!</p>
         </StBannerText>
+        <ImageDiv className="mic" src={imgBannerMic} alt="" />
       </StHome>
       <StNews>
         <h3>딜리버블의 추천 뉴스를 만나보세요.</h3>
@@ -114,21 +117,27 @@ export default Home;
 
 const StHome = styled.div`
   display: flex;
-  align-items: center;
+  justify-content: space-between;
+  align-items: end;
 
-  width: 100%;
-  height: 73rem;
-  margin: 4.8rem 0 14.4rem 0;
+  height: 60rem;
+  margin: 13.6rem 0 14.4rem 0;
 
-  background: no-repeat url('/assets/images/img_banner.svg');
+  background: no-repeat url('/assets/images/img_banner_background.svg');
   background-size: cover;
-  background-position: center;
+
+  .mic {
+    margin-right: 6.4rem;
+
+    min-width: 122.4rem;
+    min-height: 68.6rem;
+  }
 `;
 
 const StBannerText = styled.div`
-  padding: 28.9rem 0 20.1rem 16rem;
+  margin: 20.1rem 0 20.1rem 16rem;
 
-  width: fit-content;
+  min-width: 50.4rem;
   height: fit-content;
 
   color: ${COLOR.WHITE};
