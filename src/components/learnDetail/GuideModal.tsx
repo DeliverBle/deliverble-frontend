@@ -101,7 +101,7 @@ const StGuideModalContent = styled.div`
   box-shadow: 0.4rem 0.4rem 2rem rgba(22, 15, 53, 0.15);
 
   position: fixed;
-  top: 50.9rem;
+  top: 42.1rem;
   left: 50%;
   transform: translateX(-50%);
   z-index: 2;
