@@ -1,8 +1,6 @@
 import styled from 'styled-components';
-import ImageDiv from '../common/ImageDiv';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import { icScriptDeleteLight } from 'public/assets/icons';
 
 interface ScriptIndexProps {
   isOne: boolean;
@@ -16,7 +14,7 @@ function ScriptIndex(props: ScriptIndexProps) {
   return (
     <StScriptIndex onClick={() => setClickedIndex(currentIndex)} isClicked={currentIndex === clickedIndex}>
       스크립트 {currentIndex + 1}
-      {!isOne && <ImageDiv src={icScriptDeleteLight} className="script-delete-btn" layout="fill" alt="x" />}
+      {!isOne && <StDeleteButton />}
     </StScriptIndex>
   );
 }
@@ -40,10 +38,15 @@ const StScriptIndex = styled.div<{ isClicked: boolean }>`
   color: ${COLOR.MAIN_BLUE};
   ${FONT_STYLES.B_20_BODY};
   cursor: pointer;
+`;
 
-  .script-delete-btn {
-    position: relative;
-    width: 2.4rem;
-    height: 2.4rem;
+const StDeleteButton = styled.button`
+  width: 2.4rem;
+  height: 2.4rem;
+  padding: 0;
+  background-image: url('/assets/icons/ic_script_delete_light.svg');
+  &:hover,
+  &:active {
+    background-image: url('/assets/icons/ic_script_delete_dark.svg');
   }
 `;
