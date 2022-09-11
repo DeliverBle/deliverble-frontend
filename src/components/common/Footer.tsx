@@ -71,6 +71,7 @@ const StLogo = styled.div`
   }
 
   & > h4 {
+    min-width: 35.1rem;
     margin-top: 1.6rem;
 
     color: ${COLOR.MAIN_BLUE};
@@ -93,15 +94,18 @@ const StUnderlineText = styled.p`
 `;
 
 const StService = styled.div`
-  padding: 15.1rem 11.7rem 0 0;
+  min-width: 10.8rem;
+  margin: 15.1rem 11.7rem 0 15.1rem;
 `;
 
 const StPeople = styled.div`
-  padding: 15.1rem 10.1em 0 0;
+  min-width: 18.1rem;
+  margin: 15.1rem 10.1em 0 0;
 `;
 
 const StContact = styled.div`
-  padding: 15.1rem 9.4rem 0 0;
+  min-width: 24.7rem;
+  margin: 15.1rem 9.4rem 0 0;
 `;
 
 const StSocial = styled.div`
@@ -109,7 +113,7 @@ const StSocial = styled.div`
   flex-direction: column;
   align-items: center;
 
-  padding: 15.1rem 18rem 0 0;
+  margin: 15.1rem 18rem 0 0;
 
   & > a {
     margin-top: 1.6rem;

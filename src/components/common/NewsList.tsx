@@ -64,6 +64,14 @@ const StNewsList = styled.section`
   grid-template-columns: repeat(4, 1fr);
   grid-row-gap: 11.2rem;
   grid-column-gap: 2rem;
+
+  @media (max-width: 1280px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: 960px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 `;
 
 const StNewsWrapper = styled.article`

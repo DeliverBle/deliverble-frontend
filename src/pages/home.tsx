@@ -153,13 +153,15 @@ const StBannerText = styled.div`
 `;
 
 const StNews = styled.div`
-  padding: 0 16rem 16rem 16rem;
+  padding: 0 0 16rem 16rem;
 
   & > div {
     margin: 0 auto;
+    padding-right: 16rem;
   }
 
   & > h3 {
+    min-width: 4.8rem;
     margin-bottom: 7.2rem;
 
     ${FONT_STYLES.SB_32_HEADLINE}
