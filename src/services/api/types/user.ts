@@ -4,5 +4,5 @@ export interface AccessToken {
 
 export interface UserData {
   nickname: string;
-  email?: string;
+  email: string;
 }

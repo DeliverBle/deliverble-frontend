@@ -1,31 +1,46 @@
-import styled from 'styled-components';
-import ImageDiv from '../common/ImageDiv';
-import { icMypageButton, icLogout } from 'public/assets/icons';
+import { api } from '@src/services/api';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { api } from '@src/services/api';
+import { icLogout, icMypageButton } from 'public/assets/icons';
+import { useState } from 'react';
+import { useQuery } from 'react-query';
 import { useSetRecoilState } from 'recoil';
 import { LoginState } from 'src/stores/LoginState';
+import styled from 'styled-components';
+import ImageDiv from '../common/ImageDiv';
 
 function ProfileModal() {
   const router = useRouter();
   const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
   const setIsLoggedIn = useSetRecoilState(LoginState);
-  useEffect(() => {
-    const accessToken = localStorage.getItem('token');
-    if (accessToken) {
-      api.loginUserService
-        .getUserInfo(accessToken)
-        .then((response) => {
-          setNickname(response.nickname);
-          setEmail(response.email ?? 'NO_EMAIL');
-        })
-        .catch((error) => console.error(error));
-    }
-  }, []);
+  const accessToken = localStorage.getItem('token');
+
+  const {} = useQuery(['userInfo'], () => api.loginUserService.getUserInfo(accessToken), {
+    onSuccess: (data) => {
+      setNickname(data.nickname);
+      setEmail(data.email);
+    },
+    onError: () => {
+      console.error('유저 데이터 요청 에러 발생');
+    },
+  });
+
+  const {} = useQuery(['userInfo'], () => api.loginUserService.getUserInfo(accessToken), {
+    onSuccess: (data) => {
+      setNickname(data.nickname);
+      setEmail(data.email);
+    },
+    onError: () => {
+      console.error('유저 데이터 요청 에러 발생');
+    },
+  });
+
+  // useEffect(() => {
+  //   setNickname('최유진');
+  //   setEmail('cuj10594@naver.com');
+  // }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
