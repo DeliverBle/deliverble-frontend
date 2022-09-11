@@ -14,7 +14,7 @@ function ScriptIndex(props: ScriptIndexProps) {
   return (
     <StScriptIndex onClick={() => setClickedIndex(currentIndex)} isClicked={currentIndex === clickedIndex}>
       스크립트 {currentIndex + 1}
-      {!isOne && <StDeleteButton />}
+      {!isOne && <StScriptDeleteButton />}
     </StScriptIndex>
   );
 }
@@ -40,7 +40,7 @@ const StScriptIndex = styled.div<{ isClicked: boolean }>`
   cursor: pointer;
 `;
 
-const StDeleteButton = styled.button`
+const StScriptDeleteButton = styled.button`
   width: 2.4rem;
   height: 2.4rem;
   padding: 0;
