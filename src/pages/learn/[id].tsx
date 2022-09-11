@@ -62,6 +62,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   const [prevLink, setPrevLink] = useState('');
   const { new: newMemoHighlightId, edit: editMemoHighlightId } = memoHighlightId;
   const scriptIndexList = ['스크립트 1', '스크립트 2'];
+  const [clickedIndex, setClickedIndex] = useState(0);
 
   const controlPointX = (e: React.MouseEvent) => {
     const x = e.nativeEvent.offsetX / 10;
@@ -140,7 +141,13 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
         <ImageDiv onClick={() => router.push(prevLink)} src={icXButton} className="close" layout="fill" alt="x" />
         <StScriptIndexContainer>
           {scriptIndexList.map((_, i) => (
-            <ScriptIndex key={i} index={i} isOne={scriptIndexList.length === 1} />
+            <ScriptIndex
+              key={i}
+              isOne={scriptIndexList.length === 1}
+              currentIndex={i}
+              clickedIndex={clickedIndex}
+              setClickedIndex={setClickedIndex}
+            />
           ))}
           {scriptIndexList.length !== 3 && (
             <ImageDiv src={icScriptAddLight} className="script-add-button" layout="fill" alt="+" />

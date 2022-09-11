@@ -5,15 +5,17 @@ import { FONT_STYLES } from '@src/styles/fontStyle';
 import { icScriptDeleteLight } from 'public/assets/icons';
 
 interface ScriptIndexProps {
-  index: number;
   isOne: boolean;
+  currentIndex: number;
+  clickedIndex: number;
+  setClickedIndex: () => void;
 }
 
 function ScriptIndex(props: ScriptIndexProps) {
-  const { index, isOne } = props;
+  const { isOne, currentIndex, clickedIndex, setClickedIndex } = props;
   return (
-    <StScriptIndex>
-      스크립트 {index + 1}
+    <StScriptIndex onClick={() => setClickedIndex(currentIndex)} isClicked={currentIndex === clickedIndex}>
+      스크립트 {currentIndex + 1}
       {!isOne && <ImageDiv src={icScriptDeleteLight} className="script-delete-btn" layout="fill" alt="x" />}
     </StScriptIndex>
   );
@@ -21,7 +23,12 @@ function ScriptIndex(props: ScriptIndexProps) {
 
 export default ScriptIndex;
 
-const StScriptIndex = styled.div`
+const StScriptIndex = styled.div<{ isClicked: boolean }>`
+  opacity: ${({ isClicked }) => (isClicked ? 1 : 0.6)};
+  &:hover {
+    opacity: 0.8;
+  }
+
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -32,11 +39,11 @@ const StScriptIndex = styled.div`
   background-color: ${COLOR.WHITE};
   color: ${COLOR.MAIN_BLUE};
   ${FONT_STYLES.B_20_BODY};
+  cursor: pointer;
 
   .script-delete-btn {
     position: relative;
     width: 2.4rem;
     height: 2.4rem;
-    cursor: pointer;
   }
 `;
