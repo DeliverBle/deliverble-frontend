@@ -61,7 +61,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   const getLoginStatus = () => localStorage.getItem('token') ?? '';
   const [prevLink, setPrevLink] = useState('');
   const { new: newMemoHighlightId, edit: editMemoHighlightId } = memoHighlightId;
-  const scriptIndexList = ['스크립트 1'];
+  const scriptIndexList = ['스크립트 1', '스크립트 2'];
 
   const controlPointX = (e: React.MouseEvent) => {
     const x = e.nativeEvent.offsetX / 10;
@@ -140,10 +140,10 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
         <ImageDiv onClick={() => router.push(prevLink)} src={icXButton} className="close" layout="fill" alt="x" />
         <StScriptIndexContainer>
           {scriptIndexList.map((_, i) => (
-            <ScriptIndex key={i} index={i} />
+            <ScriptIndex key={i} index={i} isOne={scriptIndexList.length === 1} />
           ))}
           {scriptIndexList.length !== 3 && (
-            <ImageDiv src={icScriptAddLight} className="script-add" layout="fill" alt="+" />
+            <ImageDiv src={icScriptAddLight} className="script-add-button" layout="fill" alt="+" />
           )}
         </StScriptIndexContainer>
         <StLearnMain>
@@ -336,7 +336,7 @@ const StScriptIndexContainer = styled.div`
   align-items: center;
   gap: 0.8rem;
 
-  .script-add {
+  .script-add-button {
     position: relative;
     width: 4rem;
     height: 4rem;
