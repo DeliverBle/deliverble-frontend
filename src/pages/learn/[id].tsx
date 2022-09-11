@@ -15,6 +15,7 @@ import ContextMenu from '@src/components/learnDetail/ContextMenu';
 import VideoDetail from '@src/components/learnDetail/VideoDetail';
 import ConfirmModal, { ConfirmModalText } from '@src/components/learnDetail/ConfirmModal';
 import LoginModal from '@src/components/login/LoginModal';
+import ScriptIndex from '@src/components/learnDetail/ScriptIndex';
 import { api } from '@src/services/api';
 import { HighlightData, VideoData } from '@src/services/api/types/learn-detail';
 import { NEW_MEMO_CONFIRM_MODAL_TEXT, EDIT_MEMO_CONFIRM_MODAL_TEXT } from '@src/utils/constant';
@@ -29,6 +30,7 @@ import {
   icSpacingDefault,
   icSpacingHover,
   icSpacingClicked,
+  icScriptAddLight,
 } from 'public/assets/icons';
 
 export interface MemoHighlightId {
@@ -59,6 +61,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   const getLoginStatus = () => localStorage.getItem('token') ?? '';
   const [prevLink, setPrevLink] = useState('');
   const { new: newMemoHighlightId, edit: editMemoHighlightId } = memoHighlightId;
+  const scriptIndexList = ['스크립트 1'];
 
   const controlPointX = (e: React.MouseEvent) => {
     const x = e.nativeEvent.offsetX / 10;
@@ -134,15 +137,15 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
       <SEO title="학습하기 | Deliverble" />
       <NavigationBar />
       <StLearnDetail>
-        <ImageDiv
-          onClick={() => {
-            router.push(prevLink);
-          }}
-          src={icXButton}
-          className="close"
-          layout="fill"
-          alt="x"
-        />
+        <ImageDiv onClick={() => router.push(prevLink)} src={icXButton} className="close" layout="fill" alt="x" />
+        <StScriptIndexContainer>
+          {scriptIndexList.map((_, i) => (
+            <ScriptIndex key={i} index={i} />
+          ))}
+          {scriptIndexList.length !== 3 && (
+            <ImageDiv src={icScriptAddLight} className="script-add" layout="fill" alt="+" />
+          )}
+        </StScriptIndexContainer>
         <StLearnMain>
           <VideoDetail {...videoData} setIsModalOpen={setIsModalOpen} />
           <div>
@@ -321,6 +324,22 @@ const StLearnDetail = styled.div`
     right: 11.2rem;
     width: 4.8rem;
     height: 4.8rem;
+    cursor: pointer;
+  }
+`;
+
+const StScriptIndexContainer = styled.div`
+  margin: 0 auto;
+  width: 172rem;
+  padding-left: 5.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+
+  .script-add {
+    position: relative;
+    width: 4rem;
+    height: 4rem;
     cursor: pointer;
   }
 `;
