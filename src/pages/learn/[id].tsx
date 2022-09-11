@@ -30,7 +30,6 @@ import {
   icSpacingDefault,
   icSpacingHover,
   icSpacingClicked,
-  icScriptAddLight,
 } from 'public/assets/icons';
 
 export interface MemoHighlightId {
@@ -149,9 +148,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
               setClickedIndex={setClickedIndex}
             />
           ))}
-          {scriptIndexList.length !== 3 && (
-            <ImageDiv src={icScriptAddLight} className="script-add-button" layout="fill" alt="+" />
-          )}
+          {scriptIndexList.length !== 3 && <StScriptAddButton />}
         </StScriptIndexContainer>
         <StLearnMain>
           <VideoDetail {...videoData} setIsModalOpen={setIsModalOpen} />
@@ -342,12 +339,17 @@ const StScriptIndexContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 0.8rem;
+`;
 
-  .script-add-button {
-    position: relative;
-    width: 4rem;
-    height: 4rem;
-    cursor: pointer;
+const StScriptAddButton = styled.button`
+  width: 4rem;
+  height: 4rem;
+  cursor: pointer;
+  padding: 0;
+  background-image: url('/assets/icons/ic_script_add_light.svg');
+  &:hover,
+  &:active {
+    background-image: url('/assets/icons/ic_script_add_dark.svg');
   }
 `;
 
