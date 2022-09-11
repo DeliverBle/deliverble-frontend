@@ -8,7 +8,7 @@ interface ScriptIndexProps {
   isOne: boolean;
   currentIndex: number;
   clickedIndex: number;
-  setClickedIndex: () => void;
+  setClickedIndex: (index: number) => void;
 }
 
 function ScriptIndex(props: ScriptIndexProps) {
