@@ -50,9 +50,9 @@ function GuideModal(props: GuideModalProps) {
               <ImageDiv src={icGuideScript} className="function" layout="fill" alt="" />
               <StFunctionName>스크립트 추가</StFunctionName>
               <StFunctionDetail>
-                스크립트를 추가해
+                새 스크립트로 다시 연습하며 좋은 말하기를
                 <br />
-                새로운 학습 기록을 남겨보세요.
+                체화해보세요.
               </StFunctionDetail>
             </StFunction>
           </StFunctionContainer>
