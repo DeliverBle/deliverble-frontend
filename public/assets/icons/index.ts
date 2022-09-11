@@ -32,3 +32,7 @@ export { default as icDotHover } from './ic_dot_hover.svg';
 export { default as icAlert } from './ic_alert.svg';
 export { default as icMypageButton } from './ic_mypage_button.svg';
 export { default as icLogout } from './ic_logout.svg';
+export { default as icScriptAddLight } from './ic_script_add_light.svg';
+export { default as icScriptAddDark } from './ic_script_add_dark.svg';
+export { default as icScriptDeleteLight } from './ic_script_delete_light.svg';
+export { default as icScriptDeleteDark } from './ic_script_delete_dark.svg';
