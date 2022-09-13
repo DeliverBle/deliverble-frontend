@@ -14,7 +14,7 @@ function ScriptIndex(props: ScriptIndexProps) {
   return (
     <StScriptIndex onClick={() => setClickedIndex(currentIndex)} isClicked={currentIndex === clickedIndex}>
       스크립트 {currentIndex + 1}
-      {!isOne && <StScriptDeleteButton />}
+      {!isOne && <StScriptDeleteButton onClick={() => console.log('스크립트를 삭제하시겠습니까?')} />}
     </StScriptIndex>
   );
 }
