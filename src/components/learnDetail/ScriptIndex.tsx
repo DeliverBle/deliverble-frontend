@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import { ConfirmModalText } from './ConfirmModal';
+import { DELETE_SCRIPT_CONFIRM_MODAL_TEXT } from '@src/utils/constant';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 
@@ -7,14 +9,23 @@ interface ScriptIndexProps {
   currentIndex: number;
   clickedIndex: number;
   setClickedIndex: (index: number) => void;
+  setConfirmModalText: (text: ConfirmModalText) => void;
+  setIsConfirmOpen: (isOpen: boolean) => void;
 }
 
 function ScriptIndex(props: ScriptIndexProps) {
-  const { isOne, currentIndex, clickedIndex, setClickedIndex } = props;
+  const { isOne, currentIndex, clickedIndex, setClickedIndex, setConfirmModalText, setIsConfirmOpen } = props;
   return (
     <StScriptIndex onClick={() => setClickedIndex(currentIndex)} isClicked={currentIndex === clickedIndex}>
       스크립트 {currentIndex + 1}
-      {!isOne && <StScriptDeleteButton onClick={() => console.log('스크립트를 삭제하시겠습니까?')} />}
+      {!isOne && (
+        <StScriptDeleteButton
+          onClick={() => {
+            setConfirmModalText(DELETE_SCRIPT_CONFIRM_MODAL_TEXT);
+            setIsConfirmOpen(true);
+          }}
+        />
+      )}
     </StScriptIndex>
   );
 }

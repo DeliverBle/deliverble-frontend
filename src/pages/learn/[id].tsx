@@ -146,6 +146,8 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
               currentIndex={i}
               clickedIndex={clickedIndex}
               setClickedIndex={setClickedIndex}
+              setConfirmModalText={setConfirmModalText}
+              setIsConfirmOpen={setIsConfirmOpen}
             />
           ))}
           {scriptIndexList.length !== 3 && <StScriptAddButton />}

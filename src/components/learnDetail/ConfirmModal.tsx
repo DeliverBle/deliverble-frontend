@@ -74,6 +74,7 @@ const StDescription = styled.div`
   & > p {
     ${FONT_STYLES.M_20_BODY};
     color: ${COLOR.GRAY_45};
+    white-space: pre-line;
   }
 `;
 
