@@ -20,9 +20,9 @@ function OAuthRedirectHandler() {
     onSuccess: () => {
       if (data?.accessToken) {
         localStorage.setItem('token', data.accessToken);
-        if (localStorage.getItem('token')) {
-          setIsLoggedIn(true);
-        }
+      }
+      if (localStorage.getItem('token')) {
+        setIsLoggedIn(true);
       }
       router.push(prevLink);
     },
