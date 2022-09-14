@@ -60,7 +60,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   const getLoginStatus = () => localStorage.getItem('token') ?? '';
   const [prevLink, setPrevLink] = useState('');
   const { new: newMemoHighlightId, edit: editMemoHighlightId } = memoHighlightId;
-  const scriptIndexList = ['스크립트 1', '스크립트 2'];
+  const [scriptIndexList, setScriptIndexList] = useState(['스크립트 1']);
   const [clickedIndex, setClickedIndex] = useState(0);
 
   const controlPointX = (e: React.MouseEvent) => {
@@ -150,7 +150,13 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
               setIsConfirmOpen={setIsConfirmOpen}
             />
           ))}
-          {scriptIndexList.length !== 3 && <StScriptAddButton />}
+          {scriptIndexList.length !== 3 && (
+            <StScriptAddButton
+              onClick={() =>
+                setScriptIndexList((scriptIndexList) => [...scriptIndexList, '스크립트 ${scriptIndexList.length}'])
+              }
+            />
+          )}
         </StScriptIndexContainer>
         <StLearnMain>
           <VideoDetail {...videoData} setIsModalOpen={setIsModalOpen} />
