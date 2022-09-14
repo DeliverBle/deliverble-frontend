@@ -3,7 +3,6 @@ import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { useRouter } from 'next/router';
 import { icLogout, icMypageButton } from 'public/assets/icons';
-import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { useSetRecoilState } from 'recoil';
 import { LoginState } from 'src/stores/LoginState';
@@ -12,35 +11,13 @@ import ImageDiv from '../common/ImageDiv';
 
 function ProfileModal() {
   const router = useRouter();
-  const [nickname, setNickname] = useState('');
-  const [email, setEmail] = useState('');
   const setIsLoggedIn = useSetRecoilState(LoginState);
   const accessToken = localStorage.getItem('token');
-
-  const {} = useQuery(['userInfo'], () => api.loginUserService.getUserInfo(accessToken), {
-    onSuccess: (data) => {
-      setNickname(data.nickname);
-      setEmail(data.email);
-    },
+  const { data } = useQuery(['userInfo'], () => api.loginUserService.getUserInfo(accessToken), {
     onError: () => {
       console.error('유저 데이터 요청 에러 발생');
     },
   });
-
-  const {} = useQuery(['userInfo'], () => api.loginUserService.getUserInfo(accessToken), {
-    onSuccess: (data) => {
-      setNickname(data.nickname);
-      setEmail(data.email);
-    },
-    onError: () => {
-      console.error('유저 데이터 요청 에러 발생');
-    },
-  });
-
-  // useEffect(() => {
-  //   setNickname('최유진');
-  //   setEmail('cuj10594@naver.com');
-  // }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -52,8 +29,8 @@ function ProfileModal() {
     <StProfileModal>
       <StProfileInfo>
         <ImageDiv className="profile-image" src={icMypageButton} layout="fill" alt="" />
-        <p>{nickname}</p>
-        {email !== 'NO_EMAIL' && <div>{email}</div>}
+        <p>{data?.nickname}</p>
+        {data?.email !== 'NO_EMAIL' && <div>{data?.email}</div>}
       </StProfileInfo>
       <StLogoutButton onClick={handleLogout}>
         <ImageDiv className="logout" src={icLogout} layout="fill" alt="" />
