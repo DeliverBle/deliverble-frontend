@@ -1,16 +1,15 @@
-import { HomeService } from './home';
 import { homeDataRemote } from '../remote/home';
-import { LearnService } from './learn';
 import { learnDataRemote } from '../remote/learn';
-import { LearnDetailService } from './learn-detail';
 import { learnDetailDataRemote } from '../remote/learn-detail';
-import { ReviewService } from './review';
 import { likeDataRemote } from '../remote/like';
-import { LikeService } from './like';
-import { reviewDataRemote } from '../remote/review';
-import { LoginUserService } from './login-user';
 import { loginUserRemote } from '../remote/login-user';
-// import { loginUserDataMock } from '../mock/user';
+import { reviewDataRemote } from '../remote/review';
+import { HomeService } from './home';
+import { LearnService } from './learn';
+import { LearnDetailService } from './learn-detail';
+import { LikeService } from './like';
+import { LoginUserService } from './login-user';
+import { ReviewService } from './review';
 
 export const api: APIService = getAPIMethod();
 
