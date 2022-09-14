@@ -16,10 +16,14 @@ function OAuthRedirectHandler() {
   }, []);
 
   const code = router.query.code as string;
-  const {} = useQuery(['accessToken'], () => api.loginUserService.requestLogin(code), {
-    onSuccess: (data) => {
-      localStorage.setItem('token', data.accessToken);
-      if (localStorage.getItem('token')) setIsLoggedIn(true);
+  const { data } = useQuery(['accessToken'], () => api.loginUserService.requestLogin(code), {
+    onSuccess: () => {
+      if (data?.accessToken) {
+        localStorage.setItem('token', data.accessToken);
+        if (localStorage.getItem('token')) {
+          setIsLoggedIn(true);
+        }
+      }
       router.push(prevLink);
     },
     onError: () => {
