@@ -301,6 +301,10 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
             closeModal={setIsConfirmOpen}
             confirmModalText={confirmModalText}
             setMemoHighlightId={setMemoHighlightId}
+            clickedIndex={clickedIndex}
+            setClickedIndex={setClickedIndex}
+            scriptIndexList={scriptIndexList}
+            setScriptIndexList={setScriptIndexList}
           />
         )}
         {isLoginModalOpen && <LoginModal closeModal={() => setIsLoginModalOpen(false)} />}

@@ -15,11 +15,30 @@ interface ConfirmModalProps {
   closeModal: (close: boolean) => void;
   setMemoHighlightId: (id: MemoHighlightId) => void;
   confirmModalText: ConfirmModalText;
+  clickedIndex: number;
+  setClickedIndex: (index: number) => void;
+  scriptIndexList: string[];
+  setScriptIndexList: (list: string[]) => void;
 }
 
 function ConfirmModal(props: ConfirmModalProps) {
-  const { closeModal, setMemoHighlightId, confirmModalText } = props;
+  const {
+    closeModal,
+    setMemoHighlightId,
+    confirmModalText,
+    clickedIndex,
+    setClickedIndex,
+    scriptIndexList,
+    setScriptIndexList,
+  } = props;
   const { mainText, subText, confirmText, cancelText } = confirmModalText;
+
+  const deleteIndex = (index: number) => {
+    const tempList = [...scriptIndexList];
+    tempList.splice(index, 1);
+    setScriptIndexList(tempList);
+    setClickedIndex(0);
+  };
 
   useEffect(() => {
     window.scrollTo({
@@ -39,6 +58,7 @@ function ConfirmModal(props: ConfirmModalProps) {
         <button
           onClick={() => {
             setMemoHighlightId({ new: 0, edit: 0 });
+            deleteIndex(clickedIndex);
             closeModal(false);
           }}>
           {cancelText}
