@@ -4,7 +4,7 @@ import { USER_DATA, USER_DATA_TOKEN } from './user.data';
 export function loginUserDataMock(): LoginUserService {
   const requestLogin = async () => {
     await wait(500);
-    return USER_DATA_TOKEN;
+    return USER_DATA_TOKEN.accessToken;
   };
 
   const getUserInfo = async () => {
