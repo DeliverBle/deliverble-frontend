@@ -53,12 +53,21 @@ const StFooter = styled.div`
   height: 40rem;
 
   background-color: ${COLOR.GRAY_5};
-
   p {
     margin-top: 1.6rem;
 
     color: ${COLOR.GRAY_60};
     ${FONT_STYLES.M_20_FOOTER}
+  }
+
+  @media (max-width: 960px) {
+    display: block;
+    height: 53.4rem;
+  }
+
+  @media (max-width: 630px) {
+    display: block;
+    height: 84.9rem;
   }
 `;
 
@@ -77,15 +86,24 @@ const StLogo = styled.div`
     color: ${COLOR.MAIN_BLUE};
     ${FONT_STYLES.SB_24_HEADLINE}
   }
+
+  @media (max-width: 960px) {
+    padding: 10rem 0 0rem 10rem;
+  }
+`;
+
+const StInfo = styled.div`
+  display: flex;
+
+  @media (max-width: 630px) {
+    flex-direction: column;
+    height: 53.4rem;
+  }
 `;
 
 const StInfoTitle = styled.h6`
   color: ${COLOR.GRAY_30};
   ${FONT_STYLES.SB_24_HEADLINE}
-`;
-
-const StInfo = styled.div`
-  display: flex;
 `;
 
 const StUnderlineText = styled.p`
@@ -96,26 +114,59 @@ const StUnderlineText = styled.p`
 const StService = styled.div`
   min-width: 10.8rem;
   margin: 15.1rem 11.7rem 0 15.1rem;
+
+  @media (max-width: 960px) {
+    margin: 9.1rem 6rem 0 10rem;
+  }
+
+  @media (max-width: 630px) {
+    margin: 6rem 0 0 10rem;
+  }
 `;
 
 const StPeople = styled.div`
   min-width: 18.1rem;
   margin: 15.1rem 10.1em 0 0;
+
+  @media (max-width: 960px) {
+    margin: 9.1rem 4.5em 0 0;
+  }
+
+  @media (max-width: 630px) {
+    margin: 4.4rem 0 0 10rem;
+  }
 `;
 
 const StContact = styled.div`
-  min-width: 24.7rem;
   margin: 15.1rem 9.4rem 0 0;
+  min-width: 24.7rem;
+
+  @media (max-width: 960px) {
+    margin: 9.1rem 4.5em 0 0;
+  }
+
+  @media (max-width: 630px) {
+    margin: 4.4rem 0 0 10rem;
+  }
 `;
 
 const StSocial = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
+  width: 6.6rem;
   margin: 15.1rem 18rem 0 0;
 
   & > a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
     margin-top: 1.6rem;
+  }
+
+  @media (max-width: 960px) {
+    margin: 9.1rem 10.8rem 0 0;
+  }
+
+  @media (max-width: 630px) {
+    margin: 4.4rem 0 0 10rem;
   }
 `;
