@@ -101,7 +101,7 @@ const StInfo = styled.div`
   }
 `;
 
-const StInfoTitle = styled.h6`
+const StInfoTitle = styled.div`
   color: ${COLOR.GRAY_30};
   ${FONT_STYLES.SB_24_HEADLINE}
 `;
