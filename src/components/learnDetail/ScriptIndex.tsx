@@ -4,6 +4,7 @@ import { FONT_STYLES } from '@src/styles/fontStyle';
 
 interface ScriptIndexProps {
   isOne: boolean;
+  isInputVisible: boolean;
   currentIndex: number;
   clickedIndex: number;
   setClickedIndex: (index: number) => void;
@@ -11,10 +12,13 @@ interface ScriptIndexProps {
 }
 
 function ScriptIndex(props: ScriptIndexProps) {
-  const { isOne, currentIndex, clickedIndex, setClickedIndex, onIndexDelete } = props;
+  const { isOne, isInputVisible, currentIndex, clickedIndex, setClickedIndex, onIndexDelete } = props;
   return (
-    <StScriptIndex onClick={() => setClickedIndex(currentIndex)} isClicked={currentIndex === clickedIndex}>
-      스크립트 {currentIndex + 1}
+    <StScriptIndex
+      onClick={() => setClickedIndex(currentIndex)}
+      isClicked={currentIndex === clickedIndex}
+      isInputVisible={isInputVisible}>
+      {isInputVisible ? <input value={`스크립트 ${currentIndex + 1}`} /> : <div>스크립트 {currentIndex + 1}</div>}
       {!isOne && <StScriptDeleteButton onClick={onIndexDelete} />}
     </StScriptIndex>
   );
@@ -22,7 +26,7 @@ function ScriptIndex(props: ScriptIndexProps) {
 
 export default ScriptIndex;
 
-const StScriptIndex = styled.div<{ isClicked: boolean }>`
+const StScriptIndex = styled.div<{ isClicked: boolean; isInputVisible: boolean }>`
   opacity: ${({ isClicked }) => (isClicked ? 1 : 0.6)};
   &:hover {
     opacity: 0.8;
@@ -33,12 +37,21 @@ const StScriptIndex = styled.div<{ isClicked: boolean }>`
   justify-content: space-between;
   width: 16.7rem;
   height: 4.8rem;
-  padding: 1rem 2.4rem 1rem 1.6rem;
+  padding: ${({ isInputVisible }) => (isInputVisible ? '0.7rem 0.8rem 0.6rem 0.7rem' : '1rem 2.4rem 1rem 1.6rem')};
   border-radius: 1.6rem 1.6rem 0 0;
   background-color: ${COLOR.WHITE};
   color: ${COLOR.MAIN_BLUE};
   ${FONT_STYLES.B_20_BODY};
   cursor: pointer;
+
+  & > input {
+    width: 15.1rem;
+    height: 3.5rem;
+    border: 0.2rem solid ${COLOR.MAIN_BLUE};
+    border-radius: 0.4rem;
+    padding: 0.3rem 0.8rem 0.4rem 0.8rem;
+    ${FONT_STYLES.M_20_BODY};
+  }
 `;
 
 const StScriptDeleteButton = styled.button`

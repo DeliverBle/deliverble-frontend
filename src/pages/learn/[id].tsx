@@ -66,6 +66,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   const { new: newMemoHighlightId, edit: editMemoHighlightId } = memoHighlightId;
   const [scriptIndexList, setScriptIndexList] = useState(['스크립트 1']);
   const [clickedIndex, setClickedIndex] = useState(0);
+  const [isInputVisible, setIsInputVisible] = useState(false);
 
   const controlPointX = (e: React.MouseEvent) => {
     const x = e.nativeEvent.offsetX / 10;
@@ -152,6 +153,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
             <ScriptIndex
               key={i}
               isOne={scriptIndexList.length === 1}
+              isInputVisible={isInputVisible}
               currentIndex={i}
               clickedIndex={clickedIndex}
               setClickedIndex={setClickedIndex}
@@ -161,6 +163,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
           {scriptIndexList.length !== 3 && (
             <StScriptAddButton
               onClick={() => {
+                setIsInputVisible(true);
                 setScriptIndexList((scriptIndexList) => [...scriptIndexList, '스크립트 ${scriptIndexList.length}']);
                 setClickedIndex(clickedIndex + 1);
               }}
