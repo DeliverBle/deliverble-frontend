@@ -152,9 +152,10 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
           ))}
           {scriptIndexList.length !== 3 && (
             <StScriptAddButton
-              onClick={() =>
-                setScriptIndexList((scriptIndexList) => [...scriptIndexList, '스크립트 ${scriptIndexList.length}'])
-              }
+              onClick={() => {
+                setScriptIndexList((scriptIndexList) => [...scriptIndexList, '스크립트 ${scriptIndexList.length}']);
+                setClickedIndex(clickedIndex + 1);
+              }}
             />
           )}
         </StScriptIndexContainer>
