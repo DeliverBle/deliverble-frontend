@@ -20,9 +20,11 @@ export const DELETE_MEMO_CONFIRM_MODAL_TEXT = {
 
 export const DELETE_SCRIPT_CONFIRM_MODAL_TEXT = {
   mainText: '스크립트를 삭제하시겠습니까?',
-  subText: '스크립트 삭제 시, 스크립트 시트와\n작성한 내용(끊어 읽기, 메모, 하이라이트)이 모두 삭제됩니다.',
+  subText: '스크립트 삭제 시, 스크립트 시트와 작성한 내용\n(끊어 읽기, 메모, 하이라이트)이 모두 삭제됩니다.',
   confirmText: '취소',
   cancelText: '삭제하기',
 };
 
 export const MEMO_CONTENT_MAX = 30;
+export const BLOCK_SIZE = 10;
+export const LIST_SIZE = 12;
