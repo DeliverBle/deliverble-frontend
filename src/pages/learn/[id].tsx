@@ -18,7 +18,11 @@ import LoginModal from '@src/components/login/LoginModal';
 import ScriptIndex from '@src/components/learnDetail/ScriptIndex';
 import { api } from '@src/services/api';
 import { HighlightData, VideoData } from '@src/services/api/types/learn-detail';
-import { NEW_MEMO_CONFIRM_MODAL_TEXT, EDIT_MEMO_CONFIRM_MODAL_TEXT } from '@src/utils/constant';
+import {
+  NEW_MEMO_CONFIRM_MODAL_TEXT,
+  EDIT_MEMO_CONFIRM_MODAL_TEXT,
+  DELETE_SCRIPT_CONFIRM_MODAL_TEXT,
+} from '@src/utils/constant';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import {
@@ -92,6 +96,11 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
     }
   };
 
+  const handleIndexDelete = () => {
+    setConfirmModalText(DELETE_SCRIPT_CONFIRM_MODAL_TEXT);
+    setIsConfirmOpen(true);
+  };
+
   useEffect(() => {
     if (!player) return;
 
@@ -146,8 +155,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
               currentIndex={i}
               clickedIndex={clickedIndex}
               setClickedIndex={setClickedIndex}
-              setConfirmModalText={setConfirmModalText}
-              setIsConfirmOpen={setIsConfirmOpen}
+              onIndexDelete={handleIndexDelete}
             />
           ))}
           {scriptIndexList.length !== 3 && (
