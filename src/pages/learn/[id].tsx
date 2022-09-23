@@ -67,6 +67,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   const [scriptIndexList, setScriptIndexList] = useState(['스크립트 1']);
   const [clickedIndex, setClickedIndex] = useState(0);
   const [isInputVisible, setIsInputVisible] = useState(false);
+  const [inputIndex, setInputIndex] = useState(-1);
 
   const controlPointX = (e: React.MouseEvent) => {
     const x = e.nativeEvent.offsetX / 10;
@@ -100,6 +101,12 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   const handleIndexDelete = () => {
     setConfirmModalText(DELETE_SCRIPT_CONFIRM_MODAL_TEXT);
     setIsConfirmOpen(true);
+  };
+
+  const handleIndexRename = (index: number) => {
+    setClickedIndex(index);
+    setInputIndex(index);
+    setIsInputVisible(true);
   };
 
   useEffect(() => {
@@ -156,8 +163,10 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
               isInputVisible={isInputVisible}
               currentIndex={i}
               clickedIndex={clickedIndex}
+              inputIndex={inputIndex}
               setClickedIndex={setClickedIndex}
               onIndexDelete={handleIndexDelete}
+              onIndexRename={(index: number) => handleIndexRename(index)}
             />
           ))}
           {scriptIndexList.length !== 3 && (
@@ -166,6 +175,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
                 setIsInputVisible(true);
                 setScriptIndexList((scriptIndexList) => [...scriptIndexList, '스크립트 ${scriptIndexList.length}']);
                 setClickedIndex(clickedIndex + 1);
+                setInputIndex(clickedIndex + 1);
               }}
             />
           )}

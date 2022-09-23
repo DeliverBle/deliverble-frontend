@@ -7,19 +7,39 @@ interface ScriptIndexProps {
   isInputVisible: boolean;
   currentIndex: number;
   clickedIndex: number;
+  inputIndex: number;
   setClickedIndex: (index: number) => void;
   onIndexDelete: () => void;
+  onIndexRename: (index: number) => void;
 }
 
 function ScriptIndex(props: ScriptIndexProps) {
-  const { isOne, isInputVisible, currentIndex, clickedIndex, setClickedIndex, onIndexDelete } = props;
+  const {
+    isOne,
+    isInputVisible,
+    currentIndex,
+    clickedIndex,
+    inputIndex,
+    setClickedIndex,
+    onIndexDelete,
+    onIndexRename,
+  } = props;
   return (
     <StScriptIndex
       onClick={() => setClickedIndex(currentIndex)}
+      onDoubleClick={() => onIndexRename(currentIndex)}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        onIndexRename(currentIndex);
+      }}
       isClicked={currentIndex === clickedIndex}
-      isInputVisible={isInputVisible}>
-      {isInputVisible ? <input value={`스크립트 ${currentIndex + 1}`} /> : <div>스크립트 {currentIndex + 1}</div>}
-      {!isOne && <StScriptDeleteButton onClick={onIndexDelete} />}
+      isInputVisible={isInputVisible && inputIndex === currentIndex}>
+      {isInputVisible && inputIndex === currentIndex && inputIndex === clickedIndex ? (
+        <input value={`스크립트 ${currentIndex + 1}`} />
+      ) : (
+        <div>스크립트 {currentIndex + 1}</div>
+      )}
+      {!isOne && !isInputVisible && <StScriptDeleteButton onClick={onIndexDelete} />}
     </StScriptIndex>
   );
 }
