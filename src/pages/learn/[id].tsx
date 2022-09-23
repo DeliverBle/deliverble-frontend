@@ -164,6 +164,7 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
               currentIndex={i}
               clickedIndex={clickedIndex}
               inputIndex={inputIndex}
+              setIsInputVisible={setIsInputVisible}
               setClickedIndex={setClickedIndex}
               onIndexDelete={handleIndexDelete}
               onIndexRename={(index: number) => handleIndexRename(index)}

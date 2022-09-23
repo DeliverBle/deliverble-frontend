@@ -8,6 +8,7 @@ interface ScriptIndexProps {
   currentIndex: number;
   clickedIndex: number;
   inputIndex: number;
+  setIsInputVisible: (isInputVisible: boolean) => void;
   setClickedIndex: (index: number) => void;
   onIndexDelete: () => void;
   onIndexRename: (index: number) => void;
@@ -17,6 +18,7 @@ function ScriptIndex(props: ScriptIndexProps) {
   const {
     isOne,
     isInputVisible,
+    setIsInputVisible,
     currentIndex,
     clickedIndex,
     inputIndex,
@@ -34,12 +36,21 @@ function ScriptIndex(props: ScriptIndexProps) {
       }}
       isClicked={currentIndex === clickedIndex}
       isInputVisible={isInputVisible && inputIndex === currentIndex}>
-      {isInputVisible && inputIndex === currentIndex && inputIndex === clickedIndex ? (
-        <input value={`스크립트 ${currentIndex + 1}`} />
+      {isInputVisible && inputIndex === currentIndex ? (
+        <input
+          onChange={(e) => console.log(e.target.value)}
+          onKeyUp={(e) => {
+            if (e.key === 'Enter') {
+              console.log(e.target.value);
+              setIsInputVisible(false);
+            }
+          }}
+          value={`스크립트 ${currentIndex + 1}`}
+        />
       ) : (
         <div>스크립트 {currentIndex + 1}</div>
       )}
-      {!isOne && currentIndex !== inputIndex && <StScriptDeleteButton onClick={onIndexDelete} />}
+      {!isOne && <StScriptDeleteButton onClick={onIndexDelete} />}
     </StScriptIndex>
   );
 }
