@@ -39,7 +39,7 @@ function ScriptIndex(props: ScriptIndexProps) {
       ) : (
         <div>스크립트 {currentIndex + 1}</div>
       )}
-      {!isOne && !isInputVisible && <StScriptDeleteButton onClick={onIndexDelete} />}
+      {!isOne && currentIndex !== inputIndex && <StScriptDeleteButton onClick={onIndexDelete} />}
     </StScriptIndex>
   );
 }
