@@ -18,9 +18,6 @@ function OAuthRedirectHandler() {
   const code = router.query.code as string;
   const { data } = useQuery(['accessToken'], () => api.loginUserService.requestLogin(code), {
     onSuccess: () => {
-      if (data) {
-        localStorage.setItem('token', data);
-      }
       setIsLoggedIn(true);
       router.push(prevLink);
     },
@@ -29,6 +26,10 @@ function OAuthRedirectHandler() {
     },
     enabled: !!code,
   });
+
+  useEffect(() => {
+    data && localStorage.setItem('token', data);
+  }, [data]);
 
   return <></>;
 }

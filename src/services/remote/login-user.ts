@@ -4,8 +4,8 @@ import { LoginUserService } from '../api/login-user';
 export function loginUserRemote(): LoginUserService {
   const requestLogin = async (code: string) => {
     try {
-      const response = await axios.post(`http://3.36.120.112:8080/auth/kakao/login-or-signup?code=${code}`);
-      return response.data.accessToken;
+      const response = await axios.post(`http://3.36.120.112:8080/auth/authentication/kakao?code=${code}`);
+      return response.data.data.accessToken;
     } catch {
       throw '로그인 에러 발생';
     }
@@ -19,8 +19,8 @@ export function loginUserRemote(): LoginUserService {
         },
       });
       return {
-        nickname: response.data.nickname,
-        email: response.data.email,
+        nickname: response.data.data.nickname,
+        email: response.data.data.email,
       };
     } catch {
       throw '유저 데이터 요청 에러 발생';
