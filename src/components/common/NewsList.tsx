@@ -66,6 +66,14 @@ const StNewsList = styled.section`
   grid-template-columns: repeat(4, 1fr);
   grid-row-gap: 11.2rem;
   grid-column-gap: 2rem;
+
+  @media (max-width: 1280px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: 960px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 `;
 
 const StNewsWrapper = styled.article`
@@ -82,9 +90,23 @@ const StThumbnail = styled.div`
   border-radius: 1rem;
   cursor: pointer;
 
+  &::before {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-radius: 1rem;
+    content: '';
+    background: linear-gradient(rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 100%);
+    transition: opacity 0.2s ease-in-out;
+    opacity: 0;
+  }
+
   &:hover {
-    transition: background-color 0.2s ease-in-out;
-    background-color: rgba(0, 0, 0, 0.15);
+    &::before {
+      opacity: 1;
+    }
   }
 
   &:hover .like {

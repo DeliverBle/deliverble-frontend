@@ -95,31 +95,27 @@ function SliderContainer(props: SliderContainerProps) {
           <StCard className="first-card">
             <ImageDiv src={imgLandingEar} className="ear" layout="fill" alt="" />
             <h3>
-              “웅얼웅얼 발음을 교정하고 싶은데,
+              “발음을 교정하고 싶은데,
               <br />
-              학원을 다니기엔 금액이 부담돼요”
+              학원 가격이 너무 부담돼요”
             </h3>
             <p>26살 취준생 김○○</p>
           </StCard>
           <StCard className="second-card">
             <ImageDiv src={imgLandingFist} className="fist" layout="fill" alt="" />
             <h3>
-              “떨리고 힘없는 목소리 때문에
+              “목소리가 떨려서 발표를 망쳤어요.
               <br />
-              발표에 자신이 없어... 더 당당하게
-              <br />
-              말할 수 있는 방법이 없을까?”
+              저도 당당하게 말하고 싶어요!”
             </h3>
             <p>23살 대학생 류○○</p>
           </StCard>
           <StCard className="third-card">
             <ImageDiv src={imgLandingMic} className="mic" layout="fill" alt="" />
             <h3>
-              “아나운서 준비에 관심은 있는데,
+              “아나운서 준비를 시작했는데,
               <br />
-              혼자 뉴스 리딩을 어떻게
-              <br />
-              연습해야 할지 막막해요”
+              뉴스 리딩은 처음이라 막막해요”
             </h3>
             <p>24살 아나운서 지망생 백○○</p>
           </StCard>
@@ -141,15 +137,14 @@ function SliderContainer(props: SliderContainerProps) {
           <StTextWrapper>
             <h2>Step 1.</h2>
             <h3>
-              무작정 따라하며
-              <br />
-              아나운서의 좋은 발음과 발성 배우기
+              아나운서의 정확한 뉴스리딩,
+              <br />한 문장씩 듣고 따라하기
             </h3>
             <StH4>
               <h4>
-                언제 어디서든 아나운서의 좋은 목소리를 듣고,
+                아나운서의 좋은 발성과 발음을 따라하며
                 <br />
-                소리 내서 따라하며 연습해봐요.
+                전달력 있는 말하기를 연습해보세요.
               </h4>
             </StH4>
           </StTextWrapper>
@@ -186,15 +181,15 @@ function SliderContainer(props: SliderContainerProps) {
           <StTextWrapper>
             <h2>Step 3.</h2>
             <h3>
-              꾸준한 복습으로
+              즐겨찾는 영상과
               <br />
-              스피치 자신감 키우기
+              내가 학습한 영상 모두 모아보기
             </h3>
             <StH4>
               <h4>
                 다시 따라하고 싶은 영상을 즐겨찾기에 저장해
                 <br />
-                꾸준히 복습하고, 더 당당하게 말해봐요.
+                꾸준히 복습하고, 스피치 자신감을 키워보세요.
               </h4>
             </StH4>
           </StTextWrapper>
@@ -235,6 +230,7 @@ const StContentContainer = styled.section`
     margin-top: 36.1rem;
     margin-bottom: 36rem;
   }
+
   &.step3-content {
     margin-top: 34.2rem;
     margin-bottom: 34.1rem;

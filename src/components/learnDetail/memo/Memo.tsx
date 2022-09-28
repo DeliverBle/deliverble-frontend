@@ -29,10 +29,10 @@ function Memo(props: MemoProps) {
       return (
         <>
           {foldButton ? content : content.slice(0, 26)}
-          <StFoldbutton onClick={() => setFoldButton((prev) => !prev)} fold={foldButton}>
+          <StFoldbutton className="fold-button" onClick={() => setFoldButton((prev) => !prev)} fold={foldButton}>
             {foldButton ? (
               <>
-                <ImageDiv src={icArrowUp} className="fold" alt="" />
+                <ImageDiv src={icArrowUp} className="fold-icon" alt="" />
                 {'접기'}
               </>
             ) : (
@@ -46,7 +46,7 @@ function Memo(props: MemoProps) {
   };
 
   return (
-    <StMemo>
+    <StMemo fold={foldButton}>
       {keyword && <StKeyword>{keyword}</StKeyword>}
       {!content || isEditMemo ? (
         <MemoForm
@@ -72,7 +72,7 @@ function Memo(props: MemoProps) {
 
 export default Memo;
 
-const StMemo = styled.div`
+const StMemo = styled.div<{ fold: boolean }>`
   position: relative;
 
   margin-right: 0.8rem;
@@ -83,6 +83,10 @@ const StMemo = styled.div`
   border-radius: 2.5rem;
 
   &:hover .dot {
+    opacity: 1;
+  }
+
+  &:hover .fold-button {
     opacity: 1;
   }
 `;
@@ -105,7 +109,7 @@ const StFoldbutton = styled.div<{ fold: boolean }>`
   bottom: 2.8rem;
 
   display: flex;
-  .fold {
+  .fold-icon {
     display: flex;
     align-items: center;
   }
@@ -115,5 +119,13 @@ const StFoldbutton = styled.div<{ fold: boolean }>`
   &:hover {
     color: ${({ fold }) => !fold && COLOR.MAIN_BLUE};
   }
+
   cursor: pointer;
+  opacity: ${({ fold }) => fold && 0};
+  background: linear-gradient(
+    to left,
+    rgb(241, 246, 255) 38.54%,
+    rgba(241, 246, 255, 0.8) 79.69%,
+    rgba(241, 246, 255, 0) 100%
+  );
 `;
