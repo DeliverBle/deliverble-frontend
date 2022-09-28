@@ -1,14 +1,14 @@
+import { VideoData } from '@src/services/api/types/home';
+import { COLOR } from '@src/styles/color';
+import { FONT_STYLES } from '@src/styles/fontStyle';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { loginState } from 'src/stores/loginState';
 import styled from 'styled-components';
 import LoginModal from '../login/LoginModal';
 import ImageDiv from './ImageDiv';
 import Like from './Like';
-import { COLOR } from '@src/styles/color';
-import { FONT_STYLES } from '@src/styles/fontStyle';
-import { VideoData } from '@src/services/api/types/home';
-import { useRecoilValue } from 'recoil';
-import { LoginState } from 'src/stores/LoginState';
 
 interface NewsListProps {
   newsList: VideoData[];
@@ -19,7 +19,7 @@ function NewsList(props: NewsListProps) {
   const { newsList, onClickLike } = props;
   const router = useRouter();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const loginState = useRecoilValue(LoginState);
+  const login = useRecoilValue(loginState);
 
   return (
     <StNewsList>
@@ -39,7 +39,7 @@ function NewsList(props: NewsListProps) {
                 isFromList={true}
                 isLiked={isLiked}
                 toggleLike={() => {
-                  if (!loginState) {
+                  if (!login) {
                     setIsLoginModalOpen(true);
                   } else {
                     onClickLike && onClickLike(id, isLiked);

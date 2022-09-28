@@ -1,17 +1,17 @@
 import { api } from '@src/services/api';
+import { loginState } from '@src/stores/loginState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { useRouter } from 'next/router';
 import { icLogout, icMypageButton } from 'public/assets/icons';
 import { useQuery } from 'react-query';
 import { useSetRecoilState } from 'recoil';
-import { LoginState } from 'src/stores/LoginState';
 import styled from 'styled-components';
 import ImageDiv from '../common/ImageDiv';
 
 function ProfileModal() {
   const router = useRouter();
-  const setIsLoggedIn = useSetRecoilState(LoginState);
+  const setIsLoggedIn = useSetRecoilState(loginState);
   const accessToken = localStorage.getItem('token');
   const { data } = useQuery(['userInfo'], () => api.loginUserService.getUserInfo(accessToken), {
     onError: () => {

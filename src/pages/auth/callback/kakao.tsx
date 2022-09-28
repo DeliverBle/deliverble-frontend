@@ -3,12 +3,12 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { useSetRecoilState } from 'recoil';
-import { LoginState } from 'src/stores/LoginState';
+import { loginState } from 'src/stores/loginState';
 
 function OAuthRedirectHandler() {
   const router = useRouter();
   const [prevLink, setPrevLink] = useState('');
-  const setIsLoggedIn = useSetRecoilState(LoginState);
+  const setIsLoggedIn = useSetRecoilState(loginState);
 
   useEffect(() => {
     const storage = globalThis?.sessionStorage;
