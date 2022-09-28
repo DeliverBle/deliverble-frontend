@@ -18,6 +18,7 @@ function ProfileModal() {
       console.error('유저 데이터 요청 에러 발생');
     },
   });
+  const { nickname, email } = data || {};
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -29,8 +30,8 @@ function ProfileModal() {
     <StProfileModal>
       <StProfileInfo>
         <ImageDiv className="profile-image" src={icMypageButton} layout="fill" alt="" />
-        <p>{data?.nickname}</p>
-        {data?.email !== 'NO_EMAIL' && <div>{data?.email}</div>}
+        <p>{nickname}</p>
+        {email !== 'NO_EMAIL' && <div>{email}</div>}
       </StProfileInfo>
       <StLogoutButton onClick={handleLogout}>
         <ImageDiv className="logout" src={icLogout} layout="fill" alt="" />
