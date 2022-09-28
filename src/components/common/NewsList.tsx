@@ -1,10 +1,10 @@
 import { VideoData } from '@src/services/api/types/home';
+import { loginState } from '@src/stores/LoginState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { loginState } from 'src/stores/loginState';
 import styled from 'styled-components';
 import LoginModal from '../login/LoginModal';
 import ImageDiv from './ImageDiv';

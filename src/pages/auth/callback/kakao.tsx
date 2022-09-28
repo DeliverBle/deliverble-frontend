@@ -1,9 +1,9 @@
 import { api } from '@src/services/api';
+import { loginState } from '@src/stores/LoginState';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { useSetRecoilState } from 'recoil';
-import { loginState } from 'src/stores/loginState';
 
 function OAuthRedirectHandler() {
   const router = useRouter();

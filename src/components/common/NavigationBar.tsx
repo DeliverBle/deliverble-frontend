@@ -1,3 +1,4 @@
+import { loginState } from '@src/stores/LoginState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import Link from 'next/link';
@@ -5,7 +6,6 @@ import { useRouter } from 'next/router';
 import { icDeliverbleNav, icMypageButton } from 'public/assets/icons';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { loginState } from 'src/stores/loginState';
 import styled, { css } from 'styled-components';
 import LoginModal from '../login/LoginModal';
 import ImageDiv from './ImageDiv';
