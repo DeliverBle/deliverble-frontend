@@ -1,4 +1,4 @@
-import { loginState } from '@src/stores/LoginState';
+import { loginState } from '@src/stores/loginState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import Link from 'next/link';

@@ -1,5 +1,5 @@
 import { api } from '@src/services/api';
-import { loginState } from '@src/stores/LoginState';
+import { loginState } from '@src/stores/loginState';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
