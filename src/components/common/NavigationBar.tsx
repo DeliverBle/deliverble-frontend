@@ -1,33 +1,23 @@
-import { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import styled, { css } from 'styled-components';
-import ImageDiv from './ImageDiv';
-import LoginModal from '../login/LoginModal';
-import ProfileModal from './ProfileModal';
+import { loginState } from '@src/stores/loginState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import { icDeliverbleNav } from 'public/assets/icons';
-import { icMypageButton } from 'public/assets/icons';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { icDeliverbleNav, icMypageButton } from 'public/assets/icons';
+import { useEffect, useRef, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import styled, { css } from 'styled-components';
+import LoginModal from '../login/LoginModal';
+import ImageDiv from './ImageDiv';
+import ProfileModal from './ProfileModal';
 
 function NavigationBar() {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [loginState, setLoginState] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const profileModalRef = useRef<HTMLDivElement>(null);
   const profileImageRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    handleLoginState();
-  }, []);
-
-  const handleLoginState = () => {
-    const tokenValue = localStorage.getItem('token');
-    if (tokenValue) {
-      setLoginState(true);
-    }
-  };
+  const login = useRecoilValue(loginState);
 
   useEffect(() => {
     const handleClickOutside = (e: Event) => {
@@ -75,7 +65,7 @@ function NavigationBar() {
             </StTab>
           </StTabList>
         </nav>
-        {loginState && (
+        {login && (
           <StProfileImage ref={profileImageRef}>
             <ImageDiv
               onClick={() => setIsProfileModalOpen((prev) => !prev)}
@@ -86,7 +76,7 @@ function NavigationBar() {
             />
           </StProfileImage>
         )}
-        {!loginState && <StLogin onClick={() => setIsModalOpen(true)}>로그인</StLogin>}
+        {!login && <StLogin onClick={() => setIsModalOpen(true)}>로그인</StLogin>}
         {isProfileModalOpen && (
           <div ref={profileModalRef}>
             <ProfileModal />

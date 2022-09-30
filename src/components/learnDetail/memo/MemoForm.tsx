@@ -1,12 +1,12 @@
+import { MemoHighlightId } from '@src/pages/learn/[id]';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
+import { EDIT_MEMO_CONFIRM_MODAL_TEXT, NEW_MEMO_CONFIRM_MODAL_TEXT } from '@src/utils/constant';
 import { icCheckButton, icMemoXButton } from 'public/assets/icons';
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import ImageDiv from '../../common/ImageDiv';
-import { NEW_MEMO_CONFIRM_MODAL_TEXT, EDIT_MEMO_CONFIRM_MODAL_TEXT } from '@src/utils/constant';
 import { ConfirmModalText } from '../ConfirmModal';
-import { MemoHighlightId } from '@src/pages/learn/[id]';
 
 interface MemoFormProps {
   content?: string;
@@ -23,7 +23,7 @@ function MemoForm(props: MemoFormProps) {
     if (content) {
       setTextLength(content.length);
     }
-  }, []);
+  }, [content]);
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const handleChange = () => {

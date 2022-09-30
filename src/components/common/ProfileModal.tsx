@@ -1,26 +1,28 @@
-import styled from 'styled-components';
-import ImageDiv from '../common/ImageDiv';
-import { icMypageButton, icLogout } from 'public/assets/icons';
+import { api } from '@src/services/api';
+import { loginState } from '@src/stores/loginState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { icLogout, icMypageButton } from 'public/assets/icons';
+import { useQuery } from 'react-query';
+import { useSetRecoilState } from 'recoil';
+import styled from 'styled-components';
+import ImageDiv from '../common/ImageDiv';
 
 function ProfileModal() {
   const router = useRouter();
-  const [nickname, setNickname] = useState('');
-  const [email, setEmail] = useState('');
-  useEffect(() => {
-    const userNickname = localStorage.getItem('nickname');
-    const userEmail = localStorage.getItem('email');
-    if (userNickname && userEmail) {
-      setNickname(userNickname);
-      setEmail(userEmail);
-    }
-  }, []);
+  const setIsLoggedIn = useSetRecoilState(loginState);
+  const accessToken = localStorage.getItem('token');
+  const { data } = useQuery(['userInfo'], () => api.loginUserService.getUserInfo(accessToken), {
+    onError: () => {
+      console.error('유저 데이터 요청 에러 발생');
+    },
+  });
+  const { nickname, email } = data || {};
 
   const handleLogout = () => {
-    localStorage.clear();
+    localStorage.removeItem('token');
+    setIsLoggedIn(false);
     router.reload();
   };
 
