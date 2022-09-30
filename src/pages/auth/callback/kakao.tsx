@@ -19,9 +19,7 @@ function OAuthRedirectHandler() {
   const { data } = useQuery(['accessToken'], () => api.loginUserService.requestLogin(code), {
     onSuccess: () => {
       setIsLoggedIn(true);
-      if (prevLink === '/') {
-        router.push('/home');
-      } else router.push(prevLink);
+      router.push(prevLink === '/' ? '/home' : prevLink);
     },
     onError: () => {
       console.error('로그인 에러');
