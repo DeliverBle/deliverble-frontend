@@ -15,74 +15,19 @@ import { imgBannerMic } from 'public/assets/images';
 function Home() {
   const [newsList, setNewsList] = useState<VideoData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [token, setToken] = useState('');
-  const [userId, setUserId] = useState('');
-
-  const getNewsList = async () => {
-    setIsLoading(true);
-
-    const [{ videoList }, { favoriteList }] = await Promise.all([
-      api.homeService.getVideoData(),
-      api.likeService.getLikeData(),
-    ]);
-
-    setNewsList(
-      videoList.map((news) => {
-        return {
-          ...news,
-          isLiked: favoriteList.map((like) => like.id).includes(news.id),
-        };
-      }),
-    );
-
-    setIsLoading(false);
-  };
-
-  const getNewsListWithoutToken = async () => {
-    setIsLoading(true);
-    const { videoList } = await api.homeService.getVideoData();
-    setNewsList(videoList);
-    setIsLoading(false);
-  };
-
-  const handleClickLike = async (id: number, isLiked?: boolean) => {
-    if (!isLiked) {
-      await api.likeService.postLikeData({
-        news_id: id,
-        access_token: token,
-        user_id: userId,
-      });
-    } else {
-      await api.likeService.deleteLikeData({
-        news_id: id,
-        access_token: token,
-        user_id: userId,
-      });
-    }
-    getNewsList();
-  };
 
   useEffect(() => {
     (async () => {
-      const getAccessToken = () => localStorage.getItem('token') ?? '';
-      const getUserId = () => localStorage.getItem('userId') ?? '';
-      if (getAccessToken()) {
-        setToken(getAccessToken());
-      }
-      if (getUserId()) {
-        setUserId(getUserId());
-      }
+      setIsLoading(true);
+      const { videoList } = await api.homeService.getVideoData();
+      setNewsList(videoList);
+      setIsLoading(false);
     })();
   }, []);
 
-  useEffect(() => {
-    const getAccessToken = () => localStorage.getItem('token') ?? '';
-    if (getAccessToken()) {
-      getNewsList();
-    } else {
-      getNewsListWithoutToken();
-    }
-  }, []);
+  const handleClickLike = () => {
+    console.log('하트 클릭');
+  };
 
   return (
     <>

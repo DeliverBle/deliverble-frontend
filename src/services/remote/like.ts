@@ -4,11 +4,11 @@ import { privateAPI } from './base';
 
 export function likeDataRemote(): LikeService {
   const getLikeData = async () => {
-    const response = await privateAPI.get({ url: `/user/favorite/all` });
+    const response = await privateAPI.get({ url: `/favorite` });
     if (response.status === 200) {
       return {
-        favoriteList: response.message
-          ? response.message.favoriteNews.map((like: LikeData) => ({
+        favoriteList: response.data
+          ? response.data.exploreNewsDtoCollection.map((like: LikeData) => ({
               id: like.id,
             }))
           : [],
