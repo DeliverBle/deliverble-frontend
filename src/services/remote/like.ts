@@ -6,10 +6,8 @@ export function likeDataRemote(): LikeService {
     const response = await privateAPI.post({ url: `/user/favorite/${newsId}` });
     if (response.status === 200) {
       return {
-        likeData: {
-          id: response.data.newsId,
-          isFavorite: response.data.isFavorite,
-        },
+        id: response.data.newsId,
+        isFavorite: response.data.isFavorite,
       };
     } else throw '서버 통신 실패';
   };

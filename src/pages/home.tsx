@@ -16,19 +16,31 @@ function Home() {
   const [newsList, setNewsList] = useState<VideoData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  const getVideoList = async () => {
+    const { videoList } = await api.homeService.getVideoData();
+    setNewsList(videoList);
+  };
+
   useEffect(() => {
-    (async () => {
-      setIsLoading(true);
-      const { videoList } = await api.homeService.getVideoData();
-      setNewsList(videoList);
-      setIsLoading(false);
-    })();
+    setIsLoading(true);
+    getVideoList();
+    setIsLoading(false);
   }, []);
 
   const handleClickLike = async (id: number) => {
-    await api.likeService.postLikeData(id);
-    const { videoList } = await api.homeService.getVideoData();
-    setNewsList(videoList);
+    const { id: likeId, isFavorite } = await api.likeService.postLikeData(id);
+
+    setNewsList((prev) => {
+      return prev.map((news) => {
+        if (news.id === likeId) {
+          return {
+            ...news,
+            isFavorite,
+          };
+        }
+        return news;
+      });
+    });
   };
 
   return (
