@@ -12,7 +12,7 @@ import Like from './Like';
 
 interface NewsListProps {
   newsList: VideoData[];
-  onClickLike?: (id: number, isLiked: boolean) => void;
+  onClickLike?: (id: number) => void;
 }
 
 function NewsList(props: NewsListProps) {
@@ -23,7 +23,7 @@ function NewsList(props: NewsListProps) {
 
   return (
     <StNewsList>
-      {newsList.map(({ id, title, category, channel, thumbnail, reportDate, isLiked = false }) => {
+      {newsList.map(({ id, title, category, channel, thumbnail, reportDate, isFavorite = false }) => {
         return (
           <StNewsWrapper key={id} onClick={() => router.push(`/learn/${id}`)}>
             <StThumbnail>
@@ -37,12 +37,12 @@ function NewsList(props: NewsListProps) {
               />
               <Like
                 isFromList={true}
-                isLiked={isLiked}
+                isLiked={isFavorite}
                 toggleLike={() => {
                   if (!login) {
                     setIsLoginModalOpen(true);
                   } else {
-                    onClickLike && onClickLike(id, isLiked);
+                    onClickLike && onClickLike(id);
                   }
                 }}
               />

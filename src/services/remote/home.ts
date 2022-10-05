@@ -15,7 +15,7 @@ export function homeDataRemote(): HomeService {
               channel: video.channel,
               thumbnail: video.thumbnail,
               reportDate: video.reportDate,
-              isFavorite: video.isLiked,
+              isFavorite: video.isFavorite,
             }))
           : [],
       };

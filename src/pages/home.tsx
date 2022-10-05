@@ -25,8 +25,10 @@ function Home() {
     })();
   }, []);
 
-  const handleClickLike = () => {
-    console.log('하트 클릭');
+  const handleClickLike = async (id: number) => {
+    await api.likeService.postLikeData(id);
+    const { videoList } = await api.homeService.getVideoData();
+    setNewsList(videoList);
   };
 
   return (

@@ -8,7 +8,7 @@ import Empty from './Empty';
 interface VideoContainerProps {
   tab: string;
   videoList: VideoData[];
-  onClickLike?: (id: number, isLiked: boolean) => void;
+  onClickLike?: (id: number) => void;
 }
 
 function VideoContainer(props: VideoContainerProps) {
