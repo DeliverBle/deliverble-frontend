@@ -17,40 +17,14 @@ function Review() {
   const [isLoading, setIsLoading] = useState(false);
 
   const getFavoriteNewsList = async () => {
-    const getAccessToken = () => localStorage.getItem('token') ?? '';
-    if (getAccessToken()) {
-      setIsLoading(true);
-      const { favoriteNews } = await api.reviewService.getFavoriteVideoList();
-      setFavoriteList(
-        favoriteNews.map((news) => {
-          return {
-            ...news,
-            isLiked: favoriteNews.map((like) => like.id).includes(news.id),
-          };
-        }),
-      );
-      setIsLoading(false);
-    }
+    setIsLoading(true);
+    const { favoriteNews } = await api.reviewService.getFavoriteVideoList();
+    setFavoriteList(favoriteNews);
+    setIsLoading(false);
   };
 
-  const handleClickLike = async (id: number, isLiked?: boolean) => {
-    const getAccessToken = () => localStorage.getItem('token') ?? '';
-    const getUserId = () => localStorage.getItem('userId') ?? '';
-
-    if (!isLiked) {
-      await api.likeService.postLikeData({
-        news_id: id,
-        access_token: getAccessToken(),
-        user_id: getUserId(),
-      });
-    } else {
-      await api.likeService.deleteLikeData({
-        news_id: id,
-        access_token: getAccessToken(),
-        user_id: getUserId(),
-      });
-    }
-    getFavoriteNewsList();
+  const handleClickLike = () => {
+    console.log('하트 버튼 클릭');
   };
 
   useEffect(() => {

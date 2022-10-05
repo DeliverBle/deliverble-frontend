@@ -4,17 +4,18 @@ import { privateAPI } from './base';
 
 export function reviewDataRemote(): ReviewService {
   const getFavoriteVideoList = async () => {
-    const response = await privateAPI.get({ url: `/user/favorite/all` });
+    const response = await privateAPI.get({ url: `/news/favorite` });
     if (response.status === 200) {
       return {
-        favoriteNews: response.message.favoriteNews
-          ? response.message.favoriteNews.map((video: VideoData) => ({
+        favoriteNews: response.data
+          ? response.data.exploreNewsDtoCollection.map((video: VideoData) => ({
               id: video.id,
               title: video.title,
               category: video.category,
               channel: video.channel,
               thumbnail: video.thumbnail,
               reportDate: video.reportDate,
+              isFavorite: video.isFavorite,
             }))
           : [],
       };
