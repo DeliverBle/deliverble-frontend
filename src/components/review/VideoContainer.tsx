@@ -3,8 +3,8 @@ import { FONT_STYLES } from '@src/styles/fontStyle';
 import { COLOR } from '@src/styles/color';
 import { VideoData } from '@src/services/api/types/review';
 import NewsList from '../common/NewsList';
-import Empty from './Empty';
 import Pagination from '../common/Pagination';
+import Empty from './Empty';
 import { BLOCK_SIZE, LIST_SIZE } from '@src/utils/constant';
 
 interface VideoContainerProps {

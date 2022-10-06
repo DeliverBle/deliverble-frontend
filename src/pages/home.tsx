@@ -1,15 +1,15 @@
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import SEO from '@src/components/common/SEO';
 import NavigationBar from '@src/components/common/NavigationBar';
+import ImageDiv from '@src/components/common/ImageDiv';
 import NewsList from '@src/components/common/NewsList';
-import { FONT_STYLES } from '@src/styles/fontStyle';
-import { COLOR } from '@src/styles/color';
+import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
+import Footer from '@src/components/common/Footer';
 import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/home';
-import Footer from '@src/components/common/Footer';
-import SEO from '@src/components/common/SEO';
-import { useEffect, useState } from 'react';
-import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
-import ImageDiv from '@src/components/common/ImageDiv';
+import { FONT_STYLES } from '@src/styles/fontStyle';
+import { COLOR } from '@src/styles/color';
 import { imgBannerMic } from 'public/assets/images';
 
 function Home() {

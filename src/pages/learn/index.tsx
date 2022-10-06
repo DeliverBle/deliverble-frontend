@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
 import SEO from '@src/components/common/SEO';
 import NavigationBar from '@src/components/common/NavigationBar';
+import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
 import NewsList from '@src/components/common/NewsList';
 import SelectBox from '@src/components/learn/SelectBox';
 import ImageDiv from '@src/components/common/ImageDiv';
 import Pagination from '@src/components/common/Pagination';
 import Footer from '@src/components/common/Footer';
+import { api } from '@src/services/api';
+import { VideoData } from '@src/services/api/types/home';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { icSearch } from 'public/assets/icons';
-import { api } from '@src/services/api';
-import { VideoData } from '@src/services/api/types/home';
 import { BLOCK_SIZE, LIST_SIZE } from '@src/utils/constant';
 
 const channelList = ['전체', 'SBS', 'KBS', 'MBC', '기타'];

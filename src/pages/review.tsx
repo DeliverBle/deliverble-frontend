@@ -6,11 +6,11 @@ import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
 import HeadlineContainer from '@src/components/review/HeadlineContainer';
 import VideoContainer from '@src/components/review/VideoContainer';
 import Footer from '@src/components/common/Footer';
-import { COLOR } from 'src/styles/color';
-import { FONT_STYLES } from 'src/styles/fontStyle';
 import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/review';
 import { LIST_SIZE } from '@src/utils/constant';
+import { COLOR } from 'src/styles/color';
+import { FONT_STYLES } from 'src/styles/fontStyle';
 
 function Review() {
   const [tab, setTab] = useState('isFavorite');
