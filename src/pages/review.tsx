@@ -11,6 +11,8 @@ import { VideoData } from '@src/services/api/types/review';
 import { LIST_SIZE } from '@src/utils/constant';
 import { COLOR } from 'src/styles/color';
 import { FONT_STYLES } from 'src/styles/fontStyle';
+import { useRecoilValue } from 'recoil';
+import { loginState } from '@src/stores/loginState';
 
 function Review() {
   const [tab, setTab] = useState('isFavorite');
@@ -19,6 +21,7 @@ function Review() {
   const [totalCount, setTotalCount] = useState(0);
   const [lastPage, setLastPage] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const isLoggedIn = useRecoilValue(loginState);
 
   const getFavoriteNewsList = async () => {
     setIsLoading(true);
@@ -56,8 +59,8 @@ function Review() {
   };
 
   useEffect(() => {
-    getFavoriteNewsList();
-  }, []);
+    isLoggedIn && getFavoriteNewsList();
+  }, [isLoggedIn]);
 
   return (
     <>
