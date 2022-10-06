@@ -33,13 +33,12 @@ function Review() {
     setLastPage(paging.lastPage);
     setFavoriteList(favoriteList);
     setIsLoading(false);
-    console.log(favoriteList);
   };
 
   const handleSearchWithPage = async (page: number) => {
     setIsLoading(true);
 
-    const { paging, videoList } = await api.learnService.postSearchCondition({
+    const { paging, favoriteList } = await api.reviewService.postFavoriteVideoList({
       currentPage: page,
       listSize: LIST_SIZE,
     });
@@ -47,7 +46,7 @@ function Review() {
     setCurrentPage(page);
     setTotalCount(paging.totalCount);
     setLastPage(paging.lastPage);
-    setFavoriteList(videoList);
+    setFavoriteList(favoriteList);
     setIsLoading(false);
   };
 
