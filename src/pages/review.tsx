@@ -50,8 +50,9 @@ function Review() {
     setIsLoading(false);
   };
 
-  const handleClickLike = () => {
-    console.log('하트 버튼 클릭');
+  const handleClickLike = async (id: number) => {
+    await api.likeService.postLikeData(id);
+    getFavoriteNewsList();
   };
 
   useEffect(() => {
