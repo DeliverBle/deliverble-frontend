@@ -12,7 +12,7 @@ import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/review';
 
 function Review() {
-  const [tab, setTab] = useState('isLiked');
+  const [tab, setTab] = useState('isFavorite');
   const [favoriteList, setFavoriteList] = useState<VideoData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -39,7 +39,7 @@ function Review() {
         <HeadlineContainer />
         <nav>
           <StTab>
-            <StButton isActive={tab === 'isLiked'} onClick={() => setTab('isLiked')}>
+            <StButton isActive={tab === 'isFavorite'} onClick={() => setTab('isFavorite')}>
               내 즐겨찾기 기록
             </StButton>
             <span> | </span>

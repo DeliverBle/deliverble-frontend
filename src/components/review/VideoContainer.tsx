@@ -17,7 +17,7 @@ function VideoContainer(props: VideoContainerProps) {
 
   return (
     <>
-      {tab === 'isLiked' && videoListLength > 0 && (
+      {tab === 'isFavorite' && videoListLength > 0 && (
         <StCountVideo>
           전체
           <span> {videoListLength}개 </span>
@@ -25,7 +25,7 @@ function VideoContainer(props: VideoContainerProps) {
         </StCountVideo>
       )}
       <StVideoWrapper>
-        {tab === 'isLiked' ? (
+        {tab === 'isFavorite' ? (
           videoList.length ? (
             <NewsList newsList={videoList} onClickLike={onClickLike} />
           ) : (

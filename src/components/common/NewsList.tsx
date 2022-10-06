@@ -37,7 +37,7 @@ function NewsList(props: NewsListProps) {
               />
               <Like
                 isFromList={true}
-                isLiked={isFavorite}
+                isFavorite={isFavorite}
                 toggleLike={() => {
                   if (!login) {
                     setIsLoginModalOpen(true);
