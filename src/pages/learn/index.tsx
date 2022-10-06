@@ -34,8 +34,8 @@ function Learn() {
     setIsLoading(true);
 
     const { paging, videoList } = await api.learnService.postSearchCondition({
-      channels: selectedChannelList,
-      categories: selectedCategoryList,
+      channel: selectedChannelList,
+      category: selectedCategoryList,
       announcerGender: selectedSpeakerList,
       currentPage: 1,
       listSize: LIST_SIZE,
@@ -52,8 +52,8 @@ function Learn() {
     setIsLoading(true);
 
     const { paging, videoList } = await api.learnService.postSearchCondition({
-      channels: selectedChannelList,
-      categories: selectedCategoryList,
+      channel: selectedChannelList,
+      category: selectedCategoryList,
       announcerGender: selectedSpeakerList,
       currentPage: page,
       listSize: LIST_SIZE,
@@ -70,8 +70,8 @@ function Learn() {
     (async () => {
       setIsLoading(true);
       const { paging, videoList } = await api.learnService.postSearchCondition({
-        channels: [],
-        categories: [],
+        channel: [],
+        category: [],
         announcerGender: [],
         currentPage: 1,
         listSize: LIST_SIZE,
