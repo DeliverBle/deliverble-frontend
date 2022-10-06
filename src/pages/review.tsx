@@ -10,16 +10,44 @@ import { COLOR } from 'src/styles/color';
 import { FONT_STYLES } from 'src/styles/fontStyle';
 import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/review';
+import { LIST_SIZE } from '@src/utils/constant';
 
 function Review() {
   const [tab, setTab] = useState('isFavorite');
   const [favoriteList, setFavoriteList] = useState<VideoData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [totalCount, setTotalCount] = useState(0);
+  const [lastPage, setLastPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const getFavoriteNewsList = async () => {
     setIsLoading(true);
-    const { favoriteNews } = await api.reviewService.getFavoriteVideoList();
-    setFavoriteList(favoriteNews);
+
+    const { paging, favoriteList } = await api.reviewService.postFavoriteVideoList({
+      currentPage: 1,
+      listSize: LIST_SIZE,
+    });
+
+    setCurrentPage(1);
+    setTotalCount(paging.totalCount);
+    setLastPage(paging.lastPage);
+    setFavoriteList(favoriteList);
+    setIsLoading(false);
+    console.log(favoriteList);
+  };
+
+  const handleSearchWithPage = async (page: number) => {
+    setIsLoading(true);
+
+    const { paging, videoList } = await api.learnService.postSearchCondition({
+      currentPage: page,
+      listSize: LIST_SIZE,
+    });
+
+    setCurrentPage(page);
+    setTotalCount(paging.totalCount);
+    setLastPage(paging.lastPage);
+    setFavoriteList(videoList);
     setIsLoading(false);
   };
 
@@ -51,7 +79,15 @@ function Review() {
         {isLoading ? (
           <VideoListSkeleton itemNumber={12} />
         ) : (
-          <VideoContainer tab={tab} videoList={favoriteList} onClickLike={handleClickLike} />
+          <VideoContainer
+            tab={tab}
+            videoList={favoriteList}
+            onClickLike={handleClickLike}
+            totalCount={totalCount}
+            currentPage={currentPage}
+            lastPage={lastPage}
+            handleSearchWithPage={handleSearchWithPage}
+          />
         )}
       </StReview>
       <Footer />

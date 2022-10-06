@@ -8,6 +8,17 @@ export type VideoData = {
   isFavorite: boolean;
 };
 
-export type FavoriteVideoList = {
-  favoriteNews: VideoData[];
+export type Paging = {
+  lastPage: number;
+  totalCount: number;
+};
+
+export type PostFavoriteRequestBody = {
+  currentPage: number;
+  listSize: number;
+};
+
+export type PostFavoriteResponse = {
+  favoriteList: VideoData[];
+  paging: Paging;
 };

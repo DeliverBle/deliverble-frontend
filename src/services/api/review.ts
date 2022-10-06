@@ -1,5 +1,5 @@
-import { FavoriteVideoList } from './types/review';
+import { PostFavoriteRequestBody, PostFavoriteResponse } from './types/review';
 
 export interface ReviewService {
-  getFavoriteVideoList(): Promise<FavoriteVideoList>;
+  postFavoriteVideoList(body: PostFavoriteRequestBody): Promise<PostFavoriteResponse>;
 }

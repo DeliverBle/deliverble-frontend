@@ -19,3 +19,5 @@ export const DELETE_MEMO_CONFIRM_MODAL_TEXT = {
 };
 
 export const MEMO_CONTENT_MAX = 30;
+export const BLOCK_SIZE = 10;
+export const LIST_SIZE = 12;

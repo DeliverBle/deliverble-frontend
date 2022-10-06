@@ -4,30 +4,44 @@ import { COLOR } from '@src/styles/color';
 import { VideoData } from '@src/services/api/types/review';
 import NewsList from '../common/NewsList';
 import Empty from './Empty';
+import Pagination from '../common/Pagination';
+import { BLOCK_SIZE, LIST_SIZE } from '@src/utils/constant';
 
 interface VideoContainerProps {
   tab: string;
   videoList: VideoData[];
-  onClickLike?: (id: number) => void;
+  onClickLike: (id: number) => void;
+  totalCount: number;
+  currentPage: number;
+  lastPage: number;
+  handleSearchWithPage: (page: number) => void;
 }
 
 function VideoContainer(props: VideoContainerProps) {
-  const { tab, videoList, onClickLike } = props;
-  const videoListLength = videoList.length;
+  const { tab, videoList, onClickLike, totalCount, currentPage, lastPage, handleSearchWithPage } = props;
 
   return (
     <>
-      {tab === 'isFavorite' && videoListLength > 0 && (
+      {tab === 'isFavorite' && totalCount > 0 && (
         <StCountVideo>
           전체
-          <span> {videoListLength}개 </span>
+          <span> {totalCount}개 </span>
           영상
         </StCountVideo>
       )}
       <StVideoWrapper>
         {tab === 'isFavorite' ? (
           videoList.length ? (
-            <NewsList newsList={videoList} onClickLike={onClickLike} />
+            <>
+              <NewsList newsList={videoList} onClickLike={onClickLike} />
+              <Pagination
+                listSize={LIST_SIZE}
+                blockSize={BLOCK_SIZE}
+                currentPage={currentPage}
+                lastPage={lastPage}
+                handleSearchWithPage={handleSearchWithPage}
+              />
+            </>
           ) : (
             <Empty tab={tab} />
           )
