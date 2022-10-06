@@ -97,7 +97,7 @@ function Review() {
 export default Review;
 
 const StReview = styled.div`
-  padding: 16rem 16rem 34.8rem 16rem;
+  padding: 16rem 16rem 13.6rem 16rem;
 `;
 
 const StTab = styled.ul`

@@ -32,7 +32,7 @@ function VideoContainer(props: VideoContainerProps) {
       <StVideoWrapper>
         {tab === 'isFavorite' ? (
           videoList.length ? (
-            <>
+            <StNewsList>
               <NewsList newsList={videoList} onClickLike={onClickLike} />
               <Pagination
                 listSize={LIST_SIZE}
@@ -41,7 +41,7 @@ function VideoContainer(props: VideoContainerProps) {
                 lastPage={lastPage}
                 handleSearchWithPage={handleSearchWithPage}
               />
-            </>
+            </StNewsList>
           ) : (
             <Empty tab={tab} />
           )
@@ -68,4 +68,10 @@ const StCountVideo = styled.div`
 
 const StVideoWrapper = styled.section`
   margin: 0 auto;
+`;
+
+const StNewsList = styled.div`
+  & > section {
+    margin-bottom: 13.6rem;
+  }
 `;
