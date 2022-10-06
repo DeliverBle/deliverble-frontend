@@ -66,6 +66,22 @@ function Learn() {
     setIsLoading(false);
   };
 
+  const handleClickLike = async (id: number) => {
+    const { id: likeId, isFavorite } = await api.likeService.postLikeData(id);
+
+    setResultList((prev) => {
+      return prev.map((news) => {
+        if (news.id === likeId) {
+          return {
+            ...news,
+            isFavorite,
+          };
+        }
+        return news;
+      });
+    });
+  };
+
   useEffect(() => {
     (async () => {
       setIsLoading(true);
@@ -107,7 +123,7 @@ function Learn() {
             <h2>
               전체 <span>{totalCount}개 </span> 영상
             </h2>
-            <NewsList newsList={resultList} />
+            <NewsList newsList={resultList} onClickLike={handleClickLike} />
             <Pagination
               listSize={LIST_SIZE}
               blockSize={BLOCK_SIZE}
