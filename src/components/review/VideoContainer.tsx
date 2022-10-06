@@ -14,11 +14,11 @@ interface VideoContainerProps {
   totalCount: number;
   currentPage: number;
   lastPage: number;
-  handleSearchWithPage: (page: number) => void;
+  onPageChange: (page: number) => void;
 }
 
 function VideoContainer(props: VideoContainerProps) {
-  const { tab, videoList, onClickLike, totalCount, currentPage, lastPage, handleSearchWithPage } = props;
+  const { tab, videoList, onClickLike, totalCount, currentPage, lastPage, onPageChange } = props;
 
   return (
     <>
@@ -39,7 +39,7 @@ function VideoContainer(props: VideoContainerProps) {
                 blockSize={BLOCK_SIZE}
                 currentPage={currentPage}
                 lastPage={lastPage}
-                handleSearchWithPage={handleSearchWithPage}
+                onPageChange={onPageChange}
               />
             </StNewsList>
           ) : (

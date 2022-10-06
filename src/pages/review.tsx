@@ -35,7 +35,7 @@ function Review() {
     setIsLoading(false);
   };
 
-  const handleSearchWithPage = async (page: number) => {
+  const handlePageChange = async (page: number) => {
     setIsLoading(true);
 
     const { paging, favoriteList } = await api.reviewService.postFavoriteVideoList({
@@ -86,7 +86,7 @@ function Review() {
             totalCount={totalCount}
             currentPage={currentPage}
             lastPage={lastPage}
-            handleSearchWithPage={handleSearchWithPage}
+            onPageChange={handlePageChange}
           />
         )}
       </StReview>
