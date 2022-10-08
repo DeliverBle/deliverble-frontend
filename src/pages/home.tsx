@@ -1,88 +1,47 @@
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import SEO from '@src/components/common/SEO';
 import NavigationBar from '@src/components/common/NavigationBar';
+import ImageDiv from '@src/components/common/ImageDiv';
 import NewsList from '@src/components/common/NewsList';
-import { FONT_STYLES } from '@src/styles/fontStyle';
-import { COLOR } from '@src/styles/color';
+import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
+import Footer from '@src/components/common/Footer';
 import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/home';
-import Footer from '@src/components/common/Footer';
-import SEO from '@src/components/common/SEO';
-import { useEffect, useState } from 'react';
-import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
-import ImageDiv from '@src/components/common/ImageDiv';
+import { FONT_STYLES } from '@src/styles/fontStyle';
+import { COLOR } from '@src/styles/color';
 import { imgBannerMic } from 'public/assets/images';
 
 function Home() {
   const [newsList, setNewsList] = useState<VideoData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [token, setToken] = useState('');
-  const [userId, setUserId] = useState('');
 
-  const getNewsList = async () => {
-    setIsLoading(true);
-
-    const [{ videoList }, { favoriteList }] = await Promise.all([
-      api.homeService.getVideoData(),
-      api.likeService.getLikeData(),
-    ]);
-
-    setNewsList(
-      videoList.map((news) => {
-        return {
-          ...news,
-          isLiked: favoriteList.map((like) => like.id).includes(news.id),
-        };
-      }),
-    );
-
-    setIsLoading(false);
-  };
-
-  const getNewsListWithoutToken = async () => {
-    setIsLoading(true);
+  const getVideoList = async () => {
     const { videoList } = await api.homeService.getVideoData();
     setNewsList(videoList);
+  };
+
+  useEffect(() => {
+    setIsLoading(true);
+    getVideoList();
     setIsLoading(false);
-  };
-
-  const handleClickLike = async (id: number, isLiked?: boolean) => {
-    if (!isLiked) {
-      await api.likeService.postLikeData({
-        news_id: id,
-        access_token: token,
-        user_id: userId,
-      });
-    } else {
-      await api.likeService.deleteLikeData({
-        news_id: id,
-        access_token: token,
-        user_id: userId,
-      });
-    }
-    getNewsList();
-  };
-
-  useEffect(() => {
-    (async () => {
-      const getAccessToken = () => localStorage.getItem('token') ?? '';
-      const getUserId = () => localStorage.getItem('userId') ?? '';
-      if (getAccessToken()) {
-        setToken(getAccessToken());
-      }
-      if (getUserId()) {
-        setUserId(getUserId());
-      }
-    })();
   }, []);
 
-  useEffect(() => {
-    const getAccessToken = () => localStorage.getItem('token') ?? '';
-    if (getAccessToken()) {
-      getNewsList();
-    } else {
-      getNewsListWithoutToken();
-    }
-  }, []);
+  const handleClickLike = async (id: number) => {
+    const { id: likeId, isFavorite } = await api.likeService.postLikeData(id);
+
+    setNewsList((prev) => {
+      return prev.map((news) => {
+        if (news.id === likeId) {
+          return {
+            ...news,
+            isFavorite,
+          };
+        }
+        return news;
+      });
+    });
+  };
 
   return (
     <>

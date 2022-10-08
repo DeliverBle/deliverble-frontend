@@ -1,7 +1,5 @@
-import { LikeListData, PostLikeRequestBody } from './types/like';
+import { LikeData } from './types/like';
 
 export interface LikeService {
-  getLikeData(): Promise<LikeListData>;
-  postLikeData(body: PostLikeRequestBody): Promise<LikeListData>;
-  deleteLikeData(body: PostLikeRequestBody): Promise<LikeListData>;
+  postLikeData(newsId: number): Promise<LikeData>;
 }

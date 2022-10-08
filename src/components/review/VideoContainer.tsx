@@ -3,31 +3,45 @@ import { FONT_STYLES } from '@src/styles/fontStyle';
 import { COLOR } from '@src/styles/color';
 import { VideoData } from '@src/services/api/types/review';
 import NewsList from '../common/NewsList';
+import Pagination from '../common/Pagination';
 import Empty from './Empty';
+import { BLOCK_SIZE, LIST_SIZE } from '@src/utils/constant';
 
 interface VideoContainerProps {
   tab: string;
   videoList: VideoData[];
-  onClickLike?: (id: number, isLiked: boolean) => void;
+  onClickLike: (id: number) => void;
+  totalCount: number;
+  currentPage: number;
+  lastPage: number;
+  onPageChange: (page: number) => void;
 }
 
 function VideoContainer(props: VideoContainerProps) {
-  const { tab, videoList, onClickLike } = props;
-  const videoListLength = videoList.length;
+  const { tab, videoList, onClickLike, totalCount, currentPage, lastPage, onPageChange } = props;
 
   return (
     <>
-      {tab === 'isLiked' && videoListLength > 0 && (
+      {tab === 'isFavorite' && totalCount > 0 && (
         <StCountVideo>
           전체
-          <span> {videoListLength}개 </span>
+          <span> {totalCount}개 </span>
           영상
         </StCountVideo>
       )}
       <StVideoWrapper>
-        {tab === 'isLiked' ? (
+        {tab === 'isFavorite' ? (
           videoList.length ? (
-            <NewsList newsList={videoList} onClickLike={onClickLike} />
+            <StNewsList>
+              <NewsList newsList={videoList} onClickLike={onClickLike} />
+              <Pagination
+                listSize={LIST_SIZE}
+                blockSize={BLOCK_SIZE}
+                currentPage={currentPage}
+                lastPage={lastPage}
+                onPageChange={onPageChange}
+              />
+            </StNewsList>
           ) : (
             <Empty tab={tab} />
           )
@@ -54,4 +68,10 @@ const StCountVideo = styled.div`
 
 const StVideoWrapper = styled.section`
   margin: 0 auto;
+`;
+
+const StNewsList = styled.div`
+  & > section {
+    margin-bottom: 13.6rem;
+  }
 `;

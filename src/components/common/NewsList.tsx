@@ -1,27 +1,29 @@
+import { VideoData } from '@src/services/api/types/home';
+import { loginState } from '@src/stores/loginState';
+import { COLOR } from '@src/styles/color';
+import { FONT_STYLES } from '@src/styles/fontStyle';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import LoginModal from '../login/LoginModal';
 import ImageDiv from './ImageDiv';
 import Like from './Like';
-import { COLOR } from '@src/styles/color';
-import { FONT_STYLES } from '@src/styles/fontStyle';
-import { VideoData } from '@src/services/api/types/home';
 
 interface NewsListProps {
   newsList: VideoData[];
-  onClickLike?: (id: number, isLiked: boolean) => void;
+  onClickLike?: (id: number) => void;
 }
 
 function NewsList(props: NewsListProps) {
   const { newsList, onClickLike } = props;
   const router = useRouter();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const getLoginStatus = () => localStorage.getItem('token') ?? '';
+  const login = useRecoilValue(loginState);
 
   return (
     <StNewsList>
-      {newsList.map(({ id, title, category, channel, thumbnail, reportDate, isLiked = false }) => {
+      {newsList.map(({ id, title, category, channel, thumbnail, reportDate, isFavorite = false }) => {
         return (
           <StNewsWrapper key={id} onClick={() => router.push(`/learn/${id}`)}>
             <StThumbnail>
@@ -35,12 +37,12 @@ function NewsList(props: NewsListProps) {
               />
               <Like
                 isFromList={true}
-                isLiked={isLiked}
+                isFavorite={isFavorite}
                 toggleLike={() => {
-                  if (getLoginStatus() === '') {
+                  if (!login) {
                     setIsLoginModalOpen(true);
                   } else {
-                    onClickLike && onClickLike(id, isLiked);
+                    onClickLike && onClickLike(id);
                   }
                 }}
               />

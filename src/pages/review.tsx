@@ -6,56 +6,61 @@ import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
 import HeadlineContainer from '@src/components/review/HeadlineContainer';
 import VideoContainer from '@src/components/review/VideoContainer';
 import Footer from '@src/components/common/Footer';
-import { COLOR } from 'src/styles/color';
-import { FONT_STYLES } from 'src/styles/fontStyle';
 import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/review';
+import { LIST_SIZE } from '@src/utils/constant';
+import { COLOR } from 'src/styles/color';
+import { FONT_STYLES } from 'src/styles/fontStyle';
+import { useRecoilValue } from 'recoil';
+import { loginState } from '@src/stores/loginState';
 
 function Review() {
-  const [tab, setTab] = useState('isLiked');
+  const [tab, setTab] = useState('isFavorite');
   const [favoriteList, setFavoriteList] = useState<VideoData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [totalCount, setTotalCount] = useState(0);
+  const [lastPage, setLastPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const isLoggedIn = useRecoilValue(loginState);
 
   const getFavoriteNewsList = async () => {
-    const getAccessToken = () => localStorage.getItem('token') ?? '';
-    if (getAccessToken()) {
-      setIsLoading(true);
-      const { favoriteNews } = await api.reviewService.getFavoriteVideoList();
-      setFavoriteList(
-        favoriteNews.map((news) => {
-          return {
-            ...news,
-            isLiked: favoriteNews.map((like) => like.id).includes(news.id),
-          };
-        }),
-      );
-      setIsLoading(false);
-    }
+    setIsLoading(true);
+
+    const { paging, favoriteList } = await api.reviewService.postFavoriteVideoList({
+      currentPage: 1,
+      listSize: LIST_SIZE,
+    });
+
+    setCurrentPage(1);
+    setTotalCount(paging.totalCount);
+    setLastPage(paging.lastPage);
+    setFavoriteList(favoriteList);
+    setIsLoading(false);
   };
 
-  const handleClickLike = async (id: number, isLiked?: boolean) => {
-    const getAccessToken = () => localStorage.getItem('token') ?? '';
-    const getUserId = () => localStorage.getItem('userId') ?? '';
+  const handlePageChange = async (page: number) => {
+    setIsLoading(true);
 
-    if (!isLiked) {
-      await api.likeService.postLikeData({
-        news_id: id,
-        access_token: getAccessToken(),
-        user_id: getUserId(),
-      });
-    } else {
-      await api.likeService.deleteLikeData({
-        news_id: id,
-        access_token: getAccessToken(),
-        user_id: getUserId(),
-      });
-    }
+    const { paging, favoriteList } = await api.reviewService.postFavoriteVideoList({
+      currentPage: page,
+      listSize: LIST_SIZE,
+    });
+
+    setCurrentPage(page);
+    setTotalCount(paging.totalCount);
+    setLastPage(paging.lastPage);
+    setFavoriteList(favoriteList);
+    setIsLoading(false);
+  };
+
+  const handleClickLike = async (id: number) => {
+    await api.likeService.postLikeData(id);
     getFavoriteNewsList();
   };
 
   useEffect(() => {
-    getFavoriteNewsList();
-  }, []);
+    isLoggedIn && getFavoriteNewsList();
+  }, [isLoggedIn]);
 
   return (
     <>
@@ -65,7 +70,7 @@ function Review() {
         <HeadlineContainer />
         <nav>
           <StTab>
-            <StButton isActive={tab === 'isLiked'} onClick={() => setTab('isLiked')}>
+            <StButton isActive={tab === 'isFavorite'} onClick={() => setTab('isFavorite')}>
               내 즐겨찾기 기록
             </StButton>
             <span> | </span>
@@ -77,7 +82,15 @@ function Review() {
         {isLoading ? (
           <VideoListSkeleton itemNumber={12} />
         ) : (
-          <VideoContainer tab={tab} videoList={favoriteList} onClickLike={handleClickLike} />
+          <VideoContainer
+            tab={tab}
+            videoList={favoriteList}
+            onClickLike={handleClickLike}
+            totalCount={totalCount}
+            currentPage={currentPage}
+            lastPage={lastPage}
+            onPageChange={handlePageChange}
+          />
         )}
       </StReview>
       <Footer />
@@ -88,7 +101,7 @@ function Review() {
 export default Review;
 
 const StReview = styled.div`
-  padding: 16rem 16rem 34.8rem 16rem;
+  padding: 16rem 16rem 13.6rem 16rem;
 `;
 
 const StTab = styled.ul`
