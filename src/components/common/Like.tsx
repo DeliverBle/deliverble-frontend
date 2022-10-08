@@ -4,12 +4,12 @@ import styled, { css } from 'styled-components';
 
 interface LikeProps {
   isFromList: boolean;
-  isLiked?: boolean;
+  isFavorite?: boolean;
   toggleLike?: () => void;
 }
 
 function Like(props: LikeProps) {
-  const { isFromList, isLiked, toggleLike } = props;
+  const { isFromList, isFavorite, toggleLike } = props;
 
   return (
     <StLike
@@ -19,7 +19,7 @@ function Like(props: LikeProps) {
         toggleLike && toggleLike();
       }}>
       <StLikeImage isFromList={isFromList}>
-        {isLiked ? (
+        {isFavorite ? (
           <ImageDiv className="like" src={icLikeClicked} alt="좋아요" layout="fill" />
         ) : (
           <>

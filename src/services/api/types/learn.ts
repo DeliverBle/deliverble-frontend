@@ -5,6 +5,7 @@ export type VideoData = {
   channel: string;
   thumbnail: string;
   reportDate: string;
+  isFavorite: boolean;
 };
 
 export type Paging = {
@@ -13,8 +14,8 @@ export type Paging = {
 };
 
 export type PostSearchConditionRequestBody = {
-  channels?: string[];
-  categories?: string[];
+  channel?: string[];
+  category?: string[];
   announcerGender?: string[];
   currentPage: number;
   listSize: number;

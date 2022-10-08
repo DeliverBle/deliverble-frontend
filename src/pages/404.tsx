@@ -1,10 +1,10 @@
-import Footer from '@src/components/common/Footer';
-import NavigationBar from '@src/components/common/NavigationBar';
-import SEO from '@src/components/common/SEO';
-import { COLOR } from '@src/styles/color';
-import { FONT_STYLES } from '@src/styles/fontStyle';
 import Link from 'next/link';
 import styled from 'styled-components';
+import SEO from '@src/components/common/SEO';
+import NavigationBar from '@src/components/common/NavigationBar';
+import Footer from '@src/components/common/Footer';
+import { COLOR } from '@src/styles/color';
+import { FONT_STYLES } from '@src/styles/fontStyle';
 
 function Custom404() {
   return (

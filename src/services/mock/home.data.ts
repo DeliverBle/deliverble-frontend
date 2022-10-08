@@ -7,6 +7,7 @@ export const HOME_DATA = {
       channel: 'SBS',
       thumbnail: 'https://img.youtube.com/vi/mDW6crrUVpA/hqdefault.jpg',
       reportDate: '2022-07-06',
+      isFavorite: true,
     },
     {
       id: 8,
@@ -15,6 +16,7 @@ export const HOME_DATA = {
       channel: 'MBC',
       thumbnail: 'https://img.youtube.com/vi/1SRz_AE8R9E/hqdefault.jpg',
       reportDate: '2022-07-06',
+      isFavorite: true,
     },
     {
       id: 3,
@@ -23,6 +25,7 @@ export const HOME_DATA = {
       channel: 'SBS',
       thumbnail: 'https://img.youtube.com/vi/45IAfzlB_tQ/hqdefault.jpg',
       reportDate: '2022-07-06',
+      isFavorite: false,
     },
     {
       id: 4,
@@ -31,6 +34,7 @@ export const HOME_DATA = {
       channel: 'SBS',
       thumbnail: 'https://img.youtube.com/vi/sId-zbgWuZU/hqdefault.jpg',
       reportDate: '2022-07-05',
+      isFavorite: false,
     },
     {
       id: 9,
@@ -39,6 +43,7 @@ export const HOME_DATA = {
       channel: 'MBC',
       thumbnail: 'https://img.youtube.com/vi/WtuMp5G3yNo/hqdefault.jpg',
       reportDate: '2022-07-05',
+      isFavorite: false,
     },
     {
       id: 2,
@@ -47,6 +52,7 @@ export const HOME_DATA = {
       channel: 'KBS',
       thumbnail: 'https://img.youtube.com/vi/ee-0DeY21rU/hqdefault.jpg',
       reportDate: '2022-06-30',
+      isFavorite: false,
     },
     {
       id: 14,
@@ -55,6 +61,7 @@ export const HOME_DATA = {
       channel: 'KBS',
       thumbnail: 'https://img.youtube.com/vi/srjLy3NQO6w/hqdefault.jpg',
       reportDate: '2022-06-21',
+      isFavorite: false,
     },
     {
       id: 1,
@@ -63,6 +70,7 @@ export const HOME_DATA = {
       channel: 'SBS',
       thumbnail: 'https://img.youtube.com/vi/S_gtbu2VRlI/hqdefault.jpg',
       reportDate: '2022-06-19',
+      isFavorite: false,
     },
   ],
 };

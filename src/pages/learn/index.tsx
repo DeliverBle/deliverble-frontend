@@ -1,26 +1,25 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
 import SEO from '@src/components/common/SEO';
 import NavigationBar from '@src/components/common/NavigationBar';
+import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
 import NewsList from '@src/components/common/NewsList';
 import SelectBox from '@src/components/learn/SelectBox';
 import ImageDiv from '@src/components/common/ImageDiv';
 import Pagination from '@src/components/common/Pagination';
 import Footer from '@src/components/common/Footer';
+import { api } from '@src/services/api';
+import { VideoData } from '@src/services/api/types/home';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { icSearch } from 'public/assets/icons';
-import { api } from '@src/services/api';
-import { VideoData } from '@src/services/api/types/home';
+import { BLOCK_SIZE, LIST_SIZE } from '@src/utils/constant';
 
 const channelList = ['전체', 'SBS', 'KBS', 'MBC', '기타'];
 const categoryList = ['전체', '정치', '경제', '사회', '세계', '연예', '기타'];
 const speakerList = ['전체', '여성', '남성'];
 
 function Learn() {
-  const BLOCK_SIZE = 10;
-  const LIST_SIZE = 12;
   const [selectedChannelList, setSelectedChannelList] = useState<string[]>([]);
   const [selectedCategoryList, setSelectedCategoryList] = useState<string[]>([]);
   const [selectedSpeakerList, setSelectedSpeakerList] = useState<string[]>([]);
@@ -34,8 +33,8 @@ function Learn() {
     setIsLoading(true);
 
     const { paging, videoList } = await api.learnService.postSearchCondition({
-      channels: selectedChannelList,
-      categories: selectedCategoryList,
+      channel: selectedChannelList,
+      category: selectedCategoryList,
       announcerGender: selectedSpeakerList,
       currentPage: 1,
       listSize: LIST_SIZE,
@@ -48,12 +47,12 @@ function Learn() {
     setIsLoading(false);
   };
 
-  const handleSearchWithPage = async (page: number) => {
+  const handlePageChange = async (page: number) => {
     setIsLoading(true);
 
     const { paging, videoList } = await api.learnService.postSearchCondition({
-      channels: selectedChannelList,
-      categories: selectedCategoryList,
+      channel: selectedChannelList,
+      category: selectedCategoryList,
       announcerGender: selectedSpeakerList,
       currentPage: page,
       listSize: LIST_SIZE,
@@ -66,12 +65,28 @@ function Learn() {
     setIsLoading(false);
   };
 
+  const handleClickLike = async (id: number) => {
+    const { id: likeId, isFavorite } = await api.likeService.postLikeData(id);
+
+    setResultList((prev) => {
+      return prev.map((news) => {
+        if (news.id === likeId) {
+          return {
+            ...news,
+            isFavorite,
+          };
+        }
+        return news;
+      });
+    });
+  };
+
   useEffect(() => {
     (async () => {
       setIsLoading(true);
       const { paging, videoList } = await api.learnService.postSearchCondition({
-        channels: [],
-        categories: [],
+        channel: [],
+        category: [],
         announcerGender: [],
         currentPage: 1,
         listSize: LIST_SIZE,
@@ -107,13 +122,13 @@ function Learn() {
             <h2>
               전체 <span>{totalCount}개 </span> 영상
             </h2>
-            <NewsList newsList={resultList} />
+            <NewsList newsList={resultList} onClickLike={handleClickLike} />
             <Pagination
               listSize={LIST_SIZE}
               blockSize={BLOCK_SIZE}
               currentPage={currentPage}
               lastPage={lastPage}
-              handleSearchWithPage={handleSearchWithPage}
+              onPageChange={handlePageChange}
             />
           </StResult>
         )}
