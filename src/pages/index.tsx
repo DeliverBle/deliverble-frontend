@@ -1,9 +1,9 @@
+import { useEffect, useState } from 'react';
+import styled from 'styled-components';
 import SEO from '@src/components/common/SEO';
 import Nav from '@src/components/landing/Nav';
 import ScrollControl from '@src/components/landing/ScrollControl';
 import SliderContainer from '@src/components/landing/SliderContainer';
-import { useEffect, useState } from 'react';
-import styled from 'styled-components';
 
 function Landing() {
   const [isFirstScrolled, setIsFirstScrolled] = useState<boolean>(false);

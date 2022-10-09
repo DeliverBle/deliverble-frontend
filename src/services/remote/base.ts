@@ -1,14 +1,23 @@
 import axios from 'axios';
 
-const BASEURL = 'https://deliverble.online/v2';
+const BASEURL = 'https://deliverble.online';
 const getAccessToken = () => localStorage.getItem('token') ?? '';
-const getUserId = () => localStorage.getItem('userId') ?? '';
 
-const getBasePrivateHeaders = () => ({
-  Accept: `*/*`,
-  'Content-Type': `application/json`,
-  Authorization: getAccessToken() + ' ' + getUserId(),
-});
+const getBasePrivateHeaders = () => {
+  const accessToken = getAccessToken();
+  const headers = {
+    Accept: `*/*`,
+    'Content-Type': `application/json`,
+  };
+
+  if (accessToken) {
+    return {
+      ...headers,
+      Authorization: `Bearer ${accessToken}`,
+    };
+  }
+  return headers;
+};
 
 const basePublicHeaders = {
   Accept: `*/*`,

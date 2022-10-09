@@ -8,11 +8,11 @@ interface PaginationProps {
   blockSize: number;
   currentPage: number;
   lastPage: number;
-  handleSearchWithPage: (page: number) => void;
+  onPageChange: (page: number) => void;
 }
 
 function Pagination(props: PaginationProps) {
-  const { blockSize, currentPage, lastPage, handleSearchWithPage } = props;
+  const { blockSize, currentPage, lastPage, onPageChange } = props;
   const [pageGroupList, setPageGroupList] = useState<number[] | []>([]);
 
   const sliceIntoChunks = (list: number[], chunkSize: number) => {
@@ -39,16 +39,16 @@ function Pagination(props: PaginationProps) {
 
   return (
     <StPagination>
-      {lastPage > blockSize && <StDoubleLeftArrowButton onClick={() => currentPage !== 1 && handleSearchWithPage(1)} />}
-      <StLeftArrowButton onClick={() => currentPage !== 1 && handleSearchWithPage(currentPage - 1)} />
+      {lastPage > blockSize && <StDoubleLeftArrowButton onClick={() => currentPage !== 1 && onPageChange(1)} />}
+      <StLeftArrowButton onClick={() => currentPage !== 1 && onPageChange(currentPage - 1)} />
       {pageGroupList.map((page) => (
-        <StNumberButton onClick={() => handleSearchWithPage(page)} isActive={page === currentPage} key={page}>
+        <StNumberButton onClick={() => onPageChange(page)} isActive={page === currentPage} key={page}>
           {page}
         </StNumberButton>
       ))}
-      <StRightArrowButton onClick={() => currentPage !== lastPage && handleSearchWithPage(currentPage + 1)} />
+      <StRightArrowButton onClick={() => currentPage !== lastPage && onPageChange(currentPage + 1)} />
       {lastPage > blockSize && (
-        <StDoubleRightArrowButton onClick={() => currentPage !== lastPage && handleSearchWithPage(lastPage)} />
+        <StDoubleRightArrowButton onClick={() => currentPage !== lastPage && onPageChange(lastPage)} />
       )}
     </StPagination>
   );

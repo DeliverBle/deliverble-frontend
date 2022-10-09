@@ -15,7 +15,7 @@ export function loginUserRemote(): LoginUserService {
     try {
       const response = await axios.get('https://deliverble.online/user', {
         headers: {
-          Authorization: `bearer ${accessToken}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       });
       return {
