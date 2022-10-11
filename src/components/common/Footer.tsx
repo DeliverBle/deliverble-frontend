@@ -100,6 +100,10 @@ const StLogo = styled.div`
       width: 12rem;
       height: 3.7rem;
     }
+
+    & > h4 {
+      ${FONT_STYLES.SB_21_BODY};
+    }
   }
 `;
 
