@@ -137,6 +137,7 @@ const StNews = styled.div`
 
   @media (max-width: 500px) {
     padding: 0 0 30rem 2.4rem;
+    zoom: 150%;
 
     & > div {
       padding-right: 2.4rem;

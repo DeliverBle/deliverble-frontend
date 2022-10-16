@@ -142,7 +142,7 @@ const StThumbnail = styled.div`
   @media (max-width: 500px) {
     & > div {
       min-width: 21.9rem;
-      min-height: 12.3rem;
+      min-height: 12.2rem;
     }
   }
 `;
