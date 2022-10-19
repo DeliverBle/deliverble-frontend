@@ -95,7 +95,10 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
 
   useEffect(() => {
     (async () => {
-      const data = await api.learnDetailService.getVideoData(Number(detailId));
+      const id = Number(detailId);
+      const data = isLoggedIn
+        ? await api.learnDetailService.getPrivateVideoData(id)
+        : await api.learnDetailService.getPublicVideoData(id);
       data && setVideoData(data);
     })();
   }, [isLoggedIn, detailId]);
