@@ -145,15 +145,7 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
       <SEO title="학습하기 | Deliverble" />
       <NavigationBar />
       <StLearnDetail>
-        <ImageDiv
-          onClick={() => {
-            router.push(prevLink);
-          }}
-          src={icXButton}
-          className="close"
-          layout="fill"
-          alt="x"
-        />
+        <ImageDiv onClick={() => router.push(prevLink)} src={icXButton} className="close" layout="fill" alt="x" />
         {videoData && (
           <StLearnMain>
             <VideoDetail {...videoData} setIsModalOpen={setIsModalOpen} />
