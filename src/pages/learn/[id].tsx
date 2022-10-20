@@ -247,13 +247,7 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                   <Like
                     isFromList={false}
                     isFavorite={videoData.isFavorite}
-                    toggleLike={() => {
-                      if (getLoginStatus() === '') {
-                        setIsLoginModalOpen(true);
-                      } else {
-                        handleClickLike(videoData.id);
-                      }
-                    }}
+                    toggleLike={() => (getLoginStatus() ? handleClickLike(videoData.id) : setIsLoginModalOpen(true))}
                   />
                   <YouTube
                     videoId={videoData.link}
