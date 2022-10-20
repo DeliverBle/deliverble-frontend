@@ -93,6 +93,16 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
     }
   };
 
+  const handleClickLike = async (id: number) => {
+    const { id: likeId, isFavorite } = await api.likeService.postLikeData(id);
+    if (videoData && videoData.id === likeId) {
+      setVideoData({
+        ...videoData,
+        isFavorite,
+      });
+    }
+  };
+
   useEffect(() => {
     (async () => {
       const id = Number(detailId);
@@ -241,7 +251,7 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                       if (getLoginStatus() === '') {
                         setIsLoginModalOpen(true);
                       } else {
-                        // 즐겨찾기 API 연결하는 코드
+                        handleClickLike(videoData.id);
                       }
                     }}
                   />
