@@ -14,6 +14,7 @@ export function learnDetailDataRemote(): LearnDetailService {
         channel: response.data.channel,
         link: response.data.link,
         reportDate: response.data.reportDate,
+        isFavorite: response.data.isFavorite,
         startTime: response.data.startTime,
         endTime: response.data.endTime,
         tags: response.data.tagsForView.map((tag: Tag) => ({
@@ -40,6 +41,7 @@ export function learnDetailDataRemote(): LearnDetailService {
         channel: response.data.channel,
         link: response.data.link,
         reportDate: response.data.reportDate,
+        isFavorite: response.data.isFavorite,
         startTime: response.data.startTime,
         endTime: response.data.endTime,
         tags: response.data.tagsForView.map((tag: Tag) => ({

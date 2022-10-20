@@ -6,6 +6,7 @@ export const LEARN_DETAIL_DATA = {
     channel: 'KBS',
     link: 'ee-0DeY21rU',
     reportDate: '2022.06.30',
+    isFavorite: false,
     startTime: 0.0,
     endTime: 36.0,
     tags: [

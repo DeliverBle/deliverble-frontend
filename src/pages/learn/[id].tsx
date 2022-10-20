@@ -236,6 +236,7 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                 <StVideoWrapper>
                   <Like
                     isFromList={false}
+                    isFavorite={videoData.isFavorite}
                     toggleLike={() => {
                       if (getLoginStatus() === '') {
                         setIsLoginModalOpen(true);

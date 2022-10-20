@@ -17,6 +17,7 @@ export type VideoData = {
   channel: string;
   link: string;
   reportDate: string;
+  isFavorite: boolean;
   startTime: number;
   endTime: number;
   tags: Tag[];
