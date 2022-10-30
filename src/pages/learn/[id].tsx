@@ -55,7 +55,6 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
   const [keyword, setKeyword] = useState<string>();
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isFirstClicked, setIsFirstClicked] = useState(false);
   const [player, setPlayer] = useState<YT.Player | null>();
   const [videoState, setVideoState] = useState(-1);
   const [currentTime, setCurrentTime] = useState(0);
@@ -166,7 +165,8 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
               <StLearnSection>
                 <article>
                   <div ref={learnRef}>
-                    {!isFirstClicked &&
+                    {!isHighlight &&
+                      !isSpacing &&
                       videoData.scripts.map(({ id, text, startTime, endTime }) => (
                         <StScriptText
                           ref={contextMenuRef}
@@ -188,7 +188,7 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                           )}
                         </StScriptText>
                       ))}
-                    {isFirstClicked && (
+                    {(isHighlight || isSpacing) && (
                       <ScriptEdit scripts={videoData.scripts} isHighlight={isHighlight} isSpacing={isSpacing} />
                     )}
                   </div>
@@ -202,7 +202,6 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                           } else {
                             isHighlight ? setIsHighlight(false) : setIsHighlight(true);
                             setIsSpacing(false);
-                            setIsFirstClicked(true);
                           }
                         }}>
                         {isHighlight ? (
@@ -222,7 +221,6 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                           } else {
                             isSpacing ? setIsSpacing(false) : setIsSpacing(true);
                             setIsHighlight(false);
-                            setIsFirstClicked(true);
                           }
                         }}>
                         {isSpacing ? (
