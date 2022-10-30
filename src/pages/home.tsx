@@ -91,6 +91,7 @@ const StHome = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: end;
+  position: relative;
 
   height: 60rem;
   margin: 13.6rem 0 14.4rem 0;
@@ -101,25 +102,27 @@ const StHome = styled.div`
 
   .mic {
     position: absolute;
-    right: 0;
-    margin-right: 6.4rem;
+    right: 6.4rem;
 
     min-width: 122.4rem;
     min-height: 68.6rem;
   }
 
-  @media (max-width: 1280px) {
+  @media (max-width: 990px) {
     .mic {
-      margin-right: 0px;
+      left: 16rem;
+      right: 0px;
+      width: 122.4rem;
     }
   }
 
   @media (max-width: 960px) {
     .mic2 {
       position: absolute;
-      left: 23rem;
+      left: 22rem;
+      top: 0px;
 
-      min-width: 122.4rem;
+      min-width: 96rem;
     }
   }
 `;
