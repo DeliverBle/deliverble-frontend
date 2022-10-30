@@ -37,7 +37,7 @@ const StBackground = styled.div`
   align-items: center;
 
   min-height: 108rem;
-  background: url('/assets/images/img_background.svg') no-repeat center;
+  background: url('/assets/images/img_404_background.png') no-repeat center;
   background-size: cover;
 `;
 

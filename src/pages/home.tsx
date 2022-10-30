@@ -95,7 +95,7 @@ const StHome = styled.div`
   height: 60rem;
   margin: 13.6rem 0 14.4rem 0;
 
-  background: no-repeat url('/assets/images/img_banner_background.svg');
+  background: no-repeat url('/assets/images/img_banner_background.png');
   background-size: cover;
   background-position: center;
 
