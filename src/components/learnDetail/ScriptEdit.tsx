@@ -37,15 +37,15 @@ function ScriptEdit(props: ScriptEditProps) {
     const serializer = new XMLSerializer();
     const selectedLine = serializer.serializeToString(selectedDiv);
 
+    //빈칸인 지 빈칸의 왼쪽, 오른쪽 탐지 해서 중간 위치하도록
     const isLeftBlank = startIdx && selectedLine[startIdx - 1] === ' ';
     const isRightBlank = startIdx && selectedLine[startIdx] === ' ';
     const isValidate = isLeftBlank || isRightBlank;
 
+    //하이라이트 중복 검사
     let isOverlap = false;
     if (selection?.type === 'Range') {
-      // 중복 여부 검사
       const marks = document.getElementsByTagName('mark'); //mark라는 태그를 모두 담은 html collection
-
       // marks를 돌면서 현재 셀렉션 중 marks와 겹치는 것이 있는지 확인
       for (let i = 0; i < marks.length; i++) {
         if (selection?.containsNode(marks[i], true) === true) {
@@ -56,113 +56,47 @@ function ScriptEdit(props: ScriptEditProps) {
       }
     }
 
+    //끊어읽기 표시
     if (selection?.type === 'Caret' && isValidate && isSpacing) {
       const frag = document.createDocumentFragment();
       const div = document.createElement('div');
       isLeftBlank ? (div.innerHTML = '<span class=left >/</span>') : (div.innerHTML = '<span class=right >/</span>');
+
       while (div.firstChild) {
         frag.appendChild(div.firstChild);
       }
-      range?.deleteContents();
       range?.insertNode(frag);
-      handleClickIdx(selection);
     } else if (!isOverlap && selection?.type === 'Range' && isHighlight) {
+      //하이라이트 표시
       let text = selection.toString();
 
+      //문장간 하이라이팅의 경우 조기 return
+      if (text.includes('\n')) {
+        selection?.collapseToEnd();
+        return;
+      }
+
+      //하이라이트 중간에 끊어읽기 표시 들어가있으면 span 넣은걸로 대체하기
       if (text.includes('/')) {
         const texts = text.split('/');
         const res = texts.join('<span>/</span>');
         text = res;
       }
 
-      if (!text.includes('\n')) {
-        const frag = document.createDocumentFragment();
-        const div = document.createElement('div');
-        div.innerHTML = '<mark>' + text + '</mark>';
-        while (div.firstChild) {
-          frag.appendChild(div.firstChild);
-        }
-        range?.deleteContents();
-        range?.insertNode(frag);
-        handleHighlightIdx(selection); // 하이라이트의 인덱스를 구하는 함수
+      const frag = document.createDocumentFragment();
+      const div = document.createElement('div');
+      div.innerHTML = '<mark>' + text + '</mark>';
+      while (div.firstChild) {
+        frag.appendChild(div.firstChild);
       }
+      range?.deleteContents();
+      range?.insertNode(frag);
     }
     selection?.collapseToEnd();
   };
 
   const [currentLine, setCurrentLine] = useState<number>(); // 현재 스크립트 아이디
-
-  // 끊어 읽기 인덱스 구하기
-  // 끊어 읽기는 두가지 경우 존재 1.plain 텍스트 안에 있는 경우 2.하이라이트 안에 있는 경우
-  // spacingIdx는 text로 접근해서 위치를 구해야 해서 state를 사용
-  const [spacingIdx, setSpacingIdx] = useState<number[]>([]);
-
-  useEffect(() => {
-    // 서버에서 받아온 인덱스와 비교 후 post하는 함수 들어갈 예정
-    // currentLine이 겹쳐서 관련 조건 넣어주어야할듯
-    console.log(spacingIdx, currentLine);
-  }, [spacingIdx, currentLine]);
-
-  const handleClickIdx = (selection: Selection | null) => {
-    const range2 = selection?.getRangeAt(0);
-
-    let textCount = 0;
-    if (range2?.commonAncestorContainer.nodeName === 'DIV') {
-      const innertext = range2?.commonAncestorContainer.textContent;
-      const deleteMarks = innertext?.split('/');
-      if (deleteMarks) {
-        for (let i = 0; i < deleteMarks.length - 1; i++) {
-          textCount += deleteMarks[i].length;
-          setSpacingIdx([...spacingIdx, textCount]);
-        }
-      }
-    } else if (range2?.commonAncestorContainer.nodeName === 'MARK') {
-      const innertext = range2.commonAncestorContainer.parentNode?.textContent;
-      const deleteMarks = innertext?.split('/');
-
-      if (deleteMarks) {
-        for (let i = 0; i < deleteMarks.length - 1; i++) {
-          textCount += deleteMarks[i].length;
-          setSpacingIdx([...spacingIdx, textCount]);
-        }
-      }
-    }
-  };
-
-  // 하이라이트 인덱스 구하기
-  const [highlightStartIdx, setHighlightStartIdx] = useState<number>();
-  const [highlightEndIdx, setHighlightEndIdx] = useState<number>();
-
-  useEffect(() => {
-    // 서버에서 받아온 인덱스와 비교 후 post하는 함수 들어갈 예정
-    // currentLine이 겹쳐서 관련 조건 넣어주어야 할 듯
-    console.log(highlightStartIdx, highlightEndIdx, currentLine);
-  }, [highlightStartIdx, highlightEndIdx, currentLine]);
-
-  const handleHighlightIdx = (selection: Selection | null) => {
-    const range2 = selection?.getRangeAt(0);
-
-    // 여기서 node가 children을 가지면 mark 태그
-    let textCount = 0;
-    if (range2?.commonAncestorContainer) {
-      if (range2?.commonAncestorContainer?.childNodes) {
-        for (let i = 0; i < range2.commonAncestorContainer.childNodes.length; i++) {
-          const node = range2.commonAncestorContainer.childNodes[i];
-          if (node.textContent?.length) {
-            textCount += node.textContent.length;
-          }
-          if (node.hasChildNodes()) {
-            // 하이라이트 발견 시작
-            setHighlightStartIdx(textCount);
-            if (node.childNodes[0].textContent?.length) {
-              textCount += node.childNodes[0].textContent?.length;
-            }
-            setHighlightEndIdx(textCount);
-          }
-        }
-      }
-    }
-  };
+  console.log('>>현재 라인의 번호', currentLine);
 
   return (
     <>
