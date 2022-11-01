@@ -112,10 +112,17 @@ function ScriptEdit(props: ScriptEditProps) {
     }
   };
 
+  const [isHiglightOverSpacing, setIsHiglightOverSpacing] = useState<boolean>(false);
   //수정된 html을 text로 직렬화 하는 함수
   const nodeToText = (anchorNode: Node | null | undefined) => {
     let textVal = '';
-    if (anchorNode?.childNodes) {
+    if (anchorNode?.nodeName === 'MARK') {
+      nodeToText(anchorNode.parentNode);
+      setIsHiglightOverSpacing(true);
+      return;
+    }
+
+    if (!isHiglightOverSpacing && anchorNode?.childNodes) {
       for (let i = 0; i < anchorNode?.childNodes.length; i++) {
         switch (anchorNode?.childNodes[i].nodeName) {
           case '#text':
@@ -131,6 +138,7 @@ function ScriptEdit(props: ScriptEditProps) {
         }
       }
       console.log('결과값', textVal);
+      setIsHiglightOverSpacing(false);
     }
   };
 
