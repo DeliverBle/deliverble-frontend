@@ -47,7 +47,7 @@ const StLeft = styled.div`
   & > div {
     display: flex;
     color: ${COLOR.GRAY_30};
-    ${FONT_STYLES.M_21_BODY};
+    ${FONT_STYLES.SB_21_BODY};
   }
 
   & > h1 {
