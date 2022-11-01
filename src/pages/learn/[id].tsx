@@ -177,7 +177,7 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                           key={id}
                           onClick={() => player?.seekTo(startTime, true)}
                           isActive={startTime <= currentTime && currentTime < endTime ? true : false}>
-                          <p id={id.toString()}>{<div dangerouslySetInnerHTML={{ __html: text }}></div>}</p>
+                          <div id={id.toString()} dangerouslySetInnerHTML={{ __html: text }}></div>
                           {clickedHighlightId === id && !newMemoHighlightId && !editMemoHighlightId && (
                             <ContextMenu
                               points={points}
