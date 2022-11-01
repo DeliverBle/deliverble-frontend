@@ -13,7 +13,14 @@ interface ScriptEditProps {
 function ScriptEdit(props: ScriptEditProps) {
   const { scripts, isHighlight, isSpacing } = props;
   const [highlightAlert, setHighlightAlert] = useState<boolean>(false);
+  const [firstLineId, setFirstLineId] = useState<number>(); // 첫번째 줄의 id값
+  const [order, setOrder] = useState<number>();
   const learnRef = useRef<HTMLDivElement>(null);
+
+  //첫번째 라인의 id를 저장하는 코드
+  useEffect(() => {
+    setFirstLineId(scripts[0].id);
+  }, [firstLineId, scripts]);
 
   useEffect(() => {
     if (highlightAlert) {
@@ -93,10 +100,21 @@ function ScriptEdit(props: ScriptEditProps) {
       range?.insertNode(frag);
     }
     selection?.collapseToEnd();
+
+    console.log('>>>>>>>>', selection?.anchorNode);
   };
 
-  const [currentLine, setCurrentLine] = useState<number>(); // 현재 스크립트 아이디
-  console.log('>>현재 라인의 번호', currentLine);
+  const findLineOrder = (currentLineId: number | undefined) => {
+    if (currentLineId && firstLineId) {
+      const order = currentLineId - firstLineId + 1;
+      setOrder(order);
+    }
+  };
+
+  //다음 작업 전 임시 콘솔
+  useEffect(() => {
+    console.log(order);
+  }, [order]);
 
   return (
     <>
@@ -111,9 +129,10 @@ function ScriptEdit(props: ScriptEditProps) {
         onKeyDown={(e) => e.preventDefault()}
         ref={learnRef}>
         {scripts.map(({ id, text }) => (
-          <StScriptText key={id} onClick={() => setCurrentLine(id)}>
-            {text}
-          </StScriptText>
+          <StScriptText
+            key={id}
+            onClick={() => findLineOrder(id)}
+            dangerouslySetInnerHTML={{ __html: text }}></StScriptText>
         ))}
       </StWrapper>
       {highlightAlert && <HighlightModal closeModal={() => setHighlightAlert(false)} />}
