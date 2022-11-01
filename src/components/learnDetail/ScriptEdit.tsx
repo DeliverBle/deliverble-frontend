@@ -102,12 +102,35 @@ function ScriptEdit(props: ScriptEditProps) {
     selection?.collapseToEnd();
 
     console.log('>>>>>>>>', selection?.anchorNode);
+    nodeToText(selection?.anchorNode);
   };
 
   const findLineOrder = (currentLineId: number | undefined) => {
     if (currentLineId && firstLineId) {
       const order = currentLineId - firstLineId + 1;
       setOrder(order);
+    }
+  };
+
+  //수정된 html을 text로 직렬화 하는 함수
+  const nodeToText = (anchorNode: Node | null | undefined) => {
+    let textVal = '';
+    if (anchorNode?.childNodes) {
+      for (let i = 0; i < anchorNode?.childNodes.length; i++) {
+        switch (anchorNode?.childNodes[i].nodeName) {
+          case '#text':
+            textVal += anchorNode?.childNodes[i].nodeValue;
+            break;
+          case 'MARK':
+            textVal += '<mark>' + anchorNode?.childNodes[i].textContent + '</mark>';
+            break;
+          case 'SPAN':
+            textVal += '<span>/</span>';
+            break;
+          default:
+        }
+      }
+      console.log('결과값', textVal);
     }
   };
 
