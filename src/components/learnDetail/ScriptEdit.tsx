@@ -86,8 +86,7 @@ function ScriptEdit(props: ScriptEditProps) {
       //하이라이트 중간에 끊어읽기 표시 들어가있으면 span 넣은걸로 대체하기
       if (text.includes('/')) {
         const texts = text.split('/');
-        const res = texts.join('<span>/</span>');
-        text = res;
+        text = texts.join('<span>/</span>');
       }
 
       const frag = document.createDocumentFragment();
@@ -101,7 +100,6 @@ function ScriptEdit(props: ScriptEditProps) {
     }
     selection?.collapseToEnd();
 
-    console.log('>>>>>>>>', selection?.anchorNode);
     nodeToText(selection?.anchorNode);
   };
 
@@ -112,15 +110,18 @@ function ScriptEdit(props: ScriptEditProps) {
     }
   };
 
-  const [isHiglightOverSpacing, setIsHiglightOverSpacing] = useState<boolean>(false);
+  let isHiglightOverSpacing = false;
+
   //수정된 html을 text로 직렬화 하는 함수
   const nodeToText = (anchorNode: Node | null | undefined) => {
     let textVal = '';
     if (anchorNode?.nodeName === 'MARK') {
       nodeToText(anchorNode.parentNode);
-      setIsHiglightOverSpacing(true);
+      isHiglightOverSpacing = true;
       return;
     }
+
+    isHiglightOverSpacing = false;
 
     if (!isHiglightOverSpacing && anchorNode?.childNodes) {
       for (let i = 0; i < anchorNode?.childNodes.length; i++) {
@@ -128,9 +129,20 @@ function ScriptEdit(props: ScriptEditProps) {
           case '#text':
             textVal += anchorNode?.childNodes[i].nodeValue;
             break;
+
           case 'MARK':
-            textVal += '<mark>' + anchorNode?.childNodes[i].textContent + '</mark>';
+            if (anchorNode?.childNodes[i].textContent?.includes('/')) {
+              let text = anchorNode?.childNodes[i].textContent;
+              if (text) {
+                const texts = text.split('/');
+                text = texts.join('<span>/</span>');
+              }
+              textVal += '<mark>' + text + '</mark>';
+            } else {
+              textVal += '<mark>' + anchorNode?.childNodes[i].textContent + '</mark>';
+            }
             break;
+
           case 'SPAN':
             textVal += '<span>/</span>';
             break;
@@ -138,7 +150,6 @@ function ScriptEdit(props: ScriptEditProps) {
         }
       }
       console.log('결과값', textVal);
-      setIsHiglightOverSpacing(false);
     }
   };
 
