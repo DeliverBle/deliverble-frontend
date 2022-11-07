@@ -3,15 +3,16 @@ import { Script } from '@src/services/api/types/learn-detail';
 import HighlightModal from './HighlightModal';
 import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
-
+import { api } from '@src/services/api';
 interface ScriptEditProps {
+  scriptsId: number;
   scripts: Script[];
   isHighlight: boolean;
   isSpacing: boolean;
 }
 
 function ScriptEdit(props: ScriptEditProps) {
-  const { scripts, isHighlight, isSpacing } = props;
+  const { scriptsId, scripts, isHighlight, isSpacing } = props;
   const [highlightAlert, setHighlightAlert] = useState<boolean>(false);
   const [firstLineId, setFirstLineId] = useState<number>(); // 첫번째 줄의 id값
   const [order, setOrder] = useState<number>();
@@ -112,6 +113,7 @@ function ScriptEdit(props: ScriptEditProps) {
 
   let isHiglightOverSpacing = false;
 
+  const [resText, setResText] = useState<string>();
   //수정된 html을 text로 직렬화 하는 함수
   const nodeToText = (anchorNode: Node | null | undefined) => {
     let textVal = '';
@@ -149,14 +151,24 @@ function ScriptEdit(props: ScriptEditProps) {
           default:
         }
       }
-      console.log('결과값', textVal);
+      setResText(textVal);
     }
   };
 
   //다음 작업 전 임시 콘솔
   useEffect(() => {
-    console.log(order);
-  }, [order]);
+    (async () => {
+      if (order && resText && scriptsId) {
+        await api.learnDetailService.postSentenceData(
+          {
+            order: order,
+            text: resText,
+          },
+          scriptsId,
+        );
+      }
+    })();
+  }, [order, resText, scriptsId]);
 
   return (
     <>

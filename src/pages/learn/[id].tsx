@@ -189,7 +189,12 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                         </StScriptText>
                       ))}
                     {(isHighlight || isSpacing) && (
-                      <ScriptEdit scripts={videoData.scripts} isHighlight={isHighlight} isSpacing={isSpacing} />
+                      <ScriptEdit
+                        scriptsId={videoData.scriptsId}
+                        scripts={videoData.scripts}
+                        isHighlight={isHighlight}
+                        isSpacing={isSpacing}
+                      />
                     )}
                   </div>
                   <div>
