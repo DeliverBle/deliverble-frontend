@@ -415,14 +415,14 @@ const StScriptText = styled.div<{ isActive: boolean }>`
   color: ${({ isActive }) => (isActive ? COLOR.MAIN_BLUE : COLOR.BLACK)};
   cursor: pointer;
 
-  & > span {
+  span {
     font-size: 3.2rem;
     font-weight: 600;
     color: ${COLOR.MAIN_BLUE};
     margin: 0 0.02rem 0 0.02rem;
   }
 
-  & > mark {
+  mark {
     background: linear-gradient(259.3deg, #d8d9ff 0%, #a7c5ff 100%);
     font-weight: ${({ isActive }) => (isActive ? 600 : 400)};
     color: ${({ isActive }) => (isActive ? COLOR.MAIN_BLUE : COLOR.BLACK)};
