@@ -102,6 +102,13 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
     }
   };
 
+  const [isEditing, setisEditing] = useState<boolean>(false);
+  useEffect(() => {
+    if (isHighlight || isSpacing) {
+      setisEditing(true);
+    }
+  }, [isHighlight, isSpacing]);
+
   useEffect(() => {
     (async () => {
       const id = Number(detailId);
@@ -110,7 +117,7 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
         : await api.learnDetailService.getPublicVideoData(id);
       data && setVideoData(data);
     })();
-  }, [isLoggedIn, detailId]);
+  }, [isLoggedIn, detailId, isEditing]);
 
   useEffect(() => {
     if (!player) return;
@@ -165,8 +172,7 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
               <StLearnSection>
                 <article>
                   <div ref={learnRef}>
-                    {!isHighlight &&
-                      !isSpacing &&
+                    {!isEditing &&
                       videoData.scripts.map(({ id, text, startTime, endTime }) => (
                         <StScriptText
                           ref={contextMenuRef}
@@ -188,7 +194,7 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                           )}
                         </StScriptText>
                       ))}
-                    {(isHighlight || isSpacing) && (
+                    {isEditing && (
                       <ScriptEdit
                         scriptsId={videoData.scriptsId}
                         scripts={videoData.scripts}
