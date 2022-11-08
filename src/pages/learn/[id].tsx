@@ -32,7 +32,7 @@ import {
   icSpacingHover,
   icSpacingClicked,
 } from 'public/assets/icons';
-
+import { imgHighlightTooltip, imgSpacingTooltip } from 'public/assets/images';
 export interface MemoHighlightId {
   new: number;
   edit: number;
@@ -159,6 +159,8 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
     }
   }, []);
 
+  const [hOver, setHOver] = useState<boolean>(false);
+  const [sOver, setSOver] = useState<boolean>(false);
   return (
     <>
       <SEO title="학습하기 | Deliverble" />
@@ -213,6 +215,7 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                           } else {
                             isHighlight ? setIsHighlight(false) : setIsHighlight(true);
                             setIsSpacing(false);
+                            setHOver(false);
                           }
                         }}>
                         {isHighlight ? (
@@ -220,7 +223,18 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                         ) : (
                           <>
                             <ImageDiv className="function-button" src={icHighlighterHover} alt="하이라이트" />
-                            <ImageDiv className="default function-button" src={icHighlighterDefault} alt="하이라이트" />
+                            <ImageDiv
+                              className="default function-button"
+                              src={icHighlighterDefault}
+                              alt="하이라이트"
+                              onMouseOver={() => {
+                                setHOver(true);
+                              }}
+                              onMouseOut={(e) => {
+                                e.stopPropagation();
+                                setHOver(false);
+                              }}
+                            />
                           </>
                         )}
                       </StButton>
@@ -232,17 +246,30 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                           } else {
                             isSpacing ? setIsSpacing(false) : setIsSpacing(true);
                             setIsHighlight(false);
+                            setSOver(false);
                           }
                         }}>
                         {isSpacing ? (
                           <ImageDiv className="spacing function-button" src={icSpacingClicked} alt="끊어 읽기" />
                         ) : (
                           <>
-                            <ImageDiv className="spacing function-button" src={icSpacingHover} alt="끊어 읽기" />
+                            <ImageDiv
+                              className="spacing function-button spacing-hover"
+                              src={icSpacingHover}
+                              alt="끊어 읽기"
+                            />
                             <ImageDiv
                               className="spacing default function-button"
                               src={icSpacingDefault}
                               alt="끊어 읽기"
+                              onMouseOver={(e) => {
+                                e.stopPropagation();
+                                setSOver(true);
+                              }}
+                              onMouseOut={(e) => {
+                                e.stopPropagation();
+                                setSOver(false);
+                              }}
                             />
                           </>
                         )}
@@ -250,6 +277,10 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                     </StButtonContainer>
                   </div>
                 </article>
+                <StTooltipContanier hOver={hOver} sOver={sOver}>
+                  <ImageDiv className="highlight-tooltip" src={imgHighlightTooltip} alt="하이라이트 툴팁" />
+                  <ImageDiv className="spacing-tooltip" src={imgSpacingTooltip} alt="하이라이트 툴팁" />
+                </StTooltipContanier>
               </StLearnSection>
               <aside>
                 <StVideoWrapper>
@@ -451,6 +482,21 @@ const StButtonContainer = styled.div`
   gap: 0.8rem;
   position: relative;
   padding-right: 0.8rem;
+`;
+
+const StTooltipContanier = styled.div<{ hOver: boolean; sOver: boolean }>`
+  display: flex;
+  gap: 1.2rem;
+  position: fixed;
+  margin: 86.3rem 0 0 60.1rem;
+  z-index: 1;
+
+  .highlight-tooltip {
+    visibility: ${({ hOver }) => (hOver ? 'visible' : 'hidden')};
+  }
+  .spacing-tooltip {
+    visibility: ${({ sOver }) => (sOver ? 'visible' : 'hidden')};
+  }
 `;
 
 const StButton = styled.button`
