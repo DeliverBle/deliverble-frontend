@@ -81,12 +81,12 @@ export function learnDetailDataRemote(): LearnDetailService {
         isFavorite: response.data.isFavorite,
         startTime: response.data.startTime,
         endTime: response.data.endTime,
-        scriptsId: response.data2[0].id,
+        scriptsId: response.data2[0]?.id,
         tags: response.data.tagsForView.map((tag: Tag) => ({
           id: tag.id,
           name: tag.name,
         })),
-        scripts: response.data2[0].sentences.map((sentence: Script) => ({
+        scripts: response.data2[0]?.sentences.map((sentence: Script) => ({
           id: sentence.id,
           text: sentence.text,
           startTime: sentence.startTime,
