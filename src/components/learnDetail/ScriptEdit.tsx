@@ -18,10 +18,18 @@ function ScriptEdit(props: ScriptEditProps) {
   const [order, setOrder] = useState<number>();
   const learnRef = useRef<HTMLDivElement>(null);
 
-  //첫번째 라인의 id를 저장하는 코드
+  //order을 구하기 위해 첫번째 라인의 id를 저장하는 코드
   useEffect(() => {
     setFirstLineId(scripts[0].id);
   }, [firstLineId, scripts]);
+
+  //order을 구하는 함수
+  const findLineOrder = (currentLineId: number | undefined) => {
+    if (currentLineId && firstLineId) {
+      const order = currentLineId - firstLineId + 1;
+      setOrder(order);
+    }
+  };
 
   useEffect(() => {
     if (highlightAlert) {
@@ -104,19 +112,14 @@ function ScriptEdit(props: ScriptEditProps) {
     nodeToText(selection?.anchorNode);
   };
 
-  const findLineOrder = (currentLineId: number | undefined) => {
-    if (currentLineId && firstLineId) {
-      const order = currentLineId - firstLineId + 1;
-      setOrder(order);
-    }
-  };
-
   let isHiglightOverSpacing = false;
 
-  const [resText, setResText] = useState<string>();
   //수정된 html을 text로 직렬화 하는 함수
+  const [resText, setResText] = useState<string>();
   const nodeToText = (anchorNode: Node | null | undefined) => {
     let textVal = '';
+    //끊어읽기를 하이라이트 안에 표시한 경우 anchor노드가 하이라이트로 잡혀서
+    //anchorNode의 부모노드로 다시 호출해주었습니다.
     if (anchorNode?.nodeName === 'MARK') {
       nodeToText(anchorNode.parentNode);
       isHiglightOverSpacing = true;
@@ -124,8 +127,8 @@ function ScriptEdit(props: ScriptEditProps) {
     }
 
     isHiglightOverSpacing = false;
-
     if (!isHiglightOverSpacing && anchorNode?.childNodes) {
+      //노드를 순회하면서 text이면 그대로 text를 복사해주고 하이라이트이면 태그를 붙여서 복사해주고 /이면 span을 붙여서 복사
       for (let i = 0; i < anchorNode?.childNodes.length; i++) {
         switch (anchorNode?.childNodes[i].nodeName) {
           case '#text':
@@ -133,6 +136,7 @@ function ScriptEdit(props: ScriptEditProps) {
             break;
 
           case 'MARK':
+            //하이라이트 안에 끊어읽기가 포함되는 경우 예외처리
             if (anchorNode?.childNodes[i].textContent?.includes('/')) {
               let text = anchorNode?.childNodes[i].textContent;
               if (text) {
@@ -155,7 +159,7 @@ function ScriptEdit(props: ScriptEditProps) {
     }
   };
 
-  //다음 작업 전 임시 콘솔
+  //order과 text post 하는 함수
   useEffect(() => {
     (async () => {
       if (order && resText && scriptsId) {
