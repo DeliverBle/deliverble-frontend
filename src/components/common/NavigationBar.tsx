@@ -16,7 +16,7 @@ function NavigationBar() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const profileModalRef = useRef<HTMLDivElement>(null);
-  const profileImageRef = useRef<HTMLDivElement>(null);
+  const profileImageRef = useRef<HTMLButtonElement>(null);
   const login = useRecoilValue(loginState);
 
   useEffect(() => {
@@ -65,8 +65,8 @@ function NavigationBar() {
             </StTab>
           </StTabList>
         </nav>
-        {login && (
-          <StProfileImage ref={profileImageRef}>
+        {login ? (
+          <StLoginButton ref={profileImageRef}>
             <ImageDiv
               onClick={() => setIsProfileModalOpen((prev) => !prev)}
               className="profile"
@@ -74,9 +74,10 @@ function NavigationBar() {
               layout="fill"
               alt=""
             />
-          </StProfileImage>
+          </StLoginButton>
+        ) : (
+          <StLoginButton onClick={() => setIsModalOpen(true)}>로그인</StLoginButton>
         )}
-        {!login && <StLogin onClick={() => setIsModalOpen(true)}>로그인</StLogin>}
         {isProfileModalOpen && (
           <div ref={profileModalRef}>
             <ProfileModal />
@@ -99,7 +100,6 @@ const StNavigationBar = styled.div`
 
   width: 100%;
   height: 8.8rem;
-  padding: 0 6.4rem;
 
   box-shadow: 0.2rem 0.4rem 4rem 0 rgba(22, 15, 53, 0.1);
   background-color: ${COLOR.WHITE};
@@ -107,9 +107,18 @@ const StNavigationBar = styled.div`
   .logo {
     position: relative;
 
-    width: 11.9rem;
-    height: 3.7rem;
-    margin-right: 7.7rem;
+    width: 12rem;
+    height: 37rem;
+
+    margin: 0 7.2rem 0 16rem;
+
+    @media (max-width: 960px) {
+      margin-left: 8.6rem;
+    }
+
+    @media (max-width: 500px) {
+      margin: 0 3.2rem 0 2.4rem;
+    }
   }
 
   .profile {
@@ -118,11 +127,6 @@ const StNavigationBar = styled.div`
     height: 4rem;
     cursor: pointer;
   }
-`;
-
-const StProfileImage = styled.div`
-  position: absolute;
-  right: 6.4rem;
 `;
 
 const StTabList = styled.ul`
@@ -135,7 +139,7 @@ const StTab = styled.li<{ isActive: boolean }>`
   width: 9rem;
 
   &:first-of-type {
-    width: 4.4rem;
+    width: 4rem;
   }
 
   & > a {
@@ -162,9 +166,17 @@ const StTab = styled.li<{ isActive: boolean }>`
     `}
 `;
 
-const StLogin = styled.button`
+const StLoginButton = styled.button`
   position: absolute;
-  right: 6.4rem;
+  right: 16rem;
+
+  @media (max-width: 960px) {
+    right: 8.6rem;
+  }
+
+  @media (max-width: 500px) {
+    display: none;
+  }
 
   color: ${COLOR.MAIN_BLUE};
   ${FONT_STYLES.B_20_BODY};
