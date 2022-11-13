@@ -17,7 +17,12 @@ export function learnDetailDataMock(): LearnDetailService {
     return LEARN_DETAIL_DATA.HIGHLIGHT_DATA;
   };
 
-  return { getPrivateVideoData, getPublicVideoData, getHighlightData };
+  const postSentenceData = async () => {
+    await wait(500);
+    return LEARN_DETAIL_DATA.VIDEO_DATA;
+  };
+
+  return { getPrivateVideoData, getPublicVideoData, getHighlightData, postSentenceData };
 }
 
 const wait = (milliSeconds: number) => new Promise((resolve) => setTimeout(resolve, milliSeconds));
