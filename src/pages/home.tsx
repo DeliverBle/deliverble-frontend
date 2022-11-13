@@ -51,25 +51,23 @@ function Home() {
   };
 
   return (
-    <>
+    <StHome>
       <SEO title="Deliverble" />
       <NavigationBar />
-      <StHome>
-        <>
-          <StBannerText>
-            <h1>
-              우리는 말하는 법은 배웠지만,
-              <br />잘 말하는 법은 배우지 못했다!
-            </h1>
-            <p>딜리버블과 함께 잘 말하는 법을 배워봐요!</p>
-          </StBannerText>
-          {is960 ? (
-            <ImageDiv className="mic2" src={imgBannerMic2} alt="" />
-          ) : (
-            !is500 && <ImageDiv className="mic" src={imgBannerMic} alt="" layout="fill" />
-          )}
-        </>
-      </StHome>
+      <StBanner>
+        <StBannerText>
+          <h1>
+            우리는 말하는 법은 배웠지만,
+            <br />잘 말하는 법은 배우지 못했다!
+          </h1>
+          <p>딜리버블과 함께 잘 말하는 법을 배워봐요!</p>
+        </StBannerText>
+        {is960 ? (
+          <ImageDiv className="mic2" src={imgBannerMic2} alt="" />
+        ) : (
+          !is500 && <ImageDiv className="mic" src={imgBannerMic} alt="" layout="fill" />
+        )}
+      </StBanner>
       <StNews>
         <h3>딜리버블의 추천 뉴스를 만나보세요.</h3>
         <div>
@@ -81,13 +79,17 @@ function Home() {
         </div>
       </StNews>
       <Footer />
-    </>
+    </StHome>
   );
 }
 
 export default Home;
 
 const StHome = styled.div`
+  overflow: hidden;
+`;
+
+const StBanner = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: end;
@@ -117,6 +119,7 @@ const StHome = styled.div`
   }
 
   @media (max-width: 960px) {
+    overflow: hidden;
     .mic2 {
       position: absolute;
       left: 22rem;
