@@ -75,9 +75,6 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
     return { x: x + x * 0.5, y: y + y * 0.5 };
   };
 
-  //하이라이트 인덱스 구하는 함수입니다.
-  //클릭된 하이라이트의 부모 노드와 해당 하이라이트의 텍스트를 인자로 받습니다.
-  //부모노드를 순회하면서 하이라이트 텍스트와 같은 내용이 나올때까지 글자수를 카운트하면서 증가시킵니다.
   const [highlightIndex, setHighlightIndex] = useState<number>(0);
   const getHighlightIndex = (parentNode: ParentNode | null, givenString: string) => {
     if (parentNode?.childNodes) {
@@ -87,13 +84,11 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
           setHighlightIndex(stringLength);
           break;
         }
-        //as number 빼면 undefined 뜨길래... 붙여줬어용
         stringLength += parentNode?.childNodes[i]?.textContent?.length ?? 0;
       }
     }
   };
 
-  //하이라이트 인덱스 잘 구해졌는 지 확인위한 콘솔
   useEffect(() => {
     console.log('하이라이트 인덱스!', highlightIndex);
   }, [highlightIndex]);
