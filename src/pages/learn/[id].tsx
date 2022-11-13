@@ -129,8 +129,10 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
   useEffect(() => {
     if (isHighlight || isSpacing) {
       setisEditing(true);
+    } else {
+      setisEditing(false);
     }
-  }, [isHighlight, isSpacing]);
+  }, [isEditing, isHighlight, isSpacing]);
 
   useEffect(() => {
     (async () => {
