@@ -88,7 +88,7 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
           break;
         }
         //as number 빼면 undefined 뜨길래... 붙여줬어용
-        stringLength += parentNode?.childNodes[i]?.textContent?.length as number;
+        stringLength += parentNode?.childNodes[i]?.textContent?.length ?? 0;
       }
     }
   };
