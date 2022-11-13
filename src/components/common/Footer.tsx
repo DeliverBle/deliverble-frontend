@@ -19,18 +19,21 @@ function Footer() {
         </h4>
       </StLogo>
       <StInfo>
-        <StService>
-          <StInfoTitle>Service</StInfoTitle>
+        <StFeedback>
+          <StInfoTitle>Feedback</StInfoTitle>
           <a target="_blank" href="https://forms.gle/BGQGeGBLXTM6RBCR7" rel="noreferrer">
             <StUnderlineText>서비스 피드백</StUnderlineText>
           </a>
-        </StService>
-        <StPeople>
-          <StInfoTitle>People</StInfoTitle>
-          <a target="_blank" href="https://airy-fang-202.notion.site/b2c4031ba1424e66840ddbad3432a8c5" rel="noreferrer">
-            <StUnderlineText>딜리버블을 만든 사람들</StUnderlineText>
+        </StFeedback>
+        <StService>
+          <StInfoTitle>Service</StInfoTitle>
+          <a
+            target="_blank"
+            href="https://airy-fang-202.notion.site/DeliverBle-42f2392a86714b02b369e7cb1c3e7dd9"
+            rel="noreferrer">
+            <StUnderlineText>딜리버블 서비스 소개</StUnderlineText>
           </a>
-        </StPeople>
+        </StService>
         <StContact>
           <StInfoTitle>Contact Us</StInfoTitle>
           <p>deliverble.team@gmail.com</p>
@@ -128,7 +131,7 @@ const StUnderlineText = styled.p`
   text-underline-position: under;
 `;
 
-const StService = styled.div`
+const StFeedback = styled.div`
   min-width: 10.8rem;
   margin: 15.1rem 11.7rem 0 15.1rem;
 
@@ -141,7 +144,7 @@ const StService = styled.div`
   }
 `;
 
-const StPeople = styled.div`
+const StService = styled.div`
   min-width: 18.1rem;
   margin: 15.1rem 10.1em 0 0;
 
