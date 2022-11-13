@@ -143,7 +143,7 @@ function ScriptEdit(props: ScriptEditProps) {
               }
               textValue += `<mark>${text}</mark>`;
             } else {
-              textValue += '<mark>' + childNodeItem.textContent + '</mark>';
+              textValue += `<mark>${childNodeItem.textContent}</mark>`;
             }
             break;
 
