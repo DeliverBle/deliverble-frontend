@@ -16,22 +16,22 @@ function ScriptEdit(props: ScriptEditProps) {
   const [highlightAlert, setHighlightAlert] = useState<boolean>(false);
   const [firstLineId, setFirstLineId] = useState<number>();
   const [order, setOrder] = useState<number>();
-  const [resText, setResText] = useState<string>();
+  const [text, setText] = useState<string>();
   const learnRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     (async () => {
-      if (order && resText && scriptsId) {
+      if (order && text && scriptsId) {
         await api.learnDetailService.postSentenceData(
           {
-            order: order,
-            text: resText,
+            order,
+            text,
           },
           scriptsId,
         );
       }
     })();
-  }, [order, resText, scriptsId]);
+  }, [order, text, scriptsId]);
 
   useEffect(() => {
     setFirstLineId(scripts[0].id);
@@ -83,14 +83,14 @@ function ScriptEdit(props: ScriptEditProps) {
     }
 
     if (selection?.type === 'Caret' && isValidate && isSpacing) {
-      const frag = document.createDocumentFragment();
+      const fragment = document.createDocumentFragment();
       const div = document.createElement('div');
       isLeftBlank ? (div.innerHTML = '<span class=left >/</span>') : (div.innerHTML = '<span class=right >/</span>');
 
       while (div.firstChild) {
-        frag.appendChild(div.firstChild);
+        fragment.appendChild(div.firstChild);
       }
-      range?.insertNode(frag);
+      range?.insertNode(fragment);
     } else if (!isOverlap && selection?.type === 'Range' && isHighlight) {
       let text = selection.toString();
 
@@ -130,20 +130,21 @@ function ScriptEdit(props: ScriptEditProps) {
     isHiglightOverSpacing = false;
     if (!isHiglightOverSpacing && anchorNode?.childNodes) {
       for (let i = 0; i < anchorNode?.childNodes.length; i++) {
-        switch (anchorNode?.childNodes[i].nodeName) {
+        const childNodeItem = anchorNode?.childNodes[i];
+        switch (childNodeItem.nodeName) {
           case '#text':
-            textValue += anchorNode?.childNodes[i].nodeValue;
+            textValue += childNodeItem.nodeValue;
             break;
 
           case 'MARK':
-            if (anchorNode?.childNodes[i].textContent?.includes('/')) {
-              let text = anchorNode?.childNodes[i].textContent;
+            if (childNodeItem.textContent?.includes('/')) {
+              let text = childNodeItem.textContent;
               if (text) {
                 text = text.split('/').join('<span>/</span>');
               }
               textValue += `<mark>${text}</mark>`;
             } else {
-              textValue += '<mark>' + anchorNode?.childNodes[i].textContent + '</mark>';
+              textValue += '<mark>' + childNodeItem.textContent + '</mark>';
             }
             break;
 
@@ -152,7 +153,7 @@ function ScriptEdit(props: ScriptEditProps) {
             break;
         }
       }
-      setResText(textValue);
+      setText(textValue);
     }
   };
 
