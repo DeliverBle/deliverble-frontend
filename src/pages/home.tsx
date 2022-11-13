@@ -51,10 +51,10 @@ function Home() {
   };
 
   return (
-    <StHome>
+    <>
       <SEO title="Deliverble" />
       <NavigationBar />
-      <StBanner>
+      <StHome>
         <StBannerText>
           <h1>
             우리는 말하는 법은 배웠지만,
@@ -67,7 +67,7 @@ function Home() {
         ) : (
           !is500 && <ImageDiv className="mic" src={imgBannerMic} alt="" layout="fill" />
         )}
-      </StBanner>
+      </StHome>
       <StNews>
         <h3>딜리버블의 추천 뉴스를 만나보세요.</h3>
         <div>
@@ -79,17 +79,13 @@ function Home() {
         </div>
       </StNews>
       <Footer />
-    </StHome>
+    </>
   );
 }
 
 export default Home;
 
 const StHome = styled.div`
-  overflow: hidden;
-`;
-
-const StBanner = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: end;
@@ -105,7 +101,6 @@ const StBanner = styled.div`
   .mic {
     position: absolute;
     right: 6.4rem;
-
     min-width: 122.4rem;
     min-height: 68.6rem;
   }
@@ -119,12 +114,10 @@ const StBanner = styled.div`
   }
 
   @media (max-width: 960px) {
-    overflow: hidden;
     .mic2 {
       position: absolute;
-      left: 22rem;
       top: 0px;
-
+      left: 22rem;
       min-width: 96rem;
     }
   }
@@ -156,7 +149,6 @@ const StBannerText = styled.div`
     }
 
     & > p {
-      padding-top: 3.2rem;
       ${FONT_STYLES.M_18_CAPTION}
     }
   }
@@ -179,7 +171,7 @@ const StNews = styled.div`
   }
 
   @media (max-width: 960px) {
-    padding: 0 0 30rem 8.6rem;
+    padding-left: 8.6rem;
 
     & > div {
       padding-right: 8.6rem;
@@ -187,8 +179,7 @@ const StNews = styled.div`
   }
 
   @media (max-width: 500px) {
-    padding: 0 0 30rem 2.4rem;
-    zoom: 150%;
+    padding-left: 2.4rem;
 
     & > div {
       padding-right: 2.4rem;
