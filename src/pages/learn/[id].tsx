@@ -62,6 +62,8 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
   const getLoginStatus = () => localStorage.getItem('token') ?? '';
   const [prevLink, setPrevLink] = useState('');
   const { new: newMemoHighlightId, edit: editMemoHighlightId } = memoHighlightId;
+  const [isHighlightOver, setIsHighlightOver] = useState<boolean>(false);
+  const [isSpacingOver, setIsSpacingOver] = useState<boolean>(false);
 
   const controlPointX = (e: React.MouseEvent) => {
     const x = e.nativeEvent.offsetX / 10;
@@ -76,7 +78,7 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
   //하이라이트 인덱스 구하는 함수입니다.
   //클릭된 하이라이트의 부모 노드와 해당 하이라이트의 텍스트를 인자로 받습니다.
   //부모노드를 순회하면서 하이라이트 텍스트와 같은 내용이 나올때까지 글자수를 카운트하면서 증가시킵니다.
-  const [highlighIdx, setHighlightIndex] = useState<number>(0);
+  const [highlightIndex, setHighlightIndex] = useState<number>(0);
   const getHighlightIndex = (parentNode: ParentNode | null, givenString: string) => {
     if (parentNode?.childNodes) {
       let stringLength = 0;
@@ -93,12 +95,12 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
 
   //하이라이트 인덱스 잘 구해졌는 지 확인위한 콘솔
   useEffect(() => {
-    console.log('하이라이트 인덱스!', highlighIdx);
-  }, [highlighIdx]);
+    console.log('하이라이트 인덱스!', highlightIndex);
+  }, [highlightIndex]);
 
   const handleRightClick = (e: React.MouseEvent, id: number) => {
-    const target2 = e.target as HTMLDivElement;
-    getHighlightIndex(target2?.parentNode, target2.innerText); //인덱스 구하는 함수 호출
+    const clickedContextTarget = e.target as HTMLDivElement;
+    getHighlightIndex(clickedContextTarget?.parentNode, clickedContextTarget.innerText); //인덱스 구하는 함수 호출
 
     if (highlightData) {
       const index = highlightData.findIndex((item) => item.highlightId === id);
@@ -185,8 +187,6 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
     }
   }, []);
 
-  const [hOver, setHOver] = useState<boolean>(false);
-  const [sOver, setSOver] = useState<boolean>(false);
   return (
     <>
       <SEO title="학습하기 | Deliverble" />
@@ -241,7 +241,7 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                           } else {
                             isHighlight ? setIsHighlight(false) : setIsHighlight(true);
                             setIsSpacing(false);
-                            setHOver(false);
+                            setIsHighlightOver(false);
                           }
                         }}>
                         {isHighlight ? (
@@ -254,11 +254,11 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                               src={icHighlighterDefault}
                               alt="하이라이트"
                               onMouseOver={() => {
-                                setHOver(true);
+                                setIsHighlightOver(true);
                               }}
                               onMouseOut={(e) => {
                                 e.stopPropagation();
-                                setHOver(false);
+                                setIsHighlightOver(false);
                               }}
                             />
                           </>
@@ -272,7 +272,7 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                           } else {
                             isSpacing ? setIsSpacing(false) : setIsSpacing(true);
                             setIsHighlight(false);
-                            setSOver(false);
+                            setIsSpacingOver(false);
                           }
                         }}>
                         {isSpacing ? (
@@ -290,11 +290,11 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                               alt="끊어 읽기"
                               onMouseOver={(e) => {
                                 e.stopPropagation();
-                                setSOver(true);
+                                setIsSpacingOver(true);
                               }}
                               onMouseOut={(e) => {
                                 e.stopPropagation();
-                                setSOver(false);
+                                setIsSpacingOver(false);
                               }}
                             />
                           </>
@@ -303,9 +303,17 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                     </StButtonContainer>
                   </div>
                 </article>
-                <StTooltipContanier hOver={hOver} sOver={sOver}>
-                  <ImageDiv className="highlight-tooltip" src={imgHighlightTooltip} alt="하이라이트 툴팁" />
-                  <ImageDiv className="spacing-tooltip" src={imgSpacingTooltip} alt="하이라이트 툴팁" />
+                <StTooltipContanier isHighlightOver={isHighlightOver} isSpacingOver={isSpacingOver}>
+                  <ImageDiv
+                    className="highlight-tooltip"
+                    src={imgHighlightTooltip}
+                    alt="드래그해서 하이라이트를 표시해보세요."
+                  />
+                  <ImageDiv
+                    className="spacing-tooltip"
+                    src={imgSpacingTooltip}
+                    alt="클릭해서 끊어읽기를 표시해보세요."
+                  />
                 </StTooltipContanier>
               </StLearnSection>
               <aside>
@@ -510,7 +518,7 @@ const StButtonContainer = styled.div`
   padding-right: 0.8rem;
 `;
 
-const StTooltipContanier = styled.div<{ hOver: boolean; sOver: boolean }>`
+const StTooltipContanier = styled.div<{ isHighlightOver: boolean; isSpacingOver: boolean }>`
   display: flex;
   gap: 1.2rem;
   position: fixed;
@@ -518,10 +526,10 @@ const StTooltipContanier = styled.div<{ hOver: boolean; sOver: boolean }>`
   z-index: 1;
 
   .highlight-tooltip {
-    visibility: ${({ hOver }) => (hOver ? 'visible' : 'hidden')};
+    visibility: ${({ isHighlightOver }) => (isHighlightOver ? 'visible' : 'hidden')};
   }
   .spacing-tooltip {
-    visibility: ${({ sOver }) => (sOver ? 'visible' : 'hidden')};
+    visibility: ${({ isSpacingOver }) => (isSpacingOver ? 'visible' : 'hidden')};
   }
 `;
 
