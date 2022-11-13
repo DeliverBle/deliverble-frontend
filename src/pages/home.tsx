@@ -1,6 +1,5 @@
 import Footer from '@src/components/common/Footer';
 import ImageDiv from '@src/components/common/ImageDiv';
-import NavigationBar from '@src/components/common/NavigationBar';
 import NewsList from '@src/components/common/NewsList';
 import SEO from '@src/components/common/SEO';
 import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
@@ -8,11 +7,13 @@ import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/home';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
+import dynamic from 'next/dynamic';
 import { imgBannerMic } from 'public/assets/images';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 function Home() {
+  const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
   const [newsList, setNewsList] = useState<VideoData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
