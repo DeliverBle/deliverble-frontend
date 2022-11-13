@@ -100,8 +100,7 @@ function ScriptEdit(props: ScriptEditProps) {
       }
 
       if (text.includes('/')) {
-        const texts = text.split('/');
-        text = texts.join('<span>/</span>');
+        text = text.split('/').join('<span>/</span>');
       }
 
       const fragment = document.createDocumentFragment();
