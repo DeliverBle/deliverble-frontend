@@ -3,6 +3,8 @@ import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import YouTube from 'react-youtube';
+import { useRecoilValue } from 'recoil';
+import { loginState } from '@src/stores/loginState';
 import SEO from '@src/components/common/SEO';
 import NavigationBar from '@src/components/common/NavigationBar';
 import ImageDiv from '@src/components/common/ImageDiv';
@@ -36,8 +38,11 @@ export interface MemoHighlightId {
   edit: number;
 }
 
-function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highlightData: HighlightData[] }) {
+function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
   const router = useRouter();
+  const { id: detailId } = router.query;
+  const isLoggedIn = useRecoilValue(loginState);
+  const [videoData, setVideoData] = useState<VideoData>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [confirmModalText, setConfirmModalText] = useState<ConfirmModalText>(NEW_MEMO_CONFIRM_MODAL_TEXT);
@@ -54,7 +59,6 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
   const [player, setPlayer] = useState<YT.Player | null>();
   const [videoState, setVideoState] = useState(-1);
   const [currentTime, setCurrentTime] = useState(0);
-  const { link, startTime, endTime, scripts } = videoData;
   const learnRef = useRef<HTMLDivElement>(null);
   const getLoginStatus = () => localStorage.getItem('token') ?? '';
   const [prevLink, setPrevLink] = useState('');
@@ -88,6 +92,26 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
       }
     }
   };
+
+  const handleClickLike = async (id: number) => {
+    const { id: likeId, isFavorite } = await api.likeService.postLikeData(id);
+    if (videoData && videoData.id === likeId) {
+      setVideoData({
+        ...videoData,
+        isFavorite,
+      });
+    }
+  };
+
+  useEffect(() => {
+    (async () => {
+      const id = Number(detailId);
+      const data = isLoggedIn
+        ? await api.learnDetailService.getPrivateVideoData(id)
+        : await api.learnDetailService.getPublicVideoData(id);
+      data && setVideoData(data);
+    })();
+  }, [isLoggedIn, detailId]);
 
   useEffect(() => {
     if (!player) return;
@@ -134,152 +158,143 @@ function LearnDetail({ videoData, highlightData }: { videoData: VideoData; highl
       <SEO title="학습하기 | Deliverble" />
       <NavigationBar />
       <StLearnDetail>
-        <ImageDiv
-          onClick={() => {
-            router.push(prevLink);
-          }}
-          src={icXButton}
-          className="close"
-          layout="fill"
-          alt="x"
-        />
-        <StLearnMain>
-          <VideoDetail {...videoData} setIsModalOpen={setIsModalOpen} />
-          <div>
-            <StLearnSection>
-              <article>
-                <div ref={learnRef}>
-                  {!isFirstClicked &&
-                    scripts.map(({ id, text, startTime, endTime }) => (
-                      <StScriptText
-                        ref={contextMenuRef}
-                        onContextMenu={(e) => {
-                          e.preventDefault();
-                          handleRightClick(e, id);
-                        }}
-                        key={id}
-                        onClick={() => player?.seekTo(startTime, true)}
-                        isActive={startTime <= currentTime && currentTime < endTime ? true : false}>
-                        <p id={id.toString()}>{text}</p>
-                        {clickedHighlightId === id && !newMemoHighlightId && !editMemoHighlightId && (
-                          <ContextMenu
-                            points={points}
-                            hasMemo={hasMemo}
-                            id={id}
-                            setMemoHighlightId={setMemoHighlightId}
-                          />
+        <ImageDiv onClick={() => router.push(prevLink)} src={icXButton} className="close" layout="fill" alt="x" />
+        {videoData && (
+          <StLearnMain>
+            <VideoDetail {...videoData} setIsModalOpen={setIsModalOpen} />
+            <div>
+              <StLearnSection>
+                <article>
+                  <div ref={learnRef}>
+                    {!isFirstClicked &&
+                      videoData.scripts.map(({ id, text, startTime, endTime }) => (
+                        <StScriptText
+                          ref={contextMenuRef}
+                          onContextMenu={(e) => {
+                            e.preventDefault();
+                            handleRightClick(e, id);
+                          }}
+                          key={id}
+                          onClick={() => player?.seekTo(startTime, true)}
+                          isActive={startTime <= currentTime && currentTime < endTime ? true : false}>
+                          <p id={id.toString()}>{text}</p>
+                          {clickedHighlightId === id && !newMemoHighlightId && !editMemoHighlightId && (
+                            <ContextMenu
+                              points={points}
+                              hasMemo={hasMemo}
+                              id={id}
+                              setMemoHighlightId={setMemoHighlightId}
+                            />
+                          )}
+                        </StScriptText>
+                      ))}
+                    {isFirstClicked && (
+                      <ScriptEdit scripts={videoData.scripts} isHighlight={isHighlight} isSpacing={isSpacing} />
+                    )}
+                  </div>
+                  <div>
+                    <StButtonContainer>
+                      <StButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (getLoginStatus() === '') {
+                            setIsLoginModalOpen(true);
+                          } else {
+                            isHighlight ? setIsHighlight(false) : setIsHighlight(true);
+                            setIsSpacing(false);
+                            setIsFirstClicked(true);
+                          }
+                        }}>
+                        {isHighlight ? (
+                          <ImageDiv className="function-button" src={icHighlighterClicked} alt="하이라이트" />
+                        ) : (
+                          <>
+                            <ImageDiv className="function-button" src={icHighlighterHover} alt="하이라이트" />
+                            <ImageDiv className="default function-button" src={icHighlighterDefault} alt="하이라이트" />
+                          </>
                         )}
-                      </StScriptText>
-                    ))}
-                  {isFirstClicked && <ScriptEdit scripts={scripts} isHighlight={isHighlight} isSpacing={isSpacing} />}
-                </div>
-                <div>
-                  <StButtonContainer>
-                    <StButton
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (getLoginStatus() === '') {
-                          setIsLoginModalOpen(true);
-                        } else {
-                          isHighlight ? setIsHighlight(false) : setIsHighlight(true);
-                          setIsSpacing(false);
-                          setIsFirstClicked(true);
-                        }
-                      }}>
-                      {isHighlight ? (
-                        <ImageDiv className="function-button" src={icHighlighterClicked} alt="하이라이트" />
-                      ) : (
-                        <>
-                          <ImageDiv className="function-button" src={icHighlighterHover} alt="하이라이트" />
-                          <ImageDiv className="default function-button" src={icHighlighterDefault} alt="하이라이트" />
-                        </>
-                      )}
-                    </StButton>
-                    <StButton
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (getLoginStatus() === '') {
-                          setIsLoginModalOpen(true);
-                        } else {
-                          isSpacing ? setIsSpacing(false) : setIsSpacing(true);
-                          setIsHighlight(false);
-                          setIsFirstClicked(true);
-                        }
-                      }}>
-                      {isSpacing ? (
-                        <ImageDiv className="spacing function-button" src={icSpacingClicked} alt="끊어 읽기" />
-                      ) : (
-                        <>
-                          <ImageDiv className="spacing function-button" src={icSpacingHover} alt="끊어 읽기" />
-                          <ImageDiv
-                            className="spacing default function-button"
-                            src={icSpacingDefault}
-                            alt="끊어 읽기"
-                          />
-                        </>
-                      )}
-                    </StButton>
-                  </StButtonContainer>
-                </div>
-              </article>
-            </StLearnSection>
-            <aside>
-              <StVideoWrapper>
-                <Like
-                  isFromList={false}
-                  toggleLike={() => {
-                    if (getLoginStatus() === '') {
-                      setIsLoginModalOpen(true);
-                    } else {
-                      // 즐겨찾기 API 연결하는 코드
-                    }
-                  }}
-                />
-                <YouTube
-                  videoId={link}
-                  opts={{
-                    width: '670',
-                    height: '376',
-                    playerVars: {
-                      modestbranding: 1,
-                      start: startTime,
-                      end: Math.ceil(endTime),
-                      controls: 0,
-                    },
-                  }}
-                  onReady={(e) => setPlayer(e.target)}
-                  onStateChange={(e) => setVideoState(e.target.getPlayerState())}
-                  onEnd={(e) => e.target.seekTo(startTime)}
-                />
-              </StVideoWrapper>
-              <StMemoContainer>
-                <StMemoTitle>
-                  <ImageDiv src={icMemo} className="memo" layout="fill" />
-                  <h2>메모</h2>
-                </StMemoTitle>
-                <StMemoWrapper>
-                  {highlightData ? (
-                    <>
-                      <MemoList
-                        highlightList={highlightData}
-                        memoHighlightId={memoHighlightId}
-                        setMemoHighlightId={setMemoHighlightId}
-                        highlightId={clickedHighlightId}
-                        keyword={keyword}
-                        setIsConfirmOpen={setIsConfirmOpen}
-                        setConfirmModalText={setConfirmModalText}
-                      />
-                      <StMemoGradient />
-                      <StMemoFooter />
-                    </>
-                  ) : (
-                    <EmptyMemo />
-                  )}
-                </StMemoWrapper>
-              </StMemoContainer>
-            </aside>
-          </div>
-        </StLearnMain>
+                      </StButton>
+                      <StButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (getLoginStatus() === '') {
+                            setIsLoginModalOpen(true);
+                          } else {
+                            isSpacing ? setIsSpacing(false) : setIsSpacing(true);
+                            setIsHighlight(false);
+                            setIsFirstClicked(true);
+                          }
+                        }}>
+                        {isSpacing ? (
+                          <ImageDiv className="spacing function-button" src={icSpacingClicked} alt="끊어 읽기" />
+                        ) : (
+                          <>
+                            <ImageDiv className="spacing function-button" src={icSpacingHover} alt="끊어 읽기" />
+                            <ImageDiv
+                              className="spacing default function-button"
+                              src={icSpacingDefault}
+                              alt="끊어 읽기"
+                            />
+                          </>
+                        )}
+                      </StButton>
+                    </StButtonContainer>
+                  </div>
+                </article>
+              </StLearnSection>
+              <aside>
+                <StVideoWrapper>
+                  <Like
+                    isFromList={false}
+                    isFavorite={videoData.isFavorite}
+                    toggleLike={() => (getLoginStatus() ? handleClickLike(videoData.id) : setIsLoginModalOpen(true))}
+                  />
+                  <YouTube
+                    videoId={videoData.link}
+                    opts={{
+                      width: '670',
+                      height: '376',
+                      playerVars: {
+                        modestbranding: 1,
+                        start: videoData.startTime,
+                        end: Math.ceil(videoData.endTime),
+                        controls: 0,
+                      },
+                    }}
+                    onReady={(e) => setPlayer(e.target)}
+                    onStateChange={(e) => setVideoState(e.target.getPlayerState())}
+                    onEnd={(e) => e.target.seekTo(videoData.startTime)}
+                  />
+                </StVideoWrapper>
+                <StMemoContainer>
+                  <StMemoTitle>
+                    <ImageDiv src={icMemo} className="memo" layout="fill" />
+                    <h2>메모</h2>
+                  </StMemoTitle>
+                  <StMemoWrapper>
+                    {highlightData ? (
+                      <>
+                        <MemoList
+                          highlightList={highlightData}
+                          memoHighlightId={memoHighlightId}
+                          setMemoHighlightId={setMemoHighlightId}
+                          highlightId={clickedHighlightId}
+                          keyword={keyword}
+                          setIsConfirmOpen={setIsConfirmOpen}
+                          setConfirmModalText={setConfirmModalText}
+                        />
+                        <StMemoGradient />
+                        <StMemoFooter />
+                      </>
+                    ) : (
+                      <EmptyMemo />
+                    )}
+                  </StMemoWrapper>
+                </StMemoContainer>
+              </aside>
+            </div>
+          </StLearnMain>
+        )}
         {isModalOpen && <GuideModal closeModal={() => setIsModalOpen(false)} />}
         {isConfirmOpen && (
           <ConfirmModal
@@ -298,15 +313,8 @@ export default LearnDetail;
 
 export async function getServerSideProps({ params }: GetServerSidePropsContext) {
   const id = +(params?.id ?? -1);
-  const videoData = await api.learnDetailService.getVideoData(id);
   const highlightData = await api.learnDetailService.getHighlightData(id);
-
-  if (videoData.id !== id) {
-    return {
-      notFound: true,
-    };
-  }
-  return { props: { videoData: videoData, highlightData: highlightData } };
+  return { props: { highlightData: highlightData } };
 }
 
 const StLearnDetail = styled.div`
