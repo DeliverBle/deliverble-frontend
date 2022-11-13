@@ -81,6 +81,8 @@ const StNewsList = styled.section`
   @media (max-width: 500px) {
     grid-template-columns: repeat(1, 1fr);
     grid-row-gap: 2.4rem;
+
+    zoom: 150%;
   }
 `;
 
