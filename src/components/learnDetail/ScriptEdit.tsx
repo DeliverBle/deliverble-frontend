@@ -37,7 +37,7 @@ function ScriptEdit(props: ScriptEditProps) {
     setFirstLineId(scripts[0].id);
   }, [firstLineId, scripts]);
 
-  const findLineOrder = (currentLineId: number | undefined) => {
+  const findLineOrder = (currentLineId: number) => {
     if (currentLineId && firstLineId) {
       const order = currentLineId - firstLineId + 1;
       setOrder(order);
@@ -60,21 +60,21 @@ function ScriptEdit(props: ScriptEditProps) {
   const handleClick = () => {
     const selection = window.getSelection();
     const range = selection?.getRangeAt(0);
-    const startIdx = range?.startOffset;
+    const startIndex = range?.startOffset;
 
     const selectedDiv = range?.startContainer as Node;
     const serializer = new XMLSerializer();
     const selectedLine = serializer.serializeToString(selectedDiv);
 
-    const isLeftBlank = startIdx && selectedLine[startIdx - 1] === ' ';
-    const isRightBlank = startIdx && selectedLine[startIdx] === ' ';
+    const isLeftBlank = startIndex && selectedLine[startIndex - 1] === ' ';
+    const isRightBlank = startIndex && selectedLine[startIndex] === ' ';
     const isValidate = isLeftBlank || isRightBlank;
 
     let isOverlap = false;
     if (selection?.type === 'Range') {
-      const marks = document.getElementsByTagName('mark');
-      for (let i = 0; i < marks.length; i++) {
-        if (selection?.containsNode(marks[i], true) === true) {
+      const markList = document.getElementsByTagName('mark');
+      for (let i = 0; i < markList.length; i++) {
+        if (selection?.containsNode(markList[i], true) === true) {
           isOverlap = true;
           setHighlightAlert(true);
           break;
@@ -104,14 +104,14 @@ function ScriptEdit(props: ScriptEditProps) {
         text = texts.join('<span>/</span>');
       }
 
-      const frag = document.createDocumentFragment();
+      const fragment = document.createDocumentFragment();
       const div = document.createElement('div');
       div.innerHTML = '<mark>' + text + '</mark>';
       while (div.firstChild) {
-        frag.appendChild(div.firstChild);
+        fragment.appendChild(div.firstChild);
       }
       range?.deleteContents();
-      range?.insertNode(frag);
+      range?.insertNode(fragment);
     }
     selection?.collapseToEnd();
 
@@ -120,7 +120,7 @@ function ScriptEdit(props: ScriptEditProps) {
 
   let isHiglightOverSpacing = false;
   const nodeToText = (anchorNode: Node | null | undefined) => {
-    let textVal = '';
+    let textValue = '';
     if (anchorNode?.nodeName === 'MARK') {
       nodeToText(anchorNode.parentNode);
       isHiglightOverSpacing = true;
@@ -132,29 +132,27 @@ function ScriptEdit(props: ScriptEditProps) {
       for (let i = 0; i < anchorNode?.childNodes.length; i++) {
         switch (anchorNode?.childNodes[i].nodeName) {
           case '#text':
-            textVal += anchorNode?.childNodes[i].nodeValue;
+            textValue += anchorNode?.childNodes[i].nodeValue;
             break;
 
           case 'MARK':
             if (anchorNode?.childNodes[i].textContent?.includes('/')) {
               let text = anchorNode?.childNodes[i].textContent;
               if (text) {
-                const texts = text.split('/');
-                text = texts.join('<span>/</span>');
+                text = text.split('/').join('<span>/</span>');
               }
-              textVal += '<mark>' + text + '</mark>';
+              textValue += `<mark>${text}</mark>`;
             } else {
-              textVal += '<mark>' + anchorNode?.childNodes[i].textContent + '</mark>';
+              textValue += '<mark>' + anchorNode?.childNodes[i].textContent + '</mark>';
             }
             break;
 
           case 'SPAN':
-            textVal += '<span>/</span>';
+            textValue += '<span>/</span>';
             break;
-          default:
         }
       }
-      setResText(textVal);
+      setResText(textValue);
     }
   };
 
