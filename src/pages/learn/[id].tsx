@@ -191,9 +191,9 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
       <StLearnDetail>
         <ImageDiv onClick={() => router.push(prevLink)} src={icXButton} className="close" layout="fill" alt="x" />
         {videoData && (
-          <StLearnMain>
+          <StLearnBox>
             <VideoDetail {...videoData} setIsModalOpen={setIsModalOpen} />
-            <div>
+            <main>
               <StLearnSection>
                 <article>
                   <div ref={learnRef}>
@@ -363,8 +363,8 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                   </StMemoWrapper>
                 </StMemoContainer>
               </aside>
-            </div>
-          </StLearnMain>
+            </main>
+          </StLearnBox>
         )}
         {isModalOpen && <GuideModal closeModal={() => setIsModalOpen(false)} />}
         {isConfirmOpen && (
@@ -404,7 +404,7 @@ const StLearnDetail = styled.div`
   }
 `;
 
-const StLearnMain = styled.main`
+const StLearnBox = styled.div`
   display: flex;
   flex-direction: column;
   margin: 0 auto;
@@ -415,7 +415,7 @@ const StLearnMain = styled.main`
   background-color: ${COLOR.WHITE};
   overflow: hidden;
 
-  & > div:last-child {
+  & > main {
     display: flex;
     gap: 4.8rem;
   }
