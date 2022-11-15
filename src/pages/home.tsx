@@ -10,7 +10,7 @@ import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/home';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { COLOR } from '@src/styles/color';
-import { imgBannerMic, imgBannerMic2 } from 'public/assets/images';
+import { imgBigBannerMic, imgSmallBannerMic } from 'public/assets/images';
 import { useMediaQuery } from 'react-responsive';
 
 function Home() {
@@ -63,9 +63,9 @@ function Home() {
           <p>딜리버블과 함께 잘 말하는 법을 배워봐요!</p>
         </StBannerText>
         {is960 ? (
-          <ImageDiv className="mic2" src={imgBannerMic2} alt="" />
+          <ImageDiv className="small-mic" src={imgSmallBannerMic} alt="" />
         ) : (
-          !is500 && <ImageDiv className="mic" src={imgBannerMic} alt="" layout="fill" />
+          !is500 && <ImageDiv className="big-mic" src={imgBigBannerMic} alt="" layout="fill" />
         )}
       </StHome>
       <StNews>
@@ -98,7 +98,7 @@ const StHome = styled.div`
   background-size: cover;
   background-position: center;
 
-  .mic {
+  .big-mic {
     position: absolute;
     right: 6.4rem;
     min-width: 122.4rem;
@@ -106,7 +106,7 @@ const StHome = styled.div`
   }
 
   @media (max-width: 990px) {
-    .mic {
+    .big-mic {
       left: 16rem;
       right: 0px;
       width: 122.4rem;
@@ -114,7 +114,7 @@ const StHome = styled.div`
   }
 
   @media (max-width: 960px) {
-    .mic2 {
+    .small-mic {
       position: absolute;
       top: 0px;
       left: 22rem;
