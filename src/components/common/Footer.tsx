@@ -52,12 +52,13 @@ function Footer() {
 export default Footer;
 
 const StFooter = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: 3.7fr 6.2fr;
   justify-content: space-between;
 
   width: 100%;
   height: 40rem;
-
+  padding: 12.4rem 0rem 13.1rem 16rem;
   background-color: ${COLOR.GRAY_5};
 
   p {
@@ -67,38 +68,29 @@ const StFooter = styled.div`
 
   @media (max-width: 960px) {
     display: block;
+    padding: 10rem 0rem 0rem 8.6rem;
     height: 53.4rem;
   }
 
   @media (max-width: 500px) {
     display: block;
+    padding: 8rem 0rem 8rem 2.4rem;
     height: 79.5rem;
   }
 `;
 
 const StLogo = styled.div`
-  padding: 12.4rem 0 0rem 16rem;
-
   .logo {
-    width: 19.4rem;
     height: 6rem;
   }
 
   & > h4 {
-    min-width: 35.1rem;
     margin-top: 1.6rem;
-
     color: ${COLOR.MAIN_BLUE};
     ${FONT_STYLES.SB_24_HEADLINE};
   }
 
-  @media (max-width: 960px) {
-    padding: 10rem 0 0rem 8.6rem;
-  }
-
   @media (max-width: 500px) {
-    padding: 8rem 0 0rem 2.4rem;
-
     .logo {
       width: 12rem;
       height: 3.7rem;
@@ -111,11 +103,18 @@ const StLogo = styled.div`
 `;
 
 const StInfo = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: 2fr 2.6fr 3.1fr 2.1fr;
+  padding-top: 2.6rem;
+
+  @media (max-width: 960px) {
+    padding-top: 9.6rem;
+  }
 
   @media (max-width: 500px) {
-    flex-direction: column;
-    margin: 6.4rem 0 8rem 0;
+    grid-template-columns: repeat(1, 1fr);
+    row-gap: 4.8rem;
+    padding-top: 6.4rem;
     height: 46rem;
   }
 `;
@@ -133,62 +132,30 @@ const StUnderlineText = styled.p`
 
 const StFeedback = styled.div`
   min-width: 10.8rem;
-  margin: 15.1rem 11.7rem 0 15.1rem;
-
-  @media (max-width: 960px) {
-    margin: 9.5rem 6rem 0 8.6rem;
-  }
-
-  @media (max-width: 500px) {
-    margin: 0 0 0 2.4rem;
-  }
 `;
 
 const StService = styled.div`
   min-width: 18.1rem;
-  margin: 15.1rem 10.1em 0 0;
-
-  @media (max-width: 960px) {
-    margin: 9.5rem 4.5em 0 0;
-  }
-
-  @media (max-width: 500px) {
-    margin: 4.8rem 0 0 2.4rem;
-  }
 `;
 
 const StContact = styled.div`
-  margin: 15.1rem 9.4rem 0 0;
   min-width: 24.7rem;
   ${FONT_STYLES.M_20_FOOTER};
-
-  @media (max-width: 960px) {
-    margin: 9.5rem 4.5em 0 0;
-  }
-
-  @media (max-width: 500px) {
-    margin: 4.8rem 0 0 2.4rem;
-  }
 `;
 
 const StSocial = styled.div`
   width: 6.6rem;
-  margin: 15.1rem 18rem 0 0;
 
   & > a {
     display: flex;
     flex-direction: column;
     align-items: center;
-
     margin-top: 1.6rem;
   }
 
-  @media (max-width: 960px) {
-    margin: 9.5rem 10.8rem 0 0;
-  }
-
   @media (max-width: 500px) {
-    margin: 4.8rem 0 0 2.4rem;
-    align-items: left;
+    & > a {
+      align-items: start;
+    }
   }
 `;
