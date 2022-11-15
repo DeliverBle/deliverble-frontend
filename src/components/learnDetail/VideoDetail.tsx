@@ -37,7 +37,7 @@ function VideoDetail(props: VideoDetailProps) {
 
 export default VideoDetail;
 
-const StVideoDetail = styled.div`
+const StVideoDetail = styled.header`
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
