@@ -130,9 +130,6 @@ const StThumbnail = styled.div`
   & > div {
     position: relative;
     z-index: -1;
-
-    min-width: 38.4rem;
-    min-height: 21.6rem;
     padding-top: 56%;
 
     & img {
