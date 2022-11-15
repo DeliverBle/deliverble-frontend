@@ -341,7 +341,7 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                     <h2>메모</h2>
                   </StMemoTitle>
                   <StMemoWrapper>
-                    {highlightData ? (
+                    {highlightData.length ? (
                       <>
                         <MemoList
                           highlightList={highlightData}
