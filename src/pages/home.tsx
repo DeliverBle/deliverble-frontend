@@ -100,25 +100,18 @@ const StHome = styled.div`
 
   .big-mic {
     position: absolute;
-    right: 6.4rem;
-    min-width: 122.4rem;
-    min-height: 68.6rem;
-  }
-
-  @media (max-width: 990px) {
-    .big-mic {
-      left: 16rem;
-      right: 0px;
-      width: 122.4rem;
-    }
+    right: 0rem;
+    width: 122.4rem;
+    height: 68.6rem;
   }
 
   @media (max-width: 960px) {
     .small-mic {
       position: absolute;
-      top: 0px;
-      left: 22rem;
-      min-width: 96rem;
+      top: 0rem;
+      left: 24.5rem;
+      width: 96rem;
+      height: 60rem;
     }
   }
 `;
