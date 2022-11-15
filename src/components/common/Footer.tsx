@@ -53,7 +53,7 @@ export default Footer;
 
 const StFooter = styled.div`
   display: grid;
-  grid-template-columns: 3.7fr 6.2fr;
+  grid-template-columns: 4fr 6fr;
   justify-content: space-between;
 
   width: 100%;
@@ -104,7 +104,8 @@ const StLogo = styled.div`
 
 const StInfo = styled.div`
   display: grid;
-  grid-template-columns: 2fr 2.6fr 3.1fr 2.1fr;
+  grid-template-columns: 2.1fr 2.6fr 3.2fr 2.1fr;
+  column-gap: 3rem;
   padding-top: 2.6rem;
 
   @media (max-width: 960px) {
