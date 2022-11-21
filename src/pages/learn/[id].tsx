@@ -28,15 +28,12 @@ import {
   icSpacingHover,
   icXButton,
 } from 'public/assets/icons';
-<<<<<<< HEAD
 import React, { useEffect, useRef, useState } from 'react';
 import YouTube from 'react-youtube';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 
-=======
 import { imgHighlightTooltip, imgSpacingTooltip } from 'public/assets/images';
->>>>>>> f528b24764c03e87ba7c2a9b1919e24b217211ba
 export interface MemoHighlightId {
   new: number;
   edit: number;
@@ -336,6 +333,7 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                         end: Math.ceil(videoData.endTime),
                         controls: 0,
                       },
+                      url: 'http://localhost:3000/learn/128',
                     }}
                     onReady={(e) => setPlayer(e.target)}
                     onStateChange={(e) => setVideoState(e.target.getPlayerState())}

@@ -1,8 +1,7 @@
 import { LearnDetailService } from '../api/learn-detail';
-import { Script, Tag } from '../api/types/learn-detail';
+import { Script, SentenceData, Tag } from '../api/types/learn-detail';
 import { LEARN_DETAIL_DATA } from '../mock/learn-detail.data';
 import { privateAPI, publicAPI } from './base';
-import { SentenceData } from '../api/types/learn-detail';
 
 export function learnDetailDataRemote(): LearnDetailService {
   const getPrivateVideoData = async (id: number) => {
