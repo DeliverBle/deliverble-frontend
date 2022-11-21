@@ -333,7 +333,6 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                         end: Math.ceil(videoData.endTime),
                         controls: 0,
                       },
-                      url: 'http://localhost:3000/learn/128',
                     }}
                     onReady={(e) => setPlayer(e.target)}
                     onStateChange={(e) => setVideoState(e.target.getPlayerState())}
