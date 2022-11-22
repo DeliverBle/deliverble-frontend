@@ -103,6 +103,14 @@ export default Review;
 
 const StReview = styled.div`
   padding: 16rem 16rem 13.6rem 16rem;
+
+  @media (max-width: 960px) {
+    padding: 16rem 8.6rem;
+  }
+
+  @media (max-width: 500px) {
+    padding: 16rem 2.4rem;
+  }
 `;
 
 const StTab = styled.ul`

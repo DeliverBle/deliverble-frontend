@@ -285,7 +285,7 @@ const StFirstSlider = styled.section`
     justify-content: flex-start;
 
     color: ${COLOR.BLACK};
-    ${FONT_STYLES.M_44_HEADLINE};
+    ${FONT_STYLES.SB_44_HEADLINE};
 
     padding-top: 41.5rem;
     margin-left: 16rem;

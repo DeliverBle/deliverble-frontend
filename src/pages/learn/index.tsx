@@ -139,6 +139,14 @@ export default Learn;
 
 const StLearn = styled.div`
   margin: auto 16rem;
+
+  @media (max-width: 960px) {
+    margin: auto 8.6rem;
+  }
+
+  @media (max-width: 500px) {
+    margin: auto 2.4rem;
+  }
 `;
 
 const StTitle = styled.div`
