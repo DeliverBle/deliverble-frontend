@@ -10,11 +10,18 @@ import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/home';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { COLOR } from '@src/styles/color';
-import { imgBannerMic } from 'public/assets/images';
+import { imgBigBannerMic, imgSmallBannerMic } from 'public/assets/images';
+import { useMediaQuery } from 'react-responsive';
 
 function Home() {
   const [newsList, setNewsList] = useState<VideoData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const is960 = useMediaQuery({
+    query: '(min-width: 501px) and (max-width: 960px)',
+  });
+  const is500 = useMediaQuery({
+    query: '(max-width: 500px)',
+  });
 
   const getVideoList = async () => {
     const { videoList } = await api.homeService.getVideoData();
@@ -55,7 +62,11 @@ function Home() {
           </h1>
           <p>딜리버블과 함께 잘 말하는 법을 배워봐요!</p>
         </StBannerText>
-        <ImageDiv className="mic" src={imgBannerMic} alt="" />
+        {is960 ? (
+          <ImageDiv className="small-mic" src={imgSmallBannerMic} alt="" />
+        ) : (
+          !is500 && <ImageDiv className="big-mic" src={imgBigBannerMic} alt="" layout="fill" />
+        )}
       </StHome>
       <StNews>
         <h3>딜리버블의 추천 뉴스를 만나보세요.</h3>
@@ -78,18 +89,30 @@ const StHome = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: end;
+  position: relative;
 
   height: 60rem;
   margin: 13.6rem 0 14.4rem 0;
 
-  background: no-repeat url('/assets/images/img_banner_background.svg');
+  background: no-repeat url('/assets/images/img_banner_background.png');
   background-size: cover;
+  background-position: center;
 
-  .mic {
-    margin-right: 6.4rem;
+  .big-mic {
+    position: absolute;
+    right: 0rem;
+    width: 122.4rem;
+    height: 68.6rem;
+  }
 
-    min-width: 122.4rem;
-    min-height: 68.6rem;
+  @media (max-width: 960px) {
+    .small-mic {
+      position: absolute;
+      top: 0rem;
+      left: 24.5rem;
+      width: 96rem;
+      height: 60rem;
+    }
   }
 `;
 
@@ -102,17 +125,30 @@ const StBannerText = styled.div`
   color: ${COLOR.WHITE};
 
   & > h1 {
-    ${FONT_STYLES.M_44_HEADLINE}
+    ${FONT_STYLES.SB_44_HEADLINE}
   }
 
   & > p {
     padding-top: 3.2rem;
     ${FONT_STYLES.M_24_HEADLINE}
   }
+
+  @media (max-width: 960px) {
+    margin: 23.2rem 0 23.1rem 6.4rem;
+    min-width: 36.7rem;
+
+    & > h1 {
+      ${FONT_STYLES.SB_32_HEADLINE}
+    }
+
+    & > p {
+      ${FONT_STYLES.M_18_CAPTION}
+    }
+  }
 `;
 
 const StNews = styled.div`
-  padding: 0 0 16rem 16rem;
+  padding: 0 0 30rem 16rem;
 
   & > div {
     margin: 0 auto;
@@ -121,9 +157,30 @@ const StNews = styled.div`
 
   & > h3 {
     min-width: 4.8rem;
-    margin-bottom: 7.2rem;
+    margin-bottom: 5.6rem;
 
     ${FONT_STYLES.SB_32_HEADLINE}
     color: ${COLOR.BLACK};
+  }
+
+  @media (max-width: 960px) {
+    padding-left: 8.6rem;
+
+    & > div {
+      padding-right: 8.6rem;
+    }
+  }
+
+  @media (max-width: 500px) {
+    padding-left: 2.4rem;
+
+    & > div {
+      padding-right: 2.4rem;
+    }
+
+    & > h3 {
+      margin-bottom: 3.2rem;
+      ${FONT_STYLES.SB_21_BODY};
+    }
   }
 `;

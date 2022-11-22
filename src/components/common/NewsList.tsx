@@ -47,9 +47,11 @@ function NewsList(props: NewsListProps) {
                 }}
               />
             </StThumbnail>
-            <StTitle>{title}</StTitle>
             <StInfo>
-              {channel} | {category} | {reportDate.replaceAll('-', '.')}
+              <StTitle>{title}</StTitle>
+              <StCaption>
+                {channel} | {category} | {reportDate.replaceAll('-', '.')}
+              </StCaption>
             </StInfo>
           </StNewsWrapper>
         );
@@ -64,7 +66,7 @@ export default NewsList;
 const StNewsList = styled.section`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-row-gap: 11.2rem;
+  grid-row-gap: 8rem;
   grid-column-gap: 2rem;
 
   @media (max-width: 1280px) {
@@ -73,6 +75,14 @@ const StNewsList = styled.section`
 
   @media (max-width: 960px) {
     grid-template-columns: repeat(2, 1fr);
+    grid-row-gap: 5.6rem;
+  }
+
+  @media (max-width: 500px) {
+    grid-template-columns: repeat(1, 1fr);
+    grid-row-gap: 2.4rem;
+
+    zoom: 150%;
   }
 `;
 
@@ -83,6 +93,10 @@ const StNewsWrapper = styled.article`
 
   width: 100%;
   height: 100%;
+
+  @media (max-width: 500px) {
+    flex-direction: row;
+  }
 `;
 
 const StThumbnail = styled.div`
@@ -116,9 +130,6 @@ const StThumbnail = styled.div`
   & > div {
     position: relative;
     z-index: -1;
-
-    min-width: 38.4rem;
-    min-height: 21.6rem;
     padding-top: 56%;
 
     & img {
@@ -126,19 +137,37 @@ const StThumbnail = styled.div`
       object-fit: cover;
     }
   }
-`;
 
-const StTitle = styled.p`
-  width: fit-content;
-  height: 5.8rem;
-  ${FONT_STYLES.M_21_BODY};
-  color: ${COLOR.BLACK};
-  cursor: pointer;
+  @media (max-width: 500px) {
+    & > div {
+      min-width: 21.9rem;
+      min-height: 12.2rem;
+    }
+  }
 `;
 
 const StInfo = styled.div`
-  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
 
+const StTitle = styled.p`
+  height: 5.8rem;
+  ${FONT_STYLES.SB_21_BODY};
+  color: ${COLOR.BLACK};
+  cursor: pointer;
+
+  @media (max-width: 500px) {
+    ${FONT_STYLES.SB_18_CAPTION};
+  }
+`;
+
+const StCaption = styled.div`
   ${FONT_STYLES.M_18_CAPTION};
   color: ${COLOR.GRAY_30};
+
+  @media (max-width: 500px) {
+    ${FONT_STYLES.M_15_CAPTION};
+  }
 `;
