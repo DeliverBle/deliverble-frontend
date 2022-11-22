@@ -1,19 +1,20 @@
-import { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import SEO from '@src/components/common/SEO';
-import NavigationBar from '@src/components/common/NavigationBar';
+import Footer from '@src/components/common/Footer';
 import ImageDiv from '@src/components/common/ImageDiv';
 import NewsList from '@src/components/common/NewsList';
+import SEO from '@src/components/common/SEO';
 import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
-import Footer from '@src/components/common/Footer';
 import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/home';
-import { FONT_STYLES } from '@src/styles/fontStyle';
 import { COLOR } from '@src/styles/color';
+import { FONT_STYLES } from '@src/styles/fontStyle';
+import dynamic from 'next/dynamic';
 import { imgBigBannerMic, imgSmallBannerMic } from 'public/assets/images';
+import { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
+import styled from 'styled-components';
 
 function Home() {
+  const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
   const [newsList, setNewsList] = useState<VideoData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const is960 = useMediaQuery({
