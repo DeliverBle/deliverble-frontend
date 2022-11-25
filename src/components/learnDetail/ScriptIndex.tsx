@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { useState } from 'react';
+import { SCRIPT_INDEX_MAX } from '@src/utils/constant';
 
 interface ScriptIndexProps {
   isOne: boolean;
@@ -29,6 +30,22 @@ function ScriptIndex(props: ScriptIndexProps) {
   } = props;
   const [text, setText] = useState(`스크립트 ${currentIndex + 1}`);
 
+  const handleInputChange = (e) => {
+    let value = e.target.value;
+    if (value.length >= SCRIPT_INDEX_MAX) {
+      value = value.substr(0, SCRIPT_INDEX_MAX + 1);
+    }
+    setText(value);
+  };
+
+  const handleKeyUp = (e) => {
+    const value = e.target.value;
+    if (e.key === 'Enter' && value.length <= SCRIPT_INDEX_MAX) {
+      // 엔터 눌렀을 때 value를 request body에 담아 patch
+      setIsInputVisible(false);
+    }
+  };
+
   return (
     <StScriptIndex
       onClick={() => setClickedIndex(currentIndex)}
@@ -38,19 +55,10 @@ function ScriptIndex(props: ScriptIndexProps) {
         onIndexRename(currentIndex);
       }}
       isClicked={currentIndex === clickedIndex}
-      isError={text.length === 0}
+      isError={text.length === 0 || text.length >= 28}
       isInputVisible={isInputVisible && inputIndex === currentIndex}>
       {isInputVisible && inputIndex === currentIndex ? (
-        <input
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          onKeyUp={(e) => {
-            if (e.key === 'Enter') {
-              console.log(e.target.value);
-              setIsInputVisible(false);
-            }
-          }}
-        />
+        <input value={text} onChange={handleInputChange} onKeyUp={handleKeyUp} />
       ) : (
         <div>스크립트 {currentIndex + 1}</div>
       )}
