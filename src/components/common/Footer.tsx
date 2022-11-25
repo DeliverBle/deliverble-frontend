@@ -1,33 +1,39 @@
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { icDeliverbleBlue, icSocial } from 'public/assets/icons';
+import { useMediaQuery } from 'react-responsive';
 import styled from 'styled-components';
 import ImageDiv from './ImageDiv';
 
 function Footer() {
+  const is500 = useMediaQuery({
+    query: '(max-width: 500px)',
+  });
+
   return (
     <StFooter>
       <StLogo>
         <ImageDiv className="logo" src={icDeliverbleBlue} alt="딜리버블" />
         <h4>
-          언제 어디서나 당당할 당신의 말하기를
-          <br />
-          딜리버블이 응원합니다.
+          언제 어디서나 당당할 당신의 {is500 && <br />}말하기를{!is500 && <br />} 딜리버블이 응원합니다.
         </h4>
       </StLogo>
       <StInfo>
-        <StService>
-          <StInfoTitle>Service</StInfoTitle>
+        <StFeedback>
+          <StInfoTitle>Feedback</StInfoTitle>
           <a target="_blank" href="https://forms.gle/BGQGeGBLXTM6RBCR7" rel="noreferrer">
             <StUnderlineText>서비스 피드백</StUnderlineText>
           </a>
-        </StService>
-        <StPeople>
-          <StInfoTitle>People</StInfoTitle>
-          <a target="_blank" href="https://airy-fang-202.notion.site/b2c4031ba1424e66840ddbad3432a8c5" rel="noreferrer">
-            <StUnderlineText>딜리버블을 만든 사람들</StUnderlineText>
+        </StFeedback>
+        <StService>
+          <StInfoTitle>Service</StInfoTitle>
+          <a
+            target="_blank"
+            href="https://airy-fang-202.notion.site/DeliverBle-42f2392a86714b02b369e7cb1c3e7dd9"
+            rel="noreferrer">
+            <StUnderlineText>딜리버블 서비스 소개</StUnderlineText>
           </a>
-        </StPeople>
+        </StService>
         <StContact>
           <StInfoTitle>Contact Us</StInfoTitle>
           <p>deliverble.team@gmail.com</p>
@@ -46,127 +52,111 @@ function Footer() {
 export default Footer;
 
 const StFooter = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: 4fr 6fr;
   justify-content: space-between;
 
   width: 100%;
   height: 40rem;
-
+  padding: 12.4rem 0rem 13.1rem 16rem;
   background-color: ${COLOR.GRAY_5};
+
   p {
     margin-top: 1.6rem;
-
     color: ${COLOR.GRAY_60};
-    ${FONT_STYLES.M_20_FOOTER}
   }
 
   @media (max-width: 960px) {
     display: block;
+    padding: 10rem 0rem 0rem 8.6rem;
     height: 53.4rem;
   }
 
-  @media (max-width: 630px) {
+  @media (max-width: 500px) {
     display: block;
-    height: 84.9rem;
+    padding: 8rem 0rem 8rem 2.4rem;
+    height: 79.5rem;
   }
 `;
 
 const StLogo = styled.div`
-  padding: 12.4rem 0 0rem 16rem;
-
   .logo {
-    width: 19.4rem;
     height: 6rem;
   }
 
   & > h4 {
-    min-width: 35.1rem;
     margin-top: 1.6rem;
-
     color: ${COLOR.MAIN_BLUE};
-    ${FONT_STYLES.SB_24_HEADLINE}
+    ${FONT_STYLES.SB_24_HEADLINE};
   }
 
-  @media (max-width: 960px) {
-    padding: 10rem 0 0rem 10rem;
+  @media (max-width: 500px) {
+    .logo {
+      width: 12rem;
+      height: 3.7rem;
+    }
+
+    & > h4 {
+      ${FONT_STYLES.SB_21_BODY};
+    }
   }
 `;
 
 const StInfo = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: 2.1fr 2.6fr 3.2fr 2.1fr;
+  column-gap: 3rem;
+  padding-top: 2.6rem;
 
-  @media (max-width: 630px) {
-    flex-direction: column;
-    height: 53.4rem;
+  @media (max-width: 960px) {
+    padding-top: 9.6rem;
+  }
+
+  @media (max-width: 500px) {
+    grid-template-columns: repeat(1, 1fr);
+    row-gap: 4.8rem;
+    padding-top: 6.4rem;
+    height: 46rem;
   }
 `;
 
 const StInfoTitle = styled.div`
   color: ${COLOR.GRAY_30};
-  ${FONT_STYLES.SB_24_HEADLINE}
+  ${FONT_STYLES.SB_24_HEADLINE};
 `;
 
 const StUnderlineText = styled.p`
+  ${FONT_STYLES.SB_20_FOOTER};
   text-decoration-line: underline;
   text-underline-position: under;
 `;
 
-const StService = styled.div`
+const StFeedback = styled.div`
   min-width: 10.8rem;
-  margin: 15.1rem 11.7rem 0 15.1rem;
-
-  @media (max-width: 960px) {
-    margin: 9.1rem 6rem 0 10rem;
-  }
-
-  @media (max-width: 630px) {
-    margin: 6rem 0 0 10rem;
-  }
 `;
 
-const StPeople = styled.div`
+const StService = styled.div`
   min-width: 18.1rem;
-  margin: 15.1rem 10.1em 0 0;
-
-  @media (max-width: 960px) {
-    margin: 9.1rem 4.5em 0 0;
-  }
-
-  @media (max-width: 630px) {
-    margin: 4.4rem 0 0 10rem;
-  }
 `;
 
 const StContact = styled.div`
-  margin: 15.1rem 9.4rem 0 0;
   min-width: 24.7rem;
-
-  @media (max-width: 960px) {
-    margin: 9.1rem 4.5em 0 0;
-  }
-
-  @media (max-width: 630px) {
-    margin: 4.4rem 0 0 10rem;
-  }
+  ${FONT_STYLES.M_20_FOOTER};
 `;
 
 const StSocial = styled.div`
   width: 6.6rem;
-  margin: 15.1rem 18rem 0 0;
 
   & > a {
     display: flex;
     flex-direction: column;
     align-items: center;
-
     margin-top: 1.6rem;
   }
 
-  @media (max-width: 960px) {
-    margin: 9.1rem 10.8rem 0 0;
-  }
-
-  @media (max-width: 630px) {
-    margin: 4.4rem 0 0 10rem;
+  @media (max-width: 500px) {
+    & > a {
+      align-items: start;
+    }
   }
 `;

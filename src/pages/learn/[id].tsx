@@ -1,21 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { GetServerSidePropsContext } from 'next';
-import { useRouter } from 'next/router';
-import styled from 'styled-components';
-import YouTube from 'react-youtube';
-import { useRecoilValue } from 'recoil';
-import { loginState } from '@src/stores/loginState';
-import SEO from '@src/components/common/SEO';
-import NavigationBar from '@src/components/common/NavigationBar';
 import ImageDiv from '@src/components/common/ImageDiv';
 import Like from '@src/components/common/Like';
+import SEO from '@src/components/common/SEO';
+import ConfirmModal, { ConfirmModalText } from '@src/components/learnDetail/ConfirmModal';
+import ContextMenu from '@src/components/learnDetail/ContextMenu';
 import GuideModal from '@src/components/learnDetail/GuideModal';
 import EmptyMemo from '@src/components/learnDetail/memo/EmptyMemo';
 import MemoList from '@src/components/learnDetail/memo/MemoList';
 import ScriptEdit from '@src/components/learnDetail/ScriptEdit';
-import ContextMenu from '@src/components/learnDetail/ContextMenu';
 import VideoDetail from '@src/components/learnDetail/VideoDetail';
-import ConfirmModal, { ConfirmModalText } from '@src/components/learnDetail/ConfirmModal';
 import LoginModal from '@src/components/login/LoginModal';
 import ScriptIndex from '@src/components/learnDetail/ScriptIndex';
 import { api } from '@src/services/api';
@@ -25,25 +17,35 @@ import {
   EDIT_MEMO_CONFIRM_MODAL_TEXT,
   DELETE_SCRIPT_CONFIRM_MODAL_TEXT,
 } from '@src/utils/constant';
+import { loginState } from '@src/stores/loginState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
+import { GetServerSidePropsContext } from 'next';
+import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
 import {
-  icXButton,
-  icMemo,
+  icHighlighterClicked,
   icHighlighterDefault,
   icHighlighterHover,
-  icHighlighterClicked,
+  icMemo,
+  icSpacingClicked,
   icSpacingDefault,
   icSpacingHover,
-  icSpacingClicked,
+  icXButton,
 } from 'public/assets/icons';
+import React, { useEffect, useRef, useState } from 'react';
+import YouTube from 'react-youtube';
+import { useRecoilValue } from 'recoil';
+import styled from 'styled-components';
 
+import { imgHighlightTooltip, imgSpacingTooltip } from 'public/assets/images';
 export interface MemoHighlightId {
   new: number;
   edit: number;
 }
 
 function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
+  const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
   const router = useRouter();
   const { id: detailId } = router.query;
   const isLoggedIn = useRecoilValue(loginState);
@@ -60,7 +62,6 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
   const [keyword, setKeyword] = useState<string>();
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isFirstClicked, setIsFirstClicked] = useState(false);
   const [player, setPlayer] = useState<YT.Player | null>();
   const [videoState, setVideoState] = useState(-1);
   const [currentTime, setCurrentTime] = useState(0);
@@ -68,6 +69,8 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
   const getLoginStatus = () => localStorage.getItem('token') ?? '';
   const [prevLink, setPrevLink] = useState('');
   const { new: newMemoHighlightId, edit: editMemoHighlightId } = memoHighlightId;
+  const [isHighlightOver, setIsHighlightOver] = useState<boolean>(false);
+  const [isSpacingOver, setIsSpacingOver] = useState<boolean>(false);
   const [scriptIndexList, setScriptIndexList] = useState(['스크립트 1']);
   const [clickedIndex, setClickedIndex] = useState(0);
   const [isInputVisible, setIsInputVisible] = useState(false);
@@ -83,7 +86,28 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
     return { x: x + x * 0.5, y: y + y * 0.5 };
   };
 
+  const [highlightIndex, setHighlightIndex] = useState<number>(0);
+  const getHighlightIndex = (parentNode: ParentNode | null, givenString: string) => {
+    if (parentNode?.childNodes) {
+      let stringLength = 0;
+      for (let i = 0; i < parentNode?.childNodes.length; i++) {
+        if (parentNode?.childNodes[i].textContent === givenString) {
+          setHighlightIndex(stringLength);
+          break;
+        }
+        stringLength += parentNode?.childNodes[i]?.textContent?.length ?? 0;
+      }
+    }
+  };
+
+  useEffect(() => {
+    console.log('하이라이트 인덱스!', highlightIndex);
+  }, [highlightIndex]);
+
   const handleRightClick = (e: React.MouseEvent, id: number) => {
+    const clickedContextTarget = e.target as HTMLDivElement;
+    getHighlightIndex(clickedContextTarget?.parentNode, clickedContextTarget.innerText); //인덱스 구하는 함수 호출
+
     if (highlightData) {
       const index = highlightData.findIndex((item) => item.highlightId === id);
       if (index !== -1) {
@@ -123,6 +147,15 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
     }
   };
 
+  const [isEditing, setisEditing] = useState<boolean>(false);
+  useEffect(() => {
+    if (isHighlight || isSpacing) {
+      setisEditing(true);
+    } else {
+      setisEditing(false);
+    }
+  }, [isEditing, isHighlight, isSpacing]);
+
   useEffect(() => {
     (async () => {
       const id = Number(detailId);
@@ -131,7 +164,7 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
         : await api.learnDetailService.getPublicVideoData(id);
       data && setVideoData(data);
     })();
-  }, [isLoggedIn, detailId]);
+  }, [isLoggedIn, detailId, isEditing]);
 
   useEffect(() => {
     if (!player) return;
@@ -206,13 +239,13 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
           )}
         </StScriptIndexContainer>
         {videoData && (
-          <StLearnMain>
+          <StLearnBox>
             <VideoDetail {...videoData} setIsModalOpen={setIsModalOpen} />
-            <div>
+            <main>
               <StLearnSection>
                 <article>
                   <div ref={learnRef}>
-                    {!isFirstClicked &&
+                    {!isEditing &&
                       videoData.scripts.map(({ id, text, startTime, endTime }) => (
                         <StScriptText
                           ref={contextMenuRef}
@@ -223,7 +256,7 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                           key={id}
                           onClick={() => player?.seekTo(startTime, true)}
                           isActive={startTime <= currentTime && currentTime < endTime ? true : false}>
-                          <p id={id.toString()}>{text}</p>
+                          <div id={id.toString()} dangerouslySetInnerHTML={{ __html: text }}></div>
                           {clickedHighlightId === id && !newMemoHighlightId && !editMemoHighlightId && (
                             <ContextMenu
                               points={points}
@@ -234,8 +267,13 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                           )}
                         </StScriptText>
                       ))}
-                    {isFirstClicked && (
-                      <ScriptEdit scripts={videoData.scripts} isHighlight={isHighlight} isSpacing={isSpacing} />
+                    {isEditing && (
+                      <ScriptEdit
+                        scriptsId={videoData.scriptsId}
+                        scripts={videoData.scripts}
+                        isHighlight={isHighlight}
+                        isSpacing={isSpacing}
+                      />
                     )}
                   </div>
                   <div>
@@ -248,7 +286,7 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                           } else {
                             isHighlight ? setIsHighlight(false) : setIsHighlight(true);
                             setIsSpacing(false);
-                            setIsFirstClicked(true);
+                            setIsHighlightOver(false);
                           }
                         }}>
                         {isHighlight ? (
@@ -256,7 +294,18 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                         ) : (
                           <>
                             <ImageDiv className="function-button" src={icHighlighterHover} alt="하이라이트" />
-                            <ImageDiv className="default function-button" src={icHighlighterDefault} alt="하이라이트" />
+                            <ImageDiv
+                              className="default function-button"
+                              src={icHighlighterDefault}
+                              alt="하이라이트"
+                              onMouseOver={() => {
+                                setIsHighlightOver(true);
+                              }}
+                              onMouseOut={(e) => {
+                                e.stopPropagation();
+                                setIsHighlightOver(false);
+                              }}
+                            />
                           </>
                         )}
                       </StButton>
@@ -268,18 +317,30 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                           } else {
                             isSpacing ? setIsSpacing(false) : setIsSpacing(true);
                             setIsHighlight(false);
-                            setIsFirstClicked(true);
+                            setIsSpacingOver(false);
                           }
                         }}>
                         {isSpacing ? (
                           <ImageDiv className="spacing function-button" src={icSpacingClicked} alt="끊어 읽기" />
                         ) : (
                           <>
-                            <ImageDiv className="spacing function-button" src={icSpacingHover} alt="끊어 읽기" />
+                            <ImageDiv
+                              className="spacing function-button spacing-hover"
+                              src={icSpacingHover}
+                              alt="끊어 읽기"
+                            />
                             <ImageDiv
                               className="spacing default function-button"
                               src={icSpacingDefault}
                               alt="끊어 읽기"
+                              onMouseOver={(e) => {
+                                e.stopPropagation();
+                                setIsSpacingOver(true);
+                              }}
+                              onMouseOut={(e) => {
+                                e.stopPropagation();
+                                setIsSpacingOver(false);
+                              }}
                             />
                           </>
                         )}
@@ -287,6 +348,18 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                     </StButtonContainer>
                   </div>
                 </article>
+                <StTooltipContanier isHighlightOver={isHighlightOver} isSpacingOver={isSpacingOver}>
+                  <ImageDiv
+                    className="highlight-tooltip"
+                    src={imgHighlightTooltip}
+                    alt="드래그해서 하이라이트를 표시해보세요."
+                  />
+                  <ImageDiv
+                    className="spacing-tooltip"
+                    src={imgSpacingTooltip}
+                    alt="클릭해서 끊어읽기를 표시해보세요."
+                  />
+                </StTooltipContanier>
               </StLearnSection>
               <aside>
                 <StVideoWrapper>
@@ -318,7 +391,7 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                     <h2>메모</h2>
                   </StMemoTitle>
                   <StMemoWrapper>
-                    {highlightData ? (
+                    {highlightData.length ? (
                       <>
                         <MemoList
                           highlightList={highlightData}
@@ -338,8 +411,8 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                   </StMemoWrapper>
                 </StMemoContainer>
               </aside>
-            </div>
-          </StLearnMain>
+            </main>
+          </StLearnBox>
         )}
         {isModalOpen && <GuideModal closeModal={() => setIsModalOpen(false)} />}
         {isConfirmOpen && (
@@ -404,7 +477,7 @@ const StScriptAddButton = styled.button`
   }
 `;
 
-const StLearnMain = styled.main`
+const StLearnBox = styled.div`
   display: flex;
   flex-direction: column;
   margin: 0 auto;
@@ -415,7 +488,7 @@ const StLearnMain = styled.main`
   background-color: ${COLOR.WHITE};
   overflow: hidden;
 
-  & > div:last-child {
+  & > main {
     display: flex;
     gap: 4.8rem;
   }
@@ -483,14 +556,14 @@ const StScriptText = styled.div<{ isActive: boolean }>`
   color: ${({ isActive }) => (isActive ? COLOR.MAIN_BLUE : COLOR.BLACK)};
   cursor: pointer;
 
-  & > span {
+  span {
     font-size: 3.2rem;
     font-weight: 600;
     color: ${COLOR.MAIN_BLUE};
     margin: 0 0.02rem 0 0.02rem;
   }
 
-  & > mark {
+  mark {
     background: linear-gradient(259.3deg, #d8d9ff 0%, #a7c5ff 100%);
     font-weight: ${({ isActive }) => (isActive ? 600 : 400)};
     color: ${({ isActive }) => (isActive ? COLOR.MAIN_BLUE : COLOR.BLACK)};
@@ -513,6 +586,21 @@ const StButtonContainer = styled.div`
   gap: 0.8rem;
   position: relative;
   padding-right: 0.8rem;
+`;
+
+const StTooltipContanier = styled.div<{ isHighlightOver: boolean; isSpacingOver: boolean }>`
+  display: flex;
+  gap: 1.2rem;
+  position: fixed;
+  margin: 86.3rem 0 0 60.1rem;
+  z-index: 1;
+
+  .highlight-tooltip {
+    visibility: ${({ isHighlightOver }) => (isHighlightOver ? 'visible' : 'hidden')};
+  }
+  .spacing-tooltip {
+    visibility: ${({ isSpacingOver }) => (isSpacingOver ? 'visible' : 'hidden')};
+  }
 `;
 
 const StButton = styled.button`

@@ -20,6 +20,7 @@ export type VideoData = {
   isFavorite: boolean;
   startTime: number;
   endTime: number;
+  scriptsId: number;
   tags: Tag[];
   scripts: Script[];
 };
@@ -61,4 +62,9 @@ export type hlGroupedObject = {
 export type spacingGroupedObject = {
   objectIndex: GroupedObjectKey;
   objectList: spacingGroupedObjectList;
+};
+
+export type SentenceData = {
+  order: number;
+  text: string;
 };

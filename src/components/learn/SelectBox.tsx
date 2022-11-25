@@ -4,6 +4,7 @@ import ImageDiv from '../common/ImageDiv';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { icArrow, icCheckedBox, icEmptyBox } from 'public/assets/icons';
+import { ALL } from '@src/utils/constant';
 
 interface SelectBoxProps {
   optionName: string;
@@ -14,35 +15,35 @@ interface SelectBoxProps {
 function SelectBox(props: SelectBoxProps) {
   const { optionName, optionList, setConditionList } = props;
   const [isClicked, setIsClicked] = useState(false);
-  const [checkedList, setCheckedList] = useState(['전체']);
-  const guideModalRef = useRef<HTMLDivElement>(null);
+  const [checkedList, setCheckedList] = useState([ALL]);
+  const selectBoxRef = useRef<HTMLDivElement>(null);
 
   const handleCheck = (checkedItem: string) => {
     checkedList.includes(checkedItem)
       ? setCheckedList(checkedList.filter((item) => item !== checkedItem))
       : setCheckedList([...checkedList, checkedItem]);
 
-    if (checkedItem === '전체') setCheckedList(['전체']);
+    if (checkedItem === ALL) setCheckedList([ALL]);
   };
 
-  if (!checkedList.length) setCheckedList(['전체']);
+  if (!checkedList.length) setCheckedList([ALL]);
 
-  if (checkedList.includes('전체')) {
+  if (checkedList.includes(ALL)) {
     if (checkedList.length >= 2 && checkedList.length < optionList.length) {
-      setCheckedList(checkedList.filter((item) => item !== '전체'));
-    } else if (checkedList.includes('전체') && checkedList.length >= optionList.length) {
-      setCheckedList(['전체']);
+      setCheckedList(checkedList.filter((item) => item !== ALL));
+    } else if (checkedList.length >= optionList.length) {
+      setCheckedList([ALL]);
     }
   }
 
   useEffect(() => {
-    setConditionList(checkedList.includes('전체') || checkedList.length === optionList.length - 1 ? [] : checkedList);
+    setConditionList(checkedList.includes(ALL) || checkedList.length === optionList.length - 1 ? [] : checkedList);
   }, [checkedList, optionList, setConditionList]);
 
   useEffect(() => {
     const handleClickOutside = (e: Event) => {
       const eventTarget = e.target as HTMLElement;
-      if (isClicked && !guideModalRef?.current?.contains(eventTarget)) {
+      if (isClicked && !selectBoxRef?.current?.contains(eventTarget)) {
         setIsClicked(false);
       }
     };
@@ -54,7 +55,7 @@ function SelectBox(props: SelectBoxProps) {
   }, [isClicked]);
 
   return (
-    <StSelectBox ref={guideModalRef} isClicked={isClicked}>
+    <StSelectBox ref={selectBoxRef} isClicked={isClicked}>
       <span>{optionName}</span>
       <StCategoryButton onClick={() => setIsClicked((prev) => !prev)}>
         <div>{checkedList.join(', ')}</div>

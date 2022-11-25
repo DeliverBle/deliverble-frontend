@@ -1,25 +1,22 @@
-import { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import SEO from '@src/components/common/SEO';
-import NavigationBar from '@src/components/common/NavigationBar';
-import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
-import NewsList from '@src/components/common/NewsList';
-import SelectBox from '@src/components/learn/SelectBox';
-import ImageDiv from '@src/components/common/ImageDiv';
-import Pagination from '@src/components/common/Pagination';
 import Footer from '@src/components/common/Footer';
+import ImageDiv from '@src/components/common/ImageDiv';
+import NewsList from '@src/components/common/NewsList';
+import Pagination from '@src/components/common/Pagination';
+import SEO from '@src/components/common/SEO';
+import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
+import SelectBox from '@src/components/learn/SelectBox';
 import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/home';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
+import { BLOCK_SIZE, categoryList, channelList, LIST_SIZE, speakerList } from '@src/utils/constant';
+import dynamic from 'next/dynamic';
 import { icSearch } from 'public/assets/icons';
-import { BLOCK_SIZE, LIST_SIZE } from '@src/utils/constant';
-
-const channelList = ['전체', 'SBS', 'KBS', 'MBC', '기타'];
-const categoryList = ['전체', '정치', '경제', '사회', '세계', '연예', '기타'];
-const speakerList = ['전체', '여성', '남성'];
+import { useEffect, useState } from 'react';
+import styled from 'styled-components';
 
 function Learn() {
+  const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
   const [selectedChannelList, setSelectedChannelList] = useState<string[]>([]);
   const [selectedCategoryList, setSelectedCategoryList] = useState<string[]>([]);
   const [selectedSpeakerList, setSelectedSpeakerList] = useState<string[]>([]);
@@ -142,6 +139,14 @@ export default Learn;
 
 const StLearn = styled.div`
   margin: auto 16rem;
+
+  @media (max-width: 960px) {
+    margin: auto 8.6rem;
+  }
+
+  @media (max-width: 500px) {
+    margin: auto 2.4rem;
+  }
 `;
 
 const StTitle = styled.div`

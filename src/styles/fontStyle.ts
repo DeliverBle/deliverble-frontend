@@ -29,14 +29,14 @@ export const FONT = ({ size, weight, height }: Font) => css`
 `;
 
 export const FONT_STYLES = {
-  M_44_HEADLINE: FONT({ size: 44, weight: 'M', position: 'Headline', height: 150 }),
+  SB_44_HEADLINE: FONT({ size: 44, weight: 'SB', position: 'Headline', height: 150 }),
   SB_36_HEADLINE: FONT({ size: 36, weight: 'SB', position: 'Headline', height: 140 }),
   SB_32_HEADLINE: FONT({ size: 32, weight: 'SB', position: 'Headline', height: 150 }),
   SB_28_HEADLINE: FONT({ size: 28, weight: 'SB', position: 'Headline', height: 140 }),
   M_28_HEADLINE: FONT({ size: 28, weight: 'M', position: 'Headline', height: 140 }),
   SB_24_HEADLINE: FONT({ size: 24, weight: 'SB', position: 'Headline', height: 140 }),
   M_24_HEADLINE: FONT({ size: 24, weight: 'M', position: 'Headline', height: 140 }),
-  M_21_BODY: FONT({ size: 21, weight: 'M', position: 'Body', height: 140 }),
+  SB_21_BODY: FONT({ size: 21, weight: 'SB', position: 'Body', height: 140 }),
   B_20_BODY: FONT({ size: 20, weight: 'B', position: 'Body', height: 140 }),
   SB_20_BODY: FONT({ size: 20, weight: 'SB', position: 'Body', height: 140 }),
   M_20_BODY: FONT({ size: 20, weight: 'M', position: 'Body', height: 140 }),
@@ -47,8 +47,10 @@ export const FONT_STYLES = {
   R_17_CAPTION: FONT({ size: 17, weight: 'R', position: 'Caption', height: 150 }),
   SB_16_CAPTION: FONT({ size: 16, weight: 'SB', position: 'Caption', height: 140 }),
   M_16_CAPTION: FONT({ size: 16, weight: 'M', position: 'Caption', height: 140 }),
+  M_15_CAPTION: FONT({ size: 15, weight: 'M', position: 'Caption', height: 140 }),
   B_100_CAPTION: FONT({ size: 100, weight: 'B', position: 'Caption', height: 140 }),
   SB_25_MEMO: FONT({ size: 25, weight: 'SB', position: 'Memo', height: 140 }),
   R_23_MEMO: FONT({ size: 23, weight: 'R', position: 'Memo', height: 160 }),
+  SB_20_FOOTER: FONT({ size: 20, weight: 'SB', position: 'Footer', height: 140 }),
   M_20_FOOTER: FONT({ size: 20, weight: 'M', position: 'Footer', height: 140 }),
 };
