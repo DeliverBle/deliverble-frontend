@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import { useState } from 'react';
+import { ChangeEvent, KeyboardEvent, useState } from 'react';
 import { SCRIPT_INDEX_MAX } from '@src/utils/constant';
 
 interface ScriptIndexProps {
@@ -30,7 +30,7 @@ function ScriptIndex(props: ScriptIndexProps) {
   } = props;
   const [text, setText] = useState(`스크립트 ${currentIndex + 1}`);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
     if (value.length >= SCRIPT_INDEX_MAX) {
       value = value.substr(0, SCRIPT_INDEX_MAX + 1);
@@ -38,7 +38,7 @@ function ScriptIndex(props: ScriptIndexProps) {
     setText(value);
   };
 
-  const handleKeyUp = (e) => {
+  const handleKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
     const value = e.target.value;
     if (e.key === 'Enter' && value.length <= SCRIPT_INDEX_MAX) {
       // 엔터 눌렀을 때 value를 request body에 담아 patch
