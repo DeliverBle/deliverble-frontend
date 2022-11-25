@@ -231,7 +231,7 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
             {scriptIndexList.length !== 3 && (
               <StScriptAddButton
                 onClick={() => {
-                  setIsInputVisible(true);
+                  // 서버에 post 요청
                   setScriptIndexList((scriptIndexList) => [...scriptIndexList, '스크립트 ${scriptIndexList.length}']);
                   setClickedIndex(clickedIndex + 1);
                   setInputIndex(clickedIndex + 1);
