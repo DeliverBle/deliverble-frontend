@@ -38,6 +38,7 @@ function ScriptIndex(props: ScriptIndexProps) {
         onIndexRename(currentIndex);
       }}
       isClicked={currentIndex === clickedIndex}
+      isError={text.length === 0}
       isInputVisible={isInputVisible && inputIndex === currentIndex}>
       {isInputVisible && inputIndex === currentIndex ? (
         <input
@@ -60,7 +61,7 @@ function ScriptIndex(props: ScriptIndexProps) {
 
 export default ScriptIndex;
 
-const StScriptIndex = styled.div<{ isClicked: boolean; isInputVisible: boolean }>`
+const StScriptIndex = styled.div<{ isClicked: boolean; isError: boolean; isInputVisible: boolean }>`
   opacity: ${({ isClicked }) => (isClicked ? 1 : 0.6)};
   &:hover {
     opacity: 0.8;
@@ -81,7 +82,7 @@ const StScriptIndex = styled.div<{ isClicked: boolean; isInputVisible: boolean }
   & > input {
     width: 15.1rem;
     height: 3.5rem;
-    border: 0.2rem solid ${COLOR.MAIN_BLUE};
+    border: 0.2rem solid ${({ isError }) => (isError ? COLOR.RED : COLOR.MAIN_BLUE)};
     border-radius: 0.4rem;
     padding: 0.3rem 0.8rem 0.4rem 0.8rem;
     ${FONT_STYLES.M_20_BODY};
