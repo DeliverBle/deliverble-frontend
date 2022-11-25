@@ -54,7 +54,9 @@ function ScriptIndex(props: ScriptIndexProps) {
       ) : (
         <div>스크립트 {currentIndex + 1}</div>
       )}
-      {!isOne && <StScriptDeleteButton onClick={onIndexDelete} />}
+      {!isOne && (
+        <StScriptDeleteButton onClick={onIndexDelete} isInputVisible={isInputVisible && inputIndex === currentIndex} />
+      )}
     </StScriptIndex>
   );
 }
@@ -72,24 +74,31 @@ const StScriptIndex = styled.div<{ isClicked: boolean; isError: boolean; isInput
   justify-content: space-between;
   width: 20.9rem;
   height: 4.8rem;
-  padding: ${({ isInputVisible }) => (isInputVisible ? '0.7rem 0.8rem 0.6rem 0.7rem' : '1rem 2.4rem 1rem 1.6rem')};
+  padding: ${({ isInputVisible }) => (isInputVisible ? '0.6rem 0.8rem' : '1rem 1.2rem 1rem 2.4rem')};
   border-radius: 1.6rem 1.6rem 0 0;
   background-color: ${COLOR.WHITE};
   color: ${COLOR.MAIN_BLUE};
   ${FONT_STYLES.B_20_BODY};
   cursor: pointer;
 
+  & > div {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
   & > input {
-    width: 15.1rem;
+    width: 100%;
     height: 3.5rem;
     border: 0.2rem solid ${({ isError }) => (isError ? COLOR.RED : COLOR.MAIN_BLUE)};
     border-radius: 0.4rem;
-    padding: 0.3rem 0.8rem 0.4rem 0.8rem;
+    padding: 0.4rem 0.8rem;
     ${FONT_STYLES.M_20_BODY};
   }
 `;
 
-const StScriptDeleteButton = styled.button`
+const StScriptDeleteButton = styled.button<{ isInputVisible: boolean }>`
+  display: ${({ isInputVisible }) => (isInputVisible ? 'none' : 'block')};
   width: 2.4rem;
   height: 2.4rem;
   padding: 0;
