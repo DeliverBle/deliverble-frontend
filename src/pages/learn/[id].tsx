@@ -212,32 +212,34 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
       <NavigationBar />
       <StLearnDetail>
         <ImageDiv onClick={() => router.push(prevLink)} src={icXButton} className="close" layout="fill" alt="x" />
-        <StScriptIndexContainer>
-          {scriptIndexList.map((_, i) => (
-            <ScriptIndex
-              key={i}
-              isOne={scriptIndexList.length === 1}
-              isInputVisible={isInputVisible}
-              currentIndex={i}
-              clickedIndex={clickedIndex}
-              inputIndex={inputIndex}
-              setIsInputVisible={setIsInputVisible}
-              setClickedIndex={setClickedIndex}
-              onIndexDelete={handleIndexDelete}
-              onIndexRename={(index: number) => handleIndexRename(index)}
-            />
-          ))}
-          {scriptIndexList.length !== 3 && (
-            <StScriptAddButton
-              onClick={() => {
-                setIsInputVisible(true);
-                setScriptIndexList((scriptIndexList) => [...scriptIndexList, '스크립트 ${scriptIndexList.length}']);
-                setClickedIndex(clickedIndex + 1);
-                setInputIndex(clickedIndex + 1);
-              }}
-            />
-          )}
-        </StScriptIndexContainer>
+        {isLoggedIn && (
+          <StScriptIndexContainer>
+            {scriptIndexList.map((_, i) => (
+              <ScriptIndex
+                key={i}
+                isOne={scriptIndexList.length === 1}
+                isInputVisible={isInputVisible}
+                currentIndex={i}
+                clickedIndex={clickedIndex}
+                inputIndex={inputIndex}
+                setIsInputVisible={setIsInputVisible}
+                setClickedIndex={setClickedIndex}
+                onIndexDelete={handleIndexDelete}
+                onIndexRename={(index: number) => handleIndexRename(index)}
+              />
+            ))}
+            {scriptIndexList.length !== 3 && (
+              <StScriptAddButton
+                onClick={() => {
+                  setIsInputVisible(true);
+                  setScriptIndexList((scriptIndexList) => [...scriptIndexList, '스크립트 ${scriptIndexList.length}']);
+                  setClickedIndex(clickedIndex + 1);
+                  setInputIndex(clickedIndex + 1);
+                }}
+              />
+            )}
+          </StScriptIndexContainer>
+        )}
         {videoData && (
           <StLearnBox>
             <VideoDetail {...videoData} setIsModalOpen={setIsModalOpen} />
