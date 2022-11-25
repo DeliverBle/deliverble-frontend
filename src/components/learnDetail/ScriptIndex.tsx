@@ -35,7 +35,7 @@ function ScriptIndex(props: ScriptIndexProps) {
       onDoubleClick={() => onIndexRename(currentIndex)}
       onContextMenu={(e) => {
         e.preventDefault();
-        setIsRightClicked(true);
+        onIndexRename(currentIndex);
       }}
       isClicked={currentIndex === clickedIndex}
       isInputVisible={isInputVisible && inputIndex === currentIndex}>
