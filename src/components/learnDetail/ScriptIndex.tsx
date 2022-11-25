@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
+import { useState } from 'react';
 
 interface ScriptIndexProps {
   isOne: boolean;
@@ -26,26 +27,28 @@ function ScriptIndex(props: ScriptIndexProps) {
     onIndexDelete,
     onIndexRename,
   } = props;
+  const [text, setText] = useState(`스크립트 ${currentIndex + 1}`);
+
   return (
     <StScriptIndex
       onClick={() => setClickedIndex(currentIndex)}
       onDoubleClick={() => onIndexRename(currentIndex)}
       onContextMenu={(e) => {
         e.preventDefault();
-        onIndexRename(currentIndex);
+        setIsRightClicked(true);
       }}
       isClicked={currentIndex === clickedIndex}
       isInputVisible={isInputVisible && inputIndex === currentIndex}>
       {isInputVisible && inputIndex === currentIndex ? (
         <input
-          onChange={(e) => console.log(e.target.value)}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
           onKeyUp={(e) => {
             if (e.key === 'Enter') {
               console.log(e.target.value);
               setIsInputVisible(false);
             }
           }}
-          value={`스크립트 ${currentIndex + 1}`}
         />
       ) : (
         <div>스크립트 {currentIndex + 1}</div>
@@ -66,7 +69,7 @@ const StScriptIndex = styled.div<{ isClicked: boolean; isInputVisible: boolean }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 16.7rem;
+  width: 20.9rem;
   height: 4.8rem;
   padding: ${({ isInputVisible }) => (isInputVisible ? '0.7rem 0.8rem 0.6rem 0.7rem' : '1rem 2.4rem 1rem 1.6rem')};
   border-radius: 1.6rem 1.6rem 0 0;
