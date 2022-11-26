@@ -56,6 +56,9 @@ const StFooter = styled.div`
   grid-template-columns: 4fr 6fr;
   justify-content: space-between;
 
+  position: absolute;
+  bottom: 0;
+
   width: 100%;
   height: 40rem;
   padding: 12.4rem 0rem 13.1rem 16rem;
