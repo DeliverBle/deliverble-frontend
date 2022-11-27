@@ -148,7 +148,6 @@ function LearnDetail() {
   }, [clickedDeleteMemo]);
 
   useEffect(() => {
-    console.log('highlightIndex', highlightIndex);
     if (highlightIndex !== INITIAL_NUMBER) {
       setIsContextMenuOpen(true);
       setMemoInfo((prev) => ({
@@ -166,8 +165,6 @@ function LearnDetail() {
   }, [highlightIndex]);
 
   useEffect(() => {
-    console.log('memoState', memoState);
-    console.log(highlightIndex);
     const { newMemoId, editMemoId } = memoState;
     if (newMemoId === INITIAL_NUMBER && editMemoId === INITIAL_NUMBER) {
       setHighlightIndex(INITIAL_NUMBER);
