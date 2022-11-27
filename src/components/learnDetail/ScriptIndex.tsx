@@ -50,7 +50,7 @@ function ScriptIndex(props: ScriptIndexProps) {
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
     if (value.length >= SCRIPT_INDEX_MAX) {
-      value = value.substr(0, SCRIPT_INDEX_MAX + 1);
+      value = value.substring(0, SCRIPT_INDEX_MAX + 1);
     }
     setText(value);
   };
