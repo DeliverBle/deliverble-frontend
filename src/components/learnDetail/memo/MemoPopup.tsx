@@ -3,30 +3,38 @@ import { FONT_STYLES } from '@src/styles/fontStyle';
 import styled from 'styled-components';
 import { DELETE_MEMO_CONFIRM_MODAL_TEXT } from '@src/utils/constant';
 import { ConfirmModalText } from '../ConfirmModal';
-import { MemoHighlightId } from '@src/pages/learn/[id]';
+import { Dispatch, SetStateAction } from 'react';
+import { MemoState } from '@src/pages/learn/[id]';
+import { MemoData } from '@src/services/api/types/learn-detail';
 
 interface MemoPopupProps {
-  highlightId: number;
-  setMemoHighlightId: (id: MemoHighlightId) => void;
+  memoData: MemoData;
+  setMemoState: Dispatch<SetStateAction<MemoState>>;
   setIsConfirmOpen: (open: boolean) => void;
   setConfirmModalText: (text: ConfirmModalText) => void;
 }
 
 function MemoPopup(props: MemoPopupProps) {
-  const { setMemoHighlightId, highlightId, setIsConfirmOpen, setConfirmModalText } = props;
+  const { memoData, setMemoState, setIsConfirmOpen, setConfirmModalText } = props;
+  const { id } = memoData;
+
+  const handleClickDelete = () => {
+    id && setMemoState((prev: MemoState) => ({ ...prev, deleteMemoId: id }));
+    setIsConfirmOpen(true);
+    setConfirmModalText(DELETE_MEMO_CONFIRM_MODAL_TEXT);
+  };
 
   return (
     <>
       <StMemoPopup>
-        <button type="button" onClick={() => setMemoHighlightId({ new: 0, edit: highlightId })}>
-          메모 수정
-        </button>
         <button
           type="button"
           onClick={() => {
-            setIsConfirmOpen(true);
-            setConfirmModalText(DELETE_MEMO_CONFIRM_MODAL_TEXT);
+            id && setMemoState((prev: MemoState) => ({ ...prev, editMemoId: id }));
           }}>
+          메모 수정
+        </button>
+        <button type="button" onClick={handleClickDelete}>
           메모 삭제
         </button>
       </StMemoPopup>

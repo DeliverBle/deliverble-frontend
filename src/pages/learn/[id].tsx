@@ -10,12 +10,11 @@ import ScriptEdit from '@src/components/learnDetail/ScriptEdit';
 import VideoDetail from '@src/components/learnDetail/VideoDetail';
 import LoginModal from '@src/components/login/LoginModal';
 import { api } from '@src/services/api';
-import { HighlightData, VideoData } from '@src/services/api/types/learn-detail';
+import { MemoData, VideoData } from '@src/services/api/types/learn-detail';
 import { loginState } from '@src/stores/loginState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import { EDIT_MEMO_CONFIRM_MODAL_TEXT, NEW_MEMO_CONFIRM_MODAL_TEXT } from '@src/utils/constant';
-import { GetServerSidePropsContext } from 'next';
+import { NEW_MEMO_CONFIRM_MODAL_TEXT, INITIAL_NUMBER, INITIAL_MEMO_STATE } from '@src/utils/constant';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import {
@@ -32,14 +31,20 @@ import React, { useEffect, useRef, useState } from 'react';
 import YouTube from 'react-youtube';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
-
 import { imgHighlightTooltip, imgSpacingTooltip } from 'public/assets/images';
-export interface MemoHighlightId {
-  new: number;
-  edit: number;
+
+export interface MemoState {
+  newMemoId: number;
+  editMemoId: number;
+  deleteMemoId: number;
+}
+export interface MemoInfo {
+  scriptId: number;
+  order: number;
+  startIndex: number;
 }
 
-function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
+function LearnDetail() {
   const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
   const router = useRouter();
   const { id: detailId } = router.query;
@@ -50,71 +55,73 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
   const [confirmModalText, setConfirmModalText] = useState<ConfirmModalText>(NEW_MEMO_CONFIRM_MODAL_TEXT);
   const [isHighlight, setIsHighlight] = useState(false);
   const [isSpacing, setIsSpacing] = useState(false);
-  const [clickedHighlightId, setClickedHighlightId] = useState<number>();
-  const [points, setPoints] = useState({ x: 0, y: 0 });
-  const [memoHighlightId, setMemoHighlightId] = useState<MemoHighlightId>({ new: 0, edit: 0 });
-  const [hasMemo, setHasMemo] = useState(false);
-  const [keyword, setKeyword] = useState<string>();
-  const contextMenuRef = useRef<HTMLDivElement>(null);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [player, setPlayer] = useState<YT.Player | null>();
-  const [videoState, setVideoState] = useState(-1);
+  const [videoState, setVideoState] = useState(INITIAL_NUMBER);
   const [currentTime, setCurrentTime] = useState(0);
   const learnRef = useRef<HTMLDivElement>(null);
   const getLoginStatus = () => localStorage.getItem('token') ?? '';
   const [prevLink, setPrevLink] = useState('');
-  const { new: newMemoHighlightId, edit: editMemoHighlightId } = memoHighlightId;
+  const [isEditing, setisEditing] = useState<boolean>(false);
   const [isHighlightOver, setIsHighlightOver] = useState<boolean>(false);
   const [isSpacingOver, setIsSpacingOver] = useState<boolean>(false);
+  const [highlightIndex, setHighlightIndex] = useState<number>(INITIAL_NUMBER);
+  const [memoList, setMemoList] = useState<MemoData[]>([]);
+  const [memoState, setMemoState] = useState<MemoState>(INITIAL_MEMO_STATE);
+  const [memoInfo, setMemoInfo] = useState<MemoInfo>({
+    scriptId: INITIAL_NUMBER,
+    order: INITIAL_NUMBER,
+    startIndex: INITIAL_NUMBER,
+  });
+  const [clickedMemo, setClickedMemo] = useState<MemoData>();
+  const [clickedDeleteMemo, setClickedDeleteMemo] = useState<boolean>(false);
+  const contextMenuRef = useRef<HTMLDivElement>(null);
+  const [contextEvent, setContextEvent] = useState<React.MouseEvent>();
+  const [contextMenuPoint, setContextMenuPoint] = useState({ x: 0, y: 0 });
+  const [selectedKeyword, setSelectedKeyword] = useState<string>('');
+  const [isContextMenuOpen, setIsContextMenuOpen] = useState<boolean>(false);
 
-  const controlPointX = (e: React.MouseEvent) => {
-    const x = e.nativeEvent.offsetX / 10;
-    const y = e.nativeEvent.offsetY / 10;
+  const handleContextMenuPoint = (target: HTMLDivElement) => {
+    let x = 0;
+    let y = 0;
 
-    if (x > 40) {
-      return { x: x + x * 0.2, y: y + y * 0.5 };
+    const article = target.parentElement?.closest('article');
+    if (article) {
+      const articleAbsoluteTop = window.pageYOffset + article.getBoundingClientRect().top;
+      const articleAbsoluteLeft = window.pageYOffset + article.getBoundingClientRect().left;
+      const absoulteTop = window.pageYOffset + target.getBoundingClientRect().top;
+      const absoulteRight = window.pageYOffset + target.getBoundingClientRect().right;
+
+      x = absoulteRight - articleAbsoluteLeft - 15;
+      y = absoulteTop - articleAbsoluteTop - 10;
     }
-    return { x: x + x * 0.5, y: y + y * 0.5 };
+
+    return { x, y };
   };
 
-  const [highlightIndex, setHighlightIndex] = useState<number>(0);
   const getHighlightIndex = (parentNode: ParentNode | null, givenString: string) => {
-    if (parentNode?.childNodes) {
+    const childNodes = parentNode?.childNodes;
+    if (childNodes && childNodes.length !== 1) {
       let stringLength = 0;
-      for (let i = 0; i < parentNode?.childNodes.length; i++) {
-        if (parentNode?.childNodes[i].textContent === givenString) {
+      for (let i = 0; i < childNodes.length; i++) {
+        if (childNodes[i].textContent === givenString) {
           setHighlightIndex(stringLength);
           break;
         }
-        stringLength += parentNode?.childNodes[i]?.textContent?.length ?? 0;
+        stringLength += childNodes[i]?.textContent?.length ?? 0;
       }
     }
   };
 
-  useEffect(() => {
-    console.log('하이라이트 인덱스!', highlightIndex);
-  }, [highlightIndex]);
-
-  const handleRightClick = (e: React.MouseEvent, id: number) => {
-    const clickedContextTarget = e.target as HTMLDivElement;
-    getHighlightIndex(clickedContextTarget?.parentNode, clickedContextTarget.innerText); //인덱스 구하는 함수 호출
-
-    if (highlightData) {
-      const index = highlightData.findIndex((item) => item.highlightId === id);
-      if (index !== -1) {
-        const target = e.target as HTMLDivElement;
-        setHasMemo(Object.keys(highlightData[index].memo).length > 0);
-        setPoints(controlPointX(e));
-        setClickedHighlightId(() => Number(target.id));
-        setKeyword(target.innerText);
-      }
-      if (newMemoHighlightId || editMemoHighlightId) {
-        newMemoHighlightId && setConfirmModalText(NEW_MEMO_CONFIRM_MODAL_TEXT);
-        editMemoHighlightId && setConfirmModalText(EDIT_MEMO_CONFIRM_MODAL_TEXT);
-        setClickedHighlightId(-1);
-        return setIsConfirmOpen(true);
-      }
-    }
+  const handleRightClick = (e: React.MouseEvent, scriptId: number, order: number) => {
+    const contextTarget = e.target as HTMLDivElement;
+    getHighlightIndex(contextTarget?.parentNode, contextTarget.innerText);
+    setContextEvent(e);
+    setMemoInfo((prev) => ({
+      ...prev,
+      scriptId,
+      order,
+    }));
   };
 
   const handleClickLike = async (id: number) => {
@@ -127,7 +134,46 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
     }
   };
 
-  const [isEditing, setisEditing] = useState<boolean>(false);
+  useEffect(() => {
+    (async () => {
+      const { deleteMemoId } = memoState;
+      if (clickedDeleteMemo && deleteMemoId !== INITIAL_NUMBER) {
+        const memoList = await api.learnDetailService.deleteMemoData(deleteMemoId);
+        if (memoList) {
+          setMemoList(memoList);
+          setClickedDeleteMemo(false);
+        }
+      }
+    })();
+  }, [clickedDeleteMemo]);
+
+  useEffect(() => {
+    console.log('highlightIndex', highlightIndex);
+    if (highlightIndex !== INITIAL_NUMBER) {
+      setIsContextMenuOpen(true);
+      setMemoInfo((prev) => ({
+        ...prev,
+        startIndex: highlightIndex,
+      }));
+
+      if (contextEvent) {
+        const contextTarget = contextEvent.target as HTMLDivElement;
+        setClickedMemo(memoList.find((memo) => memo.startIndex === highlightIndex));
+        setContextMenuPoint(handleContextMenuPoint(contextTarget));
+        setSelectedKeyword(contextTarget.innerText);
+      }
+    }
+  }, [highlightIndex]);
+
+  useEffect(() => {
+    console.log('memoState', memoState);
+    console.log(highlightIndex);
+    const { newMemoId, editMemoId } = memoState;
+    if (newMemoId === INITIAL_NUMBER && editMemoId === INITIAL_NUMBER) {
+      setHighlightIndex(INITIAL_NUMBER);
+    }
+  }, [memoState]);
+
   useEffect(() => {
     if (isHighlight || isSpacing) {
       setisEditing(true);
@@ -142,7 +188,10 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
       const data = isLoggedIn
         ? await api.learnDetailService.getPrivateVideoData(id)
         : await api.learnDetailService.getPublicVideoData(id);
-      data && setVideoData(data);
+      if (data) {
+        setVideoData(data);
+        data.memos && setMemoList(data.memos);
+      }
     })();
   }, [isLoggedIn, detailId, isEditing]);
 
@@ -164,17 +213,19 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
   useEffect(() => {
     const handleClickOutside = (e: Event) => {
       const eventTarget = e.target as HTMLElement;
-      if (clickedHighlightId && !contextMenuRef?.current?.contains(eventTarget)) {
-        setClickedHighlightId(-1);
+      if (isContextMenuOpen && !contextMenuRef?.current?.contains(eventTarget) && eventTarget.tagName !== 'MARK') {
+        setIsContextMenuOpen(false);
       }
     };
-    if (clickedHighlightId) {
+    if (isContextMenuOpen) {
       window.addEventListener('click', handleClickOutside);
+      window.addEventListener('contextmenu', handleClickOutside);
     }
     return () => {
       window.removeEventListener('click', handleClickOutside);
+      window.removeEventListener('contextmenu', handleClickOutside);
     };
-  }, [clickedHighlightId]);
+  }, [isContextMenuOpen]);
 
   useEffect(() => {
     const storage = globalThis?.sessionStorage;
@@ -200,27 +251,27 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                 <article>
                   <div ref={learnRef}>
                     {!isEditing &&
-                      videoData.scripts.map(({ id, text, startTime, endTime }) => (
+                      videoData.scripts.map(({ id, order, text, startTime, endTime }) => (
                         <StScriptText
                           ref={contextMenuRef}
                           onContextMenu={(e) => {
                             e.preventDefault();
-                            handleRightClick(e, id);
+                            handleRightClick(e, videoData.scriptsId, order);
                           }}
                           key={id}
                           onClick={() => player?.seekTo(startTime, true)}
                           isActive={startTime <= currentTime && currentTime < endTime ? true : false}>
-                          <div id={id.toString()} dangerouslySetInnerHTML={{ __html: text }}></div>
-                          {clickedHighlightId === id && !newMemoHighlightId && !editMemoHighlightId && (
-                            <ContextMenu
-                              points={points}
-                              hasMemo={hasMemo}
-                              id={id}
-                              setMemoHighlightId={setMemoHighlightId}
-                            />
-                          )}
+                          <div dangerouslySetInnerHTML={{ __html: text }}></div>
                         </StScriptText>
                       ))}
+                    {!isEditing && isContextMenuOpen && (
+                      <ContextMenu
+                        contextMenuPoint={contextMenuPoint}
+                        clickedMemoId={clickedMemo?.id}
+                        setMemoState={setMemoState}
+                        setIsContextMenuOpen={setIsContextMenuOpen}
+                      />
+                    )}
                     {isEditing && (
                       <ScriptEdit
                         scriptsId={videoData.scriptsId}
@@ -345,14 +396,15 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                     <h2>메모</h2>
                   </StMemoTitle>
                   <StMemoWrapper>
-                    {highlightData.length ? (
+                    {memoList.length || memoState.newMemoId !== INITIAL_NUMBER ? (
                       <>
                         <MemoList
-                          highlightList={highlightData}
-                          memoHighlightId={memoHighlightId}
-                          setMemoHighlightId={setMemoHighlightId}
-                          highlightId={clickedHighlightId}
-                          keyword={keyword}
+                          memoList={memoList}
+                          selectedKeyword={selectedKeyword}
+                          memoState={memoState}
+                          memoInfo={memoInfo}
+                          setMemoList={setMemoList}
+                          setMemoState={setMemoState}
                           setIsConfirmOpen={setIsConfirmOpen}
                           setConfirmModalText={setConfirmModalText}
                         />
@@ -371,9 +423,10 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
         {isModalOpen && <GuideModal closeModal={() => setIsModalOpen(false)} />}
         {isConfirmOpen && (
           <ConfirmModal
-            closeModal={setIsConfirmOpen}
             confirmModalText={confirmModalText}
-            setMemoHighlightId={setMemoHighlightId}
+            setMemoState={setMemoState}
+            setIsConfirmOpen={setIsConfirmOpen}
+            setClickedDeleteMemo={setClickedDeleteMemo}
           />
         )}
         {isLoginModalOpen && <LoginModal closeModal={() => setIsLoginModalOpen(false)} />}
@@ -383,12 +436,6 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
 }
 
 export default LearnDetail;
-
-export async function getServerSideProps({ params }: GetServerSidePropsContext) {
-  const id = +(params?.id ?? -1);
-  const highlightData = await api.learnDetailService.getHighlightData(id);
-  return { props: { highlightData: highlightData } };
-}
 
 const StLearnDetail = styled.div`
   padding: 14.8rem 10rem 15rem 10rem;

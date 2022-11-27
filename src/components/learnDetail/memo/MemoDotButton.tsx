@@ -1,21 +1,21 @@
 import ImageDiv from '@src/components/common/ImageDiv';
 import { icDotDefault, icDotHover } from 'public/assets/icons';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, Dispatch, SetStateAction } from 'react';
 import styled from 'styled-components';
 import MemoPopup from './MemoPopup';
 import { ConfirmModalText } from '../ConfirmModal';
-import { MemoHighlightId } from '@src/pages/learn/[id]';
+import { MemoState } from '@src/pages/learn/[id]';
+import { MemoData } from '@src/services/api/types/learn-detail';
 
 interface MemoDotButtonProps {
-  highlightId: number;
-  setMemoHighlightId: (id: MemoHighlightId) => void;
+  memoData: MemoData;
+  setMemoState: Dispatch<SetStateAction<MemoState>>;
   setIsConfirmOpen: (open: boolean) => void;
   setConfirmModalText: (text: ConfirmModalText) => void;
 }
 
 function MemoDotButton(props: MemoDotButtonProps) {
-  const { highlightId, setMemoHighlightId, setIsConfirmOpen, setConfirmModalText } = props;
-
+  const { memoData, setMemoState, setIsConfirmOpen, setConfirmModalText } = props;
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const memoPopupRef = useRef<HTMLDivElement>(null);
 
@@ -44,8 +44,8 @@ function MemoDotButton(props: MemoDotButtonProps) {
       </StMemoDotImage>
       {isPopupOpen && (
         <MemoPopup
-          highlightId={highlightId}
-          setMemoHighlightId={setMemoHighlightId}
+          memoData={memoData}
+          setMemoState={setMemoState}
           setIsConfirmOpen={setIsConfirmOpen}
           setConfirmModalText={setConfirmModalText}
         />

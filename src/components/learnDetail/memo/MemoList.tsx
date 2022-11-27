@@ -1,67 +1,88 @@
-import { HighlightData } from '@src/services/api/types/learn-detail';
+import { MemoData } from '@src/services/api/types/learn-detail';
 import { COLOR } from '@src/styles/color';
-import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Memo from './Memo';
 import { ConfirmModalText } from '../ConfirmModal';
-import { MemoHighlightId } from '@src/pages/learn/[id]';
+import { MemoInfo, MemoState } from '@src/pages/learn/[id]';
+import { Dispatch, SetStateAction, useEffect } from 'react';
+import { INITIAL_NUMBER } from '@src/utils/constant';
 
 interface MemoListProps {
-  highlightList: HighlightData[];
-  highlightId?: number;
-  keyword?: string;
-  memoHighlightId: MemoHighlightId;
-  setMemoHighlightId: (id: MemoHighlightId) => void;
+  memoList: MemoData[];
+  memoState: MemoState;
+  memoInfo: MemoInfo;
+  selectedKeyword: string;
+  setMemoList: (memoList: MemoData[]) => void;
+  setMemoState: Dispatch<SetStateAction<MemoState>>;
   setIsConfirmOpen: (open: boolean) => void;
   setConfirmModalText: (text: ConfirmModalText) => void;
 }
 
 function MemoList(props: MemoListProps) {
   const {
-    highlightList,
-    highlightId,
-    keyword,
-    memoHighlightId,
-    setMemoHighlightId,
+    memoList,
+    memoState,
+    memoInfo,
+    selectedKeyword,
+    setMemoList,
+    setMemoState,
     setIsConfirmOpen,
     setConfirmModalText,
   } = props;
-  const [index, setIndex] = useState<number>();
-  const [memoIndexToDelete, setMemoIndexToDelete] = useState<number>();
+  const { newMemoId, editMemoId } = memoState;
 
   useEffect(() => {
-    setIndex(highlightList.findIndex((item) => item.highlightId === highlightId));
-    setMemoIndexToDelete(highlightList.findIndex((item) => Object.keys(item.memo).length === 1));
-  }, [highlightId, highlightList]);
+    if (newMemoId !== INITIAL_NUMBER) {
+      const { order, startIndex } = memoInfo;
+      const newMemoList = [
+        ...memoList,
+        {
+          id: INITIAL_NUMBER,
+          order,
+          startIndex,
+          keyword: selectedKeyword,
+          content: '',
+        },
+      ];
+      newMemoList.sort((a, b) => {
+        if (a.order > b.order) return 1;
+        if (a.order < b.order) return -1;
+        if (a.startIndex > b.startIndex) return 1;
+        if (a.startIndex < b.startIndex) return -1;
+        return 0;
+      });
+      setMemoList(newMemoList);
 
-  if (index && index !== -1) {
-    if (memoHighlightId.new) {
-      highlightList[index].memo = { keyword: keyword };
-    } else if (Object.keys(highlightList[index].memo).length === 1) {
-      highlightList[index].memo = {};
+      if (editMemoId !== INITIAL_NUMBER) {
+        setMemoList(memoList.filter((memo) => memo.content !== ''));
+      }
     }
-  }
-
-  if (memoIndexToDelete && memoIndexToDelete !== -1 && !memoHighlightId.new) {
-    highlightList[memoIndexToDelete].memo = {};
-  }
+  }, [memoState]);
 
   return (
     <StMemoList>
-      {highlightList.map(
-        ({ highlightId, memo }) =>
-          Object.keys(memo).length > 0 && (
-            <Memo
-              key={highlightId}
-              highlightId={highlightId}
-              memoData={[memo.keyword, memo.content]}
-              isEditMemo={memoHighlightId.edit == highlightId}
-              setMemoHighlightId={setMemoHighlightId}
-              setIsConfirmOpen={setIsConfirmOpen}
-              setConfirmModalText={setConfirmModalText}
-            />
-          ),
-      )}
+      {memoList.map((memo) => {
+        const tempMemo = {
+          id: memo.id,
+          order: memoInfo.order,
+          startIndex: memoInfo.startIndex,
+          keyword: memo.keyword,
+          content: memo.content,
+        };
+
+        return (
+          <Memo
+            key={memo.id}
+            scriptId={memoInfo.scriptId}
+            memoData={tempMemo}
+            memoState={memoState}
+            setMemoList={setMemoList}
+            setMemoState={setMemoState}
+            setIsConfirmOpen={setIsConfirmOpen}
+            setConfirmModalText={setConfirmModalText}
+          />
+        );
+      })}
     </StMemoList>
   );
 }

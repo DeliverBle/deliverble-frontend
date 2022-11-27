@@ -1,31 +1,37 @@
-import { MemoHighlightId } from '@src/pages/learn/[id]';
+import { MemoState } from '@src/pages/learn/[id]';
+import { api } from '@src/services/api';
+import { MemoData } from '@src/services/api/types/learn-detail';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import { EDIT_MEMO_CONFIRM_MODAL_TEXT, NEW_MEMO_CONFIRM_MODAL_TEXT } from '@src/utils/constant';
+import {
+  EDIT_MEMO_CONFIRM_MODAL_TEXT,
+  INITIAL_MEMO_STATE,
+  INITIAL_NUMBER,
+  NEW_MEMO_CONFIRM_MODAL_TEXT,
+} from '@src/utils/constant';
 import { icCheckButton, icMemoXButton } from 'public/assets/icons';
-import { useEffect, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import ImageDiv from '../../common/ImageDiv';
 import { ConfirmModalText } from '../ConfirmModal';
 
 interface MemoFormProps {
-  content?: string;
-  setMemoHighlightId: (id: MemoHighlightId) => void;
+  scriptId: number;
+  memoData: MemoData;
+  memoState: MemoState;
+  setMemoList: (memoList: MemoData[]) => void;
+  setMemoState: Dispatch<SetStateAction<MemoState>>;
   setIsConfirmOpen: (open: boolean) => void;
   setConfirmModalText: (text: ConfirmModalText) => void;
 }
 
 function MemoForm(props: MemoFormProps) {
-  const { setMemoHighlightId, content, setIsConfirmOpen, setConfirmModalText } = props;
+  const { scriptId, memoData, memoState, setMemoList, setMemoState, setIsConfirmOpen, setConfirmModalText } = props;
+  const { id, keyword, content, order, startIndex } = memoData;
+  const { newMemoId, editMemoId } = memoState;
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const [textLength, setTextLength] = useState(0);
 
-  useEffect(() => {
-    if (content) {
-      setTextLength(content.length);
-    }
-  }, [content]);
-
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const handleChange = () => {
     if (textAreaRef.current) {
       textAreaRef.current.style.height = '0.1rem';
@@ -36,12 +42,48 @@ function MemoForm(props: MemoFormProps) {
   };
 
   const changeModalText = () => {
-    if (!content && textAreaRef.current?.value) {
+    if (newMemoId !== INITIAL_NUMBER) {
       setConfirmModalText(NEW_MEMO_CONFIRM_MODAL_TEXT);
-    } else if (textAreaRef.current?.value !== content) {
+    } else if (editMemoId !== INITIAL_NUMBER) {
       setConfirmModalText(EDIT_MEMO_CONFIRM_MODAL_TEXT);
     }
   };
+
+  const handleClickDone = async () => {
+    const newContent = textAreaRef.current?.value;
+    if (newContent && newContent !== content) {
+      let memoList;
+      if (newMemoId !== INITIAL_NUMBER) {
+        memoList = await api.learnDetailService.postMemoData(
+          {
+            keyword,
+            order,
+            startIndex,
+            content: newContent,
+          },
+          scriptId,
+        );
+      } else if (editMemoId !== INITIAL_NUMBER && id) {
+        memoList = await api.learnDetailService.updateMemoData(id, newContent);
+      }
+      memoList && setMemoList(memoList);
+    }
+    setMemoState(INITIAL_MEMO_STATE);
+  };
+
+  const handleClickCancel = () => {
+    const newContent = textAreaRef.current?.value;
+    if (newContent !== '' && newContent !== content) {
+      changeModalText();
+      setIsConfirmOpen(true);
+    } else {
+      setMemoState(INITIAL_MEMO_STATE);
+    }
+  };
+
+  useEffect(() => {
+    content && setTextLength(content.length);
+  }, [content]);
 
   return (
     <StMemoForm>
@@ -55,18 +97,11 @@ function MemoForm(props: MemoFormProps) {
       />
       <StTextCounter>{textLength}/70</StTextCounter>
       <StButtonContainer>
-        <button
-          type="button"
-          onClick={() => {
-            changeModalText();
-            (content ? textAreaRef.current?.value !== '' : textAreaRef.current?.value !== content)
-              ? setIsConfirmOpen(true)
-              : setMemoHighlightId({ new: 0, edit: 0 });
-          }}>
+        <button type="button" onClick={handleClickCancel}>
           <ImageDiv src={icMemoXButton} alt="취소" />
         </button>
-        <button type="button">
-          <ImageDiv src={icCheckButton} alt="수정" />
+        <button type="button" onClick={handleClickDone}>
+          <ImageDiv src={icCheckButton} alt="완료" />
         </button>
       </StButtonContainer>
     </StMemoForm>

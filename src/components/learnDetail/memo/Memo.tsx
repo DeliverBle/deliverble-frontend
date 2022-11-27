@@ -1,27 +1,29 @@
 import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import MemoForm from './MemoForm';
 import MemoDotButton from './MemoDotButton';
 import { ConfirmModalText } from '../ConfirmModal';
 import { MEMO_CONTENT_MAX } from '@src/utils/constant';
-import { MemoHighlightId } from '@src/pages/learn/[id]';
+import { MemoState } from '@src/pages/learn/[id]';
 import ImageDiv from '@src/components/common/ImageDiv';
 import { icArrowUp } from 'public/assets/icons';
+import { MemoData } from '@src/services/api/types/learn-detail';
 
 interface MemoProps {
-  highlightId: number;
-  memoData: (string | undefined)[];
-  isEditMemo: boolean;
-  setMemoHighlightId: (id: MemoHighlightId) => void;
+  scriptId: number;
+  memoData: MemoData;
+  memoState: MemoState;
+  setMemoList: (memoList: MemoData[]) => void;
+  setMemoState: Dispatch<SetStateAction<MemoState>>;
   setIsConfirmOpen: (open: boolean) => void;
   setConfirmModalText: (text: ConfirmModalText) => void;
 }
 
 function Memo(props: MemoProps) {
-  const { highlightId, memoData, isEditMemo, setMemoHighlightId, setIsConfirmOpen, setConfirmModalText } = props;
-  const [keyword, content] = memoData;
+  const { scriptId, memoData, memoState, setMemoList, setMemoState, setIsConfirmOpen, setConfirmModalText } = props;
+  const { id, keyword, content } = memoData;
   const [foldButton, setFoldButton] = useState(false);
 
   const showContent = () => {
@@ -47,11 +49,14 @@ function Memo(props: MemoProps) {
 
   return (
     <StMemo fold={foldButton}>
-      {keyword && <StKeyword>{keyword}</StKeyword>}
-      {!content || isEditMemo ? (
+      <StKeyword>{keyword}</StKeyword>
+      {!content || memoState.editMemoId === id ? (
         <MemoForm
-          content={content}
-          setMemoHighlightId={setMemoHighlightId}
+          scriptId={scriptId}
+          memoData={memoData}
+          memoState={memoState}
+          setMemoList={setMemoList}
+          setMemoState={setMemoState}
           setIsConfirmOpen={setIsConfirmOpen}
           setConfirmModalText={setConfirmModalText}
         />
@@ -59,8 +64,8 @@ function Memo(props: MemoProps) {
         <>
           <StContent>{showContent()}</StContent>
           <MemoDotButton
-            highlightId={highlightId}
-            setMemoHighlightId={setMemoHighlightId}
+            memoData={memoData}
+            setMemoState={setMemoState}
             setIsConfirmOpen={setIsConfirmOpen}
             setConfirmModalText={setConfirmModalText}
           />
