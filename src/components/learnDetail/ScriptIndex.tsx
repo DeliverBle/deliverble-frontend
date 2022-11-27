@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
-import { SCRIPT_INDEX_MAX } from '@src/utils/constant';
+import { SCRIPT_TITLE_LENGTH_MAX } from '@src/utils/constant';
 
 interface ScriptIndexProps {
   isOne: boolean;
@@ -49,15 +49,15 @@ function ScriptIndex(props: ScriptIndexProps) {
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
-    if (value.length >= SCRIPT_INDEX_MAX) {
-      value = value.substring(0, SCRIPT_INDEX_MAX + 1);
+    if (value.length >= SCRIPT_TITLE_LENGTH_MAX) {
+      value = value.substring(0, SCRIPT_TITLE_LENGTH_MAX + 1);
     }
     setText(value);
   };
 
   const handleKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    if (e.key === 'Enter' && value.length <= SCRIPT_INDEX_MAX) {
+    if (e.key === 'Enter' && value.length <= SCRIPT_TITLE_LENGTH_MAX) {
       // 엔터 눌렀을 때 value를 request body에 담아 patch
       setIsInputVisible(false);
     }
