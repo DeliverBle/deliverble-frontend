@@ -36,8 +36,8 @@ export default Like;
 
 const StLike = styled.button`
   position: absolute;
-  top: 1.2rem;
-  right: 1.2rem;
+  top: 0;
+  right: 0;
 
   padding: 0;
 `;
@@ -50,12 +50,17 @@ const StLikeImage = styled.div<{ isFromList: boolean }>`
       ? css`
           .like {
             position: absolute;
-            top: 0.2rem;
-            right: 0.2rem;
+            top: 1.2rem;
+            right: 1.2rem;
 
             width: 4rem;
             height: 4rem;
             opacity: 0;
+
+            @media (max-width: 500px) {
+              width: 2.4rem;
+              height: 2.4rem;
+            }
           }
         `
       : css`

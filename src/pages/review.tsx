@@ -1,20 +1,21 @@
-import { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import Footer from '@src/components/common/Footer';
 import SEO from '@src/components/common/SEO';
-import NavigationBar from '@src/components/common/NavigationBar';
 import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
 import HeadlineContainer from '@src/components/review/HeadlineContainer';
 import VideoContainer from '@src/components/review/VideoContainer';
-import Footer from '@src/components/common/Footer';
 import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/review';
+import { loginState } from '@src/stores/loginState';
 import { LIST_SIZE } from '@src/utils/constant';
+import dynamic from 'next/dynamic';
+import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { COLOR } from 'src/styles/color';
 import { FONT_STYLES } from 'src/styles/fontStyle';
-import { useRecoilValue } from 'recoil';
-import { loginState } from '@src/stores/loginState';
+import styled from 'styled-components';
 
 function Review() {
+  const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
   const [tab, setTab] = useState('isFavorite');
   const [favoriteList, setFavoriteList] = useState<VideoData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -102,6 +103,14 @@ export default Review;
 
 const StReview = styled.div`
   padding: 16rem 16rem 13.6rem 16rem;
+
+  @media (max-width: 960px) {
+    padding: 16rem 8.6rem;
+  }
+
+  @media (max-width: 500px) {
+    padding: 16rem 2.4rem;
+  }
 `;
 
 const StTab = styled.ul`

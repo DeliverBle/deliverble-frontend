@@ -1,37 +1,38 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { GetServerSidePropsContext } from 'next';
-import { useRouter } from 'next/router';
-import styled from 'styled-components';
-import YouTube from 'react-youtube';
-import { useRecoilValue } from 'recoil';
-import { loginState } from '@src/stores/loginState';
-import SEO from '@src/components/common/SEO';
-import NavigationBar from '@src/components/common/NavigationBar';
 import ImageDiv from '@src/components/common/ImageDiv';
 import Like from '@src/components/common/Like';
+import SEO from '@src/components/common/SEO';
+import ConfirmModal, { ConfirmModalText } from '@src/components/learnDetail/ConfirmModal';
+import ContextMenu from '@src/components/learnDetail/ContextMenu';
 import GuideModal from '@src/components/learnDetail/GuideModal';
 import EmptyMemo from '@src/components/learnDetail/memo/EmptyMemo';
 import MemoList from '@src/components/learnDetail/memo/MemoList';
 import ScriptEdit from '@src/components/learnDetail/ScriptEdit';
-import ContextMenu from '@src/components/learnDetail/ContextMenu';
 import VideoDetail from '@src/components/learnDetail/VideoDetail';
-import ConfirmModal, { ConfirmModalText } from '@src/components/learnDetail/ConfirmModal';
 import LoginModal from '@src/components/login/LoginModal';
 import { api } from '@src/services/api';
 import { HighlightData, VideoData } from '@src/services/api/types/learn-detail';
-import { NEW_MEMO_CONFIRM_MODAL_TEXT, EDIT_MEMO_CONFIRM_MODAL_TEXT } from '@src/utils/constant';
+import { loginState } from '@src/stores/loginState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
+import { EDIT_MEMO_CONFIRM_MODAL_TEXT, NEW_MEMO_CONFIRM_MODAL_TEXT } from '@src/utils/constant';
+import { GetServerSidePropsContext } from 'next';
+import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
 import {
-  icXButton,
-  icMemo,
+  icHighlighterClicked,
   icHighlighterDefault,
   icHighlighterHover,
-  icHighlighterClicked,
+  icMemo,
+  icSpacingClicked,
   icSpacingDefault,
   icSpacingHover,
-  icSpacingClicked,
+  icXButton,
 } from 'public/assets/icons';
+import React, { useEffect, useRef, useState } from 'react';
+import YouTube from 'react-youtube';
+import { useRecoilValue } from 'recoil';
+import styled from 'styled-components';
+
 import { imgHighlightTooltip, imgSpacingTooltip } from 'public/assets/images';
 export interface MemoHighlightId {
   new: number;
@@ -39,6 +40,7 @@ export interface MemoHighlightId {
 }
 
 function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
+  const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
   const router = useRouter();
   const { id: detailId } = router.query;
   const isLoggedIn = useRecoilValue(loginState);
@@ -191,9 +193,9 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
       <StLearnDetail>
         <ImageDiv onClick={() => router.push(prevLink)} src={icXButton} className="close" layout="fill" alt="x" />
         {videoData && (
-          <StLearnMain>
+          <StLearnBox>
             <VideoDetail {...videoData} setIsModalOpen={setIsModalOpen} />
-            <div>
+            <main>
               <StLearnSection>
                 <article>
                   <div ref={learnRef}>
@@ -343,7 +345,7 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                     <h2>메모</h2>
                   </StMemoTitle>
                   <StMemoWrapper>
-                    {highlightData ? (
+                    {highlightData.length ? (
                       <>
                         <MemoList
                           highlightList={highlightData}
@@ -363,8 +365,8 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                   </StMemoWrapper>
                 </StMemoContainer>
               </aside>
-            </div>
-          </StLearnMain>
+            </main>
+          </StLearnBox>
         )}
         {isModalOpen && <GuideModal closeModal={() => setIsModalOpen(false)} />}
         {isConfirmOpen && (
@@ -404,7 +406,7 @@ const StLearnDetail = styled.div`
   }
 `;
 
-const StLearnMain = styled.main`
+const StLearnBox = styled.div`
   display: flex;
   flex-direction: column;
   margin: 0 auto;
@@ -415,7 +417,7 @@ const StLearnMain = styled.main`
   background-color: ${COLOR.WHITE};
   overflow: hidden;
 
-  & > div:last-child {
+  & > main {
     display: flex;
     gap: 4.8rem;
   }
