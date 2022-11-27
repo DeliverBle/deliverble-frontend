@@ -3,7 +3,7 @@ import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { Dispatch, SetStateAction, useEffect } from 'react';
 import { MemoState } from '@src/pages/learn/[id]';
-import { INITIAL_MEMO_STATE } from '@src/utils/constant';
+import { DELETE_MEMO_CONFIRM_MODAL_TEXT, INITIAL_MEMO_STATE } from '@src/utils/constant';
 
 export interface ConfirmModalText {
   mainText: string;
@@ -32,7 +32,9 @@ function ConfirmModal(props: ConfirmModalProps) {
 
   const handleClickConfirm = async () => {
     setIsConfirmOpen(false);
-    setClickedDeleteMemo(true);
+    if (confirmText === DELETE_MEMO_CONFIRM_MODAL_TEXT.confirmText) {
+      setClickedDeleteMemo(true);
+    }
   };
 
   return (
