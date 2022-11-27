@@ -9,12 +9,19 @@ import MemoList from '@src/components/learnDetail/memo/MemoList';
 import ScriptEdit from '@src/components/learnDetail/ScriptEdit';
 import VideoDetail from '@src/components/learnDetail/VideoDetail';
 import LoginModal from '@src/components/login/LoginModal';
+import ScriptTitle from '@src/components/learnDetail/ScriptTitle';
 import { api } from '@src/services/api';
 import { MemoData, VideoData } from '@src/services/api/types/learn-detail';
 import { loginState } from '@src/stores/loginState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import { NEW_MEMO_CONFIRM_MODAL_TEXT, INITIAL_NUMBER, INITIAL_MEMO_STATE } from '@src/utils/constant';
+import {
+  NEW_MEMO_CONFIRM_MODAL_TEXT,
+  INITIAL_NUMBER,
+  INITIAL_MEMO_STATE,
+  DELETE_SCRIPT_CONFIRM_MODAL_TEXT,
+  SCRIPT_MAX_COUNT,
+} from '@src/utils/constant';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import {
@@ -62,10 +69,14 @@ function LearnDetail() {
   const learnRef = useRef<HTMLDivElement>(null);
   const getLoginStatus = () => localStorage.getItem('token') ?? '';
   const [prevLink, setPrevLink] = useState('');
-  const [isEditing, setisEditing] = useState<boolean>(false);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isHighlightOver, setIsHighlightOver] = useState<boolean>(false);
   const [isSpacingOver, setIsSpacingOver] = useState<boolean>(false);
   const [highlightIndex, setHighlightIndex] = useState<number>(INITIAL_NUMBER);
+  const [scriptTitleList, setScriptTitleList] = useState(['스크립트 1']);
+  const [clickedScriptTitleIndex, setClickedScriptTitleIndex] = useState(0);
+  const [isScriptTitleInputVisible, setIsScriptTitleInputVisible] = useState(false);
+  const [scriptTitleInputIndex, setTitleInputIndex] = useState(-1);
   const [memoList, setMemoList] = useState<MemoData[]>([]);
   const [memoState, setMemoState] = useState<MemoState>(INITIAL_MEMO_STATE);
   const [memoInfo, setMemoInfo] = useState<MemoInfo>({
@@ -124,6 +135,17 @@ function LearnDetail() {
     }));
   };
 
+  const handleScriptDelete = () => {
+    setConfirmModalText(DELETE_SCRIPT_CONFIRM_MODAL_TEXT);
+    setIsConfirmOpen(true);
+  };
+
+  const handleScriptRename = (index: number) => {
+    setClickedScriptTitleIndex(index);
+    setTitleInputIndex(index);
+    setIsScriptTitleInputVisible(true);
+  };
+
   const handleClickLike = async (id: number) => {
     const { id: likeId, isFavorite } = await api.likeService.postLikeData(id);
     if (videoData && videoData.id === likeId) {
@@ -173,9 +195,9 @@ function LearnDetail() {
 
   useEffect(() => {
     if (isHighlight || isSpacing) {
-      setisEditing(true);
+      setIsEditing(true);
     } else {
-      setisEditing(false);
+      setIsEditing(false);
     }
   }, [isEditing, isHighlight, isSpacing]);
 
@@ -240,6 +262,34 @@ function LearnDetail() {
       <NavigationBar />
       <StLearnDetail>
         <ImageDiv onClick={() => router.push(prevLink)} src={icXButton} className="close" layout="fill" alt="x" />
+        {isLoggedIn && (
+          <StScriptTitleContainer>
+            {scriptTitleList.map((_, i) => (
+              <ScriptTitle
+                key={i}
+                isOne={scriptTitleList.length === 1}
+                isScriptTitleInputVisible={isScriptTitleInputVisible}
+                currentScriptTitleIndex={i}
+                clickedScriptTitleIndex={clickedScriptTitleIndex}
+                scriptTitleInputIndex={scriptTitleInputIndex}
+                setIsScriptTitleInputVisible={setIsScriptTitleInputVisible}
+                setClickedScriptTitleIndex={setClickedScriptTitleIndex}
+                onScriptDelete={handleScriptDelete}
+                onScriptRename={(index: number) => handleScriptRename(index)}
+              />
+            ))}
+            {scriptTitleList.length !== SCRIPT_MAX_COUNT && (
+              <StScriptAddButton
+                onClick={() => {
+                  // 서버에 post 요청
+                  setScriptTitleList((scriptTitleList) => [...scriptTitleList, '스크립트 ${scriptTitleList.length}']);
+                  setClickedScriptTitleIndex(clickedScriptTitleIndex + 1);
+                  setTitleInputIndex(clickedScriptTitleIndex + 1);
+                }}
+              />
+            )}
+          </StScriptTitleContainer>
+        )}
         {videoData && (
           <StLearnBox>
             <VideoDetail {...videoData} setIsModalOpen={setIsModalOpen} />
@@ -421,9 +471,13 @@ function LearnDetail() {
         {isConfirmOpen && (
           <ConfirmModal
             confirmModalText={confirmModalText}
+            scriptTitleList={scriptTitleList}
+            clickedScriptTitleIndex={clickedScriptTitleIndex}
             setMemoState={setMemoState}
             setIsConfirmOpen={setIsConfirmOpen}
             setClickedDeleteMemo={setClickedDeleteMemo}
+            setScriptTitleList={setScriptTitleList}
+            setClickedScriptTitleIndex={setClickedScriptTitleIndex}
           />
         )}
         {isLoginModalOpen && <LoginModal closeModal={() => setIsLoginModalOpen(false)} />}
@@ -447,6 +501,27 @@ const StLearnDetail = styled.div`
     width: 4.8rem;
     height: 4.8rem;
     cursor: pointer;
+  }
+`;
+
+const StScriptTitleContainer = styled.div`
+  margin: 0 auto;
+  width: 172rem;
+  padding-left: 5.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+`;
+
+const StScriptAddButton = styled.button`
+  width: 4rem;
+  height: 4rem;
+  cursor: pointer;
+  padding: 0;
+  background-image: url('/assets/icons/ic_script_add_light.svg');
+  &:hover,
+  &:active {
+    background-image: url('/assets/icons/ic_script_add_dark.svg');
   }
 `;
 

@@ -29,7 +29,8 @@ export const FONT = ({ size, weight, height }: Font) => css`
 `;
 
 export const FONT_STYLES = {
-  SB_44_HEADLINE: FONT({ size: 44, weight: 'SB', position: 'Headline', height: 150 }),
+  M_44_HEADLINE: FONT({ size: 44, weight: 'M', position: 'Headline', height: 150 }),
+  SB_44_HEADLINE: FONT({ size: 44, weight: 'SB', position: 'Headline', height: 130 }),
   SB_36_HEADLINE: FONT({ size: 36, weight: 'SB', position: 'Headline', height: 140 }),
   SB_32_HEADLINE: FONT({ size: 32, weight: 'SB', position: 'Headline', height: 150 }),
   SB_28_HEADLINE: FONT({ size: 28, weight: 'SB', position: 'Headline', height: 140 }),
@@ -53,4 +54,5 @@ export const FONT_STYLES = {
   R_23_MEMO: FONT({ size: 23, weight: 'R', position: 'Memo', height: 160 }),
   SB_20_FOOTER: FONT({ size: 20, weight: 'SB', position: 'Footer', height: 140 }),
   M_20_FOOTER: FONT({ size: 20, weight: 'M', position: 'Footer', height: 140 }),
+  SB_15_CAPTION: FONT({ size: 15, weight: 'SB', position: 'Caption', height: 140 }),
 };

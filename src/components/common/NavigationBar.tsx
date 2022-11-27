@@ -108,7 +108,7 @@ const StNavigationBar = styled.div`
     position: relative;
 
     width: 12rem;
-    height: 37rem;
+    height: 3.7rem;
 
     margin: 0 7.2rem 0 16rem;
 

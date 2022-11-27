@@ -14,14 +14,34 @@ export interface ConfirmModalText {
 
 interface ConfirmModalProps {
   confirmModalText: ConfirmModalText;
+  scriptTitleList: string[];
+  clickedScriptTitleIndex: number;
   setMemoState: Dispatch<SetStateAction<MemoState>>;
   setIsConfirmOpen: (close: boolean) => void;
   setClickedDeleteMemo: (clicked: boolean) => void;
+  setClickedScriptTitleIndex: (index: number) => void;
+  setScriptTitleList: (list: string[]) => void;
 }
 
 function ConfirmModal(props: ConfirmModalProps) {
-  const { confirmModalText, setMemoState, setIsConfirmOpen, setClickedDeleteMemo } = props;
+  const {
+    confirmModalText,
+    scriptTitleList,
+    clickedScriptTitleIndex,
+    setMemoState,
+    setIsConfirmOpen,
+    setClickedDeleteMemo,
+    setClickedScriptTitleIndex,
+    setScriptTitleList,
+  } = props;
   const { mainText, subText, confirmText, cancelText } = confirmModalText;
+
+  const deleteScript = (index: number) => {
+    const tempList = [...scriptTitleList];
+    tempList.splice(index, 1);
+    setScriptTitleList(tempList);
+    setClickedScriptTitleIndex(0);
+  };
 
   useEffect(() => {
     window.scrollTo({
@@ -49,6 +69,7 @@ function ConfirmModal(props: ConfirmModalProps) {
           onClick={() => {
             setMemoState(INITIAL_MEMO_STATE);
             setIsConfirmOpen(false);
+            deleteScript(clickedScriptTitleIndex);
           }}>
           {cancelText}
         </button>
@@ -83,6 +104,7 @@ const StDescription = styled.div`
   & > p {
     ${FONT_STYLES.M_20_BODY};
     color: ${COLOR.GRAY_45};
+    white-space: pre-line;
   }
 `;
 
