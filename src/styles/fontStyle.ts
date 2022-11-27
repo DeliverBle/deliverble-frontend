@@ -54,4 +54,5 @@ export const FONT_STYLES = {
   R_23_MEMO: FONT({ size: 23, weight: 'R', position: 'Memo', height: 160 }),
   SB_20_FOOTER: FONT({ size: 20, weight: 'SB', position: 'Footer', height: 140 }),
   M_20_FOOTER: FONT({ size: 20, weight: 'M', position: 'Footer', height: 140 }),
+  SB_15_CAPTION: FONT({ size: 15, weight: 'SB', position: 'Caption', height: 140 }),
 };
