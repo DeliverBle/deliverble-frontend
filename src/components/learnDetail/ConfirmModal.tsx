@@ -15,10 +15,10 @@ interface ConfirmModalProps {
   closeModal: (close: boolean) => void;
   setMemoHighlightId: (id: MemoHighlightId) => void;
   confirmModalText: ConfirmModalText;
-  clickedIndex: number;
-  setClickedIndex: (index: number) => void;
-  scriptIndexList: string[];
-  setScriptIndexList: (list: string[]) => void;
+  clickedScriptTitleIndex: number;
+  setClickedScriptTitleIndex: (index: number) => void;
+  scriptTitleList: string[];
+  setScriptTitleList: (list: string[]) => void;
 }
 
 function ConfirmModal(props: ConfirmModalProps) {
@@ -26,18 +26,18 @@ function ConfirmModal(props: ConfirmModalProps) {
     closeModal,
     setMemoHighlightId,
     confirmModalText,
-    clickedIndex,
-    setClickedIndex,
-    scriptIndexList,
-    setScriptIndexList,
+    clickedScriptTitleIndex,
+    setClickedScriptTitleIndex,
+    scriptTitleList,
+    setScriptTitleList,
   } = props;
   const { mainText, subText, confirmText, cancelText } = confirmModalText;
 
-  const deleteIndex = (index: number) => {
-    const tempList = [...scriptIndexList];
+  const deleteScriptIndex = (index: number) => {
+    const tempList = [...scriptTitleList];
     tempList.splice(index, 1);
-    setScriptIndexList(tempList);
-    setClickedIndex(0);
+    setScriptTitleList(tempList);
+    setClickedScriptTitleIndex(0);
   };
 
   useEffect(() => {
@@ -58,7 +58,7 @@ function ConfirmModal(props: ConfirmModalProps) {
         <button
           onClick={() => {
             setMemoHighlightId({ new: 0, edit: 0 });
-            deleteIndex(clickedIndex);
+            deleteScriptIndex(clickedScriptTitleIndex);
             closeModal(false);
           }}>
           {cancelText}

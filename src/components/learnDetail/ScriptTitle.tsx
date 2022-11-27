@@ -2,101 +2,104 @@ import styled, { css } from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
-import { SCRIPT_TITLE_LENGTH_MAX } from '@src/utils/constant';
+import { SCRIPT_TITLE_MAX_LENGTH } from '@src/utils/constant';
 
-interface ScriptIndexProps {
+interface ScriptTitleProps {
   isOne: boolean;
-  isInputVisible: boolean;
-  currentIndex: number;
-  clickedIndex: number;
-  inputIndex: number;
-  setIsInputVisible: (isInputVisible: boolean) => void;
-  setClickedIndex: (index: number) => void;
-  onIndexDelete: () => void;
-  onIndexRename: (index: number) => void;
+  isScriptTitleInputVisible: boolean;
+  currentScriptTitleIndex: number;
+  clickedScriptTitleIndex: number;
+  scriptTitleInputIndex: number;
+  setIsScriptTitleInputVisible: (isScriptTitleInputVisible: boolean) => void;
+  setClickedScriptTitleIndex: (index: number) => void;
+  onScriptDelete: () => void;
+  onScriptRename: (index: number) => void;
 }
 
-function ScriptIndex(props: ScriptIndexProps) {
+function ScriptTitle(props: ScriptTitleProps) {
   const {
     isOne,
-    isInputVisible,
-    setIsInputVisible,
-    currentIndex,
-    clickedIndex,
-    inputIndex,
-    setClickedIndex,
-    onIndexDelete,
-    onIndexRename,
+    isScriptTitleInputVisible,
+    setIsScriptTitleInputVisible,
+    currentScriptTitleIndex,
+    clickedScriptTitleIndex,
+    scriptTitleInputIndex,
+    setClickedScriptTitleIndex,
+    onScriptDelete,
+    onScriptRename,
   } = props;
-  const [text, setText] = useState(`스크립트 ${currentIndex + 1}`);
-  const scriptIndexInputRef = useRef<HTMLInputElement>(null);
+  const [text, setText] = useState(`스크립트 ${currentScriptTitleIndex + 1}`);
+  const scriptTitleInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (e: Event) => {
       const eventTarget = e.target as HTMLInputElement;
       if (eventTarget.tagName !== 'INPUT') {
-        setIsInputVisible(false);
+        setIsScriptTitleInputVisible(false);
       }
     };
 
-    if (isInputVisible) {
+    if (isScriptTitleInputVisible) {
       window.addEventListener('click', handleClickOutside);
     }
     return () => {
       window.removeEventListener('click', handleClickOutside);
     };
-  }, [isInputVisible, setIsInputVisible]);
+  }, [isScriptTitleInputVisible, setIsScriptTitleInputVisible]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
-    if (value.length >= SCRIPT_TITLE_LENGTH_MAX) {
-      value = value.substring(0, SCRIPT_TITLE_LENGTH_MAX + 1);
+    if (value.length >= SCRIPT_TITLE_MAX_LENGTH) {
+      value = value.substring(0, SCRIPT_TITLE_MAX_LENGTH + 1);
     }
     setText(value);
   };
 
   const handleKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    if (e.key === 'Enter' && value.length <= SCRIPT_TITLE_LENGTH_MAX) {
+    if (e.key === 'Enter' && value.length <= SCRIPT_TITLE_MAX_LENGTH) {
       // 엔터 눌렀을 때 value를 request body에 담아 patch
-      setIsInputVisible(false);
+      setIsScriptTitleInputVisible(false);
     }
   };
 
   return (
-    <StScriptIndex
-      onClick={() => setClickedIndex(currentIndex)}
-      onDoubleClick={() => onIndexRename(currentIndex)}
+    <StScriptTitle
+      onClick={() => setClickedScriptTitleIndex(currentScriptTitleIndex)}
+      onDoubleClick={() => onScriptRename(currentScriptTitleIndex)}
       onContextMenu={(e) => {
         e.preventDefault();
-        onIndexRename(currentIndex);
+        onScriptRename(currentScriptTitleIndex);
       }}
-      isClicked={currentIndex === clickedIndex}
+      isClicked={currentScriptTitleIndex === clickedScriptTitleIndex}
       isMinError={text.length === 0}
-      isMaxError={text.length >= 28}
-      isInputVisible={isInputVisible && inputIndex === currentIndex}>
-      {isInputVisible && inputIndex === currentIndex ? (
+      isMaxError={text.length >= SCRIPT_TITLE_MAX_LENGTH + 1}
+      isScriptTitleInputVisible={isScriptTitleInputVisible && scriptTitleInputIndex === currentScriptTitleIndex}>
+      {isScriptTitleInputVisible && scriptTitleInputIndex === currentScriptTitleIndex ? (
         <>
-          <input ref={scriptIndexInputRef} value={text} onChange={handleInputChange} onKeyUp={handleKeyUp} />
+          <input ref={scriptTitleInputRef} value={text} onChange={handleInputChange} onKeyUp={handleKeyUp} />
           <p>최대 글자수를 초과했어요!</p>
         </>
       ) : (
-        <div>스크립트 {currentIndex + 1}</div>
+        <div>스크립트 {currentScriptTitleIndex + 1}</div>
       )}
       {!isOne && (
-        <StScriptDeleteButton onClick={onIndexDelete} isInputVisible={isInputVisible && inputIndex === currentIndex} />
+        <StScriptDeleteButton
+          onClick={onScriptDelete}
+          isScriptTitleInputVisible={isScriptTitleInputVisible && scriptTitleInputIndex === currentScriptTitleIndex}
+        />
       )}
-    </StScriptIndex>
+    </StScriptTitle>
   );
 }
 
-export default ScriptIndex;
+export default ScriptTitle;
 
-const StScriptIndex = styled.div<{
+const StScriptTitle = styled.div<{
   isClicked: boolean;
   isMinError: boolean;
   isMaxError: boolean;
-  isInputVisible: boolean;
+  isScriptTitleInputVisible: boolean;
 }>`
   opacity: ${({ isClicked }) => (isClicked ? 1 : 0.6)};
   &:hover > div {
@@ -108,7 +111,8 @@ const StScriptIndex = styled.div<{
   justify-content: space-between;
   width: 20.9rem;
   height: 4.8rem;
-  padding: ${({ isInputVisible }) => (isInputVisible ? '0.6rem 0.8rem' : '1rem 1.2rem 1rem 2.4rem')};
+  padding: ${({ isScriptTitleInputVisible }) =>
+    isScriptTitleInputVisible ? '0.6rem 0.8rem' : '1rem 1.2rem 1rem 2.4rem'};
   border-radius: 1.6rem 1.6rem 0 0;
   background-color: ${COLOR.WHITE};
   color: ${COLOR.MAIN_BLUE};
@@ -166,8 +170,8 @@ const StScriptIndex = styled.div<{
         `}
 `;
 
-const StScriptDeleteButton = styled.button<{ isInputVisible: boolean }>`
-  display: ${({ isInputVisible }) => (isInputVisible ? 'none' : 'block')};
+const StScriptDeleteButton = styled.button<{ isScriptTitleInputVisible: boolean }>`
+  display: ${({ isScriptTitleInputVisible }) => (isScriptTitleInputVisible ? 'none' : 'block')};
   width: 2.4rem;
   height: 2.4rem;
   padding: 0;

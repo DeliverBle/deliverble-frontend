@@ -9,13 +9,14 @@ import MemoList from '@src/components/learnDetail/memo/MemoList';
 import ScriptEdit from '@src/components/learnDetail/ScriptEdit';
 import VideoDetail from '@src/components/learnDetail/VideoDetail';
 import LoginModal from '@src/components/login/LoginModal';
-import ScriptIndex from '@src/components/learnDetail/ScriptIndex';
+import ScriptTitle from '@src/components/learnDetail/ScriptTitle';
 import { api } from '@src/services/api';
 import { HighlightData, VideoData } from '@src/services/api/types/learn-detail';
 import {
   NEW_MEMO_CONFIRM_MODAL_TEXT,
   EDIT_MEMO_CONFIRM_MODAL_TEXT,
   DELETE_SCRIPT_CONFIRM_MODAL_TEXT,
+  SCRIPT_MAX_COUNT,
 } from '@src/utils/constant';
 import { loginState } from '@src/stores/loginState';
 import { COLOR } from '@src/styles/color';
@@ -71,10 +72,10 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
   const { new: newMemoHighlightId, edit: editMemoHighlightId } = memoHighlightId;
   const [isHighlightOver, setIsHighlightOver] = useState<boolean>(false);
   const [isSpacingOver, setIsSpacingOver] = useState<boolean>(false);
-  const [scriptIndexList, setScriptIndexList] = useState(['스크립트 1']);
-  const [clickedIndex, setClickedIndex] = useState(0);
-  const [isInputVisible, setIsInputVisible] = useState(false);
-  const [inputIndex, setInputIndex] = useState(-1);
+  const [scriptTitleList, setScriptTitleList] = useState(['스크립트 1']);
+  const [clickedScriptTitleIndex, setClickedScriptTitleIndex] = useState(0);
+  const [isScriptTitleInputVisible, setIsScriptTitleInputVisible] = useState(false);
+  const [scriptTitleInputIndex, setTitleInputIndex] = useState(-1);
 
   const controlPointX = (e: React.MouseEvent) => {
     const x = e.nativeEvent.offsetX / 10;
@@ -126,15 +127,15 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
     }
   };
 
-  const handleIndexDelete = () => {
+  const handleScriptDelete = () => {
     setConfirmModalText(DELETE_SCRIPT_CONFIRM_MODAL_TEXT);
     setIsConfirmOpen(true);
   };
 
-  const handleIndexRename = (index: number) => {
-    setClickedIndex(index);
-    setInputIndex(index);
-    setIsInputVisible(true);
+  const handleScriptRename = (index: number) => {
+    setClickedScriptTitleIndex(index);
+    setTitleInputIndex(index);
+    setIsScriptTitleInputVisible(true);
   };
 
   const handleClickLike = async (id: number) => {
@@ -147,12 +148,12 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
     }
   };
 
-  const [isEditing, setisEditing] = useState<boolean>(false);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
   useEffect(() => {
     if (isHighlight || isSpacing) {
-      setisEditing(true);
+      setIsEditing(true);
     } else {
-      setisEditing(false);
+      setIsEditing(false);
     }
   }, [isEditing, isHighlight, isSpacing]);
 
@@ -213,32 +214,32 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
       <StLearnDetail>
         <ImageDiv onClick={() => router.push(prevLink)} src={icXButton} className="close" layout="fill" alt="x" />
         {isLoggedIn && (
-          <StScriptIndexContainer>
-            {scriptIndexList.map((_, i) => (
-              <ScriptIndex
+          <StScriptTitleContainer>
+            {scriptTitleList.map((_, i) => (
+              <ScriptTitle
                 key={i}
-                isOne={scriptIndexList.length === 1}
-                isInputVisible={isInputVisible}
-                currentIndex={i}
-                clickedIndex={clickedIndex}
-                inputIndex={inputIndex}
-                setIsInputVisible={setIsInputVisible}
-                setClickedIndex={setClickedIndex}
-                onIndexDelete={handleIndexDelete}
-                onIndexRename={(index: number) => handleIndexRename(index)}
+                isOne={scriptTitleList.length === 1}
+                isScriptTitleInputVisible={isScriptTitleInputVisible}
+                currentScriptTitleIndex={i}
+                clickedScriptTitleIndex={clickedScriptTitleIndex}
+                scriptTitleInputIndex={scriptTitleInputIndex}
+                setIsScriptTitleInputVisible={setIsScriptTitleInputVisible}
+                setClickedScriptTitleIndex={setClickedScriptTitleIndex}
+                onScriptDelete={handleScriptDelete}
+                onScriptRename={(index: number) => handleScriptRename(index)}
               />
             ))}
-            {scriptIndexList.length !== 3 && (
+            {scriptTitleList.length !== SCRIPT_MAX_COUNT && (
               <StScriptAddButton
                 onClick={() => {
                   // 서버에 post 요청
-                  setScriptIndexList((scriptIndexList) => [...scriptIndexList, '스크립트 ${scriptIndexList.length}']);
-                  setClickedIndex(clickedIndex + 1);
-                  setInputIndex(clickedIndex + 1);
+                  setScriptTitleList((scriptTitleList) => [...scriptTitleList, '스크립트 ${scriptTitleList.length}']);
+                  setClickedScriptTitleIndex(clickedScriptTitleIndex + 1);
+                  setTitleInputIndex(clickedScriptTitleIndex + 1);
                 }}
               />
             )}
-          </StScriptIndexContainer>
+          </StScriptTitleContainer>
         )}
         {videoData && (
           <StLearnBox>
@@ -422,10 +423,10 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
             closeModal={setIsConfirmOpen}
             confirmModalText={confirmModalText}
             setMemoHighlightId={setMemoHighlightId}
-            clickedIndex={clickedIndex}
-            setClickedIndex={setClickedIndex}
-            scriptIndexList={scriptIndexList}
-            setScriptIndexList={setScriptIndexList}
+            clickedScriptTitleIndex={clickedScriptTitleIndex}
+            setClickedScriptTitleIndex={setClickedScriptTitleIndex}
+            scriptTitleList={scriptTitleList}
+            setScriptTitleList={setScriptTitleList}
           />
         )}
         {isLoginModalOpen && <LoginModal closeModal={() => setIsLoginModalOpen(false)} />}
@@ -458,7 +459,7 @@ const StLearnDetail = styled.div`
   }
 `;
 
-const StScriptIndexContainer = styled.div`
+const StScriptTitleContainer = styled.div`
   margin: 0 auto;
   width: 172rem;
   padding-left: 5.6rem;
