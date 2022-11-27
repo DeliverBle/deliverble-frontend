@@ -2,7 +2,14 @@ import styled from 'styled-components';
 import ImageDiv from '../common/ImageDiv';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import { icGuideHighlight, icGuideMemo, icGuideScript, icGuideSpacing, icXButton } from 'public/assets/icons';
+import {
+  icGuideHighlight,
+  icGuideMemo,
+  icGuideRecord,
+  icGuideScript,
+  icGuideSpacing,
+  icXButton,
+} from 'public/assets/icons';
 
 interface GuideModalProps {
   closeModal: () => void;
@@ -45,6 +52,11 @@ function GuideModal(props: GuideModalProps) {
               <ImageDiv src={icGuideMemo} className="function" layout="fill" alt="" />
               <StFunctionName>메모</StFunctionName>
               <StFunctionDetail>하이라이트를 우클릭해 주의할 내용을 메모해보세요.</StFunctionDetail>
+            </StFunction>
+            <StFunction>
+              <ImageDiv src={icGuideRecord} className="function" layout="fill" alt="" />
+              <StFunctionName>녹음</StFunctionName>
+              <StFunctionDetail>아나운서 쉐도잉으로 달라지는 나의 말하기를 녹음하고 점검해보세요.</StFunctionDetail>
             </StFunction>
             <StFunction>
               <ImageDiv src={icGuideScript} className="function" layout="fill" alt="" />
@@ -93,8 +105,8 @@ const StGuideModalBackground = styled.div`
 `;
 
 const StGuideModalContent = styled.div`
-  width: 103.8rem;
-  height: 69rem;
+  width: 127.3rem;
+  height: 68.5rem;
   padding: 6.4rem;
   border-radius: 2.5rem;
   background-color: ${COLOR.WHITE};

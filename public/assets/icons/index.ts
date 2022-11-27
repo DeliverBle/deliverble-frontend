@@ -5,6 +5,7 @@ export { default as icSearch } from './ic_search.svg';
 export { default as icGuideHighlight } from './ic_guide_highlight.svg';
 export { default as icGuideSpacing } from './ic_guide_spacing.svg';
 export { default as icGuideMemo } from './ic_guide_memo.svg';
+export { default as icGuideRecord } from './ic_guide_record.svg';
 export { default as icGuideScript } from './ic_guide_script.svg';
 export { default as icXButton } from './ic_x_button.svg';
 export { default as icMemoXButton } from './ic_memo_x_button.svg';
