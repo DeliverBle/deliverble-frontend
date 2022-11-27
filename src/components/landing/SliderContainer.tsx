@@ -208,10 +208,10 @@ function SliderContainer(props: SliderContainerProps) {
             <br />
             아나운서 쉐도잉으로 스피치 자신감을 키워보세요!
           </h2>
+          <Link href="/home" passHref>
+            <StStartButton>딜리버블 시작하기</StStartButton>
+          </Link>
         </div>
-        <Link href="/home" passHref>
-          <StStartButton>딜리버블 시작하기</StStartButton>
-        </Link>
         <StContact>
           <p>Contact Us</p>
           <p>deliverble.team@gmail.com</p>
@@ -405,10 +405,6 @@ const StFifthSlider = styled.section`
 `;
 
 const StSixthSlider = styled.section`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
   width: 100%;
   height: 100%;
 
@@ -416,24 +412,25 @@ const StSixthSlider = styled.section`
   background-repeat: no-repeat;
   background-size: cover;
 
-  & > div > h2 {
+  & > div:first-child {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 40.9rem;
 
-    color: ${COLOR.BLACK};
-    ${FONT_STYLES.SB_32_HEADLINE};
+    margin-top: 42.9rem;
   }
 
-  & > a {
-    margin-top: 5.6rem;
+  & > div > h2 {
+    color: ${COLOR.BLACK};
+    ${FONT_STYLES.SB_32_HEADLINE};
+    margin-bottom: 5.6rem;
   }
 `;
 
 const StContact = styled.div`
   position: relative;
-  margin: 22.9rem 0 6.4rem 160.9rem;
+  float: right;
+  margin: 22.9rem 6.4rem 6.4rem 0;
   color: ${COLOR.MAIN_BLUE};
 
   & > p:first-child {
