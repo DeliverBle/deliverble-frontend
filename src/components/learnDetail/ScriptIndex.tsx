@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import { ChangeEvent, KeyboardEvent, useState } from 'react';
+import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { SCRIPT_INDEX_MAX } from '@src/utils/constant';
 
 interface ScriptIndexProps {
@@ -29,6 +29,23 @@ function ScriptIndex(props: ScriptIndexProps) {
     onIndexRename,
   } = props;
   const [text, setText] = useState(`스크립트 ${currentIndex + 1}`);
+  const scriptIndexInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: Event) => {
+      const eventTarget = e.target as HTMLInputElement;
+      if (eventTarget.tagName !== 'INPUT') {
+        setIsInputVisible(false);
+      }
+    };
+
+    if (isInputVisible) {
+      window.addEventListener('click', handleClickOutside);
+    }
+    return () => {
+      window.removeEventListener('click', handleClickOutside);
+    };
+  }, [isInputVisible, setIsInputVisible]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
@@ -60,7 +77,7 @@ function ScriptIndex(props: ScriptIndexProps) {
       isInputVisible={isInputVisible && inputIndex === currentIndex}>
       {isInputVisible && inputIndex === currentIndex ? (
         <>
-          <input value={text} onChange={handleInputChange} onKeyUp={handleKeyUp} />
+          <input ref={scriptIndexInputRef} value={text} onChange={handleInputChange} onKeyUp={handleKeyUp} />
           <p>최대 글자수를 초과했어요!</p>
         </>
       ) : (
