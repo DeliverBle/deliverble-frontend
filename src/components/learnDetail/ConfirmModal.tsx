@@ -33,7 +33,7 @@ function ConfirmModal(props: ConfirmModalProps) {
   } = props;
   const { mainText, subText, confirmText, cancelText } = confirmModalText;
 
-  const deleteScriptIndex = (index: number) => {
+  const deleteScript = (index: number) => {
     const tempList = [...scriptTitleList];
     tempList.splice(index, 1);
     setScriptTitleList(tempList);
@@ -58,7 +58,7 @@ function ConfirmModal(props: ConfirmModalProps) {
         <button
           onClick={() => {
             setMemoHighlightId({ new: 0, edit: 0 });
-            deleteScriptIndex(clickedScriptTitleIndex);
+            deleteScript(clickedScriptTitleIndex);
             closeModal(false);
           }}>
           {cancelText}
