@@ -85,7 +85,7 @@ function SliderContainer(props: SliderContainerProps) {
             스피치 자신감, 딜리버블
           </h1>
         </div>
-        <Link href="/home">
+        <Link href="/home" passHref>
           <StStartButton>딜리버블 시작하기</StStartButton>
         </Link>
       </StFirstSlider>
@@ -205,7 +205,7 @@ function SliderContainer(props: SliderContainerProps) {
             아나운서 쉐도잉으로 스피치 자신감을 키워보세요!
           </h2>
         </div>
-        <Link href="/home">
+        <Link href="/home" passHref>
           <StStartButton>딜리버블 시작하기</StStartButton>
         </Link>
         <StContact>
@@ -271,11 +271,11 @@ const StFirstSlider = styled.section`
     margin-left: 16rem;
   }
 
-  & > button {
+  & > a {
     margin: 4.8rem 0 41.5rem 16rem;
   }
 `;
-const StStartButton = styled.button`
+const StStartButton = styled.a`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -288,6 +288,7 @@ const StStartButton = styled.button`
   ${FONT_STYLES.SB_24_HEADLINE};
 
   border-radius: 1.4rem;
+  cursor: pointer;
 `;
 
 const StSecondSlider = styled.section`
@@ -421,7 +422,7 @@ const StSixthSlider = styled.section`
     ${FONT_STYLES.SB_32_HEADLINE};
   }
 
-  & > button {
+  & > a {
     margin-top: 5.6rem;
   }
 `;
