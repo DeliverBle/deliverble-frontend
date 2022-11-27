@@ -22,6 +22,13 @@ export const MEMO_CONTENT_MAX = 30;
 export const BLOCK_SIZE = 10;
 export const LIST_SIZE = 12;
 export const ALL = '전체';
+export const INITIAL_NUMBER = -1;
 export const channelList = ['전체', 'SBS', 'KBS', 'MBC', '기타'];
 export const categoryList = ['전체', '정치', '경제', '사회', '세계', '연예', '기타'];
 export const speakerList = ['전체', '여성', '남성'];
+
+export const INITIAL_MEMO_STATE = {
+  newMemoId: INITIAL_NUMBER,
+  editMemoId: INITIAL_NUMBER,
+  deleteMemoId: INITIAL_NUMBER,
+};
