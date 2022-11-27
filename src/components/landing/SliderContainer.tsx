@@ -2,12 +2,16 @@ import styled from 'styled-components';
 import Link from 'next/link';
 import { MutableRefObject, useEffect } from 'react';
 import Lottie from 'lottie-react';
-import { step1Lottie } from 'public/assets/lottie';
-import { step2Lottie } from 'public/assets/lottie';
-import { step3Lottie } from 'public/assets/lottie';
-import { imgLandingBgFirst, imgLandingBgSecond, imgLandingBgLast } from 'public/assets/images/index';
-import { imgLandingBubble } from 'public/assets/images/index';
-import { imgLandingEar, imgLandingMic, imgLandingFist } from 'public/assets/images/index';
+import { step1Lottie, step2Lottie, step3Lottie } from 'public/assets/lottie';
+import {
+  imgLandingBgFirst,
+  imgLandingBgSecond,
+  imgLandingBgLast,
+  imgLandingEar,
+  imgLandingMic,
+  imgLandingFist,
+  imgLandingBubble,
+} from 'public/assets/images/index';
 import { COLOR } from 'src/styles/color';
 import { FONT_STYLES } from 'src/styles/fontStyle';
 import ImageDiv from '../common/ImageDiv';
