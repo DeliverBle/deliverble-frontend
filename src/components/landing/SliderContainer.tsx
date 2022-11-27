@@ -77,22 +77,23 @@ function SliderContainer(props: SliderContainerProps) {
 
   return (
     <StSliderContainer>
-      <div className="first-slide">
-        <StFirstSlider ref={firstSlideRef}>
-          <div>
-            <h1>아나운서 쉐도잉으로 키우는</h1>
-            <h1>스피치 자신감, 딜리버블</h1>
-          </div>
-          <Link href="/home">
-            <a className="start-button">딜리버블 시작하기</a>
-          </Link>
-        </StFirstSlider>
-      </div>
+      <StFirstSlider ref={firstSlideRef}>
+        <div>
+          <h1>
+            아나운서 쉐도잉으로 키우는
+            <br />
+            스피치 자신감, 딜리버블
+          </h1>
+        </div>
+        <Link href="/home">
+          <StStartButton>딜리버블 시작하기</StStartButton>
+        </Link>
+      </StFirstSlider>
 
       <StSecondSlider ref={secondSlideRef}>
         <h2>지금보다 더 잘 말하고 싶었던 적 없나요?</h2>
-        <div className="body-card-wrapper">
-          <StCard className="first-card">
+        <StBodyCardWrapper>
+          <StCard>
             <ImageDiv src={imgLandingEar} className="ear" layout="fill" alt="" />
             <h3>
               “발음을 교정하고 싶은데,
@@ -101,7 +102,7 @@ function SliderContainer(props: SliderContainerProps) {
             </h3>
             <p>26살 취준생 김○○</p>
           </StCard>
-          <StCard className="second-card">
+          <StCard>
             <ImageDiv src={imgLandingFist} className="fist" layout="fill" alt="" />
             <h3>
               “목소리가 떨려서 발표를 망쳤어요.
@@ -110,7 +111,7 @@ function SliderContainer(props: SliderContainerProps) {
             </h3>
             <p>23살 대학생 류○○</p>
           </StCard>
-          <StCard className="third-card">
+          <StCard>
             <ImageDiv src={imgLandingMic} className="mic" layout="fill" alt="" />
             <h3>
               “아나운서 준비를 시작했는데,
@@ -119,18 +120,18 @@ function SliderContainer(props: SliderContainerProps) {
             </h3>
             <p>24살 아나운서 지망생 백○○</p>
           </StCard>
-        </div>
+        </StBodyCardWrapper>
       </StSecondSlider>
 
       <StThirdSlider ref={thirdSlideRef}>
-        <div className="headline-wrapper">
+        <div>
           <h1>
             딜리버블이 제안하는
             <br />
             효과적인 말하기 학습 솔루션
           </h1>
         </div>
-        <StContentContainer className="step1-content">
+        <section>
           <StLottieWrapper className="step1">
             <Lottie animationData={step1Lottie} autoPlay loop />
           </StLottieWrapper>
@@ -148,11 +149,11 @@ function SliderContainer(props: SliderContainerProps) {
               </h4>
             </StH4>
           </StTextWrapper>
-        </StContentContainer>
+        </section>
       </StThirdSlider>
 
       <StFourthSlider ref={fourthSlideRef}>
-        <StContentContainer className="step2-content">
+        <section>
           <StLottieWrapper className="step2">
             <Lottie animationData={step2Lottie} autoPlay loop />
           </StLottieWrapper>
@@ -170,11 +171,11 @@ function SliderContainer(props: SliderContainerProps) {
               </h4>
             </StH4>
           </StTextWrapper>
-        </StContentContainer>
+        </section>
       </StFourthSlider>
 
       <StFifthSlider ref={fifthSlideRef}>
-        <StContentContainer className="step3-content">
+        <section>
           <StLottieWrapper className="step3">
             <Lottie animationData={step3Lottie} autoPlay loop />
           </StLottieWrapper>
@@ -193,7 +194,7 @@ function SliderContainer(props: SliderContainerProps) {
               </h4>
             </StH4>
           </StTextWrapper>
-        </StContentContainer>
+        </section>
       </StFifthSlider>
 
       <StSixthSlider ref={sixthSlideRef}>
@@ -205,11 +206,11 @@ function SliderContainer(props: SliderContainerProps) {
           </h2>
         </div>
         <Link href="/home">
-          <a className="start-button">딜리버블 시작하기</a>
+          <StStartButton>딜리버블 시작하기</StStartButton>
         </Link>
         <StContact>
-          <p className="contact">Contact Us</p>
-          <p className="email">deliverble.team@gmail.com</p>
+          <p>Contact Us</p>
+          <p>deliverble.team@gmail.com</p>
         </StContact>
       </StSixthSlider>
     </StSliderContainer>
@@ -217,25 +218,6 @@ function SliderContainer(props: SliderContainerProps) {
 }
 
 export default SliderContainer;
-
-const StContentContainer = styled.section`
-  display: flex;
-
-  &.step1-content {
-    margin-top: 23.6rem;
-    margin-bottom: 21.9rem;
-  }
-
-  &.step2-content {
-    margin-top: 36.1rem;
-    margin-bottom: 36rem;
-  }
-
-  &.step3-content {
-    margin-top: 34.2rem;
-    margin-bottom: 34.1rem;
-  }
-`;
 
 const StH4 = styled.section`
   & > h4 {
@@ -262,22 +244,20 @@ const StSliderContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-
-  .first-slide {
-    width: 100%;
-    height: 100vh;
-    min-height: 108rem;
-
-    background-image: url(${imgLandingBubble.src}), url(${imgLandingBgFirst.src});
-    background-position: -60px 96px, 0px 0px;
-    background-repeat: no-repeat;
-    background-size: 1906.64px 655px, cover;
-  }
 `;
 
 const StFirstSlider = styled.section`
   width: 100%;
   height: 100%;
+
+  width: 100%;
+  height: 100vh;
+  min-height: 108rem;
+
+  background-image: url(${imgLandingBubble.src}), url(${imgLandingBgFirst.src});
+  background-position: -60px 96px, 0px 0px;
+  background-repeat: no-repeat;
+  background-size: 1906.64px 655px, cover;
 
   & > div {
     display: flex;
@@ -291,24 +271,23 @@ const StFirstSlider = styled.section`
     margin-left: 16rem;
   }
 
-  .start-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    width: 26rem;
-    height: 7rem;
-
-    margin-top: 4.8rem;
-    margin-left: 16rem;
-    margin-bottom: 41.5rem;
-
-    background-color: ${COLOR.MAIN_BLUE};
-    color: ${COLOR.WHITE};
-    ${FONT_STYLES.SB_24_HEADLINE};
-
-    border-radius: 1.4rem;
+  & > button {
+    margin: 4.8rem 0 41.5rem 16rem;
   }
+`;
+const StStartButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 26rem;
+  height: 7rem;
+
+  background-color: ${COLOR.MAIN_BLUE};
+  color: ${COLOR.WHITE};
+  ${FONT_STYLES.SB_24_HEADLINE};
+
+  border-radius: 1.4rem;
 `;
 
 const StSecondSlider = styled.section`
@@ -327,21 +306,21 @@ const StSecondSlider = styled.section`
   & > h2 {
     margin-top: 8.8rem;
     color: ${COLOR.BLACK};
-    font: normal 600 44px/150% 'Pretendard';
+    ${FONT_STYLES.SB_36_HEADLINE};
     text-align: center;
     letter-spacing: -0.01em;
   }
+`;
 
-  .body-card-wrapper {
-    display: flex;
-    justify-content: center;
+const StBodyCardWrapper = styled.div`
+  display: flex;
+  justify-content: center;
 
-    width: 100%;
-    height: 79rem;
+  width: 100%;
+  height: 79rem;
 
-    margin: 4.3rem 0 12.1rem 0;
-    gap: 7rem;
-  }
+  margin: 4.3rem 0 12.1rem 0;
+  gap: 7rem;
 `;
 
 const StCard = styled.section`
@@ -358,19 +337,6 @@ const StCard = styled.section`
   border-radius: 4rem;
 
   margin-top: 17.9rem;
-
-  .first-card {
-    & > h3 {
-      margin-bottom: 8.6rem;
-    }
-  }
-
-  .second-card,
-  third-card {
-    & > h3 {
-      margin-bottom: 6.2rem;
-    }
-  }
 
   & > h3 {
     color: ${COLOR.BLACK};
@@ -400,24 +366,37 @@ const StThirdSlider = styled.section`
   width: 100%;
   height: 100%;
 
-  .headline-wrapper {
-    margin-top: 22rem;
+  & > div:first-child {
+    margin: 22rem 0 23.6rem 0;
 
-    font: normal 600 44px/150% 'Pretendard';
+    ${FONT_STYLES.SB_44_HEADLINE};
 
     text-align: center;
     letter-spacing: -0.01em;
+  }
+  & > section {
+    display: flex;
   }
 `;
 
 const StFourthSlider = styled.section`
   width: 100%;
   height: 100%;
+
+  & > section:first-child {
+    display: flex;
+    margin: 36.1rem 0 36rem 0;
+  }
 `;
 
 const StFifthSlider = styled.section`
   width: 100%;
   height: 100%;
+
+  & > section:first-child {
+    display: flex;
+    margin: 34.2rem 0 34.1rem 0;
+  }
 `;
 
 const StSixthSlider = styled.section`
@@ -442,21 +421,8 @@ const StSixthSlider = styled.section`
     ${FONT_STYLES.SB_32_HEADLINE};
   }
 
-  .start-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    width: 26rem;
-    height: 7rem;
-
+  & > button {
     margin-top: 5.6rem;
-
-    background-color: ${COLOR.MAIN_BLUE};
-    color: ${COLOR.WHITE};
-    ${FONT_STYLES.SB_24_HEADLINE};
-
-    border-radius: 1.4rem;
   }
 `;
 
@@ -465,11 +431,10 @@ const StContact = styled.div`
   margin: 22.9rem 0 6.4rem 160.9rem;
   color: ${COLOR.MAIN_BLUE};
 
-  .contact {
+  & > p:first-child {
     ${FONT_STYLES.SB_24_HEADLINE};
   }
-
-  .email {
+  & > p:nth-child(2) {
     ${FONT_STYLES.M_20_BODY};
   }
 `;
