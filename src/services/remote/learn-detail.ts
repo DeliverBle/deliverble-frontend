@@ -1,6 +1,5 @@
 import { LearnDetailService } from '../api/learn-detail';
-import { Script, SentenceData, Tag } from '../api/types/learn-detail';
-import { LEARN_DETAIL_DATA } from '../mock/learn-detail.data';
+import { Script, SentenceData, Tag, MemoData } from '../api/types/learn-detail';
 import { privateAPI, publicAPI } from './base';
 
 export function learnDetailDataRemote(): LearnDetailService {
@@ -24,9 +23,17 @@ export function learnDetailDataRemote(): LearnDetailService {
         })),
         scripts: response.data2[0].sentences.map((sentence: Script) => ({
           id: sentence.id,
+          order: sentence.order,
           text: sentence.text,
           startTime: sentence.startTime,
           endTime: sentence.endTime,
+        })),
+        memos: response.data2[0].memos.map((memo: MemoData) => ({
+          id: memo.id,
+          keyword: memo.keyword,
+          order: memo.order,
+          startIndex: memo.startIndex,
+          content: memo.content,
         })),
       };
     } else throw '서버 통신 실패';
@@ -60,10 +67,6 @@ export function learnDetailDataRemote(): LearnDetailService {
     } else throw '서버 통신 실패';
   };
 
-  const getHighlightData = async () => {
-    return LEARN_DETAIL_DATA.HIGHLIGHT_DATA;
-  };
-
   const postSentenceData = async (SentenceData: SentenceData, scriptsId: number) => {
     const response = await privateAPI.post({
       url: `/script/sentence/update/${scriptsId}`,
@@ -95,5 +98,59 @@ export function learnDetailDataRemote(): LearnDetailService {
     } else throw '서버 통신 실패';
   };
 
-  return { getPrivateVideoData, getPublicVideoData, getHighlightData, postSentenceData };
+  const postMemoData = async (memo: MemoData, scriptId: number) => {
+    const response = await privateAPI.post({
+      url: `/script/memo/create/${scriptId}`,
+      data: memo,
+    });
+    if (response.status === 200) {
+      return response.data2?.memos.map((memo: MemoData) => ({
+        id: memo.id,
+        keyword: memo.keyword,
+        order: memo.order,
+        startIndex: memo.startIndex,
+        content: memo.content,
+      }));
+    } else throw '서버 통신 실패';
+  };
+
+  const updateMemoData = async (memoId: number, content: string) => {
+    const response = await privateAPI.patch({
+      url: `/script/memo/update/${memoId}`,
+      data: { content },
+    });
+    if (response.status === 200) {
+      return response.data2?.memos.map((memo: MemoData) => ({
+        id: memo.id,
+        keyword: memo.keyword,
+        order: memo.order,
+        startIndex: memo.startIndex,
+        content: memo.content,
+      }));
+    } else throw '서버 통신 실패';
+  };
+
+  const deleteMemoData = async (memoId: number) => {
+    const response = await privateAPI.delete({
+      url: `/script/memo/delete/${memoId}`,
+    });
+    if (response.status === 200) {
+      return response.data2?.memos.map((memo: MemoData) => ({
+        id: memo.id,
+        keyword: memo.keyword,
+        order: memo.order,
+        startIndex: memo.startIndex,
+        content: memo.content,
+      }));
+    } else throw '서버 통신 실패';
+  };
+
+  return {
+    getPrivateVideoData,
+    getPublicVideoData,
+    postSentenceData,
+    postMemoData,
+    deleteMemoData,
+    updateMemoData,
+  };
 }
