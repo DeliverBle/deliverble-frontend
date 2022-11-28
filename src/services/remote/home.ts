@@ -1,10 +1,10 @@
 import { VideoData } from '../api/types/home';
 import { HomeService } from './../api/home';
-import { privateAPI } from './base';
+import { publicAPI } from './base';
 
 export function homeDataRemote(): HomeService {
   const getVideoData = async () => {
-    const response = await privateAPI.get({ url: `/news/recommend` });
+    const response = await publicAPI.get({ url: `/news/recommend` });
     if (response.status === 200) {
       return {
         videoList: response.data
@@ -23,7 +23,7 @@ export function homeDataRemote(): HomeService {
   };
 
   const getSpeechGuideData = async () => {
-    const response = await privateAPI.get({ url: `/news/guide` });
+    const response = await publicAPI.get({ url: `/news/guide` });
     if (response.status === 200) {
       return {
         videoList: response.data

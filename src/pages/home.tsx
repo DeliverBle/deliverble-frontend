@@ -72,13 +72,23 @@ function Home() {
           !is500 && <ImageDiv className="big-mic" src={imgBigBannerMic} alt="" layout="fill" />
         )}
       </StHome>
-      <StNews>
+      <StNews type="guide">
+        <h3>스스로 학습하기 전, 스피치 가이드를 살펴보세요.</h3>
+        <div>
+          {isLoading ? (
+            <VideoListSkeleton itemNumber={4} />
+          ) : (
+            <NewsList onClickLike={handleClickLike} newsList={speechGuideList} type="guide" />
+          )}
+        </div>
+      </StNews>
+      <StNews type="recommend">
         <h3>딜리버블의 추천 뉴스를 만나보세요.</h3>
         <div>
           {isLoading ? (
             <VideoListSkeleton itemNumber={8} />
           ) : (
-            <NewsList onClickLike={handleClickLike} newsList={newsList} />
+            <NewsList onClickLike={handleClickLike} newsList={newsList} type="recommend" />
           )}
         </div>
       </StNews>
@@ -151,8 +161,9 @@ const StBannerText = styled.div`
   }
 `;
 
-const StNews = styled.div`
-  padding: 0 0 30rem 16rem;
+const StNews = styled.div<{ type: string }>`
+  padding-left: 16rem;
+  padding-bottom: ${({ type }) => (type === 'guide' ? '20rem' : '30rem')};
 
   & > div {
     margin: 0 auto;
