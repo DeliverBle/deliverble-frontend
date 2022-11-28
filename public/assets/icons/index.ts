@@ -39,3 +39,5 @@ export { default as icScriptAddLight } from './ic_script_add_light.svg';
 export { default as icScriptAddDark } from './ic_script_add_dark.svg';
 export { default as icScriptDeleteLight } from './ic_script_delete_light.svg';
 export { default as icScriptDeleteDark } from './ic_script_delete_dark.svg';
+export { default as icSpeechGuideCorner } from './ic_speech_guide_corner.svg';
+export { default as icSpeechGuideLogo } from './ic_speech_guide_logo.svg';
