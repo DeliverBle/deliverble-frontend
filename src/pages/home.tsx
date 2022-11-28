@@ -16,6 +16,7 @@ import styled from 'styled-components';
 function Home() {
   const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
   const [newsList, setNewsList] = useState<VideoData[]>([]);
+  const [speechGuideList, setSpeechGuideList] = useState<VideoData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const is960 = useMediaQuery({
     query: '(min-width: 501px) and (max-width: 960px)',
@@ -26,7 +27,9 @@ function Home() {
 
   const getVideoList = async () => {
     const { videoList } = await api.homeService.getVideoData();
-    setNewsList(videoList);
+    videoList && setNewsList(videoList);
+    const { videoList: guideList } = await api.homeService.getSpeechGuideData();
+    guideList && setSpeechGuideList(guideList);
   };
 
   useEffect(() => {
