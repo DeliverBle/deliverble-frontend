@@ -29,9 +29,11 @@ function MemoList(props: MemoListProps) {
     setIsConfirmOpen,
     setConfirmModalText,
   } = props;
-  const { newMemoId, editMemoId } = memoState;
+  const { newMemoId } = memoState;
 
   useEffect(() => {
+    setMemoList(memoList.filter((memo) => memo.content !== ''));
+
     if (newMemoId !== INITIAL_NUMBER) {
       const { order, startIndex } = memoInfo;
       const newMemoList = [
@@ -52,10 +54,6 @@ function MemoList(props: MemoListProps) {
         return 0;
       });
       setMemoList(newMemoList);
-
-      if (editMemoId !== INITIAL_NUMBER) {
-        setMemoList(memoList.filter((memo) => memo.content !== ''));
-      }
     }
   }, [memoState]);
 

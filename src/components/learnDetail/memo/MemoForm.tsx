@@ -36,6 +36,7 @@ function MemoForm(props: MemoFormProps) {
     if (textAreaRef.current) {
       textAreaRef.current.style.height = '0.1rem';
       textAreaRef.current.style.height = (12 + textAreaRef.current.scrollHeight) / 10 + 'rem';
+      textAreaRef.current.style.border = `0.2rem solid ${COLOR.SUB_BLUE_50}`;
 
       setTextLength(textAreaRef.current.value.length);
     }
@@ -67,8 +68,11 @@ function MemoForm(props: MemoFormProps) {
         memoList = await api.learnDetailService.updateMemoData(id, newContent);
       }
       memoList && setMemoList(memoList);
+      setMemoState(INITIAL_MEMO_STATE);
     }
-    setMemoState(INITIAL_MEMO_STATE);
+    if (newContent === '' && textAreaRef.current) {
+      textAreaRef.current.style.border = `0.2rem solid ${COLOR.RED}`;
+    }
   };
 
   const handleClickCancel = () => {
