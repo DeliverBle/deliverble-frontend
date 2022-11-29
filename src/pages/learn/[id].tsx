@@ -181,7 +181,7 @@ function LearnDetail() {
         const contextTarget = contextEvent.target as HTMLDivElement;
         setClickedMemo(memoList.find((memo) => memo.startIndex === highlightIndex));
         setContextMenuPoint(handleContextMenuPoint(contextTarget));
-        setSelectedKeyword(contextTarget.innerText);
+        setSelectedKeyword(contextTarget.innerText.replaceAll('/', ''));
       }
     }
   }, [highlightIndex]);
@@ -315,7 +315,9 @@ function LearnDetail() {
                       <ContextMenu
                         contextMenuPoint={contextMenuPoint}
                         clickedMemoId={clickedMemo?.id}
+                        memoState={memoState}
                         setMemoState={setMemoState}
+                        setIsConfirmOpen={setIsConfirmOpen}
                         setIsContextMenuOpen={setIsContextMenuOpen}
                       />
                     )}
