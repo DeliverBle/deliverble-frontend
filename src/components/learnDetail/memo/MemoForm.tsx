@@ -52,7 +52,7 @@ function MemoForm(props: MemoFormProps) {
 
   const handleClickDone = async () => {
     const newContent = textAreaRef.current?.value;
-    if (newContent && newContent !== content) {
+    if (newContent) {
       let memoList;
       if (newMemoId !== INITIAL_NUMBER) {
         memoList = await api.learnDetailService.postMemoData(
