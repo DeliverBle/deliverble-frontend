@@ -12,17 +12,27 @@ export function learnDetailDataMock(): LearnDetailService {
     return LEARN_DETAIL_DATA.VIDEO_DATA;
   };
 
-  const getHighlightData = async () => {
-    await wait(500);
-    return LEARN_DETAIL_DATA.HIGHLIGHT_DATA;
-  };
-
   const postSentenceData = async () => {
     await wait(500);
     return LEARN_DETAIL_DATA.VIDEO_DATA;
   };
 
-  return { getPrivateVideoData, getPublicVideoData, getHighlightData, postSentenceData };
+  const postMemoData = async () => {
+    await wait(500);
+    return LEARN_DETAIL_DATA.MEMO_LIST_DATA;
+  };
+
+  const updateMemoData = async () => {
+    await wait(500);
+    return LEARN_DETAIL_DATA.MEMO_LIST_DATA;
+  };
+
+  const deleteMemoData = async () => {
+    await wait(500);
+    return LEARN_DETAIL_DATA.MEMO_LIST_DATA;
+  };
+
+  return { getPrivateVideoData, getPublicVideoData, postSentenceData, postMemoData, updateMemoData, deleteMemoData };
 }
 
 const wait = (milliSeconds: number) => new Promise((resolve) => setTimeout(resolve, milliSeconds));
