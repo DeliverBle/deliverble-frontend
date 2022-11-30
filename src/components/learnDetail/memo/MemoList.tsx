@@ -11,51 +11,39 @@ interface MemoListProps {
   memoList: MemoData[];
   memoState: MemoState;
   memoInfo: MemoInfo;
-  selectedKeyword: string;
-  setMemoList: (memoList: MemoData[]) => void;
+  setMemoList: Dispatch<SetStateAction<MemoData[]>>;
   setMemoState: Dispatch<SetStateAction<MemoState>>;
   setIsConfirmOpen: (open: boolean) => void;
   setConfirmModalText: (text: ConfirmModalText) => void;
 }
 
 function MemoList(props: MemoListProps) {
-  const {
-    memoList,
-    memoState,
-    memoInfo,
-    selectedKeyword,
-    setMemoList,
-    setMemoState,
-    setIsConfirmOpen,
-    setConfirmModalText,
-  } = props;
-  const { newMemoId } = memoState;
+  const { memoList, memoState, memoInfo, setMemoList, setMemoState, setIsConfirmOpen, setConfirmModalText } = props;
 
   useEffect(() => {
-    setMemoList(memoList.filter((memo) => memo.content !== ''));
-
-    if (newMemoId !== INITIAL_NUMBER) {
-      const { order, startIndex } = memoInfo;
-      const newMemoList = [
-        ...memoList,
-        {
-          id: INITIAL_NUMBER,
-          order,
-          startIndex,
-          keyword: selectedKeyword,
-          content: '',
-        },
-      ];
-      newMemoList.sort((a, b) => {
-        if (a.order > b.order) return 1;
-        if (a.order < b.order) return -1;
-        if (a.startIndex > b.startIndex) return 1;
-        if (a.startIndex < b.startIndex) return -1;
-        return 0;
-      });
-      setMemoList(newMemoList);
+    setMemoList((prev: MemoData[]) => prev.filter((memo) => memo.content !== ''));
+    if (memoState.newMemoId !== INITIAL_NUMBER) {
+      const { order, startIndex, keyword } = memoInfo;
+      setMemoList((prev: MemoData[]) =>
+        [
+          ...prev,
+          {
+            id: INITIAL_NUMBER,
+            order,
+            startIndex,
+            keyword,
+            content: '',
+          },
+        ].sort((a, b) => {
+          if (a.order > b.order) return 1;
+          if (a.order < b.order) return -1;
+          if (a.startIndex > b.startIndex) return 1;
+          if (a.startIndex < b.startIndex) return -1;
+          return 0;
+        }),
+      );
     }
-  }, [memoState]);
+  }, [memoState, memoInfo, setMemoList]);
 
   return (
     <StMemoList>

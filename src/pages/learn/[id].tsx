@@ -19,6 +19,7 @@ import {
   NEW_MEMO_CONFIRM_MODAL_TEXT,
   INITIAL_NUMBER,
   INITIAL_MEMO_STATE,
+  INITIAL_MEMO,
   DELETE_SCRIPT_CONFIRM_MODAL_TEXT,
   SCRIPT_MAX_COUNT,
 } from '@src/utils/constant';
@@ -49,6 +50,7 @@ export interface MemoInfo {
   scriptId: number;
   order: number;
   startIndex: number;
+  keyword: string;
 }
 
 function LearnDetail() {
@@ -79,17 +81,11 @@ function LearnDetail() {
   const [scriptTitleInputIndex, setTitleInputIndex] = useState(-1);
   const [memoList, setMemoList] = useState<MemoData[]>([]);
   const [memoState, setMemoState] = useState<MemoState>(INITIAL_MEMO_STATE);
-  const [memoInfo, setMemoInfo] = useState<MemoInfo>({
-    scriptId: INITIAL_NUMBER,
-    order: INITIAL_NUMBER,
-    startIndex: INITIAL_NUMBER,
-  });
+  const [memoInfo, setMemoInfo] = useState<MemoInfo>(INITIAL_MEMO);
   const [clickedMemo, setClickedMemo] = useState<MemoData>();
   const [clickedDeleteMemo, setClickedDeleteMemo] = useState<boolean>(false);
   const contextMenuRef = useRef<HTMLDivElement>(null);
-  const [contextEvent, setContextEvent] = useState<React.MouseEvent>();
   const [contextMenuPoint, setContextMenuPoint] = useState({ x: 0, y: 0 });
-  const [selectedKeyword, setSelectedKeyword] = useState<string>('');
   const [isContextMenuOpen, setIsContextMenuOpen] = useState<boolean>(false);
 
   const handleContextMenuPoint = (target: HTMLDivElement) => {
@@ -117,7 +113,7 @@ function LearnDetail() {
       for (let i = 0; i < childNodes.length; i++) {
         if (childNodes[i].textContent === givenString) {
           setHighlightIndex(stringLength);
-          break;
+          return stringLength;
         }
         stringLength += childNodes[i]?.textContent?.length ?? 0;
       }
@@ -126,13 +122,19 @@ function LearnDetail() {
 
   const handleRightClick = (e: React.MouseEvent, scriptId: number, order: number) => {
     const contextTarget = e.target as HTMLDivElement;
-    getHighlightIndex(contextTarget?.parentNode, contextTarget.innerText);
-    setContextEvent(e);
-    setMemoInfo((prev) => ({
-      ...prev,
-      scriptId,
-      order,
-    }));
+    const startIndex = getHighlightIndex(contextTarget?.parentNode, contextTarget.innerText);
+    const markTag = contextTarget.closest('mark');
+
+    if (startIndex && markTag) {
+      setMemoInfo({
+        scriptId,
+        order,
+        startIndex,
+        keyword: markTag.innerText.replaceAll('/', ''),
+      });
+      setClickedMemo(memoList.find((memo) => memo.startIndex === startIndex));
+    }
+    setContextMenuPoint(handleContextMenuPoint(contextTarget));
   };
 
   const handleScriptDelete = () => {
@@ -167,22 +169,11 @@ function LearnDetail() {
         }
       }
     })();
-  }, [clickedDeleteMemo]);
+  }, [clickedDeleteMemo, memoState]);
 
   useEffect(() => {
     if (highlightIndex !== INITIAL_NUMBER) {
       setIsContextMenuOpen(true);
-      setMemoInfo((prev) => ({
-        ...prev,
-        startIndex: highlightIndex,
-      }));
-
-      if (contextEvent) {
-        const contextTarget = contextEvent.target as HTMLDivElement;
-        setClickedMemo(memoList.find((memo) => memo.startIndex === highlightIndex));
-        setContextMenuPoint(handleContextMenuPoint(contextTarget));
-        setSelectedKeyword(contextTarget.innerText.replaceAll('/', ''));
-      }
     }
   }, [highlightIndex]);
 
@@ -449,7 +440,6 @@ function LearnDetail() {
                       <>
                         <MemoList
                           memoList={memoList}
-                          selectedKeyword={selectedKeyword}
                           memoState={memoState}
                           memoInfo={memoInfo}
                           setMemoList={setMemoList}
