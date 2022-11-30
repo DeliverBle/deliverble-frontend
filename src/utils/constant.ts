@@ -41,3 +41,9 @@ export const INITIAL_MEMO_STATE = {
   editMemoId: INITIAL_NUMBER,
   deleteMemoId: INITIAL_NUMBER,
 };
+export const INITIAL_MEMO = {
+  scriptId: INITIAL_NUMBER,
+  order: INITIAL_NUMBER,
+  startIndex: INITIAL_NUMBER,
+  keyword: '',
+};
