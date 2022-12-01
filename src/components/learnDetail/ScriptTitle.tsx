@@ -30,6 +30,7 @@ function ScriptTitle(props: ScriptTitleProps) {
   } = props;
   const [text, setText] = useState(`스크립트 ${currentScriptTitleIndex + 1}`);
   const scriptTitleInputRef = useRef<HTMLInputElement>(null);
+  const isEditing = isScriptTitleInputVisible && scriptTitleInputIndex === currentScriptTitleIndex;
 
   useEffect(() => {
     const handleClickOutside = (e: Event) => {
@@ -74,28 +75,20 @@ function ScriptTitle(props: ScriptTitleProps) {
         onScriptRename(currentScriptTitleIndex);
       }}
       isClicked={currentScriptTitleIndex === clickedScriptTitleIndex}
-      isScriptTitleInputVisible={isScriptTitleInputVisible && scriptTitleInputIndex === currentScriptTitleIndex}>
-      {isScriptTitleInputVisible && scriptTitleInputIndex === currentScriptTitleIndex ? (
+      isEditing={isEditing}>
+      {isEditing ? (
         <input ref={scriptTitleInputRef} value={text} onChange={handleInputChange} onKeyUp={handleKeyUp} />
       ) : (
         <div>스크립트 {currentScriptTitleIndex + 1}</div>
       )}
-      {!isOne && (
-        <StScriptDeleteButton
-          onClick={onScriptDelete}
-          isScriptTitleInputVisible={isScriptTitleInputVisible && scriptTitleInputIndex === currentScriptTitleIndex}
-        />
-      )}
+      {!isOne && <StScriptDeleteButton onClick={onScriptDelete} isEditing={isEditing} />}
     </StScriptTitle>
   );
 }
 
 export default ScriptTitle;
 
-const StScriptTitle = styled.div<{
-  isClicked: boolean;
-  isScriptTitleInputVisible: boolean;
-}>`
+const StScriptTitle = styled.div<{ isClicked: boolean; isEditing: boolean }>`
   opacity: ${({ isClicked }) => (isClicked ? 1 : 0.6)};
   &:hover > div {
     opacity: 0.8;
@@ -106,8 +99,7 @@ const StScriptTitle = styled.div<{
   justify-content: space-between;
   width: 20.9rem;
   height: 4.8rem;
-  padding: ${({ isScriptTitleInputVisible }) =>
-    isScriptTitleInputVisible ? '0.6rem 0.8rem' : '1rem 1.2rem 1rem 2.4rem'};
+  padding: ${({ isEditing }) => (isEditing ? '0.6rem 0.8rem' : '1rem 1.2rem 1rem 2.4rem')};
   border-radius: 1.6rem 1.6rem 0 0;
   background-color: ${COLOR.WHITE};
   color: ${COLOR.MAIN_BLUE};
@@ -131,8 +123,8 @@ const StScriptTitle = styled.div<{
   }
 `;
 
-const StScriptDeleteButton = styled.button<{ isScriptTitleInputVisible: boolean }>`
-  display: ${({ isScriptTitleInputVisible }) => (isScriptTitleInputVisible ? 'none' : 'block')};
+const StScriptDeleteButton = styled.button<{ isEditing: boolean }>`
+  display: ${({ isEditing }) => (isEditing ? 'none' : 'block')};
   width: 2.4rem;
   height: 2.4rem;
   padding: 0;
