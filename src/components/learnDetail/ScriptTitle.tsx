@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
@@ -50,14 +50,16 @@ function ScriptTitle(props: ScriptTitleProps) {
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
     if (value.length >= SCRIPT_TITLE_MAX_LENGTH) {
-      value = value.substring(0, SCRIPT_TITLE_MAX_LENGTH + 1);
+      value = value.substring(0, SCRIPT_TITLE_MAX_LENGTH);
     }
     setText(value);
   };
 
   const handleKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    if (e.key === 'Enter' && value.length <= SCRIPT_TITLE_MAX_LENGTH) {
+    const length = value.length;
+
+    if (e.key === 'Enter' && length && length <= SCRIPT_TITLE_MAX_LENGTH) {
       // 엔터 눌렀을 때 value를 request body에 담아 patch
       setIsScriptTitleInputVisible(false);
     }
@@ -72,14 +74,9 @@ function ScriptTitle(props: ScriptTitleProps) {
         onScriptRename(currentScriptTitleIndex);
       }}
       isClicked={currentScriptTitleIndex === clickedScriptTitleIndex}
-      isMinError={text.length === 0}
-      isMaxError={text.length >= SCRIPT_TITLE_MAX_LENGTH + 1}
       isScriptTitleInputVisible={isScriptTitleInputVisible && scriptTitleInputIndex === currentScriptTitleIndex}>
       {isScriptTitleInputVisible && scriptTitleInputIndex === currentScriptTitleIndex ? (
-        <>
-          <input ref={scriptTitleInputRef} value={text} onChange={handleInputChange} onKeyUp={handleKeyUp} />
-          <p>최대 글자수를 초과했어요!</p>
-        </>
+        <input ref={scriptTitleInputRef} value={text} onChange={handleInputChange} onKeyUp={handleKeyUp} />
       ) : (
         <div>스크립트 {currentScriptTitleIndex + 1}</div>
       )}
@@ -97,8 +94,6 @@ export default ScriptTitle;
 
 const StScriptTitle = styled.div<{
   isClicked: boolean;
-  isMinError: boolean;
-  isMaxError: boolean;
   isScriptTitleInputVisible: boolean;
 }>`
   opacity: ${({ isClicked }) => (isClicked ? 1 : 0.6)};
@@ -129,45 +124,11 @@ const StScriptTitle = styled.div<{
   & > input {
     width: 100%;
     height: 3.5rem;
-    border: 0.2rem solid ${({ isMinError, isMaxError }) => (isMinError || isMaxError ? COLOR.RED : COLOR.MAIN_BLUE)};
+    border: 0.2rem solid ${COLOR.MAIN_BLUE};
     border-radius: 0.4rem;
     padding: 0.4rem 0.8rem;
     ${FONT_STYLES.M_20_BODY};
   }
-
-  ${({ isMaxError }) =>
-    isMaxError
-      ? css`
-          & > p {
-            position: absolute;
-            top: 5.5rem;
-            background: rgba(255, 79, 79, 0.2);
-            color: ${COLOR.RED};
-            width: 17.3rem;
-            padding: 1rem;
-            cursor: default;
-            border-radius: 0.6rem;
-            ${FONT_STYLES.SB_15_CAPTION}
-          }
-
-          & > p:after {
-            position: absolute;
-            bottom: 100%;
-            left: 1.6rem;
-            border: solid transparent;
-            content: '';
-            width: 0;
-            height: 0;
-            pointer-events: none;
-            border-width: 0.8rem;
-            border-bottom-color: rgba(255, 79, 79, 0.2);
-          }
-        `
-      : css`
-          & > p {
-            display: none;
-          }
-        `}
 `;
 
 const StScriptDeleteButton = styled.button<{ isScriptTitleInputVisible: boolean }>`

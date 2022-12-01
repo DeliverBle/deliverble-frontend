@@ -27,7 +27,7 @@ export const DELETE_SCRIPT_CONFIRM_MODAL_TEXT = {
 
 export const MEMO_CONTENT_MAX = 30;
 export const SCRIPT_MAX_COUNT = 3;
-export const SCRIPT_TITLE_MAX_LENGTH = 27;
+export const SCRIPT_TITLE_MAX_LENGTH = 100;
 export const BLOCK_SIZE = 10;
 export const LIST_SIZE = 12;
 export const ALL = '전체';
