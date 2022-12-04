@@ -222,6 +222,7 @@ function LearnDetail() {
     if (highlightIndex !== INITIAL_NUMBER && newMemoId === INITIAL_NUMBER && editMemoId === INITIAL_NUMBER) {
       setIsContextMenuOpen(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [highlightIndex]);
 
   useEffect(() => {

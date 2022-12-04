@@ -122,6 +122,7 @@ function MemoForm(props: MemoFormProps) {
       window.removeEventListener('mousedown', handleClickOutside);
       window.removeEventListener('contextmenu', handleClickOutside);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [memoState]);
 
   return (
