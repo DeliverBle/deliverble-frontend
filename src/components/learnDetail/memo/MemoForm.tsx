@@ -39,7 +39,7 @@ function MemoForm(props: MemoFormProps) {
       if (length > 70) {
         textarea.value = textarea.value.slice(0, 70);
       }
-      setTextLength(length);
+      setTextLength(textarea.value.length);
 
       textarea.style.height = '0.1rem';
       textarea.style.height = (12 + textarea.scrollHeight) / 10 + 'rem';
