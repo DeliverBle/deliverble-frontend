@@ -8,8 +8,8 @@ import { DELETE_MEMO_CONFIRM_MODAL_TEXT, INITIAL_MEMO_STATE } from '@src/utils/c
 export interface ConfirmModalText {
   mainText: string;
   subText?: string;
-  confirmText: string;
-  cancelText: string;
+  leftButtonText: string;
+  rightButtonText: string;
 }
 
 interface ConfirmModalProps {
@@ -34,7 +34,7 @@ function ConfirmModal(props: ConfirmModalProps) {
     setClickedScriptTitleIndex,
     setScriptTitleList,
   } = props;
-  const { mainText, subText, confirmText, cancelText } = confirmModalText;
+  const { mainText, subText, leftButtonText, rightButtonText } = confirmModalText;
 
   const deleteScript = (index: number) => {
     const tempList = [...scriptTitleList];
@@ -50,11 +50,12 @@ function ConfirmModal(props: ConfirmModalProps) {
     });
   }, []);
 
-  const handleClickConfirm = async () => {
-    setIsConfirmOpen(false);
-    if (confirmText === DELETE_MEMO_CONFIRM_MODAL_TEXT.confirmText) {
+  const handleButtonClick = () => {
+    if (rightButtonText === DELETE_MEMO_CONFIRM_MODAL_TEXT.rightButtonText) {
       setClickedDeleteMemo(true);
+      return;
     }
+    setMemoState(INITIAL_MEMO_STATE);
   };
 
   return (
@@ -64,14 +65,19 @@ function ConfirmModal(props: ConfirmModalProps) {
         <p>{subText}</p>
       </StDescription>
       <StButtonContainer>
-        <button onClick={handleClickConfirm}>{confirmText}</button>
         <button
           onClick={() => {
-            setMemoState(INITIAL_MEMO_STATE);
             setIsConfirmOpen(false);
+          }}>
+          {leftButtonText}
+        </button>
+        <button
+          onClick={() => {
+            setIsConfirmOpen(false);
+            handleButtonClick();
             deleteScript(clickedScriptTitleIndex);
           }}>
-          {cancelText}
+          {rightButtonText}
         </button>
       </StButtonContainer>
     </StConfirmModal>
