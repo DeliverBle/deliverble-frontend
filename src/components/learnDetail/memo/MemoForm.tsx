@@ -106,7 +106,6 @@ function MemoForm(props: MemoFormProps) {
   }, [content]);
 
   useEffect(() => {
-    console.log(memoState);
     const handleClickOutside = (e: Event) => {
       const eventTarget = e.target as HTMLElement;
       const memo = eventTarget.closest('.memo');

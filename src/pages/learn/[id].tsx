@@ -125,6 +125,46 @@ function LearnDetail() {
     }
   };
 
+  const createMarkStyles = (script: string, isActive: boolean, scriptOrder: number) => {
+    let styles = ``;
+    const highlightIndexList: number[] = [];
+    const searchValue = '<mark>';
+    script = script.replaceAll('</mark>', '');
+
+    let index = script.indexOf(searchValue, 0);
+    while (index !== -1) {
+      highlightIndexList.push(index);
+      script = script.replace('<mark>', '');
+      index = script.indexOf(searchValue, index + 1);
+    }
+
+    highlightIndexList.forEach((index, i) => {
+      styles += `
+        mark:nth-child(${i + 1}) {
+          background: linear-gradient(259.3deg, #d8d9ff 0%, #a7c5ff 100%);
+          font-weight: ${isActive ? 600 : 400};
+          color: ${isActive ? COLOR.MAIN_BLUE : COLOR.BLACK};
+      
+          & > span {
+            font-size: 3.2rem;
+            font-weight: 600;
+            color: ${COLOR.MAIN_BLUE};
+          }
+        `;
+
+      if (memoList.find(({ startIndex, order, content }) => startIndex === index && order === scriptOrder && content)) {
+        styles += `
+          text-decoration: underline 3px ${COLOR.MAIN_BLUE};
+          text-underline-position: under;
+          text-underline-offset: 3px;
+        `;
+      }
+      styles += `}`;
+    });
+
+    return styles;
+  };
+
   const handleRightClick = (e: React.MouseEvent, scriptId: number, order: number) => {
     const contextTarget = e.target as HTMLDivElement;
     const startIndex = getHighlightIndex(contextTarget?.parentNode, contextTarget.innerText);
@@ -177,7 +217,6 @@ function LearnDetail() {
   }, [clickedDeleteMemo, memoState]);
 
   useEffect(() => {
-    console.log('highlightIndex', highlightIndex);
     if (highlightIndex !== INITIAL_NUMBER) {
       setIsContextMenuOpen(true);
     }
@@ -231,6 +270,7 @@ function LearnDetail() {
       const eventTarget = e.target as HTMLElement;
       if (isContextMenuOpen && !contextMenuRef?.current?.contains(eventTarget) && eventTarget.tagName !== 'MARK') {
         setIsContextMenuOpen(false);
+        setHighlightIndex(INITIAL_NUMBER);
       }
     };
     if (isContextMenuOpen) {
@@ -304,6 +344,11 @@ function LearnDetail() {
                           }}
                           key={id}
                           onClick={() => player?.seekTo(startTime, true)}
+                          markStyles={createMarkStyles(
+                            text,
+                            startTime <= currentTime && currentTime < endTime ? true : false,
+                            order,
+                          )}
                           isActive={startTime <= currentTime && currentTime < endTime ? true : false}>
                           <div dangerouslySetInnerHTML={{ __html: text }}></div>
                         </StScriptText>
@@ -593,7 +638,7 @@ const StLearnSection = styled.section`
   }
 `;
 
-const StScriptText = styled.div<{ isActive: boolean }>`
+const StScriptText = styled.div<{ isActive: boolean; markStyles: string }>`
   position: relative;
   font-size: 2.6rem;
   font-weight: ${({ isActive }) => (isActive ? 600 : 400)};
@@ -607,17 +652,7 @@ const StScriptText = styled.div<{ isActive: boolean }>`
     margin: 0 0.02rem 0 0.02rem;
   }
 
-  mark {
-    background: linear-gradient(259.3deg, #d8d9ff 0%, #a7c5ff 100%);
-    font-weight: ${({ isActive }) => (isActive ? 600 : 400)};
-    color: ${({ isActive }) => (isActive ? COLOR.MAIN_BLUE : COLOR.BLACK)};
-
-    & > span {
-      font-size: 3.2rem;
-      font-weight: 600;
-      color: ${COLOR.MAIN_BLUE};
-    }
-  }
+  ${({ markStyles }) => markStyles};
 
   & > mark:hover {
     color: ${COLOR.MAIN_BLUE};
