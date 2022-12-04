@@ -217,7 +217,8 @@ function LearnDetail() {
   }, [clickedDeleteMemo, memoState]);
 
   useEffect(() => {
-    if (highlightIndex !== INITIAL_NUMBER) {
+    const { newMemoId, editMemoId } = memoState;
+    if (highlightIndex !== INITIAL_NUMBER && newMemoId === INITIAL_NUMBER && editMemoId === INITIAL_NUMBER) {
       setIsContextMenuOpen(true);
     }
   }, [highlightIndex]);
