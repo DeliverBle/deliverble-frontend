@@ -106,6 +106,7 @@ const StKeyword = styled.h1`
 const StContent = styled.div`
   color: ${COLOR.GRAY_80};
   ${FONT_STYLES.R_23_MEMO};
+  word-break: break-all;
 `;
 
 const StFoldbutton = styled.div<{ fold: boolean }>`

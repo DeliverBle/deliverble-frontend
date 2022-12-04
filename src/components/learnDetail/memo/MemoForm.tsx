@@ -208,5 +208,6 @@ const StDoneButton = styled.button<{ textLength: number }>`
     !textLength &&
     css`
       cursor: url('/assets/icons/ic_not_allowed_cursor.svg'), not-allowed;
+      disabled: true;
     `}
 `;

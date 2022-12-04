@@ -211,6 +211,7 @@ function LearnDetail() {
         if (memoList) {
           setMemoList(memoList);
           setClickedDeleteMemo(false);
+          setMemoState(INITIAL_MEMO_STATE);
         }
       }
     })();
