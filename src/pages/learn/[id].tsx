@@ -137,7 +137,7 @@ function LearnDetail() {
         startIndex,
         keyword: markTag.innerText.replaceAll('/', ''),
       });
-      setClickedMemo(memoList.find((memo) => memo.startIndex === startIndex));
+      setClickedMemo(memoList.find((memo) => memo.startIndex === startIndex && memo.order === order));
     }
     setContextMenuPoint(handleContextMenuPoint(contextTarget));
   };
