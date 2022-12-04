@@ -66,6 +66,7 @@ function ConfirmModal(props: ConfirmModalProps) {
       </StDescription>
       <StButtonContainer>
         <button
+          className="modal-left-button"
           onClick={() => {
             setIsConfirmOpen(false);
           }}>

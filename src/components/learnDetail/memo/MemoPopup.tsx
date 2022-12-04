@@ -29,7 +29,8 @@ function MemoPopup(props: MemoPopupProps) {
       <StMemoPopup>
         <button
           type="button"
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             id && setMemoState((prev: MemoState) => ({ ...prev, editMemoId: id }));
           }}>
           메모 수정

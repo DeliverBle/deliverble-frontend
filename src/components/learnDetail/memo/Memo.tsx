@@ -48,7 +48,7 @@ function Memo(props: MemoProps) {
   };
 
   return (
-    <StMemo fold={foldButton}>
+    <StMemo className="memo" fold={foldButton}>
       <StKeyword>{keyword}</StKeyword>
       {!content || memoState.editMemoId === id ? (
         <MemoForm

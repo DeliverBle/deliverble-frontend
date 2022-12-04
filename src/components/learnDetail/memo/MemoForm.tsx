@@ -10,7 +10,7 @@ import {
   NEW_MEMO_CONFIRM_MODAL_TEXT,
 } from '@src/utils/constant';
 import { icCheckButton, icMemoXButton, icUnactiveCheckButton } from 'public/assets/icons';
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
 import ImageDiv from '../../common/ImageDiv';
 import { ConfirmModalText } from '../ConfirmModal';
@@ -47,52 +47,84 @@ function MemoForm(props: MemoFormProps) {
     }
   };
 
-  const changeModalText = () => {
-    if (newMemoId !== INITIAL_NUMBER) {
-      setConfirmModalText(NEW_MEMO_CONFIRM_MODAL_TEXT);
-    } else if (editMemoId !== INITIAL_NUMBER) {
-      setConfirmModalText(EDIT_MEMO_CONFIRM_MODAL_TEXT);
-    }
+  const handleModalOpen = () => {
+    newMemoId !== INITIAL_NUMBER && setConfirmModalText(NEW_MEMO_CONFIRM_MODAL_TEXT);
+    editMemoId !== INITIAL_NUMBER && setConfirmModalText(EDIT_MEMO_CONFIRM_MODAL_TEXT);
+    setIsConfirmOpen(true);
   };
 
-  const handleClickDone = async () => {
-    const newContent = textareaRef.current?.value;
+  const createMemo = async (newContent: string) => {
+    const memoList = await api.learnDetailService.postMemoData(
+      {
+        keyword,
+        order,
+        startIndex,
+        content: newContent,
+      },
+      scriptId,
+    );
+    memoList && setMemoList(memoList);
+    setMemoState(INITIAL_MEMO_STATE);
+  };
+
+  const updateMemo = async (newContent: string) => {
+    const memoList = id && (await api.learnDetailService.updateMemoData(id, newContent));
+    memoList && setMemoList(memoList);
+    setMemoState(INITIAL_MEMO_STATE);
+  };
+
+  const handleDone = async (target: HTMLElement) => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const newContent = textarea.value;
     if (newContent) {
-      let memoList;
-      if (newMemoId !== INITIAL_NUMBER) {
-        memoList = await api.learnDetailService.postMemoData(
-          {
-            keyword,
-            order,
-            startIndex,
-            content: newContent,
-          },
-          scriptId,
-        );
-      } else if (editMemoId !== INITIAL_NUMBER && id) {
-        memoList = await api.learnDetailService.updateMemoData(id, newContent);
-      }
-      memoList && setMemoList(memoList);
-      setMemoState(INITIAL_MEMO_STATE);
+      newMemoId !== INITIAL_NUMBER && createMemo(newContent);
+      editMemoId !== INITIAL_NUMBER && updateMemo(newContent);
+      return;
     }
-    if (newContent === '' && textareaRef.current) {
-      textareaRef.current.style.border = `0.2rem solid ${COLOR.RED}`;
+
+    if (target.tagName === 'BUTTON') {
+      textarea.style.border = `0.2rem solid ${COLOR.RED}`;
+    } else {
+      newMemoId !== INITIAL_NUMBER && handleModalOpen();
+      editMemoId !== INITIAL_NUMBER && setMemoState(INITIAL_MEMO_STATE);
     }
   };
 
   const handleClickCancel = () => {
     const newContent = textareaRef.current?.value;
     if (newContent !== '' && newContent !== content) {
-      changeModalText();
-      setIsConfirmOpen(true);
-    } else {
-      setMemoState(INITIAL_MEMO_STATE);
+      handleModalOpen();
+      return;
     }
+    setMemoState(INITIAL_MEMO_STATE);
   };
 
   useEffect(() => {
     content && setTextLength(content.length);
   }, [content]);
+
+  useEffect(() => {
+    console.log(memoState);
+    const handleClickOutside = (e: Event) => {
+      const eventTarget = e.target as HTMLElement;
+      const memo = eventTarget.closest('.memo');
+      if (!memo && eventTarget.className !== 'modal-left-button') {
+        handleDone(eventTarget);
+      }
+    };
+
+    const { newMemoId, editMemoId } = memoState;
+    if (newMemoId !== INITIAL_NUMBER || editMemoId !== INITIAL_NUMBER) {
+      window.addEventListener('click', handleClickOutside);
+      window.addEventListener('contextmenu', handleClickOutside);
+    }
+    return () => {
+      window.removeEventListener('click', handleClickOutside);
+      window.removeEventListener('contextmenu', handleClickOutside);
+    };
+  }, [memoState]);
 
   return (
     <StMemoForm>
@@ -108,7 +140,7 @@ function MemoForm(props: MemoFormProps) {
         <button type="button" onClick={handleClickCancel}>
           <ImageDiv src={icMemoXButton} alt="취소" />
         </button>
-        <StDoneButton type="button" onClick={handleClickDone} textLength={textLength}>
+        <StDoneButton type="button" onClick={(e) => handleDone(e.target as HTMLElement)} textLength={textLength}>
           {textLength ? (
             <ImageDiv src={icCheckButton} alt="완료" />
           ) : (
