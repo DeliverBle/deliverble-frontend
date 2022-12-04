@@ -35,15 +35,16 @@ function MemoForm(props: MemoFormProps) {
   const handleChange = () => {
     const textarea = textareaRef.current;
     if (textarea) {
-      if (textarea.value.length > 70) {
+      const length = [...new Intl.Segmenter().segment(textarea.value)].length;
+      if (length > 70) {
         textarea.value = textarea.value.slice(0, 70);
         return;
       }
       textarea.style.height = '0.1rem';
-      textarea.style.height = (12 + textareaRef.current.scrollHeight) / 10 + 'rem';
+      textarea.style.height = (12 + textarea.scrollHeight) / 10 + 'rem';
       textarea.style.border = `0.2rem solid ${COLOR.SUB_BLUE_50}`;
 
-      setTextLength(textarea.value.length);
+      setTextLength(length);
     }
   };
 
