@@ -7,14 +7,14 @@ import { Dispatch, SetStateAction } from 'react';
 import { MemoState } from '@src/pages/learn/[id]';
 import { MemoData } from '@src/services/api/types/learn-detail';
 
-interface MemoPopupProps {
+interface MemoDropdownProps {
   memoData: MemoData;
   setMemoState: Dispatch<SetStateAction<MemoState>>;
   setIsConfirmOpen: (open: boolean) => void;
   setConfirmModalText: (text: ConfirmModalText) => void;
 }
 
-function MemoPopup(props: MemoPopupProps) {
+function MemoDropdown(props: MemoDropdownProps) {
   const { memoData, setMemoState, setIsConfirmOpen, setConfirmModalText } = props;
   const { id } = memoData;
 
@@ -26,7 +26,7 @@ function MemoPopup(props: MemoPopupProps) {
 
   return (
     <>
-      <StMemoPopup>
+      <StMemoDropdown>
         <button
           type="button"
           onClick={(e) => {
@@ -38,14 +38,14 @@ function MemoPopup(props: MemoPopupProps) {
         <button type="button" onClick={handleClickDelete}>
           메모 삭제
         </button>
-      </StMemoPopup>
+      </StMemoDropdown>
     </>
   );
 }
 
-export default MemoPopup;
+export default MemoDropdown;
 
-const StMemoPopup = styled.div`
+const StMemoDropdown = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;

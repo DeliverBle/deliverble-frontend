@@ -27,7 +27,7 @@ function ContextMenu(props: ContextMenuProps) {
   };
 
   return (
-    <StContextMenu top={y} left={x} className="test">
+    <StContextMenu top={y} left={x}>
       <ul>
         <li>
           <button type="button" onClick={(e) => handleMemoState(e)}>

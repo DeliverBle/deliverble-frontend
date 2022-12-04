@@ -10,7 +10,7 @@ export { default as icGuideScript } from './ic_guide_script.svg';
 export { default as icXButton } from './ic_x_button.svg';
 export { default as icMemoXButton } from './ic_memo_x_button.svg';
 export { default as icCheckButton } from './ic_check_button.svg';
-export { default as icUnactiveCheckButton } from './ic_unactive_check_button.svg';
+export { default as icInactiveCheckButton } from './ic_inactive_check_button.svg';
 export { default as icEmptyBox } from './ic_empty_box.svg';
 export { default as icCheckedBox } from './ic_checked_box.svg';
 export { default as icScript } from './ic_script.svg';

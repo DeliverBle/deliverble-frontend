@@ -7,9 +7,10 @@ import {
   EDIT_MEMO_CONFIRM_MODAL_TEXT,
   INITIAL_MEMO_STATE,
   INITIAL_NUMBER,
+  MEMO_CONTENT_MAX_LENGTH,
   NEW_MEMO_CONFIRM_MODAL_TEXT,
 } from '@src/utils/constant';
-import { icCheckButton, icMemoXButton, icUnactiveCheckButton } from 'public/assets/icons';
+import { icCheckButton, icMemoXButton, icInactiveCheckButton } from 'public/assets/icons';
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
 import ImageDiv from '../../common/ImageDiv';
@@ -36,8 +37,8 @@ function MemoForm(props: MemoFormProps) {
     const textarea = textareaRef.current;
     if (textarea) {
       const length = [...new Intl.Segmenter().segment(textarea.value)].length;
-      if (length > 70) {
-        textarea.value = textarea.value.slice(0, 70);
+      if (length > MEMO_CONTENT_MAX_LENGTH) {
+        textarea.value = textarea.value.slice(0, MEMO_CONTENT_MAX_LENGTH);
       }
       setTextLength(textarea.value.length);
 
@@ -73,7 +74,7 @@ function MemoForm(props: MemoFormProps) {
     setMemoState(INITIAL_MEMO_STATE);
   };
 
-  const handleDone = async (target: HTMLElement) => {
+  const handleDone = async (target?: HTMLElement) => {
     const textarea = textareaRef.current;
     if (!textarea) return;
 
@@ -84,9 +85,7 @@ function MemoForm(props: MemoFormProps) {
       return;
     }
 
-    if (target.tagName === 'BUTTON') {
-      textarea.style.border = `0.2rem solid ${COLOR.RED}`;
-    } else {
+    if (target) {
       newMemoId !== INITIAL_NUMBER && handleModalOpen();
       editMemoId !== INITIAL_NUMBER && setMemoState(INITIAL_MEMO_STATE);
     }
@@ -94,7 +93,7 @@ function MemoForm(props: MemoFormProps) {
 
   const handleClickCancel = () => {
     const newContent = textareaRef.current?.value;
-    if (newContent !== '' && newContent !== content) {
+    if (newMemoId !== INITIAL_NUMBER || (newContent && newContent !== content)) {
       handleModalOpen();
       return;
     }
@@ -109,18 +108,18 @@ function MemoForm(props: MemoFormProps) {
     const handleClickOutside = (e: Event) => {
       const eventTarget = e.target as HTMLElement;
       const memo = eventTarget.closest('.memo');
-      if (!memo && eventTarget.className !== 'modal-left-button') {
+      if (!memo && eventTarget.className !== 'modal-button') {
         handleDone(eventTarget);
       }
     };
 
     const { newMemoId, editMemoId } = memoState;
     if (newMemoId !== INITIAL_NUMBER || editMemoId !== INITIAL_NUMBER) {
-      window.addEventListener('click', handleClickOutside);
+      window.addEventListener('mousedown', handleClickOutside);
       window.addEventListener('contextmenu', handleClickOutside);
     }
     return () => {
-      window.removeEventListener('click', handleClickOutside);
+      window.removeEventListener('mousedown', handleClickOutside);
       window.removeEventListener('contextmenu', handleClickOutside);
     };
   }, [memoState]);
@@ -139,11 +138,11 @@ function MemoForm(props: MemoFormProps) {
         <button type="button" onClick={handleClickCancel}>
           <ImageDiv src={icMemoXButton} alt="취소" />
         </button>
-        <StDoneButton type="button" onClick={(e) => handleDone(e.target as HTMLElement)} textLength={textLength}>
+        <StDoneButton type="button" onClick={() => handleDone()} textLength={textLength}>
           {textLength ? (
             <ImageDiv src={icCheckButton} alt="완료" />
           ) : (
-            <ImageDiv src={icUnactiveCheckButton} alt="완료 비활성화" />
+            <ImageDiv src={icInactiveCheckButton} alt="비활성화" />
           )}
         </StDoneButton>
       </StButtonContainer>

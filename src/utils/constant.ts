@@ -8,7 +8,7 @@ export const NEW_MEMO_CONFIRM_MODAL_TEXT = {
 export const EDIT_MEMO_CONFIRM_MODAL_TEXT = {
   mainText: '메모 수정을 취소하시겠습니까?',
   subText: '수정 취소 선택시, 수정된 메모는 저장되지 않습니다.',
-  leftButtonText: '작성하기',
+  leftButtonText: '수정하기',
   rightButtonText: '수정 취소',
 };
 
@@ -28,6 +28,7 @@ export const DELETE_SCRIPT_CONFIRM_MODAL_TEXT = {
 export const MEMO_CONTENT_MAX = 30;
 export const SCRIPT_MAX_COUNT = 3;
 export const SCRIPT_TITLE_MAX_LENGTH = 27;
+export const MEMO_CONTENT_MAX_LENGTH = 70;
 export const BLOCK_SIZE = 10;
 export const LIST_SIZE = 12;
 export const ALL = '전체';

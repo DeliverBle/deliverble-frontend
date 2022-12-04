@@ -2,7 +2,7 @@ import ImageDiv from '@src/components/common/ImageDiv';
 import { icDotDefault, icDotHover } from 'public/assets/icons';
 import { useState, useRef, useEffect, Dispatch, SetStateAction } from 'react';
 import styled from 'styled-components';
-import MemoPopup from './MemoPopup';
+import MemoDropdown from './MemoDropdown';
 import { ConfirmModalText } from '../ConfirmModal';
 import { MemoState } from '@src/pages/learn/[id]';
 import { MemoData } from '@src/services/api/types/learn-detail';
@@ -16,17 +16,17 @@ interface MemoDotButtonProps {
 
 function MemoDotButton(props: MemoDotButtonProps) {
   const { memoData, setMemoState, setIsConfirmOpen, setConfirmModalText } = props;
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const memoPopupRef = useRef<HTMLDivElement>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const memoDropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (e: Event) => {
       const eventTarget = e.target as HTMLElement;
-      if (isPopupOpen && !memoPopupRef?.current?.contains(eventTarget)) {
-        setIsPopupOpen(false);
+      if (isDropdownOpen && !memoDropdownRef?.current?.contains(eventTarget)) {
+        setIsDropdownOpen(false);
       }
     };
-    if (isPopupOpen) {
+    if (isDropdownOpen) {
       window.addEventListener('click', handleClickOutside);
       window.addEventListener('contextmenu', handleClickOutside);
     }
@@ -34,16 +34,16 @@ function MemoDotButton(props: MemoDotButtonProps) {
       window.removeEventListener('click', handleClickOutside);
       window.removeEventListener('contextmenu', handleClickOutside);
     };
-  }, [isPopupOpen]);
+  }, [isDropdownOpen]);
 
   return (
-    <StMemoDotButton ref={memoPopupRef} onClick={() => setIsPopupOpen((prev) => !prev)}>
-      <StMemoDotImage isPopupOpen={isPopupOpen}>
+    <StMemoDotButton ref={memoDropdownRef} onClick={() => setIsDropdownOpen((prev) => !prev)}>
+      <StMemoDotImage isDropdownOpen={isDropdownOpen}>
         <ImageDiv className="dot" src={icDotHover} alt="..." layout="fill" />
         <ImageDiv className="dot default" src={icDotDefault} alt="..." layout="fill" />
       </StMemoDotImage>
-      {isPopupOpen && (
-        <MemoPopup
+      {isDropdownOpen && (
+        <MemoDropdown
           memoData={memoData}
           setMemoState={setMemoState}
           setIsConfirmOpen={setIsConfirmOpen}
@@ -67,14 +67,14 @@ const StMemoDotButton = styled.div`
   cursor: pointer;
 `;
 
-const StMemoDotImage = styled.div<{ isPopupOpen: boolean }>`
+const StMemoDotImage = styled.div<{ isDropdownOpen: boolean }>`
   position: relative;
 
   .dot {
     position: absolute;
     width: 4rem;
     height: 4rem;
-    opacity: ${({ isPopupOpen }) => (isPopupOpen ? 1 : 0)};
+    opacity: ${({ isDropdownOpen }) => (isDropdownOpen ? 1 : 0)};
   }
 
   &:hover .default img {
