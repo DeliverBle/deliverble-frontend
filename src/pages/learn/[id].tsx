@@ -94,13 +94,18 @@ function LearnDetail() {
 
     const article = target.parentElement?.closest('article');
     if (article) {
-      const articleAbsoluteTop = window.pageYOffset + article.getBoundingClientRect().top;
-      const articleAbsoluteLeft = window.pageYOffset + article.getBoundingClientRect().left;
-      const absoulteTop = window.pageYOffset + target.getBoundingClientRect().top;
-      const absoulteRight = window.pageYOffset + target.getBoundingClientRect().right;
+      const articleAbsoluteTop = article.getBoundingClientRect().top;
+      const articleAbsoluteLeft = article.getBoundingClientRect().left;
+      const absoulteTop = target.getBoundingClientRect().top;
+      const absoulteRight = target.getBoundingClientRect().right;
 
-      x = absoulteRight - articleAbsoluteLeft - 15;
       y = absoulteTop - articleAbsoluteTop - 10;
+      if (absoulteRight <= 830) {
+        x = absoulteRight - articleAbsoluteLeft - 15;
+      } else {
+        const absoulteLeft = target.getBoundingClientRect().left;
+        x = absoulteLeft - articleAbsoluteLeft - 175;
+      }
     }
 
     return { x, y };
