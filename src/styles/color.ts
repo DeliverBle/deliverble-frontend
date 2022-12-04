@@ -14,4 +14,5 @@ export const COLOR = {
   GRAY_80: '#453F5D',
   WHITE: '#FFFFFF',
   BLACK: '#160F35',
+  RED: '#FF4F4F',
 };
