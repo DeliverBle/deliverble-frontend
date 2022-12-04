@@ -1,53 +1,134 @@
-import { MemoHighlightId } from '@src/pages/learn/[id]';
+import { MemoState } from '@src/pages/learn/[id]';
+import { api } from '@src/services/api';
+import { MemoData } from '@src/services/api/types/learn-detail';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import { EDIT_MEMO_CONFIRM_MODAL_TEXT, NEW_MEMO_CONFIRM_MODAL_TEXT } from '@src/utils/constant';
-import { icCheckButton, icMemoXButton } from 'public/assets/icons';
-import { useEffect, useRef, useState } from 'react';
-import styled from 'styled-components';
+import {
+  EDIT_MEMO_CONFIRM_MODAL_TEXT,
+  INITIAL_MEMO_STATE,
+  INITIAL_NUMBER,
+  MEMO_CONTENT_MAX_LENGTH,
+  NEW_MEMO_CONFIRM_MODAL_TEXT,
+} from '@src/utils/constant';
+import { icCheckButton, icMemoXButton, icInactiveCheckButton } from 'public/assets/icons';
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
+import styled, { css } from 'styled-components';
 import ImageDiv from '../../common/ImageDiv';
 import { ConfirmModalText } from '../ConfirmModal';
 
 interface MemoFormProps {
-  content?: string;
-  setMemoHighlightId: (id: MemoHighlightId) => void;
+  scriptId: number;
+  memoData: MemoData;
+  memoState: MemoState;
+  setMemoList: (memoList: MemoData[]) => void;
+  setMemoState: Dispatch<SetStateAction<MemoState>>;
   setIsConfirmOpen: (open: boolean) => void;
   setConfirmModalText: (text: ConfirmModalText) => void;
 }
 
 function MemoForm(props: MemoFormProps) {
-  const { setMemoHighlightId, content, setIsConfirmOpen, setConfirmModalText } = props;
+  const { scriptId, memoData, memoState, setMemoList, setMemoState, setIsConfirmOpen, setConfirmModalText } = props;
+  const { id, keyword, content, order, startIndex } = memoData;
+  const { newMemoId, editMemoId } = memoState;
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [textLength, setTextLength] = useState(0);
 
-  useEffect(() => {
-    if (content) {
-      setTextLength(content.length);
+  const handleChange = () => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      const length = [...new Intl.Segmenter().segment(textarea.value)].length;
+      if (length > MEMO_CONTENT_MAX_LENGTH) {
+        textarea.value = textarea.value.slice(0, MEMO_CONTENT_MAX_LENGTH);
+      }
+      setTextLength(textarea.value.length);
+
+      textarea.style.height = '0.1rem';
+      textarea.style.height = (12 + textarea.scrollHeight) / 10 + 'rem';
+      textarea.style.border = `0.2rem solid ${COLOR.SUB_BLUE_50}`;
     }
+  };
+
+  const handleModalOpen = () => {
+    newMemoId !== INITIAL_NUMBER && setConfirmModalText(NEW_MEMO_CONFIRM_MODAL_TEXT);
+    editMemoId !== INITIAL_NUMBER && setConfirmModalText(EDIT_MEMO_CONFIRM_MODAL_TEXT);
+    setIsConfirmOpen(true);
+  };
+
+  const createMemo = async (newContent: string) => {
+    const memoList = await api.learnDetailService.postMemoData(
+      {
+        keyword,
+        order,
+        startIndex,
+        content: newContent,
+      },
+      scriptId,
+    );
+    memoList && setMemoList(memoList);
+    setMemoState(INITIAL_MEMO_STATE);
+  };
+
+  const updateMemo = async (newContent: string) => {
+    const memoList = id && (await api.learnDetailService.updateMemoData(id, newContent));
+    memoList && setMemoList(memoList);
+    setMemoState(INITIAL_MEMO_STATE);
+  };
+
+  const handleDone = async (target?: HTMLElement) => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const newContent = textarea.value;
+    if (newContent) {
+      newMemoId !== INITIAL_NUMBER && createMemo(newContent);
+      editMemoId !== INITIAL_NUMBER && updateMemo(newContent);
+      return;
+    }
+
+    if (target) {
+      newMemoId !== INITIAL_NUMBER && handleModalOpen();
+      editMemoId !== INITIAL_NUMBER && setMemoState(INITIAL_MEMO_STATE);
+    }
+  };
+
+  const handleClickCancel = () => {
+    const newContent = textareaRef.current?.value;
+    if (newMemoId !== INITIAL_NUMBER || (newContent && newContent !== content)) {
+      handleModalOpen();
+      return;
+    }
+    setMemoState(INITIAL_MEMO_STATE);
+  };
+
+  useEffect(() => {
+    content && setTextLength(content.length);
   }, [content]);
 
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
-  const handleChange = () => {
-    if (textAreaRef.current) {
-      textAreaRef.current.style.height = '0.1rem';
-      textAreaRef.current.style.height = (12 + textAreaRef.current.scrollHeight) / 10 + 'rem';
+  useEffect(() => {
+    const handleClickOutside = (e: Event) => {
+      const eventTarget = e.target as HTMLElement;
+      const memo = eventTarget.closest('.memo');
+      if (!memo && eventTarget.className !== 'modal-button') {
+        handleDone(eventTarget);
+      }
+    };
 
-      setTextLength(textAreaRef.current.value.length);
+    const { newMemoId, editMemoId } = memoState;
+    if (newMemoId !== INITIAL_NUMBER || editMemoId !== INITIAL_NUMBER) {
+      window.addEventListener('mousedown', handleClickOutside);
+      window.addEventListener('contextmenu', handleClickOutside);
     }
-  };
-
-  const changeModalText = () => {
-    if (!content && textAreaRef.current?.value) {
-      setConfirmModalText(NEW_MEMO_CONFIRM_MODAL_TEXT);
-    } else if (textAreaRef.current?.value !== content) {
-      setConfirmModalText(EDIT_MEMO_CONFIRM_MODAL_TEXT);
-    }
-  };
+    return () => {
+      window.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('contextmenu', handleClickOutside);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [memoState]);
 
   return (
     <StMemoForm>
       <StForm
-        ref={textAreaRef}
-        maxLength={70}
+        ref={textareaRef}
         rows={content ? Math.ceil(content.length / 30) : 1}
         autoFocus={content ? false : true}
         defaultValue={content}
@@ -55,19 +136,16 @@ function MemoForm(props: MemoFormProps) {
       />
       <StTextCounter>{textLength}/70</StTextCounter>
       <StButtonContainer>
-        <button
-          type="button"
-          onClick={() => {
-            changeModalText();
-            (content ? textAreaRef.current?.value !== '' : textAreaRef.current?.value !== content)
-              ? setIsConfirmOpen(true)
-              : setMemoHighlightId({ new: 0, edit: 0 });
-          }}>
+        <button type="button" onClick={handleClickCancel}>
           <ImageDiv src={icMemoXButton} alt="취소" />
         </button>
-        <button type="button">
-          <ImageDiv src={icCheckButton} alt="수정" />
-        </button>
+        <StDoneButton type="button" onClick={() => handleDone()} textLength={textLength}>
+          {textLength ? (
+            <ImageDiv src={icCheckButton} alt="완료" />
+          ) : (
+            <ImageDiv src={icInactiveCheckButton} alt="비활성화" />
+          )}
+        </StDoneButton>
       </StButtonContainer>
     </StMemoForm>
   );
@@ -123,4 +201,13 @@ const StButtonContainer = styled.div`
   width: 60.6rem;
   height: 3rem;
   margin-top: 1.2rem;
+`;
+
+const StDoneButton = styled.button<{ textLength: number }>`
+  ${({ textLength }) =>
+    !textLength &&
+    css`
+      cursor: url('/assets/icons/ic_not_allowed_cursor.svg'), not-allowed;
+      disabled: true;
+    `}
 `;

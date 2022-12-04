@@ -1,32 +1,37 @@
-import { MemoHighlightId } from '@src/pages/learn/[id]';
+import { MemoState } from '@src/pages/learn/[id]';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
+import React, { Dispatch, SetStateAction } from 'react';
 import styled, { css } from 'styled-components';
 
 interface ContextMenuProps {
-  points: {
+  contextMenuPoint: {
     x: number;
     y: number;
   };
-  hasMemo: boolean;
-  id: number;
-  setMemoHighlightId: (id: MemoHighlightId) => void;
+  clickedMemoId?: number;
+  setMemoState: Dispatch<SetStateAction<MemoState>>;
+  setIsContextMenuOpen: (open: boolean) => void;
 }
 
 function ContextMenu(props: ContextMenuProps) {
-  const { points, hasMemo, id, setMemoHighlightId } = props;
+  const { contextMenuPoint, clickedMemoId, setMemoState, setIsContextMenuOpen } = props;
+  const { x, y } = contextMenuPoint;
+
+  const handleMemoState = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setMemoState((prev: MemoState) =>
+      clickedMemoId ? { ...prev, editMemoId: clickedMemoId } : { ...prev, newMemoId: 0 },
+    );
+    setIsContextMenuOpen(false);
+  };
 
   return (
-    <StContextMenu top={points.y} left={points.x} className="test">
+    <StContextMenu top={y} left={x}>
       <ul>
         <li>
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              hasMemo ? setMemoHighlightId({ new: 0, edit: id }) : setMemoHighlightId({ new: id, edit: id });
-            }}>
-            {hasMemo ? '메모 수정' : '메모 추가'}
+          <button type="button" onClick={(e) => handleMemoState(e)}>
+            {clickedMemoId ? '메모 수정' : '메모 추가'}
           </button>
         </li>
         <li>
@@ -56,8 +61,8 @@ const StContextMenu = styled.div<{ top: number; left: number }>`
   box-shadow: 0.4rem 0.4rem 2rem rgba(22, 15, 53, 0.15);
 
   ${({ top, left }) => css`
-    top: ${top}rem;
-    left: ${left}rem;
+    top: ${top}px;
+    left: ${left}px;
   `}
 
   & > ul > li {
