@@ -10,6 +10,11 @@ export type Script = {
   endTime: number;
 };
 
+export type Name = {
+  id: number;
+  name: string;
+};
+
 export type VideoData = {
   id: number;
   title: string;
@@ -23,6 +28,7 @@ export type VideoData = {
   scriptsId: number;
   tags: Tag[];
   scripts: Script[];
+  names?: Name[];
 };
 
 export type HighlightData = {

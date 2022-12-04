@@ -11,7 +11,7 @@ import VideoDetail from '@src/components/learnDetail/VideoDetail';
 import LoginModal from '@src/components/login/LoginModal';
 import ScriptTitle from '@src/components/learnDetail/ScriptTitle';
 import { api } from '@src/services/api';
-import { HighlightData, VideoData } from '@src/services/api/types/learn-detail';
+import { HighlightData, Name, VideoData } from '@src/services/api/types/learn-detail';
 import {
   NEW_MEMO_CONFIRM_MODAL_TEXT,
   EDIT_MEMO_CONFIRM_MODAL_TEXT,
@@ -72,7 +72,7 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
   const { new: newMemoHighlightId, edit: editMemoHighlightId } = memoHighlightId;
   const [isHighlightOver, setIsHighlightOver] = useState<boolean>(false);
   const [isSpacingOver, setIsSpacingOver] = useState<boolean>(false);
-  const [scriptTitleList, setScriptTitleList] = useState(['스크립트 1']);
+  const [scriptTitleList, setScriptTitleList] = useState<Name[]>([]);
   const [clickedScriptTitleIndex, setClickedScriptTitleIndex] = useState(0);
   const [isScriptTitleInputVisible, setIsScriptTitleInputVisible] = useState(false);
   const [scriptTitleInputIndex, setTitleInputIndex] = useState(-1);
@@ -164,6 +164,9 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
         ? await api.learnDetailService.getPrivateVideoData(id)
         : await api.learnDetailService.getPublicVideoData(id);
       data && setVideoData(data);
+      if (data && isLoggedIn) {
+        setScriptTitleList(data.names ?? []);
+      }
     })();
   }, [isLoggedIn, detailId, isEditing]);
 
@@ -233,7 +236,6 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
               <StScriptAddButton
                 onClick={() => {
                   // 서버에 post 요청
-                  setScriptTitleList((scriptTitleList) => [...scriptTitleList, '스크립트 ${scriptTitleList.length}']);
                   setClickedScriptTitleIndex(clickedScriptTitleIndex + 1);
                   setTitleInputIndex(clickedScriptTitleIndex + 1);
                 }}

@@ -1,5 +1,5 @@
 import { LearnDetailService } from '../api/learn-detail';
-import { Script, SentenceData, Tag } from '../api/types/learn-detail';
+import { Script, SentenceData, Tag, Name } from '../api/types/learn-detail';
 import { LEARN_DETAIL_DATA } from '../mock/learn-detail.data';
 import { privateAPI, publicAPI } from './base';
 
@@ -27,6 +27,10 @@ export function learnDetailDataRemote(): LearnDetailService {
           text: sentence.text,
           startTime: sentence.startTime,
           endTime: sentence.endTime,
+        })),
+        names: response.data2.map((name: Name) => ({
+          id: name.id,
+          name: name.name,
         })),
       };
     } else throw '서버 통신 실패';

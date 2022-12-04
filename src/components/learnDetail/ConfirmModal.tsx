@@ -3,6 +3,7 @@ import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { MemoHighlightId } from '@src/pages/learn/[id]';
 import { useEffect } from 'react';
+import { Name } from '@src/services/api/types/learn-detail';
 
 export interface ConfirmModalText {
   mainText: string;
@@ -17,8 +18,8 @@ interface ConfirmModalProps {
   confirmModalText: ConfirmModalText;
   clickedScriptTitleIndex: number;
   setClickedScriptTitleIndex: (index: number) => void;
-  scriptTitleList: string[];
-  setScriptTitleList: (list: string[]) => void;
+  scriptTitleList: Name[];
+  setScriptTitleList: (list: Name[]) => void;
 }
 
 function ConfirmModal(props: ConfirmModalProps) {
