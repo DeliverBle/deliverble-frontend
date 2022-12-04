@@ -29,16 +29,21 @@ function MemoForm(props: MemoFormProps) {
   const { scriptId, memoData, memoState, setMemoList, setMemoState, setIsConfirmOpen, setConfirmModalText } = props;
   const { id, keyword, content, order, startIndex } = memoData;
   const { newMemoId, editMemoId } = memoState;
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [textLength, setTextLength] = useState(0);
 
   const handleChange = () => {
-    if (textAreaRef.current) {
-      textAreaRef.current.style.height = '0.1rem';
-      textAreaRef.current.style.height = (12 + textAreaRef.current.scrollHeight) / 10 + 'rem';
-      textAreaRef.current.style.border = `0.2rem solid ${COLOR.SUB_BLUE_50}`;
+    const textarea = textareaRef.current;
+    if (textarea) {
+      if (textarea.value.length > 70) {
+        textarea.value = textarea.value.slice(0, 70);
+        return;
+      }
+      textarea.style.height = '0.1rem';
+      textarea.style.height = (12 + textareaRef.current.scrollHeight) / 10 + 'rem';
+      textarea.style.border = `0.2rem solid ${COLOR.SUB_BLUE_50}`;
 
-      setTextLength(textAreaRef.current.value.length);
+      setTextLength(textarea.value.length);
     }
   };
 
@@ -51,7 +56,7 @@ function MemoForm(props: MemoFormProps) {
   };
 
   const handleClickDone = async () => {
-    const newContent = textAreaRef.current?.value;
+    const newContent = textareaRef.current?.value;
     if (newContent) {
       let memoList;
       if (newMemoId !== INITIAL_NUMBER) {
@@ -70,13 +75,13 @@ function MemoForm(props: MemoFormProps) {
       memoList && setMemoList(memoList);
       setMemoState(INITIAL_MEMO_STATE);
     }
-    if (newContent === '' && textAreaRef.current) {
-      textAreaRef.current.style.border = `0.2rem solid ${COLOR.RED}`;
+    if (newContent === '' && textareaRef.current) {
+      textareaRef.current.style.border = `0.2rem solid ${COLOR.RED}`;
     }
   };
 
   const handleClickCancel = () => {
-    const newContent = textAreaRef.current?.value;
+    const newContent = textareaRef.current?.value;
     if (newContent !== '' && newContent !== content) {
       changeModalText();
       setIsConfirmOpen(true);
@@ -92,8 +97,7 @@ function MemoForm(props: MemoFormProps) {
   return (
     <StMemoForm>
       <StForm
-        ref={textAreaRef}
-        maxLength={70}
+        ref={textareaRef}
         rows={content ? Math.ceil(content.length / 30) : 1}
         autoFocus={content ? false : true}
         defaultValue={content}
