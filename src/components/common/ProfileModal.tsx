@@ -47,11 +47,20 @@ const StProfileModal = styled.div`
   position: absolute;
   text-align: center;
   top: 7.6rem;
-  right: 4rem;
+  right: 16rem;
+
+  @media (max-width: 960px) {
+    right: 8.6rem;
+  }
+
+  @media (max-width: 500px) {
+    right: 2.4rem;
+  }
+
   width: 38rem;
   background-color: ${COLOR.WHITE};
   box-shadow: 4px 4px 20px 0px #160f3526;
-  border-radius: 1.034rem;
+  border-radius: 1.6rem;
 
   z-index: 2;
 
