@@ -130,7 +130,7 @@ function LearnDetail() {
     const startIndex = getHighlightIndex(contextTarget?.parentNode, contextTarget.innerText);
     const markTag = contextTarget.closest('mark');
 
-    if (startIndex && markTag) {
+    if (startIndex !== undefined && markTag) {
       setMemoInfo({
         scriptId,
         order,
