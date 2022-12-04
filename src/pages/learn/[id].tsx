@@ -11,7 +11,7 @@ import VideoDetail from '@src/components/learnDetail/VideoDetail';
 import LoginModal from '@src/components/login/LoginModal';
 import ScriptTitle from '@src/components/learnDetail/ScriptTitle';
 import { api } from '@src/services/api';
-import { MemoData, VideoData } from '@src/services/api/types/learn-detail';
+import { MemoData, Name, VideoData } from '@src/services/api/types/learn-detail';
 import { loginState } from '@src/stores/loginState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
