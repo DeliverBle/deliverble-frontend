@@ -9,9 +9,9 @@ import {
   INITIAL_NUMBER,
   NEW_MEMO_CONFIRM_MODAL_TEXT,
 } from '@src/utils/constant';
-import { icCheckButton, icMemoXButton } from 'public/assets/icons';
+import { icCheckButton, icMemoXButton, icUnactiveCheckButton } from 'public/assets/icons';
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import ImageDiv from '../../common/ImageDiv';
 import { ConfirmModalText } from '../ConfirmModal';
 
@@ -38,13 +38,12 @@ function MemoForm(props: MemoFormProps) {
       const length = [...new Intl.Segmenter().segment(textarea.value)].length;
       if (length > 70) {
         textarea.value = textarea.value.slice(0, 70);
-        return;
       }
+      setTextLength(length);
+
       textarea.style.height = '0.1rem';
       textarea.style.height = (12 + textarea.scrollHeight) / 10 + 'rem';
       textarea.style.border = `0.2rem solid ${COLOR.SUB_BLUE_50}`;
-
-      setTextLength(length);
     }
   };
 
@@ -109,9 +108,13 @@ function MemoForm(props: MemoFormProps) {
         <button type="button" onClick={handleClickCancel}>
           <ImageDiv src={icMemoXButton} alt="취소" />
         </button>
-        <button type="button" onClick={handleClickDone}>
-          <ImageDiv src={icCheckButton} alt="완료" />
-        </button>
+        <StDoneButton type="button" onClick={handleClickDone} textLength={textLength}>
+          {textLength ? (
+            <ImageDiv src={icCheckButton} alt="완료" />
+          ) : (
+            <ImageDiv src={icUnactiveCheckButton} alt="완료 비활성화" />
+          )}
+        </StDoneButton>
       </StButtonContainer>
     </StMemoForm>
   );
@@ -167,4 +170,12 @@ const StButtonContainer = styled.div`
   width: 60.6rem;
   height: 3rem;
   margin-top: 1.2rem;
+`;
+
+const StDoneButton = styled.button<{ textLength: number }>`
+  ${({ textLength }) =>
+    !textLength &&
+    css`
+      cursor: url('/assets/icons/ic_not_allowed_cursor.svg'), not-allowed;
+    `}
 `;
