@@ -10,27 +10,19 @@ interface ContextMenuProps {
     y: number;
   };
   clickedMemoId?: number;
-  memoState: MemoState;
   setMemoState: Dispatch<SetStateAction<MemoState>>;
-  setIsConfirmOpen: (open: boolean) => void;
   setIsContextMenuOpen: (open: boolean) => void;
 }
 
 function ContextMenu(props: ContextMenuProps) {
-  const { contextMenuPoint, clickedMemoId, memoState, setMemoState, setIsConfirmOpen, setIsContextMenuOpen } = props;
+  const { contextMenuPoint, clickedMemoId, setMemoState, setIsContextMenuOpen } = props;
   const { x, y } = contextMenuPoint;
 
   const handleMemoState = (e: React.MouseEvent) => {
     e.stopPropagation();
-
-    if (!memoState.newMemoId) {
-      setIsConfirmOpen(true);
-    } else {
-      setMemoState((prev: MemoState) =>
-        clickedMemoId ? { ...prev, editMemoId: clickedMemoId } : { ...prev, newMemoId: 0 },
-      );
-    }
-
+    setMemoState((prev: MemoState) =>
+      clickedMemoId ? { ...prev, editMemoId: clickedMemoId } : { ...prev, newMemoId: 0 },
+    );
     setIsContextMenuOpen(false);
   };
 

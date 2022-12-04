@@ -177,6 +177,7 @@ function LearnDetail() {
   }, [clickedDeleteMemo, memoState]);
 
   useEffect(() => {
+    console.log('highlightIndex', highlightIndex);
     if (highlightIndex !== INITIAL_NUMBER) {
       setIsContextMenuOpen(true);
     }
@@ -311,9 +312,7 @@ function LearnDetail() {
                       <ContextMenu
                         contextMenuPoint={contextMenuPoint}
                         clickedMemoId={clickedMemo?.id}
-                        memoState={memoState}
                         setMemoState={setMemoState}
-                        setIsConfirmOpen={setIsConfirmOpen}
                         setIsContextMenuOpen={setIsContextMenuOpen}
                       />
                     )}
