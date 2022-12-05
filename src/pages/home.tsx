@@ -52,41 +52,53 @@ function Home() {
   };
 
   return (
-    <>
+    <StPageWrapper>
       <SEO title="Deliverble" />
       <NavigationBar />
       <StHome>
-        <StBannerText>
-          <h1>
-            우리는 말하는 법은 배웠지만,
-            <br />잘 말하는 법은 배우지 못했다!
-          </h1>
-          <p>딜리버블과 함께 잘 말하는 법을 배워봐요!</p>
-        </StBannerText>
-        {is960 ? (
-          <ImageDiv className="small-mic" src={imgSmallBannerMic} alt="" />
-        ) : (
-          !is500 && <ImageDiv className="big-mic" src={imgBigBannerMic} alt="" layout="fill" />
-        )}
-      </StHome>
-      <StNews>
-        <h3>딜리버블의 추천 뉴스를 만나보세요.</h3>
-        <div>
-          {isLoading ? (
-            <VideoListSkeleton itemNumber={8} />
+        <StBanner>
+          <StBannerText>
+            <h1>
+              우리는 말하는 법은 배웠지만,
+              <br />잘 말하는 법은 배우지 못했다!
+            </h1>
+            <p>딜리버블과 함께 잘 말하는 법을 배워봐요!</p>
+          </StBannerText>
+          {is960 ? (
+            <ImageDiv className="small-mic" src={imgSmallBannerMic} alt="" />
           ) : (
-            <NewsList onClickLike={handleClickLike} newsList={newsList} />
+            !is500 && <ImageDiv className="big-mic" src={imgBigBannerMic} alt="" layout="fill" />
           )}
-        </div>
-      </StNews>
+        </StBanner>
+        <StNews>
+          <h3>딜리버블의 추천 뉴스를 만나보세요.</h3>
+          <div>
+            {isLoading ? (
+              <VideoListSkeleton itemNumber={8} />
+            ) : (
+              <NewsList onClickLike={handleClickLike} newsList={newsList} />
+            )}
+          </div>
+        </StNews>
+      </StHome>
       <Footer />
-    </>
+    </StPageWrapper>
   );
 }
 
 export default Home;
 
+const StPageWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
+
 const StHome = styled.div`
+  flex: 1;
+`;
+
+const StBanner = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: end;

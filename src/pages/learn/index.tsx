@@ -96,7 +96,7 @@ function Learn() {
   }, []);
 
   return (
-    <>
+    <StPageWrapper>
       <SEO title="학습하기 | Deliverble" />
       <NavigationBar />
       <StLearn>
@@ -131,13 +131,20 @@ function Learn() {
         )}
       </StLearn>
       <Footer />
-    </>
+    </StPageWrapper>
   );
 }
 
 export default Learn;
 
+const StPageWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
+
 const StLearn = styled.div`
+  flex: 1;
   margin: auto 16rem;
 
   @media (max-width: 960px) {
