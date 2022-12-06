@@ -117,17 +117,17 @@ function ScriptEdit(props: ScriptEditProps) {
     nodeToText(selection?.anchorNode);
   };
 
-  let isHiglightOverSpacing = false;
+  let isHighlightOverSpacing = false;
   const nodeToText = (anchorNode: Node | null | undefined) => {
     let textValue = '';
     if (anchorNode?.nodeName === 'MARK') {
       nodeToText(anchorNode.parentNode);
-      isHiglightOverSpacing = true;
+      isHighlightOverSpacing = true;
       return;
     }
 
-    isHiglightOverSpacing = false;
-    if (!isHiglightOverSpacing && anchorNode?.childNodes) {
+    isHighlightOverSpacing = false;
+    if (!isHighlightOverSpacing && anchorNode?.childNodes) {
       for (let i = 0; i < anchorNode?.childNodes.length; i++) {
         const childNodeItem = anchorNode?.childNodes[i];
         switch (childNodeItem.nodeName) {
