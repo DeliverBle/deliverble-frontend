@@ -37,6 +37,11 @@ export function learnDetailDataMock(): LearnDetailService {
     return { isSuccess: true };
   };
 
+  const deleteScriptData = async () => {
+    await wait(500);
+    return { isSuccess: true };
+  };
+
   return {
     getPrivateVideoData,
     getPublicVideoData,
@@ -45,6 +50,7 @@ export function learnDetailDataMock(): LearnDetailService {
     updateMemoData,
     deleteMemoData,
     postNewScriptData,
+    deleteScriptData,
   };
 }
 

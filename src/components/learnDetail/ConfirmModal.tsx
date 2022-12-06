@@ -21,11 +21,11 @@ interface ConfirmModalProps {
   setMemoState: Dispatch<SetStateAction<MemoState>>;
   setIsConfirmOpen: (close: boolean) => void;
   setClickedDeleteMemo: (clicked: boolean) => void;
-  setClickedScriptTitleIndex: (index: number) => void;
+  onScriptDelete: () => void;
 }
 
 function ConfirmModal(props: ConfirmModalProps) {
-  const { confirmModalText, setMemoState, setIsConfirmOpen, setClickedDeleteMemo, setClickedScriptTitleIndex } = props;
+  const { confirmModalText, setMemoState, setIsConfirmOpen, setClickedDeleteMemo, onScriptDelete } = props;
   const { mainText, subText, leftButtonText, rightButtonText } = confirmModalText;
 
   useEffect(() => {
@@ -37,8 +37,7 @@ function ConfirmModal(props: ConfirmModalProps) {
 
   const handleButtonClick = () => {
     if (mainText === DELETE_SCRIPT_CONFIRM_MODAL_TEXT.mainText) {
-      console.log('스크립트 삭제');
-      setClickedScriptTitleIndex(0);
+      onScriptDelete();
       return;
     }
 

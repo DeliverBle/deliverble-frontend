@@ -180,6 +180,14 @@ function LearnDetail() {
     }
   };
 
+  const handleScriptDelete = async () => {
+    const scriptId = videoData?.scriptsId ?? INITIAL_NUMBER;
+    const response = await api.learnDetailService.deleteScriptData(scriptId);
+    if (response.isSuccess) {
+      setClickedScriptTitleIndex(0);
+    }
+  };
+
   const handleScriptDeleteModal = () => {
     setConfirmModalText(DELETE_SCRIPT_CONFIRM_MODAL_TEXT);
     setIsConfirmOpen(true);
@@ -516,7 +524,7 @@ function LearnDetail() {
             setMemoState={setMemoState}
             setIsConfirmOpen={setIsConfirmOpen}
             setClickedDeleteMemo={setClickedDeleteMemo}
-            setClickedScriptTitleIndex={setClickedScriptTitleIndex}
+            onScriptDelete={handleScriptDelete}
           />
         )}
         {isLoginModalOpen && <LoginModal closeModal={() => setIsLoginModalOpen(false)} />}

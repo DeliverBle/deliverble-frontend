@@ -165,8 +165,13 @@ export function learnDetailDataRemote(): LearnDetailService {
     } else throw '서버 통신 실패';
   };
 
-  const postNewScriptData = async (id: number) => {
-    const response = await privateAPI.post({ url: `/script/create/${id}` });
+  const postNewScriptData = async (videoId: number) => {
+    const response = await privateAPI.post({ url: `/script/create/${videoId}` });
+    return { isSuccess: response.status === 200 };
+  };
+
+  const deleteScriptData = async (scriptId: number) => {
+    const response = await privateAPI.delete({ url: `/script/delete/${scriptId}` });
     return { isSuccess: response.status === 200 };
   };
 
@@ -178,5 +183,6 @@ export function learnDetailDataRemote(): LearnDetailService {
     deleteMemoData,
     updateMemoData,
     postNewScriptData,
+    deleteScriptData,
   };
 }
