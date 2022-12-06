@@ -172,9 +172,12 @@ function LearnDetail() {
   };
 
   const handleScriptAdd = async () => {
-    await api.learnDetailService.postNewScriptData(Number(detailId), clickedScriptTitleIndex + 1);
-    await setClickedScriptTitleIndex(clickedScriptTitleIndex + 1);
-    await setTitleInputIndex(clickedScriptTitleIndex + 1);
+    const response = await api.learnDetailService.postNewScriptData(Number(detailId));
+    if (response.isSuccess) {
+      const newIndex = clickedScriptTitleIndex + 1;
+      setClickedScriptTitleIndex(newIndex);
+      setTitleInputIndex(newIndex);
+    }
   };
 
   const handleScriptDelete = () => {

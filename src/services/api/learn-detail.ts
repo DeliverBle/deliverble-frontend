@@ -7,5 +7,5 @@ export interface LearnDetailService {
   postMemoData(memo: MemoData, scriptId: number): Promise<MemoData[]>;
   updateMemoData(memoId: number, content: string): Promise<MemoData[]>;
   deleteMemoData(memoId: number): Promise<MemoData[]>;
-  postNewScriptData(videoId: number, index: number): Promise<VideoData>;
+  postNewScriptData(videoId: number): Promise<{ isSuccess: boolean }>;
 }

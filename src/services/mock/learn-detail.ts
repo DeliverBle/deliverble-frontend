@@ -34,7 +34,7 @@ export function learnDetailDataMock(): LearnDetailService {
 
   const postNewScriptData = async () => {
     await wait(500);
-    return LEARN_DETAIL_DATA.VIDEO_DATA;
+    return { isSuccess: true };
   };
 
   return {

@@ -165,44 +165,9 @@ export function learnDetailDataRemote(): LearnDetailService {
     } else throw '서버 통신 실패';
   };
 
-  const postNewScriptData = async (id: number, index: number) => {
+  const postNewScriptData = async (id: number) => {
     const response = await privateAPI.post({ url: `/script/create/${id}` });
-    if (response.status === 200) {
-      return {
-        id: response.data.id,
-        title: response.data.title,
-        category: response.data.category,
-        channel: response.data.channel,
-        link: response.data.link,
-        reportDate: response.data.reportDate,
-        isFavorite: response.data.isFavorite,
-        startTime: response.data.startTime,
-        endTime: response.data.endTime,
-        scriptsId: response.data2.returnScriptDtoCollection[index].id,
-        tags: response.data.tagsForView.map((tag: Tag) => ({
-          id: tag.id,
-          name: tag.name,
-        })),
-        scripts: response.data2.returnScriptDtoCollection[index].sentences.map((sentence: Script) => ({
-          id: sentence.id,
-          order: sentence.order,
-          text: sentence.text,
-          startTime: sentence.startTime,
-          endTime: sentence.endTime,
-        })),
-        memos: response.data2.returnScriptDtoCollection[index].memos.map((memo: MemoData) => ({
-          id: memo.id,
-          keyword: memo.keyword,
-          order: memo.order,
-          startIndex: memo.startIndex,
-          content: memo.content,
-        })),
-        names: response.data2.returnScriptDtoCollection.map((name: Name) => ({
-          id: name.id,
-          name: name.name,
-        })),
-      };
-    } else throw '서버 통신 실패';
+    return { isSuccess: response.status === 200 };
   };
 
   return {
