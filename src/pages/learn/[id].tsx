@@ -183,8 +183,15 @@ function LearnDetail() {
   const handleScriptDelete = async () => {
     const scriptId = videoData?.scriptsId ?? INITIAL_NUMBER;
     const response = await api.learnDetailService.deleteScriptData(scriptId);
-    if (response.isSuccess) {
+    if (response.isSuccess && clickedScriptTitleIndex) {
       setClickedScriptTitleIndex(0);
+    } else {
+      const data = await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedScriptTitleIndex);
+      data && setVideoData(data);
+      if (data && isLoggedIn) {
+        data.memos && setMemoList(data.memos);
+        setScriptTitleList(data.names ?? []);
+      }
     }
   };
 
