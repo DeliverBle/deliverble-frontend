@@ -5,6 +5,7 @@ import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { SCRIPT_TITLE_MAX_LENGTH } from '@src/utils/constant';
 
 interface ScriptTitleProps {
+  name: string;
   isOne: boolean;
   isScriptTitleInputVisible: boolean;
   currentScriptTitleIndex: number;
@@ -18,6 +19,7 @@ interface ScriptTitleProps {
 
 function ScriptTitle(props: ScriptTitleProps) {
   const {
+    name,
     isOne,
     isScriptTitleInputVisible,
     setIsScriptTitleInputVisible,
@@ -28,7 +30,7 @@ function ScriptTitle(props: ScriptTitleProps) {
     onScriptDelete,
     onScriptRename,
   } = props;
-  const [text, setText] = useState(`스크립트 ${currentScriptTitleIndex + 1}`);
+  const [text, setText] = useState(name);
   const scriptTitleInputRef = useRef<HTMLInputElement>(null);
   const isEditing = isScriptTitleInputVisible && scriptTitleInputIndex === currentScriptTitleIndex;
 
@@ -79,7 +81,7 @@ function ScriptTitle(props: ScriptTitleProps) {
       {isEditing ? (
         <input ref={scriptTitleInputRef} value={text} onChange={handleInputChange} onKeyUp={handleKeyUp} />
       ) : (
-        <div>스크립트 {currentScriptTitleIndex + 1}</div>
+        <div>{name}</div>
       )}
       {!isOne && <StScriptDeleteButton onClick={onScriptDelete} isEditing={isEditing} />}
     </StScriptTitle>

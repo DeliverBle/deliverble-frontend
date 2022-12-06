@@ -323,9 +323,10 @@ function LearnDetail() {
         <ImageDiv onClick={() => router.push(prevLink)} src={icXButton} className="close" layout="fill" alt="x" />
         {isLoggedIn && (
           <StScriptTitleContainer>
-            {scriptTitleList.map((_, i) => (
+            {scriptTitleList.map(({ id, name }, i) => (
               <ScriptTitle
-                key={i}
+                key={id}
+                name={name}
                 isOne={scriptTitleList.length === 1}
                 isScriptTitleInputVisible={isScriptTitleInputVisible}
                 currentScriptTitleIndex={i}
