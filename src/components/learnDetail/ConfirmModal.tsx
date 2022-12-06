@@ -3,8 +3,11 @@ import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { Dispatch, SetStateAction, useEffect } from 'react';
 import { MemoState } from '@src/pages/learn/[id]';
-import { DELETE_MEMO_CONFIRM_MODAL_TEXT, INITIAL_MEMO_STATE } from '@src/utils/constant';
-import { Name } from '@src/services/api/types/learn-detail';
+import {
+  DELETE_MEMO_CONFIRM_MODAL_TEXT,
+  DELETE_SCRIPT_CONFIRM_MODAL_TEXT,
+  INITIAL_MEMO_STATE,
+} from '@src/utils/constant';
 
 export interface ConfirmModalText {
   mainText: string;
@@ -15,34 +18,15 @@ export interface ConfirmModalText {
 
 interface ConfirmModalProps {
   confirmModalText: ConfirmModalText;
-  scriptTitleList: Name[];
-  clickedScriptTitleIndex: number;
   setMemoState: Dispatch<SetStateAction<MemoState>>;
   setIsConfirmOpen: (close: boolean) => void;
   setClickedDeleteMemo: (clicked: boolean) => void;
   setClickedScriptTitleIndex: (index: number) => void;
-  setScriptTitleList: (list: Name[]) => void;
 }
 
 function ConfirmModal(props: ConfirmModalProps) {
-  const {
-    confirmModalText,
-    scriptTitleList,
-    clickedScriptTitleIndex,
-    setMemoState,
-    setIsConfirmOpen,
-    setClickedDeleteMemo,
-    setClickedScriptTitleIndex,
-    setScriptTitleList,
-  } = props;
+  const { confirmModalText, setMemoState, setIsConfirmOpen, setClickedDeleteMemo, setClickedScriptTitleIndex } = props;
   const { mainText, subText, leftButtonText, rightButtonText } = confirmModalText;
-
-  const deleteScript = (index: number) => {
-    const tempList = [...scriptTitleList];
-    tempList.splice(index, 1);
-    setScriptTitleList(tempList);
-    setClickedScriptTitleIndex(0);
-  };
 
   useEffect(() => {
     window.scrollTo({
@@ -52,10 +36,17 @@ function ConfirmModal(props: ConfirmModalProps) {
   }, []);
 
   const handleButtonClick = () => {
-    if (rightButtonText === DELETE_MEMO_CONFIRM_MODAL_TEXT.rightButtonText) {
+    if (mainText === DELETE_SCRIPT_CONFIRM_MODAL_TEXT.mainText) {
+      console.log('스크립트 삭제');
+      setClickedScriptTitleIndex(0);
+      return;
+    }
+
+    if (mainText === DELETE_MEMO_CONFIRM_MODAL_TEXT.mainText) {
       setClickedDeleteMemo(true);
       return;
     }
+
     setMemoState(INITIAL_MEMO_STATE);
   };
 
@@ -78,7 +69,6 @@ function ConfirmModal(props: ConfirmModalProps) {
           onClick={() => {
             setIsConfirmOpen(false);
             handleButtonClick();
-            deleteScript(clickedScriptTitleIndex);
           }}>
           {rightButtonText}
         </button>

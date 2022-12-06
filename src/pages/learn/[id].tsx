@@ -180,7 +180,7 @@ function LearnDetail() {
     }
   };
 
-  const handleScriptDelete = () => {
+  const handleScriptDeleteModal = () => {
     setConfirmModalText(DELETE_SCRIPT_CONFIRM_MODAL_TEXT);
     setIsConfirmOpen(true);
   };
@@ -325,7 +325,7 @@ function LearnDetail() {
                 scriptTitleInputIndex={scriptTitleInputIndex}
                 setIsScriptTitleInputVisible={setIsScriptTitleInputVisible}
                 setClickedScriptTitleIndex={setClickedScriptTitleIndex}
-                onScriptDelete={handleScriptDelete}
+                onScriptDelete={handleScriptDeleteModal}
                 onScriptRename={(index: number) => handleScriptRename(index)}
               />
             ))}
@@ -513,12 +513,9 @@ function LearnDetail() {
         {isConfirmOpen && (
           <ConfirmModal
             confirmModalText={confirmModalText}
-            scriptTitleList={scriptTitleList}
-            clickedScriptTitleIndex={clickedScriptTitleIndex}
             setMemoState={setMemoState}
             setIsConfirmOpen={setIsConfirmOpen}
             setClickedDeleteMemo={setClickedDeleteMemo}
-            setScriptTitleList={setScriptTitleList}
             setClickedScriptTitleIndex={setClickedScriptTitleIndex}
           />
         )}
