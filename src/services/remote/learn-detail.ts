@@ -3,7 +3,7 @@ import { Script, SentenceData, Tag, MemoData, Name } from '../api/types/learn-de
 import { privateAPI, publicAPI } from './base';
 
 export function learnDetailDataRemote(): LearnDetailService {
-  const getPrivateVideoData = async (id: number) => {
+  const getPrivateVideoData = async (id: number, index?: number) => {
     const response = await privateAPI.get({ url: `/news/detail/${id}` });
     if (response.status === 200) {
       return {
@@ -16,25 +16,41 @@ export function learnDetailDataRemote(): LearnDetailService {
         isFavorite: response.data.isFavorite,
         startTime: response.data.startTime,
         endTime: response.data.endTime,
-        scriptsId: response.data2[0].id,
+        scriptsId: index ? response.data2[index].id : response.data2[0].id,
         tags: response.data.tagsForView.map((tag: Tag) => ({
           id: tag.id,
           name: tag.name,
         })),
-        scripts: response.data2[0].sentences.map((sentence: Script) => ({
-          id: sentence.id,
-          order: sentence.order,
-          text: sentence.text,
-          startTime: sentence.startTime,
-          endTime: sentence.endTime,
-        })),
-        memos: response.data2[0].memos.map((memo: MemoData) => ({
-          id: memo.id,
-          keyword: memo.keyword,
-          order: memo.order,
-          startIndex: memo.startIndex,
-          content: memo.content,
-        })),
+        scripts: index
+          ? response.data2[index].sentences.map((sentence: Script) => ({
+              id: sentence.id,
+              order: sentence.order,
+              text: sentence.text,
+              startTime: sentence.startTime,
+              endTime: sentence.endTime,
+            }))
+          : response.data2[0].sentences.map((sentence: Script) => ({
+              id: sentence.id,
+              order: sentence.order,
+              text: sentence.text,
+              startTime: sentence.startTime,
+              endTime: sentence.endTime,
+            })),
+        memos: index
+          ? response.data2[index].memos.map((memo: MemoData) => ({
+              id: memo.id,
+              keyword: memo.keyword,
+              order: memo.order,
+              startIndex: memo.startIndex,
+              content: memo.content,
+            }))
+          : response.data2[0].memos.map((memo: MemoData) => ({
+              id: memo.id,
+              keyword: memo.keyword,
+              order: memo.order,
+              startIndex: memo.startIndex,
+              content: memo.content,
+            })),
         names: response.data2.map((name: Name) => ({
           id: name.id,
           name: name.name,
@@ -149,6 +165,46 @@ export function learnDetailDataRemote(): LearnDetailService {
     } else throw '서버 통신 실패';
   };
 
+  const postNewScriptData = async (id: number, index: number) => {
+    const response = await privateAPI.post({ url: `/script/create/${id}` });
+    if (response.status === 200) {
+      return {
+        id: response.data.id,
+        title: response.data.title,
+        category: response.data.category,
+        channel: response.data.channel,
+        link: response.data.link,
+        reportDate: response.data.reportDate,
+        isFavorite: response.data.isFavorite,
+        startTime: response.data.startTime,
+        endTime: response.data.endTime,
+        scriptsId: response.data2.returnScriptDtoCollection[index].id,
+        tags: response.data.tagsForView.map((tag: Tag) => ({
+          id: tag.id,
+          name: tag.name,
+        })),
+        scripts: response.data2.returnScriptDtoCollection[index].sentences.map((sentence: Script) => ({
+          id: sentence.id,
+          order: sentence.order,
+          text: sentence.text,
+          startTime: sentence.startTime,
+          endTime: sentence.endTime,
+        })),
+        memos: response.data2.returnScriptDtoCollection[index].memos.map((memo: MemoData) => ({
+          id: memo.id,
+          keyword: memo.keyword,
+          order: memo.order,
+          startIndex: memo.startIndex,
+          content: memo.content,
+        })),
+        names: response.data2.returnScriptDtoCollection.map((name: Name) => ({
+          id: name.id,
+          name: name.name,
+        })),
+      };
+    } else throw '서버 통신 실패';
+  };
+
   return {
     getPrivateVideoData,
     getPublicVideoData,
@@ -156,5 +212,6 @@ export function learnDetailDataRemote(): LearnDetailService {
     postMemoData,
     deleteMemoData,
     updateMemoData,
+    postNewScriptData,
   };
 }

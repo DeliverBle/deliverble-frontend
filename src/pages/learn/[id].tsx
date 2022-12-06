@@ -171,6 +171,12 @@ function LearnDetail() {
     setContextMenuPoint(handleContextMenuPoint(contextTarget));
   };
 
+  const handleScriptAdd = async () => {
+    await api.learnDetailService.postNewScriptData(Number(detailId), clickedScriptTitleIndex + 1);
+    await setClickedScriptTitleIndex(clickedScriptTitleIndex + 1);
+    await setTitleInputIndex(clickedScriptTitleIndex + 1);
+  };
+
   const handleScriptDelete = () => {
     setConfirmModalText(DELETE_SCRIPT_CONFIRM_MODAL_TEXT);
     setIsConfirmOpen(true);
@@ -244,6 +250,18 @@ function LearnDetail() {
   }, [isLoggedIn, detailId, isEditing]);
 
   useEffect(() => {
+    (async () => {
+      const data =
+        isLoggedIn && (await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedScriptTitleIndex));
+      data && setVideoData(data);
+      if (data && isLoggedIn) {
+        data.memos && setMemoList(data.memos);
+        setScriptTitleList(data.names ?? []);
+      }
+    })();
+  }, [clickedScriptTitleIndex, detailId, isLoggedIn]);
+
+  useEffect(() => {
     if (!player) return;
 
     const interval =
@@ -308,15 +326,7 @@ function LearnDetail() {
                 onScriptRename={(index: number) => handleScriptRename(index)}
               />
             ))}
-            {scriptTitleList.length !== SCRIPT_MAX_COUNT && (
-              <StScriptAddButton
-                onClick={() => {
-                  // 서버에 post 요청
-                  setClickedScriptTitleIndex(clickedScriptTitleIndex + 1);
-                  setTitleInputIndex(clickedScriptTitleIndex + 1);
-                }}
-              />
-            )}
+            {scriptTitleList.length !== SCRIPT_MAX_COUNT && <StScriptAddButton onClick={handleScriptAdd} />}
           </StScriptTitleContainer>
         )}
         {videoData && (

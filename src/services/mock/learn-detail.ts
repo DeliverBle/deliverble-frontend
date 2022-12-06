@@ -32,7 +32,20 @@ export function learnDetailDataMock(): LearnDetailService {
     return LEARN_DETAIL_DATA.MEMO_LIST_DATA;
   };
 
-  return { getPrivateVideoData, getPublicVideoData, postSentenceData, postMemoData, updateMemoData, deleteMemoData };
+  const postNewScriptData = async () => {
+    await wait(500);
+    return LEARN_DETAIL_DATA.VIDEO_DATA;
+  };
+
+  return {
+    getPrivateVideoData,
+    getPublicVideoData,
+    postSentenceData,
+    postMemoData,
+    updateMemoData,
+    deleteMemoData,
+    postNewScriptData,
+  };
 }
 
 const wait = (milliSeconds: number) => new Promise((resolve) => setTimeout(resolve, milliSeconds));
