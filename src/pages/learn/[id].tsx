@@ -120,16 +120,18 @@ function LearnDetail() {
           setHighlightIndex(stringLength);
           return stringLength;
         }
-        stringLength += childNodes[i]?.textContent?.length ?? 0;
+        if (childNodes[i].textContent !== '/') {
+          stringLength += childNodes[i]?.textContent?.length ?? 0;
+        }
       }
     }
   };
 
-  const createMarkStyles = (script: string, isActive: boolean, scriptOrder: number) => {
+  const createMarkStyles = (script: string, scriptOrder: number) => {
     let styles = ``;
     const highlightIndexList: number[] = [];
     const searchValue = '<mark>';
-    script = script.replaceAll('</mark>', '');
+    script = script.replaceAll(/<span>\/<\/span>|<\/mark>/g, '');
 
     let index = script.indexOf(searchValue, 0);
     while (index !== -1) {
@@ -139,29 +141,16 @@ function LearnDetail() {
     }
 
     highlightIndexList.forEach((index, i) => {
-      styles += `
-        mark:nth-child(${i + 1}) {
-          background: linear-gradient(259.3deg, #d8d9ff 0%, #a7c5ff 100%);
-          font-weight: ${isActive ? 600 : 400};
-          color: ${isActive ? COLOR.MAIN_BLUE : COLOR.BLACK};
-      
-          & > span {
-            font-size: 3.2rem;
-            font-weight: 600;
-            color: ${COLOR.MAIN_BLUE};
-          }
-        `;
-
       if (memoList.find(({ startIndex, order, content }) => startIndex === index && order === scriptOrder && content)) {
         styles += `
-          text-decoration: underline 3px ${COLOR.MAIN_BLUE};
-          text-underline-position: under;
-          text-underline-offset: 3px;
+          mark:nth-of-type(${i + 1}) {
+            text-decoration: underline 3px ${COLOR.MAIN_BLUE};
+            text-underline-position: under;
+            text-underline-offset: 3px;
+          }
         `;
       }
-      styles += `}`;
     });
-
     return styles;
   };
 
@@ -347,13 +336,9 @@ function LearnDetail() {
                           }}
                           key={id}
                           onClick={() => player?.seekTo(startTime, true)}
-                          markStyles={createMarkStyles(
-                            text,
-                            startTime <= currentTime && currentTime < endTime ? true : false,
-                            order,
-                          )}
+                          markStyles={createMarkStyles(text, order)}
                           isActive={startTime <= currentTime && currentTime < endTime ? true : false}>
-                          <div dangerouslySetInnerHTML={{ __html: text }}></div>
+                          <div id={id.toString()} dangerouslySetInnerHTML={{ __html: text }}></div>
                         </StScriptText>
                       ))}
                     {!isEditing && isContextMenuOpen && (
@@ -653,6 +638,12 @@ const StScriptText = styled.div<{ isActive: boolean; markStyles: string }>`
     font-weight: 600;
     color: ${COLOR.MAIN_BLUE};
     margin: 0 0.02rem 0 0.02rem;
+  }
+
+  mark {
+    background: linear-gradient(259.3deg, #d8d9ff 0%, #a7c5ff 100%);
+    font-weight: ${({ isActive }) => (isActive ? 600 : 400)};
+    color: ${({ isActive }) => (isActive ? COLOR.MAIN_BLUE : COLOR.BLACK)};
   }
 
   ${({ markStyles }) => markStyles};

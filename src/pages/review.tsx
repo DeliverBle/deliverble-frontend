@@ -64,7 +64,7 @@ function Review() {
   }, [isLoggedIn]);
 
   return (
-    <>
+    <StPageWrapper>
       <SEO title="복습하기 | Deliverble" />
       <NavigationBar />
       <StReview>
@@ -95,13 +95,20 @@ function Review() {
         )}
       </StReview>
       <Footer />
-    </>
+    </StPageWrapper>
   );
 }
 
 export default Review;
 
+const StPageWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
+
 const StReview = styled.div`
+  flex: 1;
   padding: 16rem 16rem 13.6rem 16rem;
 
   @media (max-width: 960px) {

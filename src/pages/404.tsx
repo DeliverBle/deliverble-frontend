@@ -9,7 +9,7 @@ import styled from 'styled-components';
 function Custom404() {
   const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
   return (
-    <>
+    <StPageWrapper>
       <SEO title="Deilverble" />
       <NavigationBar />
       <StCustom404>
@@ -22,15 +22,23 @@ function Custom404() {
             <StHomeButton>홈으로 돌아가기</StHomeButton>
           </Link>
         </StBackground>
-        <Footer />
       </StCustom404>
-    </>
+      <Footer />
+    </StPageWrapper>
   );
 }
 
 export default Custom404;
 
-const StCustom404 = styled.div``;
+const StPageWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
+
+const StCustom404 = styled.div`
+  flex: 1;
+`;
 
 const StBackground = styled.div`
   display: flex;
