@@ -451,7 +451,7 @@ function LearnDetail() {
                     </StButtonContainer>
                   </div>
                 </article>
-                <StTooltipContanier isHighlightOver={isHighlightOver} isSpacingOver={isSpacingOver}>
+                <StTooltipContainer isHighlightOver={isHighlightOver} isSpacingOver={isSpacingOver}>
                   <ImageDiv
                     className="highlight-tooltip"
                     src={imgHighlightTooltip}
@@ -462,7 +462,7 @@ function LearnDetail() {
                     src={imgSpacingTooltip}
                     alt="클릭해서 끊어읽기를 표시해보세요."
                   />
-                </StTooltipContanier>
+                </StTooltipContainer>
               </StLearnSection>
               <aside>
                 <StVideoWrapper>
@@ -679,7 +679,7 @@ const StButtonContainer = styled.div`
   padding-right: 0.8rem;
 `;
 
-const StTooltipContanier = styled.div<{ isHighlightOver: boolean; isSpacingOver: boolean }>`
+const StTooltipContainer = styled.div<{ isHighlightOver: boolean; isSpacingOver: boolean }>`
   display: flex;
   gap: 1.2rem;
   position: fixed;
