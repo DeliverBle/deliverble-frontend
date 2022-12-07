@@ -40,6 +40,7 @@ import YouTube from 'react-youtube';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import { imgHighlightTooltip, imgSpacingTooltip } from 'public/assets/images';
+import { useMutation } from 'react-query';
 
 export interface MemoState {
   newMemoId: number;
@@ -204,18 +205,24 @@ function LearnDetail() {
     setIsConfirmOpen(true);
   };
 
-  const handleScriptRename = async (name: string) => {
+  const renameScriptTitle = async (name: string) => {
     const scriptId = videoData?.scriptsId ?? INITIAL_NUMBER;
-    const data = await api.learnDetailService.updateScriptNameData(scriptId, name);
-    if (videoData?.names) {
-      const newNameList = videoData.names.slice();
-      newNameList[clickedScriptTitleIndex] = data;
-      setVideoData({
-        ...videoData,
-        names: newNameList,
-      });
-    }
+    const response = await api.learnDetailService.updateScriptNameData(scriptId, name);
+    return response;
   };
+
+  const { mutate: mutateRenameScript } = useMutation(renameScriptTitle, {
+    onSuccess: (data) => {
+      if (videoData?.names) {
+        const newNameList = videoData.names.slice();
+        newNameList[clickedScriptTitleIndex] = data;
+        setVideoData({
+          ...videoData,
+          names: newNameList,
+        });
+      }
+    },
+  });
 
   const handleScriptTitleInputChange = (index: number) => {
     setClickedScriptTitleIndex(index);
@@ -363,7 +370,7 @@ function LearnDetail() {
                 setClickedScriptTitleIndex={setClickedScriptTitleIndex}
                 onScriptDelete={handleScriptDeleteModal}
                 onScriptTitleInputChange={(index: number) => handleScriptTitleInputChange(index)}
-                onScriptRename={handleScriptRename}
+                onScriptRename={mutateRenameScript}
               />
             ))}
             {scriptTitleList.length > 0 && scriptTitleList.length !== SCRIPT_MAX_COUNT && (
