@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, KeyboardEvent, useRef, useState } from 'react';
 import { SCRIPT_TITLE_MAX_LENGTH } from '@src/utils/constant';
 
 interface ScriptTitleProps {
@@ -36,22 +36,6 @@ function ScriptTitle(props: ScriptTitleProps) {
   const scriptTitleInputRef = useRef<HTMLInputElement>(null);
   const isEditing = isScriptTitleInputVisible && scriptTitleInputIndex === currentScriptTitleIndex;
 
-  useEffect(() => {
-    const handleClickOutside = (e: Event) => {
-      const eventTarget = e.target as HTMLInputElement;
-      if (eventTarget.tagName !== 'INPUT') {
-        setIsScriptTitleInputVisible(false);
-      }
-    };
-
-    if (isScriptTitleInputVisible) {
-      window.addEventListener('click', handleClickOutside);
-    }
-    return () => {
-      window.removeEventListener('click', handleClickOutside);
-    };
-  }, [isScriptTitleInputVisible, setIsScriptTitleInputVisible]);
-
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
     if (value.length >= SCRIPT_TITLE_MAX_LENGTH) {
@@ -61,13 +45,16 @@ function ScriptTitle(props: ScriptTitleProps) {
   };
 
   const handleKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    const length = value.length;
-
+    const length = text.length;
     if (e.key === 'Enter' && length && length <= SCRIPT_TITLE_MAX_LENGTH) {
-      onScriptRename(value);
+      onScriptRename(text);
       setIsScriptTitleInputVisible(false);
     }
+  };
+
+  const handleBlur = () => {
+    onScriptRename(text);
+    setIsScriptTitleInputVisible(false);
   };
 
   return (
@@ -86,7 +73,7 @@ function ScriptTitle(props: ScriptTitleProps) {
           value={text}
           onChange={handleInputChange}
           onKeyUp={handleKeyUp}
-          onBlur={() => onScriptRename(text)}
+          onBlur={handleBlur}
         />
       ) : (
         <div>{name}</div>
