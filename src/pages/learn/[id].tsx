@@ -207,8 +207,7 @@ function LearnDetail() {
 
   const renameScriptTitle = async (name: string) => {
     const scriptId = videoData?.scriptsId ?? INITIAL_NUMBER;
-    const response = await api.learnDetailService.updateScriptNameData(scriptId, name);
-    return response;
+    return await api.learnDetailService.updateScriptNameData(scriptId, name);
   };
 
   const { mutate: mutateRenameScript } = useMutation(renameScriptTitle, {
