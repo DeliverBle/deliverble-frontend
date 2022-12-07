@@ -185,13 +185,17 @@ function LearnDetail() {
     const response = await api.learnDetailService.deleteScriptData(scriptId);
     if (response.isSuccess && clickedScriptTitleIndex) {
       setClickedScriptTitleIndex(0);
-    } else {
+      return;
+    }
+    if (response.isSuccess && clickedScriptTitleIndex === 0) {
       const data = await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedScriptTitleIndex);
-      data && setVideoData(data);
-      if (data && isLoggedIn) {
-        data.memos && setMemoList(data.memos);
-        setScriptTitleList(data.names ?? []);
+      setVideoData(data);
+      const { memos, names } = data;
+      if (memos && names) {
+        setMemoList(memos);
+        setScriptTitleList(names);
       }
+      return;
     }
   };
 
@@ -259,22 +263,25 @@ function LearnDetail() {
       const data = isLoggedIn
         ? await api.learnDetailService.getPrivateVideoData(id)
         : await api.learnDetailService.getPublicVideoData(id);
-      data && setVideoData(data);
-      if (data && isLoggedIn) {
-        data.memos && setMemoList(data.memos);
-        setScriptTitleList(data.names ?? []);
+      setVideoData(data);
+      const { memos, names } = data;
+      if (isLoggedIn && memos && names) {
+        setMemoList(memos);
+        setScriptTitleList(names);
       }
     })();
   }, [isLoggedIn, detailId, isEditing]);
 
   useEffect(() => {
     (async () => {
-      const data =
-        isLoggedIn && (await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedScriptTitleIndex));
-      data && setVideoData(data);
-      if (data && isLoggedIn) {
-        data.memos && setMemoList(data.memos);
-        setScriptTitleList(data.names ?? []);
+      if (isLoggedIn) {
+        const data = await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedScriptTitleIndex);
+        setVideoData(data);
+        const { memos, names } = data;
+        if (memos && names) {
+          setMemoList(memos);
+          setScriptTitleList(names);
+        }
       }
     })();
   }, [clickedScriptTitleIndex, detailId, isLoggedIn]);

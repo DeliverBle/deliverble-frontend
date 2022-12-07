@@ -16,41 +16,25 @@ export function learnDetailDataRemote(): LearnDetailService {
         isFavorite: response.data.isFavorite,
         startTime: response.data.startTime,
         endTime: response.data.endTime,
-        scriptsId: index ? response.data2[index].id : response.data2[0].id,
+        scriptsId: response.data2[index ?? 0].id,
         tags: response.data.tagsForView.map((tag: Tag) => ({
           id: tag.id,
           name: tag.name,
         })),
-        scripts: index
-          ? response.data2[index].sentences.map((sentence: Script) => ({
-              id: sentence.id,
-              order: sentence.order,
-              text: sentence.text,
-              startTime: sentence.startTime,
-              endTime: sentence.endTime,
-            }))
-          : response.data2[0].sentences.map((sentence: Script) => ({
-              id: sentence.id,
-              order: sentence.order,
-              text: sentence.text,
-              startTime: sentence.startTime,
-              endTime: sentence.endTime,
-            })),
-        memos: index
-          ? response.data2[index].memos.map((memo: MemoData) => ({
-              id: memo.id,
-              keyword: memo.keyword,
-              order: memo.order,
-              startIndex: memo.startIndex,
-              content: memo.content,
-            }))
-          : response.data2[0].memos.map((memo: MemoData) => ({
-              id: memo.id,
-              keyword: memo.keyword,
-              order: memo.order,
-              startIndex: memo.startIndex,
-              content: memo.content,
-            })),
+        scripts: response.data2[index ?? 0].sentences.map((sentence: Script) => ({
+          id: sentence.id,
+          order: sentence.order,
+          text: sentence.text,
+          startTime: sentence.startTime,
+          endTime: sentence.endTime,
+        })),
+        memos: response.data2[index ?? 0].memos.map((memo: MemoData) => ({
+          id: memo.id,
+          keyword: memo.keyword,
+          order: memo.order,
+          startIndex: memo.startIndex,
+          content: memo.content,
+        })),
         names: response.data2.map((name: Name) => ({
           id: name.id,
           name: name.name,
