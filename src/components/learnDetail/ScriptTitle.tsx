@@ -44,17 +44,21 @@ function ScriptTitle(props: ScriptTitleProps) {
     setText(value);
   };
 
-  const handleKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
+  const changeName = () => {
     const length = text.length;
-    if (e.key === 'Enter' && length && length <= SCRIPT_TITLE_MAX_LENGTH) {
+    if (length && length <= SCRIPT_TITLE_MAX_LENGTH) {
       onScriptRename(text);
       setIsScriptTitleInputVisible(false);
+      return;
     }
+    setText(name);
+    setIsScriptTitleInputVisible(false);
   };
 
-  const handleBlur = () => {
-    onScriptRename(text);
-    setIsScriptTitleInputVisible(false);
+  const handleKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      changeName();
+    }
   };
 
   return (
@@ -73,7 +77,7 @@ function ScriptTitle(props: ScriptTitleProps) {
           value={text}
           onChange={handleInputChange}
           onKeyUp={handleKeyUp}
-          onBlur={handleBlur}
+          onBlur={changeName}
         />
       ) : (
         <div>{name}</div>
