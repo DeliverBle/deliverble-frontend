@@ -1,4 +1,4 @@
-import { SentenceData, VideoData, MemoData } from './types/learn-detail';
+import { SentenceData, VideoData, MemoData, Name } from './types/learn-detail';
 
 export interface LearnDetailService {
   getPrivateVideoData(videoId: number, index?: number): Promise<VideoData>;
@@ -9,4 +9,5 @@ export interface LearnDetailService {
   deleteMemoData(memoId: number): Promise<MemoData[]>;
   postNewScriptData(videoId: number): Promise<{ isSuccess: boolean }>;
   deleteScriptData(scriptId: number): Promise<{ isSuccess: boolean }>;
+  updateScriptNameData(scriptId: number, name: string): Promise<Name>;
 }

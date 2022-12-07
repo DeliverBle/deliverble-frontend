@@ -3,8 +3,8 @@ import { Script, SentenceData, Tag, MemoData, Name } from '../api/types/learn-de
 import { privateAPI, publicAPI } from './base';
 
 export function learnDetailDataRemote(): LearnDetailService {
-  const getPrivateVideoData = async (id: number, index?: number) => {
-    const response = await privateAPI.get({ url: `/news/detail/${id}` });
+  const getPrivateVideoData = async (videoId: number, index?: number) => {
+    const response = await privateAPI.get({ url: `/news/detail/${videoId}` });
     if (response.status === 200) {
       return {
         id: response.data.id,
@@ -43,8 +43,8 @@ export function learnDetailDataRemote(): LearnDetailService {
     } else throw '서버 통신 실패';
   };
 
-  const getPublicVideoData = async (id: number) => {
-    const response = await publicAPI.get({ url: `/news/detail/not-authentication/${id}` });
+  const getPublicVideoData = async (videoId: number) => {
+    const response = await publicAPI.get({ url: `/news/detail/not-authentication/${videoId}` });
     if (response.status === 200) {
       return {
         id: response.data.id,
@@ -159,6 +159,16 @@ export function learnDetailDataRemote(): LearnDetailService {
     return { isSuccess: response.status === 200 };
   };
 
+  const updateScriptNameData = async (scriptId: number, name: string) => {
+    const response = await privateAPI.patch({ url: `/script/name/${scriptId}`, data: { name } });
+    if (response.status === 200) {
+      return {
+        id: response.data2.id,
+        name: response.data2.name,
+      };
+    } else throw '서버 통신 실패';
+  };
+
   return {
     getPrivateVideoData,
     getPublicVideoData,
@@ -168,5 +178,6 @@ export function learnDetailDataRemote(): LearnDetailService {
     updateMemoData,
     postNewScriptData,
     deleteScriptData,
+    updateScriptNameData,
   };
 }

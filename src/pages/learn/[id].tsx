@@ -204,7 +204,20 @@ function LearnDetail() {
     setIsConfirmOpen(true);
   };
 
-  const handleScriptRename = (index: number) => {
+  const handleScriptRename = async (name: string) => {
+    const scriptId = videoData?.scriptsId ?? INITIAL_NUMBER;
+    const data = await api.learnDetailService.updateScriptNameData(scriptId, name);
+    if (videoData?.names) {
+      const newNameList = videoData.names.slice();
+      newNameList[clickedScriptTitleIndex] = data;
+      setVideoData({
+        ...videoData,
+        names: newNameList,
+      });
+    }
+  };
+
+  const handleScriptTitleInputChange = (index: number) => {
     setClickedScriptTitleIndex(index);
     setTitleInputIndex(index);
     setIsScriptTitleInputVisible(true);
@@ -335,9 +348,9 @@ function LearnDetail() {
       <NavigationBar />
       <StLearnDetail>
         <ImageDiv onClick={() => router.push(prevLink)} src={icXButton} className="close" layout="fill" alt="x" />
-        {isLoggedIn && (
+        {videoData?.names && (
           <StScriptTitleContainer>
-            {scriptTitleList.map(({ id, name }, i) => (
+            {videoData.names.map(({ id, name }, i) => (
               <ScriptTitle
                 key={id}
                 name={name}
@@ -349,10 +362,13 @@ function LearnDetail() {
                 setIsScriptTitleInputVisible={setIsScriptTitleInputVisible}
                 setClickedScriptTitleIndex={setClickedScriptTitleIndex}
                 onScriptDelete={handleScriptDeleteModal}
-                onScriptRename={(index: number) => handleScriptRename(index)}
+                onScriptTitleInputChange={(index: number) => handleScriptTitleInputChange(index)}
+                onScriptRename={handleScriptRename}
               />
             ))}
-            {scriptTitleList.length !== SCRIPT_MAX_COUNT && <StScriptAddButton onClick={handleScriptAdd} />}
+            {scriptTitleList.length > 0 && scriptTitleList.length !== SCRIPT_MAX_COUNT && (
+              <StScriptAddButton onClick={handleScriptAdd} />
+            )}
           </StScriptTitleContainer>
         )}
         {videoData && (

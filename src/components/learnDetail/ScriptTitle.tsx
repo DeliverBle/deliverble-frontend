@@ -14,7 +14,8 @@ interface ScriptTitleProps {
   setIsScriptTitleInputVisible: (isScriptTitleInputVisible: boolean) => void;
   setClickedScriptTitleIndex: (index: number) => void;
   onScriptDelete: () => void;
-  onScriptRename: (index: number) => void;
+  onScriptTitleInputChange: (index: number) => void;
+  onScriptRename: (name: string) => void;
 }
 
 function ScriptTitle(props: ScriptTitleProps) {
@@ -28,6 +29,7 @@ function ScriptTitle(props: ScriptTitleProps) {
     scriptTitleInputIndex,
     setClickedScriptTitleIndex,
     onScriptDelete,
+    onScriptTitleInputChange,
     onScriptRename,
   } = props;
   const [text, setText] = useState(name);
@@ -63,7 +65,7 @@ function ScriptTitle(props: ScriptTitleProps) {
     const length = value.length;
 
     if (e.key === 'Enter' && length && length <= SCRIPT_TITLE_MAX_LENGTH) {
-      // 엔터 눌렀을 때 value를 request body에 담아 patch
+      onScriptRename(value);
       setIsScriptTitleInputVisible(false);
     }
   };
@@ -71,15 +73,21 @@ function ScriptTitle(props: ScriptTitleProps) {
   return (
     <StScriptTitle
       onClick={() => setClickedScriptTitleIndex(currentScriptTitleIndex)}
-      onDoubleClick={() => onScriptRename(currentScriptTitleIndex)}
+      onDoubleClick={() => onScriptTitleInputChange(currentScriptTitleIndex)}
       onContextMenu={(e) => {
         e.preventDefault();
-        onScriptRename(currentScriptTitleIndex);
+        onScriptTitleInputChange(currentScriptTitleIndex);
       }}
       isClicked={currentScriptTitleIndex === clickedScriptTitleIndex}
       isEditing={isEditing}>
       {isEditing ? (
-        <input ref={scriptTitleInputRef} value={text} onChange={handleInputChange} onKeyUp={handleKeyUp} />
+        <input
+          ref={scriptTitleInputRef}
+          value={text}
+          onChange={handleInputChange}
+          onKeyUp={handleKeyUp}
+          onBlur={() => onScriptRename(text)}
+        />
       ) : (
         <div>{name}</div>
       )}
