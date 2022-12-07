@@ -97,15 +97,15 @@ function LearnDetail() {
     if (article) {
       const articleAbsoluteTop = article.getBoundingClientRect().top;
       const articleAbsoluteLeft = article.getBoundingClientRect().left;
-      const absoulteTop = target.getBoundingClientRect().top;
-      const absoulteRight = target.getBoundingClientRect().right;
+      const absoluteTop = target.getBoundingClientRect().top;
+      const absoluteRight = target.getBoundingClientRect().right;
 
-      y = absoulteTop - articleAbsoluteTop - 10;
-      if (absoulteRight <= 830) {
-        x = absoulteRight - articleAbsoluteLeft - 15;
+      y = absoluteTop - articleAbsoluteTop - 10;
+      if (absoluteRight <= 830) {
+        x = absoluteRight - articleAbsoluteLeft - 15;
       } else {
-        const absoulteLeft = target.getBoundingClientRect().left;
-        x = absoulteLeft - articleAbsoluteLeft - 175;
+        const absoluteLeft = target.getBoundingClientRect().left;
+        x = absoluteLeft - articleAbsoluteLeft - 175;
       }
     }
 
