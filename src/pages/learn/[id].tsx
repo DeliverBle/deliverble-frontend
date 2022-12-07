@@ -175,7 +175,7 @@ function LearnDetail() {
   const handleScriptAdd = async () => {
     const response = await api.learnDetailService.postNewScriptData(Number(detailId));
     if (response.isSuccess) {
-      const newIndex = clickedScriptTitleIndex + 1;
+      const newIndex = scriptTitleList.length;
       setClickedScriptTitleIndex(newIndex);
       setTitleInputIndex(newIndex);
     }
