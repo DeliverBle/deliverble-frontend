@@ -11,6 +11,11 @@ export type Script = {
   endTime: number;
 };
 
+export type Name = {
+  id: number;
+  name: string;
+};
+
 export type VideoData = {
   id: number;
   title: string;
@@ -25,6 +30,7 @@ export type VideoData = {
   tags: Tag[];
   scripts: Script[];
   memos?: MemoData[];
+  names?: Name[];
 };
 
 export type MemoData = {

@@ -72,4 +72,9 @@ export const LEARN_DETAIL_DATA = {
       content: '숨을 2배 크게 들이마시고',
     },
   ],
+
+  NAME_DATA: {
+    id: 0,
+    name: '이름 바꾼 스크립트',
+  },
 };
