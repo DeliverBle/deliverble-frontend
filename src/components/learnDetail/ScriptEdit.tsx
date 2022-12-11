@@ -9,10 +9,11 @@ interface ScriptEditProps {
   scripts: Script[];
   isHighlight: boolean;
   isSpacing: boolean;
+  clickedScriptTitleIndex: number;
 }
 
 function ScriptEdit(props: ScriptEditProps) {
-  const { scriptsId, scripts, isHighlight, isSpacing } = props;
+  const { scriptsId, scripts, isHighlight, isSpacing, clickedScriptTitleIndex } = props;
   const [highlightAlert, setHighlightAlert] = useState<boolean>(false);
   const [firstLineId, setFirstLineId] = useState<number>();
   const [order, setOrder] = useState<number>();
@@ -28,14 +29,15 @@ function ScriptEdit(props: ScriptEditProps) {
             text,
           },
           scriptsId,
+          clickedScriptTitleIndex,
         );
       }
     })();
-  }, [order, text, scriptsId]);
+  }, [order, text, scriptsId, clickedScriptTitleIndex]);
 
   useEffect(() => {
-    setFirstLineId(scripts[0].id);
-  }, [firstLineId, scripts]);
+    setFirstLineId(scripts[clickedScriptTitleIndex].id);
+  }, [clickedScriptTitleIndex, firstLineId, scripts]);
 
   const findLineOrder = (currentLineId: number) => {
     if (currentLineId && firstLineId) {

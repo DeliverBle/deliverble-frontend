@@ -409,10 +409,11 @@ function LearnDetail() {
                     )}
                     {isEditing && (
                       <ScriptEdit
-                        scriptsId={videoData.scriptsId}
+                        scriptsId={videoData.names ? videoData.names[clickedScriptTitleIndex].id : videoData.scriptsId}
                         scripts={videoData.scripts}
                         isHighlight={isHighlight}
                         isSpacing={isSpacing}
+                        clickedScriptTitleIndex={clickedScriptTitleIndex}
                       />
                     )}
                   </div>

@@ -71,7 +71,7 @@ export function learnDetailDataRemote(): LearnDetailService {
     } else throw '서버 통신 실패';
   };
 
-  const postSentenceData = async (SentenceData: SentenceData, scriptsId: number) => {
+  const postSentenceData = async (SentenceData: SentenceData, scriptsId: number, scriptIndex: number) => {
     const response = await privateAPI.post({
       url: `/script/sentence/update/${scriptsId}`,
       data: SentenceData,
@@ -87,12 +87,12 @@ export function learnDetailDataRemote(): LearnDetailService {
         isFavorite: response.data.isFavorite,
         startTime: response.data.startTime,
         endTime: response.data.endTime,
-        scriptsId: response.data2[0]?.id,
+        scriptsId: response.data2[scriptIndex]?.id,
         tags: response.data.tagsForView.map((tag: Tag) => ({
           id: tag.id,
           name: tag.name,
         })),
-        scripts: response.data2[0]?.sentences.map((sentence: Script) => ({
+        scripts: response.data2[scriptIndex]?.sentences.map((sentence: Script) => ({
           id: sentence.id,
           text: sentence.text,
           startTime: sentence.startTime,
