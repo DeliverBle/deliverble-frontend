@@ -36,8 +36,8 @@ function ScriptEdit(props: ScriptEditProps) {
   }, [order, text, scriptsId, clickedScriptTitleIndex]);
 
   useEffect(() => {
-    setFirstLineId(scripts[clickedScriptTitleIndex].id);
-  }, [clickedScriptTitleIndex, firstLineId, scripts]);
+    setFirstLineId(scripts[0].id);
+  }, [firstLineId, scripts]);
 
   const findLineOrder = (currentLineId: number) => {
     if (currentLineId && firstLineId) {
