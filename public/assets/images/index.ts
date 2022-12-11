@@ -11,5 +11,3 @@ export { default as imgSmallBannerMic } from './img_small_banner_mic.png';
 export { default as img404Background } from './img_404_background.png';
 export { default as imgReviewEmpty } from './img_review_empty.svg';
 export { default as imgMemoEmpty } from './img_memo_empty.svg';
-export { default as imgHighlightTooltip } from './img_highlight_tooltip.svg';
-export { default as imgSpacingTooltip } from './img_spacing_tooltip.svg';

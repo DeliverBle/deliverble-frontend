@@ -38,8 +38,7 @@ import {
 import React, { useEffect, useRef, useState } from 'react';
 import YouTube from 'react-youtube';
 import { useRecoilValue } from 'recoil';
-import styled from 'styled-components';
-import { imgHighlightTooltip, imgSpacingTooltip } from 'public/assets/images';
+import styled, { css } from 'styled-components';
 
 export interface MemoState {
   newMemoId: number;
@@ -431,16 +430,16 @@ function LearnDetail() {
                   </div>
                 </article>
                 <StTooltipContanier isHighlightOver={isHighlightOver} isSpacingOver={isSpacingOver}>
-                  <ImageDiv
-                    className="highlight-tooltip"
-                    src={imgHighlightTooltip}
-                    alt="드래그해서 하이라이트를 표시해보세요."
-                  />
-                  <ImageDiv
-                    className="spacing-tooltip"
-                    src={imgSpacingTooltip}
-                    alt="클릭해서 끊어읽기를 표시해보세요."
-                  />
+                  <p>
+                    드래그해서 하이라이트를
+                    <br />
+                    표시해보세요.
+                  </p>
+                  <p>
+                    클릭해서 끊어읽기를
+                    <br />
+                    표시해보세요.
+                  </p>
                 </StTooltipContanier>
               </StLearnSection>
               <aside>
@@ -662,17 +661,75 @@ const StButtonContainer = styled.div`
 `;
 
 const StTooltipContanier = styled.div<{ isHighlightOver: boolean; isSpacingOver: boolean }>`
-  display: flex;
-  gap: 1.2rem;
   position: fixed;
-  margin: 86.3rem 0 0 60.1rem;
-  z-index: 1;
 
-  .highlight-tooltip {
-    visibility: ${({ isHighlightOver }) => (isHighlightOver ? 'visible' : 'hidden')};
-  }
-  .spacing-tooltip {
-    visibility: ${({ isSpacingOver }) => (isSpacingOver ? 'visible' : 'hidden')};
+  ${({ isHighlightOver }) =>
+    isHighlightOver
+      ? css`
+          & > p:first-child {
+            margin: 82.3rem 0 0 60.5rem;
+            position: absolute;
+            top: 4.6rem;
+            background: rgba(22, 15, 53, 0.7);
+            color: ${COLOR.WHITE};
+            width: 16.5rem;
+            padding: 1rem;
+            cursor: default;
+            border-radius: 0.6rem;
+            ${FONT_STYLES.SB_15_CAPTION}
+          }
+          & > p:first-child:after {
+            position: absolute;
+            bottom: 100%;
+            right: 1.6rem;
+            border: solid transparent;
+            content: '';
+            width: 0;
+            height: 0;
+            pointer-events: none;
+            border-width: 0.8rem;
+            border-bottom-color: rgba(22, 15, 53, 0.7);
+          }
+        `
+      : css`
+          & > p:first-child {
+            display: none;
+          }
+        `}
+
+  ${({ isSpacingOver }) =>
+    isSpacingOver
+      ? css`
+          & > p:nth-child(2) {
+            margin: 82.3rem 0 0 77.8rem;
+            position: absolute;
+            top: 4.6rem;
+            background: rgba(22, 15, 53, 0.7);
+            color: ${COLOR.WHITE};
+            width: 13.9rem;
+            padding: 1rem;
+            cursor: default;
+            border-radius: 0.6rem;
+            ${FONT_STYLES.SB_15_CAPTION}
+          }
+          & > p:nth-child(2):after {
+            position: absolute;
+            bottom: 100%;
+            left: 1.6rem;
+            border: solid transparent;
+            content: '';
+            width: 0;
+            height: 0;
+            pointer-events: none;
+            border-width: 0.8rem;
+            border-bottom-color: rgba(22, 15, 53, 0.7);
+          }
+        `
+      : css`
+          & > p:nth-child(2) {
+            display: none;
+          }
+        `}
   }
 `;
 
