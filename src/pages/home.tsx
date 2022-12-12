@@ -8,7 +8,7 @@ import { VideoData } from '@src/services/api/types/home';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import dynamic from 'next/dynamic';
-import { imgBigBannerMic, imgSmallBannerMic } from 'public/assets/images';
+import { imgBigBannerMic, imgMediumBannerMic } from 'public/assets/images';
 import { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import styled from 'styled-components';
@@ -17,12 +17,17 @@ function Home() {
   const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
   const [newsList, setNewsList] = useState<VideoData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const is960 = useMediaQuery({
-    query: '(min-width: 501px) and (max-width: 960px)',
+  const [mounted, setMounted] = useState(false);
+  const MediumBanner = useMediaQuery({
+    query: '(min-width: 501px)',
   });
-  const is500 = useMediaQuery({
-    query: '(max-width: 500px)',
+  const BigBanner = useMediaQuery({
+    query: '(min-width: 961px)',
   });
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const getVideoList = async () => {
     const { videoList } = await api.homeService.getVideoData();
@@ -51,6 +56,15 @@ function Home() {
     });
   };
 
+  const selectBannerImage = () => {
+    if (BigBanner) {
+      return <ImageDiv className="big-mic" src={imgBigBannerMic} alt="" layout="fill" />;
+    }
+    if (MediumBanner) {
+      return <ImageDiv className="medium-mic" src={imgMediumBannerMic} alt="" />;
+    }
+  };
+
   return (
     <StPageWrapper>
       <SEO title="Deliverble" />
@@ -64,11 +78,7 @@ function Home() {
             </h1>
             <p>딜리버블과 함께 잘 말하는 법을 배워봐요!</p>
           </StBannerText>
-          {is960 ? (
-            <ImageDiv className="small-mic" src={imgSmallBannerMic} alt="" />
-          ) : (
-            !is500 && <ImageDiv className="big-mic" src={imgBigBannerMic} alt="" layout="fill" />
-          )}
+          {mounted && selectBannerImage()}
         </StBanner>
         <StNews>
           <h3>딜리버블의 추천 뉴스를 만나보세요.</h3>
@@ -119,7 +129,7 @@ const StBanner = styled.div`
   }
 
   @media (max-width: 960px) {
-    .small-mic {
+    .medium-mic {
       position: absolute;
       top: 0rem;
       left: 24.5rem;
