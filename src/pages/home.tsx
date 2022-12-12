@@ -5,15 +5,18 @@ import SEO from '@src/components/common/SEO';
 import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
 import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/home';
+import { loginState } from '@src/stores/loginState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import dynamic from 'next/dynamic';
 import { imgBigBannerMic, imgSmallBannerMic } from 'public/assets/images';
 import { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
+import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 
 function Home() {
+  const isLoggedIn = useRecoilValue(loginState);
   const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
   const [newsList, setNewsList] = useState<VideoData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -24,16 +27,16 @@ function Home() {
     query: '(max-width: 500px)',
   });
 
-  const getVideoList = async () => {
-    const { videoList } = await api.homeService.getVideoData();
-    setNewsList(videoList);
-  };
-
   useEffect(() => {
     setIsLoading(true);
-    getVideoList();
+    (async () => {
+      const { videoList } = isLoggedIn
+        ? await api.homeService.getPrivateVideoData()
+        : await api.homeService.getPublicVideoData();
+      setNewsList(videoList);
+    })();
     setIsLoading(false);
-  }, []);
+  }, [isLoggedIn]);
 
   const handleClickLike = async (id: number) => {
     const { id: likeId, isFavorite } = await api.likeService.postLikeData(id);
