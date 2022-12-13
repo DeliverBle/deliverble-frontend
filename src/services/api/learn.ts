@@ -1,5 +1,6 @@
 import { PostSearchConditionRequestBody, PostSearchConditionResponse } from './types/learn';
 
 export interface LearnService {
-  postSearchCondition(body: PostSearchConditionRequestBody): Promise<PostSearchConditionResponse>;
+  postSearchConditionWithToken(body: PostSearchConditionRequestBody): Promise<PostSearchConditionResponse>;
+  postSearchConditionWithoutToken(body: PostSearchConditionRequestBody): Promise<PostSearchConditionResponse>;
 }

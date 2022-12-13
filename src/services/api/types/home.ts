@@ -5,7 +5,7 @@ export type VideoData = {
   channel: string;
   thumbnail: string;
   reportDate: string;
-  isFavorite: boolean;
+  isFavorite?: boolean;
 };
 
 export type VideoListData = {

@@ -6,8 +6,8 @@ import SEO from '@src/components/common/SEO';
 import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
 import SelectBox from '@src/components/learn/SelectBox';
 import { api } from '@src/services/api';
-import { VideoData } from '@src/services/api/types/home';
-import { PostSearchConditionRequestBody } from '@src/services/api/types/learn';
+import { PostSearchConditionRequestBody, VideoData } from '@src/services/api/types/learn';
+import { loginState } from '@src/stores/loginState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { BLOCK_SIZE, categoryList, channelList, LIST_SIZE, speakerList } from '@src/utils/constant';
@@ -15,10 +15,12 @@ import dynamic from 'next/dynamic';
 import { icSearch } from 'public/assets/icons';
 import { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
+import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 
 function Learn() {
   const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
+  const isLoggedIn = useRecoilValue(loginState);
   const [selectedChannelList, setSelectedChannelList] = useState<string[]>([]);
   const [selectedCategoryList, setSelectedCategoryList] = useState<string[]>([]);
   const [selectedSpeakerList, setSelectedSpeakerList] = useState<string[]>([]);
@@ -29,7 +31,9 @@ function Learn() {
 
   const { mutate, isLoading } = useMutation(
     async (requestBody: PostSearchConditionRequestBody) => {
-      return await api.learnService.postSearchCondition(requestBody);
+      return isLoggedIn
+        ? await api.learnService.postSearchConditionWithToken(requestBody)
+        : await api.learnService.postSearchConditionWithoutToken(requestBody);
     },
     {
       onSuccess: (data) => {
