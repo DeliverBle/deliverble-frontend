@@ -1,44 +1,32 @@
 import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import { MemoHighlightId } from '@src/pages/learn/[id]';
-import { useEffect } from 'react';
+import { Dispatch, SetStateAction, useEffect } from 'react';
+import { MemoState } from '@src/pages/learn/[id]';
+import {
+  DELETE_MEMO_CONFIRM_MODAL_TEXT,
+  DELETE_SCRIPT_CONFIRM_MODAL_TEXT,
+  INITIAL_MEMO_STATE,
+} from '@src/utils/constant';
 
 export interface ConfirmModalText {
   mainText: string;
   subText?: string;
-  confirmText: string;
-  cancelText: string;
+  leftButtonText: string;
+  rightButtonText: string;
 }
 
 interface ConfirmModalProps {
-  closeModal: (close: boolean) => void;
-  setMemoHighlightId: (id: MemoHighlightId) => void;
   confirmModalText: ConfirmModalText;
-  clickedScriptTitleIndex: number;
-  setClickedScriptTitleIndex: (index: number) => void;
-  scriptTitleList: string[];
-  setScriptTitleList: (list: string[]) => void;
+  setMemoState: Dispatch<SetStateAction<MemoState>>;
+  setIsConfirmOpen: (close: boolean) => void;
+  setClickedDeleteMemo: (clicked: boolean) => void;
+  onScriptDelete: () => void;
 }
 
 function ConfirmModal(props: ConfirmModalProps) {
-  const {
-    closeModal,
-    setMemoHighlightId,
-    confirmModalText,
-    clickedScriptTitleIndex,
-    setClickedScriptTitleIndex,
-    scriptTitleList,
-    setScriptTitleList,
-  } = props;
-  const { mainText, subText, confirmText, cancelText } = confirmModalText;
-
-  const deleteScript = (index: number) => {
-    const tempList = [...scriptTitleList];
-    tempList.splice(index, 1);
-    setScriptTitleList(tempList);
-    setClickedScriptTitleIndex(0);
-  };
+  const { confirmModalText, setMemoState, setIsConfirmOpen, setClickedDeleteMemo, onScriptDelete } = props;
+  const { mainText, subText, leftButtonText, rightButtonText } = confirmModalText;
 
   useEffect(() => {
     window.scrollTo({
@@ -47,6 +35,20 @@ function ConfirmModal(props: ConfirmModalProps) {
     });
   }, []);
 
+  const handleButtonClick = () => {
+    if (mainText === DELETE_SCRIPT_CONFIRM_MODAL_TEXT.mainText) {
+      onScriptDelete();
+      return;
+    }
+
+    if (mainText === DELETE_MEMO_CONFIRM_MODAL_TEXT.mainText) {
+      setClickedDeleteMemo(true);
+      return;
+    }
+
+    setMemoState(INITIAL_MEMO_STATE);
+  };
+
   return (
     <StConfirmModal>
       <StDescription>
@@ -54,14 +56,20 @@ function ConfirmModal(props: ConfirmModalProps) {
         <p>{subText}</p>
       </StDescription>
       <StButtonContainer>
-        <button onClick={() => closeModal(false)}>{confirmText}</button>
         <button
+          className="modal-button"
           onClick={() => {
-            setMemoHighlightId({ new: 0, edit: 0 });
-            deleteScript(clickedScriptTitleIndex);
-            closeModal(false);
+            setIsConfirmOpen(false);
           }}>
-          {cancelText}
+          {leftButtonText}
+        </button>
+        <button
+          className="modal-button"
+          onClick={() => {
+            setIsConfirmOpen(false);
+            handleButtonClick();
+          }}>
+          {rightButtonText}
         </button>
       </StButtonContainer>
     </StConfirmModal>

@@ -11,6 +11,10 @@ const GlobalStyle = createGlobalStyle`
     height: 100%;
   }
 
+  #__next {
+    height: 100%;
+  }
+
   #root {
     margin: 0 auto;
   }
@@ -29,8 +33,8 @@ const GlobalStyle = createGlobalStyle`
 
   body {
     @media (max-width: 1919px) {
-    zoom: 67%;
-  }
+      zoom: 67%;
+    }
 
     @media (min-width: 1920px) {
       zoom: 100%;

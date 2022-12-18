@@ -11,17 +11,18 @@ import VideoDetail from '@src/components/learnDetail/VideoDetail';
 import LoginModal from '@src/components/login/LoginModal';
 import ScriptTitle from '@src/components/learnDetail/ScriptTitle';
 import { api } from '@src/services/api';
-import { HighlightData, VideoData } from '@src/services/api/types/learn-detail';
-import {
-  NEW_MEMO_CONFIRM_MODAL_TEXT,
-  EDIT_MEMO_CONFIRM_MODAL_TEXT,
-  DELETE_SCRIPT_CONFIRM_MODAL_TEXT,
-  SCRIPT_MAX_COUNT,
-} from '@src/utils/constant';
+import { MemoData, Name, VideoData } from '@src/services/api/types/learn-detail';
 import { loginState } from '@src/stores/loginState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import { GetServerSidePropsContext } from 'next';
+import {
+  NEW_MEMO_CONFIRM_MODAL_TEXT,
+  INITIAL_NUMBER,
+  INITIAL_MEMO_STATE,
+  INITIAL_MEMO,
+  DELETE_SCRIPT_CONFIRM_MODAL_TEXT,
+  SCRIPT_MAX_COUNT,
+} from '@src/utils/constant';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import {
@@ -38,14 +39,22 @@ import React, { useEffect, useRef, useState } from 'react';
 import YouTube from 'react-youtube';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
-
 import { imgHighlightTooltip, imgSpacingTooltip } from 'public/assets/images';
-export interface MemoHighlightId {
-  new: number;
-  edit: number;
+import { useMutation } from 'react-query';
+
+export interface MemoState {
+  newMemoId: number;
+  editMemoId: number;
+  deleteMemoId: number;
+}
+export interface MemoInfo {
+  scriptId: number;
+  order: number;
+  startIndex: number;
+  keyword: string;
 }
 
-function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
+function LearnDetail() {
   const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
   const router = useRouter();
   const { id: detailId } = router.query;
@@ -56,83 +65,165 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
   const [confirmModalText, setConfirmModalText] = useState<ConfirmModalText>(NEW_MEMO_CONFIRM_MODAL_TEXT);
   const [isHighlight, setIsHighlight] = useState(false);
   const [isSpacing, setIsSpacing] = useState(false);
-  const [clickedHighlightId, setClickedHighlightId] = useState<number>();
-  const [points, setPoints] = useState({ x: 0, y: 0 });
-  const [memoHighlightId, setMemoHighlightId] = useState<MemoHighlightId>({ new: 0, edit: 0 });
-  const [hasMemo, setHasMemo] = useState(false);
-  const [keyword, setKeyword] = useState<string>();
-  const contextMenuRef = useRef<HTMLDivElement>(null);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [player, setPlayer] = useState<YT.Player | null>();
-  const [videoState, setVideoState] = useState(-1);
+  const [videoState, setVideoState] = useState(INITIAL_NUMBER);
   const [currentTime, setCurrentTime] = useState(0);
   const learnRef = useRef<HTMLDivElement>(null);
   const getLoginStatus = () => localStorage.getItem('token') ?? '';
   const [prevLink, setPrevLink] = useState('');
-  const { new: newMemoHighlightId, edit: editMemoHighlightId } = memoHighlightId;
+  const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isHighlightOver, setIsHighlightOver] = useState<boolean>(false);
   const [isSpacingOver, setIsSpacingOver] = useState<boolean>(false);
-  const [scriptTitleList, setScriptTitleList] = useState(['스크립트 1']);
+  const [highlightIndex, setHighlightIndex] = useState<number>(INITIAL_NUMBER);
+  const [scriptTitleList, setScriptTitleList] = useState<Name[]>([]);
   const [clickedScriptTitleIndex, setClickedScriptTitleIndex] = useState(0);
   const [isScriptTitleInputVisible, setIsScriptTitleInputVisible] = useState(false);
   const [scriptTitleInputIndex, setTitleInputIndex] = useState(-1);
+  const [memoList, setMemoList] = useState<MemoData[]>([]);
+  const [memoState, setMemoState] = useState<MemoState>(INITIAL_MEMO_STATE);
+  const [memoInfo, setMemoInfo] = useState<MemoInfo>(INITIAL_MEMO);
+  const [clickedMemo, setClickedMemo] = useState<MemoData>();
+  const [clickedDeleteMemo, setClickedDeleteMemo] = useState<boolean>(false);
+  const contextMenuRef = useRef<HTMLDivElement>(null);
+  const [contextMenuPoint, setContextMenuPoint] = useState({ x: 0, y: 0 });
+  const [isContextMenuOpen, setIsContextMenuOpen] = useState<boolean>(false);
 
-  const controlPointX = (e: React.MouseEvent) => {
-    const x = e.nativeEvent.offsetX / 10;
-    const y = e.nativeEvent.offsetY / 10;
+  const handleContextMenuPoint = (target: HTMLDivElement) => {
+    let x = 0;
+    let y = 0;
 
-    if (x > 40) {
-      return { x: x + x * 0.2, y: y + y * 0.5 };
+    const article = target.parentElement?.closest('article');
+    if (article) {
+      const articleAbsoluteTop = article.getBoundingClientRect().top;
+      const articleAbsoluteLeft = article.getBoundingClientRect().left;
+      const absoluteTop = target.getBoundingClientRect().top;
+      const absoluteRight = target.getBoundingClientRect().right;
+
+      y = absoluteTop - articleAbsoluteTop - 10;
+      if (absoluteRight <= 830) {
+        x = absoluteRight - articleAbsoluteLeft - 15;
+      } else {
+        const absoluteLeft = target.getBoundingClientRect().left;
+        x = absoluteLeft - articleAbsoluteLeft - 175;
+      }
     }
-    return { x: x + x * 0.5, y: y + y * 0.5 };
+
+    return { x, y };
   };
 
-  const [highlightIndex, setHighlightIndex] = useState<number>(0);
   const getHighlightIndex = (parentNode: ParentNode | null, givenString: string) => {
-    if (parentNode?.childNodes) {
+    const childNodes = parentNode?.childNodes;
+    if (childNodes && childNodes.length !== 1) {
       let stringLength = 0;
-      for (let i = 0; i < parentNode?.childNodes.length; i++) {
-        if (parentNode?.childNodes[i].textContent === givenString) {
+      for (let i = 0; i < childNodes.length; i++) {
+        if (childNodes[i].textContent === givenString) {
           setHighlightIndex(stringLength);
-          break;
+          return stringLength;
         }
-        stringLength += parentNode?.childNodes[i]?.textContent?.length ?? 0;
+        if (childNodes[i].textContent !== '/') {
+          stringLength += childNodes[i]?.textContent?.length ?? 0;
+        }
       }
     }
   };
 
-  useEffect(() => {
-    console.log('하이라이트 인덱스!', highlightIndex);
-  }, [highlightIndex]);
+  const createMarkStyles = (script: string, scriptOrder: number) => {
+    let styles = ``;
+    const highlightIndexList: number[] = [];
+    const searchValue = '<mark>';
+    script = script.replaceAll(/<span>\/<\/span>|<\/mark>/g, '');
 
-  const handleRightClick = (e: React.MouseEvent, id: number) => {
-    const clickedContextTarget = e.target as HTMLDivElement;
-    getHighlightIndex(clickedContextTarget?.parentNode, clickedContextTarget.innerText); //인덱스 구하는 함수 호출
+    let index = script.indexOf(searchValue, 0);
+    while (index !== -1) {
+      highlightIndexList.push(index);
+      script = script.replace('<mark>', '');
+      index = script.indexOf(searchValue, index + 1);
+    }
 
-    if (highlightData) {
-      const index = highlightData.findIndex((item) => item.highlightId === id);
-      if (index !== -1) {
-        const target = e.target as HTMLDivElement;
-        setHasMemo(Object.keys(highlightData[index].memo).length > 0);
-        setPoints(controlPointX(e));
-        setClickedHighlightId(() => Number(target.id));
-        setKeyword(target.innerText);
+    highlightIndexList.forEach((index, i) => {
+      if (memoList.find(({ startIndex, order, content }) => startIndex === index && order === scriptOrder && content)) {
+        styles += `
+          mark:nth-of-type(${i + 1}) {
+            text-decoration: underline 3px ${COLOR.MAIN_BLUE};
+            text-underline-position: under;
+            text-underline-offset: 3px;
+          }
+        `;
       }
-      if (newMemoHighlightId || editMemoHighlightId) {
-        newMemoHighlightId && setConfirmModalText(NEW_MEMO_CONFIRM_MODAL_TEXT);
-        editMemoHighlightId && setConfirmModalText(EDIT_MEMO_CONFIRM_MODAL_TEXT);
-        setClickedHighlightId(-1);
-        return setIsConfirmOpen(true);
-      }
+    });
+    return styles;
+  };
+
+  const handleRightClick = (e: React.MouseEvent, scriptId: number, order: number) => {
+    const contextTarget = e.target as HTMLDivElement;
+    const startIndex = getHighlightIndex(contextTarget?.parentNode, contextTarget.innerText);
+    const markTag = contextTarget.closest('mark');
+
+    if (startIndex !== undefined && markTag) {
+      setMemoInfo({
+        scriptId,
+        order,
+        startIndex,
+        keyword: markTag.innerText.replaceAll('/', ''),
+      });
+      setClickedMemo(memoList.find((memo) => memo.startIndex === startIndex && memo.order === order));
+    }
+    setContextMenuPoint(handleContextMenuPoint(contextTarget));
+  };
+
+  const handleScriptAdd = async () => {
+    const response = await api.learnDetailService.postNewScriptData(Number(detailId));
+    if (response.isSuccess) {
+      const newIndex = scriptTitleList.length;
+      setClickedScriptTitleIndex(newIndex);
+      setTitleInputIndex(newIndex);
     }
   };
 
-  const handleScriptDelete = () => {
+  const handleScriptDelete = async () => {
+    const scriptId = videoData?.scriptsId ?? INITIAL_NUMBER;
+    const response = await api.learnDetailService.deleteScriptData(scriptId);
+    if (response.isSuccess && clickedScriptTitleIndex) {
+      setClickedScriptTitleIndex(0);
+      return;
+    }
+    if (response.isSuccess && clickedScriptTitleIndex === 0) {
+      const data = await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedScriptTitleIndex);
+      setVideoData(data);
+      const { memos, names } = data;
+      if (memos && names) {
+        setMemoList(memos);
+        setScriptTitleList(names);
+      }
+      return;
+    }
+  };
+
+  const handleScriptDeleteModal = () => {
     setConfirmModalText(DELETE_SCRIPT_CONFIRM_MODAL_TEXT);
     setIsConfirmOpen(true);
   };
 
-  const handleScriptRename = (index: number) => {
+  const renameScriptTitle = async (name: string) => {
+    const scriptId = videoData?.scriptsId ?? INITIAL_NUMBER;
+    return await api.learnDetailService.updateScriptNameData(scriptId, name);
+  };
+
+  const { mutate: mutateRenameScript } = useMutation(renameScriptTitle, {
+    onSuccess: (data) => {
+      if (videoData?.names) {
+        const newNameList = videoData.names.slice();
+        newNameList[clickedScriptTitleIndex] = data;
+        setVideoData({
+          ...videoData,
+          names: newNameList,
+        });
+      }
+    },
+  });
+
+  const handleScriptTitleInputChange = (index: number) => {
     setClickedScriptTitleIndex(index);
     setTitleInputIndex(index);
     setIsScriptTitleInputVisible(true);
@@ -148,7 +239,35 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
     }
   };
 
-  const [isEditing, setIsEditing] = useState<boolean>(false);
+  useEffect(() => {
+    (async () => {
+      const { deleteMemoId } = memoState;
+      if (clickedDeleteMemo && deleteMemoId !== INITIAL_NUMBER) {
+        const memoList = await api.learnDetailService.deleteMemoData(deleteMemoId);
+        if (memoList) {
+          setMemoList(memoList);
+          setClickedDeleteMemo(false);
+          setMemoState(INITIAL_MEMO_STATE);
+        }
+      }
+    })();
+  }, [clickedDeleteMemo, memoState]);
+
+  useEffect(() => {
+    const { newMemoId, editMemoId } = memoState;
+    if (highlightIndex !== INITIAL_NUMBER && newMemoId === INITIAL_NUMBER && editMemoId === INITIAL_NUMBER) {
+      setIsContextMenuOpen(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [highlightIndex]);
+
+  useEffect(() => {
+    const { newMemoId, editMemoId } = memoState;
+    if (newMemoId === INITIAL_NUMBER && editMemoId === INITIAL_NUMBER) {
+      setHighlightIndex(INITIAL_NUMBER);
+    }
+  }, [memoState]);
+
   useEffect(() => {
     if (isHighlight || isSpacing) {
       setIsEditing(true);
@@ -163,9 +282,28 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
       const data = isLoggedIn
         ? await api.learnDetailService.getPrivateVideoData(id)
         : await api.learnDetailService.getPublicVideoData(id);
-      data && setVideoData(data);
+      setVideoData(data);
+      const { memos, names } = data;
+      if (isLoggedIn && memos && names) {
+        setMemoList(memos);
+        setScriptTitleList(names);
+      }
     })();
   }, [isLoggedIn, detailId, isEditing]);
+
+  useEffect(() => {
+    (async () => {
+      if (isLoggedIn) {
+        const data = await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedScriptTitleIndex);
+        setVideoData(data);
+        const { memos, names } = data;
+        if (memos && names) {
+          setMemoList(memos);
+          setScriptTitleList(names);
+        }
+      }
+    })();
+  }, [clickedScriptTitleIndex, detailId, isLoggedIn]);
 
   useEffect(() => {
     if (!player) return;
@@ -185,17 +323,20 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
   useEffect(() => {
     const handleClickOutside = (e: Event) => {
       const eventTarget = e.target as HTMLElement;
-      if (clickedHighlightId && !contextMenuRef?.current?.contains(eventTarget)) {
-        setClickedHighlightId(-1);
+      if (isContextMenuOpen && !contextMenuRef?.current?.contains(eventTarget) && eventTarget.tagName !== 'MARK') {
+        setIsContextMenuOpen(false);
+        setHighlightIndex(INITIAL_NUMBER);
       }
     };
-    if (clickedHighlightId) {
+    if (isContextMenuOpen) {
       window.addEventListener('click', handleClickOutside);
+      window.addEventListener('contextmenu', handleClickOutside);
     }
     return () => {
       window.removeEventListener('click', handleClickOutside);
+      window.removeEventListener('contextmenu', handleClickOutside);
     };
-  }, [clickedHighlightId]);
+  }, [isContextMenuOpen]);
 
   useEffect(() => {
     const storage = globalThis?.sessionStorage;
@@ -213,11 +354,12 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
       <NavigationBar />
       <StLearnDetail>
         <ImageDiv onClick={() => router.push(prevLink)} src={icXButton} className="close" layout="fill" alt="x" />
-        {isLoggedIn && (
+        {videoData?.names && (
           <StScriptTitleContainer>
-            {scriptTitleList.map((_, i) => (
+            {videoData.names.map(({ id, name }, i) => (
               <ScriptTitle
-                key={i}
+                key={id}
+                name={name}
                 isOne={scriptTitleList.length === 1}
                 isScriptTitleInputVisible={isScriptTitleInputVisible}
                 currentScriptTitleIndex={i}
@@ -225,19 +367,13 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                 scriptTitleInputIndex={scriptTitleInputIndex}
                 setIsScriptTitleInputVisible={setIsScriptTitleInputVisible}
                 setClickedScriptTitleIndex={setClickedScriptTitleIndex}
-                onScriptDelete={handleScriptDelete}
-                onScriptRename={(index: number) => handleScriptRename(index)}
+                onScriptDelete={handleScriptDeleteModal}
+                onScriptTitleInputChange={(index: number) => handleScriptTitleInputChange(index)}
+                onScriptRename={mutateRenameScript}
               />
             ))}
-            {scriptTitleList.length !== SCRIPT_MAX_COUNT && (
-              <StScriptAddButton
-                onClick={() => {
-                  // 서버에 post 요청
-                  setScriptTitleList((scriptTitleList) => [...scriptTitleList, '스크립트 ${scriptTitleList.length}']);
-                  setClickedScriptTitleIndex(clickedScriptTitleIndex + 1);
-                  setTitleInputIndex(clickedScriptTitleIndex + 1);
-                }}
-              />
+            {scriptTitleList.length > 0 && scriptTitleList.length !== SCRIPT_MAX_COUNT && (
+              <StScriptAddButton onClick={handleScriptAdd} />
             )}
           </StScriptTitleContainer>
         )}
@@ -249,33 +385,35 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                 <article>
                   <div ref={learnRef}>
                     {!isEditing &&
-                      videoData.scripts.map(({ id, text, startTime, endTime }) => (
+                      videoData.scripts.map(({ id, order, text, startTime, endTime }) => (
                         <StScriptText
                           ref={contextMenuRef}
                           onContextMenu={(e) => {
                             e.preventDefault();
-                            handleRightClick(e, id);
+                            handleRightClick(e, videoData.scriptsId, order);
                           }}
                           key={id}
                           onClick={() => player?.seekTo(startTime, true)}
+                          markStyles={createMarkStyles(text, order)}
                           isActive={startTime <= currentTime && currentTime < endTime ? true : false}>
                           <div id={id.toString()} dangerouslySetInnerHTML={{ __html: text }}></div>
-                          {clickedHighlightId === id && !newMemoHighlightId && !editMemoHighlightId && (
-                            <ContextMenu
-                              points={points}
-                              hasMemo={hasMemo}
-                              id={id}
-                              setMemoHighlightId={setMemoHighlightId}
-                            />
-                          )}
                         </StScriptText>
                       ))}
+                    {!isEditing && isContextMenuOpen && (
+                      <ContextMenu
+                        contextMenuPoint={contextMenuPoint}
+                        clickedMemoId={clickedMemo?.id}
+                        setMemoState={setMemoState}
+                        setIsContextMenuOpen={setIsContextMenuOpen}
+                      />
+                    )}
                     {isEditing && (
                       <ScriptEdit
-                        scriptsId={videoData.scriptsId}
+                        scriptsId={videoData.names ? videoData.names[clickedScriptTitleIndex].id : videoData.scriptsId}
                         scripts={videoData.scripts}
                         isHighlight={isHighlight}
                         isSpacing={isSpacing}
+                        clickedScriptTitleIndex={clickedScriptTitleIndex}
                       />
                     )}
                   </div>
@@ -351,7 +489,7 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                     </StButtonContainer>
                   </div>
                 </article>
-                <StTooltipContanier isHighlightOver={isHighlightOver} isSpacingOver={isSpacingOver}>
+                <StTooltipContainer isHighlightOver={isHighlightOver} isSpacingOver={isSpacingOver}>
                   <ImageDiv
                     className="highlight-tooltip"
                     src={imgHighlightTooltip}
@@ -362,7 +500,7 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                     src={imgSpacingTooltip}
                     alt="클릭해서 끊어읽기를 표시해보세요."
                   />
-                </StTooltipContanier>
+                </StTooltipContainer>
               </StLearnSection>
               <aside>
                 <StVideoWrapper>
@@ -394,14 +532,14 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
                     <h2>메모</h2>
                   </StMemoTitle>
                   <StMemoWrapper>
-                    {highlightData.length ? (
+                    {memoList.length || memoState.newMemoId !== INITIAL_NUMBER ? (
                       <>
                         <MemoList
-                          highlightList={highlightData}
-                          memoHighlightId={memoHighlightId}
-                          setMemoHighlightId={setMemoHighlightId}
-                          highlightId={clickedHighlightId}
-                          keyword={keyword}
+                          memoList={memoList}
+                          memoState={memoState}
+                          memoInfo={memoInfo}
+                          setMemoList={setMemoList}
+                          setMemoState={setMemoState}
                           setIsConfirmOpen={setIsConfirmOpen}
                           setConfirmModalText={setConfirmModalText}
                         />
@@ -420,13 +558,11 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
         {isModalOpen && <GuideModal closeModal={() => setIsModalOpen(false)} />}
         {isConfirmOpen && (
           <ConfirmModal
-            closeModal={setIsConfirmOpen}
             confirmModalText={confirmModalText}
-            setMemoHighlightId={setMemoHighlightId}
-            clickedScriptTitleIndex={clickedScriptTitleIndex}
-            setClickedScriptTitleIndex={setClickedScriptTitleIndex}
-            scriptTitleList={scriptTitleList}
-            setScriptTitleList={setScriptTitleList}
+            setMemoState={setMemoState}
+            setIsConfirmOpen={setIsConfirmOpen}
+            setClickedDeleteMemo={setClickedDeleteMemo}
+            onScriptDelete={handleScriptDelete}
           />
         )}
         {isLoginModalOpen && <LoginModal closeModal={() => setIsLoginModalOpen(false)} />}
@@ -436,12 +572,6 @@ function LearnDetail({ highlightData }: { highlightData: HighlightData[] }) {
 }
 
 export default LearnDetail;
-
-export async function getServerSideProps({ params }: GetServerSidePropsContext) {
-  const id = +(params?.id ?? -1);
-  const highlightData = await api.learnDetailService.getHighlightData(id);
-  return { props: { highlightData: highlightData } };
-}
 
 const StLearnDetail = styled.div`
   padding: 14.8rem 10rem 15rem 10rem;
@@ -552,7 +682,7 @@ const StLearnSection = styled.section`
   }
 `;
 
-const StScriptText = styled.div<{ isActive: boolean }>`
+const StScriptText = styled.div<{ isActive: boolean; markStyles: string }>`
   position: relative;
   font-size: 2.6rem;
   font-weight: ${({ isActive }) => (isActive ? 600 : 400)};
@@ -570,13 +700,9 @@ const StScriptText = styled.div<{ isActive: boolean }>`
     background: linear-gradient(259.3deg, #d8d9ff 0%, #a7c5ff 100%);
     font-weight: ${({ isActive }) => (isActive ? 600 : 400)};
     color: ${({ isActive }) => (isActive ? COLOR.MAIN_BLUE : COLOR.BLACK)};
-
-    & > span {
-      font-size: 3.2rem;
-      font-weight: 600;
-      color: ${COLOR.MAIN_BLUE};
-    }
   }
+
+  ${({ markStyles }) => markStyles};
 
   & > mark:hover {
     color: ${COLOR.MAIN_BLUE};
@@ -591,7 +717,7 @@ const StButtonContainer = styled.div`
   padding-right: 0.8rem;
 `;
 
-const StTooltipContanier = styled.div<{ isHighlightOver: boolean; isSpacingOver: boolean }>`
+const StTooltipContainer = styled.div<{ isHighlightOver: boolean; isSpacingOver: boolean }>`
   display: flex;
   gap: 1.2rem;
   position: fixed;
