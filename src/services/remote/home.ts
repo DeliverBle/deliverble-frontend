@@ -16,6 +16,7 @@ export function homeDataRemote(): HomeService {
               thumbnail: video.thumbnail,
               reportDate: video.reportDate,
               isFavorite: video.isFavorite,
+              haveGuide: video.haveGuide,
             }))
           : [],
       };
@@ -34,6 +35,7 @@ export function homeDataRemote(): HomeService {
               channel: video.channel,
               thumbnail: video.thumbnail,
               reportDate: video.reportDate,
+              haveGuide: video.haveGuide,
             }))
           : [],
       };
@@ -53,6 +55,7 @@ export function homeDataRemote(): HomeService {
               thumbnail: video.thumbnail,
               reportDate: video.reportDate,
               isFavorite: video.isFavorite,
+              haveGuide: video.haveGuide,
             }))
           : [],
       };
@@ -71,6 +74,7 @@ export function homeDataRemote(): HomeService {
               channel: video.channel,
               thumbnail: video.thumbnail,
               reportDate: video.reportDate,
+              haveGuide: video.haveGuide,
             }))
           : [],
       };

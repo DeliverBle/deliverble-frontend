@@ -24,6 +24,7 @@ export type VideoData = {
   link: string;
   reportDate: string;
   isFavorite: boolean;
+  haveGuide: boolean;
   startTime: number;
   endTime: number;
   scriptsId: number;
