@@ -10,8 +10,16 @@ export function homeDataMock(): HomeService {
     await wait(500);
     return HOME_DATA;
   };
+  const getPublicSpeechGuideData = async () => {
+    await wait(500);
+    return HOME_DATA;
+  };
+  const getPrivateSpeechGuideData = async () => {
+    await wait(500);
+    return HOME_DATA;
+  };
 
-  return { getPrivateVideoData, getPublicVideoData };
+  return { getPrivateVideoData, getPublicVideoData, getPublicSpeechGuideData, getPrivateSpeechGuideData };
 }
 
 const wait = (milliSeconds: number) => new Promise((resolve) => setTimeout(resolve, milliSeconds));
