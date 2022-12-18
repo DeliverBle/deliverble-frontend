@@ -1,5 +1,6 @@
 import { VideoListData } from './types/home';
 
 export interface HomeService {
-  getVideoData(): Promise<VideoListData>;
+  getPrivateVideoData(): Promise<VideoListData>;
+  getPublicVideoData(): Promise<VideoListData>;
 }
