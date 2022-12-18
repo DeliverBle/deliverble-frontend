@@ -25,7 +25,7 @@ function NewsList(props: NewsListProps) {
 
   return (
     <StNewsList type={type}>
-      {newsList.map(({ id, title, category, channel, thumbnail, reportDate, isFavorite = false }) => {
+      {newsList.map(({ id, title, category, channel, thumbnail, reportDate, isFavorite = false, haveGuide }) => {
         return (
           <StNewsWrapper key={id} onClick={() => router.push(`/learn/${id}`)}>
             {type === 'guide' && (
@@ -61,6 +61,12 @@ function NewsList(props: NewsListProps) {
                 {channel} | {category} | {reportDate.replaceAll('-', '.')}
               </StCaption>
             </StInfo>
+            {haveGuide && type !== 'guide' && (
+              <StSpeechGuide>
+                <ImageDiv className="guide-logo" src={icSpeechGuideLogo} alt="" />
+                <p>스피치 가이드</p>
+              </StSpeechGuide>
+            )}
           </StNewsWrapper>
         );
       })}
@@ -103,7 +109,6 @@ const StNewsList = styled.section<{ type: string }>`
 const StNewsWrapper = styled.article`
   display: flex;
   flex-direction: column;
-  gap: 1.6rem;
   position: relative;
 
   width: 100%;
@@ -187,6 +192,7 @@ const StInfo = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  margin-top: 1.6rem;
 `;
 
 const StTitle = styled.p`
@@ -201,10 +207,29 @@ const StTitle = styled.p`
 `;
 
 const StCaption = styled.div`
+  margin-top: 1.6rem;
   ${FONT_STYLES.M_18_CAPTION};
   color: ${COLOR.GRAY_30};
 
   @media (max-width: 500px) {
     ${FONT_STYLES.M_15_CAPTION};
+  }
+`;
+
+const StSpeechGuide = styled.div`
+  display: flex;
+  margin-top: 1.2rem;
+  padding: 0.5rem 0.8rem 0.6rem 0.4rem;
+  width: 12.2rem;
+  height: 3.3rem;
+  border-radius: 0.6rem;
+
+  background-color: ${COLOR.MAIN_BLUE};
+  color: ${COLOR.WHITE};
+  ${FONT_STYLES.SB_16_CAPTION}
+
+  & > .guide-logo {
+    display: flex;
+    align-items: center;
   }
 `;
