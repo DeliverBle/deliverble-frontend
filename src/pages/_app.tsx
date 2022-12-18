@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { RecoilRoot } from 'recoil';
+import { hotjar } from 'react-hotjar';
+import { HJID, HJSV } from '@src/utils/constant';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(() => new QueryClient());
@@ -20,6 +22,12 @@ function MyApp({ Component, pageProps }: AppProps) {
     storage.setItem('prevPath', prevPath || '');
     storage.setItem('currentPath', globalThis.location.pathname);
   };
+
+  useEffect(() => {
+    if (process.env.NODE_ENV !== 'development') {
+      hotjar.initialize(HJID, HJSV);
+    }
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

@@ -25,6 +25,8 @@ export const DELETE_SCRIPT_CONFIRM_MODAL_TEXT = {
   rightButtonText: '삭제하기',
 };
 
+export const HJID = 3283852;
+export const HJSV = 6;
 export const MEMO_CONTENT_MAX = 30;
 export const SCRIPT_MAX_COUNT = 3;
 export const SCRIPT_TITLE_MAX_LENGTH = 100;
