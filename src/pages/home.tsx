@@ -94,7 +94,7 @@ function Home() {
             {isLoading ? (
               <VideoListSkeleton itemNumber={4} />
             ) : (
-              <NewsList onClickLike={handleClickLike} newsList={speechGuideList} type="guide" />
+              <NewsList onClickLike={handleClickLike} newsList={speechGuideList} isGuide={true} />
             )}
           </div>
         </StNews>
@@ -104,7 +104,7 @@ function Home() {
             {isLoading ? (
               <VideoListSkeleton itemNumber={8} />
             ) : (
-              <NewsList onClickLike={handleClickLike} newsList={newsList} type="recommend" />
+              <NewsList onClickLike={handleClickLike} newsList={newsList} />
             )}
           </div>
         </StNews>
