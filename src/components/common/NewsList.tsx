@@ -1,50 +1,47 @@
 import { VideoData } from '@src/services/api/types/home';
 import { loginState } from '@src/stores/loginState';
+import { isGuideAtom } from '@src/stores/newsState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { useRouter } from 'next/router';
 import { icSpeechGuideLogo } from 'public/assets/icons';
 import { useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useSetRecoilState, useRecoilValue } from 'recoil';
 import styled, { css } from 'styled-components';
 import LoginModal from '../login/LoginModal';
 import ImageDiv from './ImageDiv';
 import Like from './Like';
 
 interface NewsListProps {
-  isGuide?: boolean;
+  type: string;
   newsList: VideoData[];
   onClickLike?: (id: number) => void;
 }
 
 function NewsList(props: NewsListProps) {
-  const { isGuide, newsList, onClickLike } = props;
+  const setIsGuide = useSetRecoilState(isGuideAtom);
+  const { type, newsList, onClickLike } = props;
   const router = useRouter();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const login = useRecoilValue(loginState);
 
   return (
-    <StNewsList isGuide={isGuide}>
+    <StNewsList type={type}>
       {newsList.map(({ id, title, category, channel, thumbnail, reportDate, isFavorite = false, haveGuide }) => {
         return (
           <StNewsWrapper
             key={id}
-            onClick={() =>
-              router.push(
-                {
-                  pathname: `/learn/${id}`,
-                  query: { isGuide },
-                },
-                // `/learn/${id}`,
-              )
-            }>
-            {isGuide && (
+            onClick={() => {
+              type === 'guide' ? setIsGuide(true) : setIsGuide(false);
+              router.push(`/learn/${id}`);
+            }}>
+            {type === 'guide' && (
               <StGuideTitle>
                 <ImageDiv className="guide-logo" src={icSpeechGuideLogo} alt="" />
                 <p>스피치 가이드</p>
               </StGuideTitle>
             )}
-            <StThumbnail isGuide={isGuide}>
+            <StThumbnail type={type}>
               <ImageDiv
                 className="thumbnail"
                 src={thumbnail}
@@ -71,7 +68,7 @@ function NewsList(props: NewsListProps) {
                 {channel} | {category} | {reportDate.replaceAll('-', '.')}
               </StCaption>
             </StInfo>
-            {haveGuide && !isGuide && (
+            {haveGuide && type === 'normal' && (
               <StSpeechGuide>
                 <ImageDiv className="guide-logo" src={icSpeechGuideLogo} alt="" />
                 <p>스피치 가이드</p>
@@ -87,14 +84,14 @@ function NewsList(props: NewsListProps) {
 
 export default NewsList;
 
-const StNewsList = styled.section<{ isGuide: boolean | undefined }>`
+const StNewsList = styled.section<{ type: string }>`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-row-gap: 8rem;
   grid-column-gap: 2rem;
 
-  ${({ isGuide }) =>
-    isGuide &&
+  ${({ type }) =>
+    type === 'guide' &&
     css`
       grid-column-gap: 3rem;
     `}
@@ -129,13 +126,13 @@ const StNewsWrapper = styled.article`
   }
 `;
 
-const StThumbnail = styled.div<{ isGuide: boolean | undefined }>`
+const StThumbnail = styled.div<{ type: string }>`
   position: relative;
   border-radius: 1rem;
   cursor: pointer;
 
-  ${({ isGuide }) =>
-    isGuide &&
+  ${({ type }) =>
+    type === 'guide' &&
     css`
       outline: 0.5rem solid ${COLOR.MAIN_BLUE};
     `}

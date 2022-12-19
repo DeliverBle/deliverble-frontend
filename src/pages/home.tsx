@@ -94,17 +94,17 @@ function Home() {
             {isLoading ? (
               <VideoListSkeleton itemNumber={4} />
             ) : (
-              <NewsList onClickLike={handleClickLike} newsList={speechGuideList} isGuide={true} />
+              <NewsList onClickLike={handleClickLike} newsList={speechGuideList} type="guide" />
             )}
           </div>
         </StNews>
-        <StNews type="recommend">
+        <StNews type="normal">
           <h3>딜리버블의 추천 뉴스를 만나보세요.</h3>
           <div>
             {isLoading ? (
               <VideoListSkeleton itemNumber={8} />
             ) : (
-              <NewsList onClickLike={handleClickLike} newsList={newsList} />
+              <NewsList onClickLike={handleClickLike} newsList={newsList} type="normal" />
             )}
           </div>
         </StNews>

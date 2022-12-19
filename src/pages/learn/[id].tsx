@@ -38,9 +38,10 @@ import {
 import React, { useEffect, useRef, useState } from 'react';
 import YouTube from 'react-youtube';
 import { useRecoilValue } from 'recoil';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { imgHighlightTooltip, imgSpacingTooltip } from 'public/assets/images';
 import { useMutation } from 'react-query';
+import { isGuideAtom } from '@src/stores/newsState';
 
 export interface MemoState {
   newMemoId: number;
@@ -57,7 +58,8 @@ export interface MemoInfo {
 function LearnDetail() {
   const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
   const router = useRouter();
-  const { id: detailId, isGuide } = router.query;
+  const { id: detailId } = router.query;
+  const isGuide = useRecoilValue(isGuideAtom);
   const isLoggedIn = useRecoilValue(loginState);
   const [videoData, setVideoData] = useState<VideoData>();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -281,8 +283,10 @@ function LearnDetail() {
       const id = Number(detailId);
       let data;
       if (isGuide) {
+        console.log('가이드임');
         data = await api.learnDetailService.getPublicSpeechGuideData(id);
       } else {
+        console.log('가이드아님');
         data = isLoggedIn
           ? await api.learnDetailService.getPrivateVideoData(id)
           : await api.learnDetailService.getPublicVideoData(id);
@@ -387,10 +391,10 @@ function LearnDetail() {
           </StScriptTitleContainer>
         )}
         {videoData && (
-          <StLearnBox>
+          <StLearnBox isGuide={isGuide}>
             <VideoDetail {...videoData} setIsModalOpen={setIsModalOpen} />
             <main>
-              <StLearnSection>
+              <StLearnSection isGuide={isGuide}>
                 <article>
                   <div ref={learnRef}>
                     {!isEditing &&
@@ -427,75 +431,77 @@ function LearnDetail() {
                     )}
                   </div>
                   <div>
-                    <StButtonContainer>
-                      <StButton
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (getLoginStatus() === '') {
-                            setIsLoginModalOpen(true);
-                          } else {
-                            isHighlight ? setIsHighlight(false) : setIsHighlight(true);
-                            setIsSpacing(false);
-                            setIsHighlightOver(false);
-                          }
-                        }}>
-                        {isHighlight ? (
-                          <ImageDiv className="function-button" src={icHighlighterClicked} alt="하이라이트" />
-                        ) : (
-                          <>
-                            <ImageDiv className="function-button" src={icHighlighterHover} alt="하이라이트" />
-                            <ImageDiv
-                              className="default function-button"
-                              src={icHighlighterDefault}
-                              alt="하이라이트"
-                              onMouseOver={() => {
-                                setIsHighlightOver(true);
-                              }}
-                              onMouseOut={(e) => {
-                                e.stopPropagation();
-                                setIsHighlightOver(false);
-                              }}
-                            />
-                          </>
-                        )}
-                      </StButton>
-                      <StButton
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (getLoginStatus() === '') {
-                            setIsLoginModalOpen(true);
-                          } else {
-                            isSpacing ? setIsSpacing(false) : setIsSpacing(true);
-                            setIsHighlight(false);
-                            setIsSpacingOver(false);
-                          }
-                        }}>
-                        {isSpacing ? (
-                          <ImageDiv className="spacing function-button" src={icSpacingClicked} alt="끊어 읽기" />
-                        ) : (
-                          <>
-                            <ImageDiv
-                              className="spacing function-button spacing-hover"
-                              src={icSpacingHover}
-                              alt="끊어 읽기"
-                            />
-                            <ImageDiv
-                              className="spacing default function-button"
-                              src={icSpacingDefault}
-                              alt="끊어 읽기"
-                              onMouseOver={(e) => {
-                                e.stopPropagation();
-                                setIsSpacingOver(true);
-                              }}
-                              onMouseOut={(e) => {
-                                e.stopPropagation();
-                                setIsSpacingOver(false);
-                              }}
-                            />
-                          </>
-                        )}
-                      </StButton>
-                    </StButtonContainer>
+                    {!isGuide && (
+                      <StButtonContainer>
+                        <StButton
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (getLoginStatus() === '') {
+                              setIsLoginModalOpen(true);
+                            } else {
+                              isHighlight ? setIsHighlight(false) : setIsHighlight(true);
+                              setIsSpacing(false);
+                              setIsHighlightOver(false);
+                            }
+                          }}>
+                          {isHighlight ? (
+                            <ImageDiv className="function-button" src={icHighlighterClicked} alt="하이라이트" />
+                          ) : (
+                            <>
+                              <ImageDiv className="function-button" src={icHighlighterHover} alt="하이라이트" />
+                              <ImageDiv
+                                className="default function-button"
+                                src={icHighlighterDefault}
+                                alt="하이라이트"
+                                onMouseOver={() => {
+                                  setIsHighlightOver(true);
+                                }}
+                                onMouseOut={(e) => {
+                                  e.stopPropagation();
+                                  setIsHighlightOver(false);
+                                }}
+                              />
+                            </>
+                          )}
+                        </StButton>
+                        <StButton
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (getLoginStatus() === '') {
+                              setIsLoginModalOpen(true);
+                            } else {
+                              isSpacing ? setIsSpacing(false) : setIsSpacing(true);
+                              setIsHighlight(false);
+                              setIsSpacingOver(false);
+                            }
+                          }}>
+                          {isSpacing ? (
+                            <ImageDiv className="spacing function-button" src={icSpacingClicked} alt="끊어 읽기" />
+                          ) : (
+                            <>
+                              <ImageDiv
+                                className="spacing function-button spacing-hover"
+                                src={icSpacingHover}
+                                alt="끊어 읽기"
+                              />
+                              <ImageDiv
+                                className="spacing default function-button"
+                                src={icSpacingDefault}
+                                alt="끊어 읽기"
+                                onMouseOver={(e) => {
+                                  e.stopPropagation();
+                                  setIsSpacingOver(true);
+                                }}
+                                onMouseOut={(e) => {
+                                  e.stopPropagation();
+                                  setIsSpacingOver(false);
+                                }}
+                              />
+                            </>
+                          )}
+                        </StButton>
+                      </StButtonContainer>
+                    )}
                   </div>
                 </article>
                 <StTooltipContainer isHighlightOver={isHighlightOver} isSpacingOver={isSpacingOver}>
@@ -619,7 +625,7 @@ const StScriptAddButton = styled.button`
   }
 `;
 
-const StLearnBox = styled.div`
+const StLearnBox = styled.div<{ isGuide: boolean }>`
   display: flex;
   flex-direction: column;
   margin: 0 auto;
@@ -634,9 +640,18 @@ const StLearnBox = styled.div`
     display: flex;
     gap: 4.8rem;
   }
+
+  ${({ isGuide }) => {
+    return (
+      isGuide &&
+      css`
+        outline: 0.6rem solid ${COLOR.MAIN_BLUE};
+      `
+    );
+  }}
 `;
 
-const StLearnSection = styled.section`
+const StLearnSection = styled.section<{ isGuide: boolean }>`
   display: flex;
   flex-direction: column;
   padding-bottom: 8rem;
@@ -686,7 +701,7 @@ const StLearnSection = styled.section`
       justify-content: flex-end;
       padding-top: 1.8rem;
       margin-top: 2.4rem;
-      border-top: 0.2rem solid ${COLOR.GRAY_10};
+      border-top: ${({ isGuide }) => !isGuide && `0.2rem solid ${COLOR.GRAY_10}`};
     }
   }
 `;
