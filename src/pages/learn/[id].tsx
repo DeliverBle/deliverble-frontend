@@ -22,6 +22,7 @@ import {
   INITIAL_MEMO,
   DELETE_SCRIPT_CONFIRM_MODAL_TEXT,
   SCRIPT_MAX_COUNT,
+  SPEECH_GUIDE_TOOLTIP_TEXT,
 } from '@src/utils/constant';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -33,6 +34,7 @@ import {
   icSpacingClicked,
   icSpacingDefault,
   icSpacingHover,
+  icSpeechGuideInfo,
   icXButton,
 } from 'public/assets/icons';
 import React, { useEffect, useRef, useState } from 'react';
@@ -77,6 +79,7 @@ function LearnDetail() {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isHighlightOver, setIsHighlightOver] = useState<boolean>(false);
   const [isSpacingOver, setIsSpacingOver] = useState<boolean>(false);
+  const [isGuideOver, setIsGuideOver] = useState<boolean>(false);
   const [highlightIndex, setHighlightIndex] = useState<number>(INITIAL_NUMBER);
   const [scriptTitleList, setScriptTitleList] = useState<Name[]>([]);
   const [clickedScriptTitleIndex, setClickedScriptTitleIndex] = useState(0);
@@ -367,6 +370,20 @@ function LearnDetail() {
       <NavigationBar />
       <StLearnDetail>
         <ImageDiv onClick={() => router.push(prevLink)} src={icXButton} className="close" layout="fill" alt="x" />
+        {isGuide && (
+          <StScriptTitleContainer>
+            <StGuideTitle>
+              <p>스피치 가이드</p>
+              <ImageDiv
+                className="guide-info"
+                src={icSpeechGuideInfo}
+                alt="speech-guide-info"
+                onMouseOver={() => setIsGuideOver((prev) => !prev)}
+                onMouseOut={() => setIsGuideOver((prev) => !prev)}
+              />
+            </StGuideTitle>
+          </StScriptTitleContainer>
+        )}
         {videoData?.names && (
           <StScriptTitleContainer>
             {videoData.names.map(({ id, name }, i) => (
@@ -568,6 +585,12 @@ function LearnDetail() {
                 </StMemoContainer>
               </aside>
             </main>
+            {isGuideOver && (
+              <StGuideTooltip>
+                <p>{SPEECH_GUIDE_TOOLTIP_TEXT.title}</p>
+                <p>{SPEECH_GUIDE_TOOLTIP_TEXT.description}</p>
+              </StGuideTooltip>
+            )}
           </StLearnBox>
         )}
         {isModalOpen && <GuideModal closeModal={() => setIsModalOpen(false)} />}
@@ -613,6 +636,27 @@ const StScriptTitleContainer = styled.div`
   gap: 0.8rem;
 `;
 
+const StGuideTitle = styled.div`
+  display: flex;
+  align-items: center;
+  position: relative;
+
+  padding: 1rem 0 1rem 2.4rem;
+  width: 19.2rem;
+  height: 4.8rem;
+  border-radius: 1.6rem 1.6rem 0 0;
+  background-color: ${COLOR.MAIN_BLUE};
+
+  color: ${COLOR.WHITE};
+  ${FONT_STYLES.B_20_BODY};
+
+  & > .guide-info {
+    display: flex;
+    align-items: center;
+    padding-left: 1.2rem;
+  }
+`;
+
 const StScriptAddButton = styled.button`
   width: 4rem;
   height: 4rem;
@@ -628,6 +672,8 @@ const StScriptAddButton = styled.button`
 const StLearnBox = styled.div<{ isGuide: boolean }>`
   display: flex;
   flex-direction: column;
+  position: relative;
+
   margin: 0 auto;
   width: 172rem;
   height: 123.6rem;
@@ -649,6 +695,27 @@ const StLearnBox = styled.div<{ isGuide: boolean }>`
       `
     );
   }}
+`;
+
+const StGuideTooltip = styled.div`
+  position: absolute;
+  left: 178px;
+  top: 8px;
+
+  padding: 2.4rem 0 1.6rem 1.6rem;
+  width: 46.3rem;
+  height: 11.7rem;
+  background-image: url('/assets/images/img_guide_tooltip.png');
+  color: white;
+  white-space: pre-line;
+
+  & > p:first-child {
+    ${FONT_STYLES.B_20_BODY}
+  }
+
+  & > p:last-child {
+    ${FONT_STYLES.M_16_CAPTION}
+  }
 `;
 
 const StLearnSection = styled.section<{ isGuide: boolean }>`
