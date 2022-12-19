@@ -93,6 +93,8 @@ function LearnDetail() {
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const [contextMenuPoint, setContextMenuPoint] = useState({ x: 0, y: 0 });
   const [isContextMenuOpen, setIsContextMenuOpen] = useState<boolean>(false);
+  const [haveGuide, setHaveGuide] = useState<boolean>(false);
+  const [isSpeechGuide, setIsSpeechGuide] = useState<boolean>(false);
 
   const handleContextMenuPoint = (target: HTMLDivElement) => {
     let x = 0;
@@ -293,6 +295,8 @@ function LearnDetail() {
           : await api.learnDetailService.getPublicVideoData(id);
       }
       setVideoData(data);
+      setHaveGuide(data.haveGuide);
+      setIsSpeechGuide(isGuide);
       const { memos, names } = data;
       if (isGuide && memos) {
         setMemoList(memos);
@@ -368,23 +372,21 @@ function LearnDetail() {
       <NavigationBar />
       <StLearnDetail>
         <ImageDiv onClick={() => router.push(prevLink)} src={icXButton} className="close" layout="fill" alt="x" />
-        {videoData?.name === '스피치 가이드' && (
-          <StScriptTitleContainer>
-            <StGuideTitle>
+        <StScriptTitleContainer>
+          {haveGuide && (
+            <StGuideTitle isGuide={isGuide} onClick={() => !isSpeechGuide && setIsGuide((prev) => !prev)}>
               <p>스피치 가이드</p>
               <ImageDiv
                 className="guide-info"
                 src={icSpeechGuideInfo}
                 alt="speech-guide-info"
-                onMouseOver={() => setIsGuideOver((prev) => !prev)}
-                onMouseOut={() => setIsGuideOver((prev) => !prev)}
+                onMouseOver={() => isSpeechGuide && setIsGuideOver((prev) => !prev)}
+                onMouseOut={() => isSpeechGuide && setIsGuideOver((prev) => !prev)}
               />
             </StGuideTitle>
-          </StScriptTitleContainer>
-        )}
-        {videoData?.names && (
-          <StScriptTitleContainer>
-            {videoData.names.map(({ id, name }, i) => (
+          )}
+          {videoData?.names &&
+            videoData.names.map(({ id, name }, i) => (
               <ScriptTitle
                 key={id}
                 name={name}
@@ -400,11 +402,11 @@ function LearnDetail() {
                 onScriptRename={mutateRenameScript}
               />
             ))}
-            {scriptTitleList.length > 0 && scriptTitleList.length !== SCRIPT_MAX_COUNT && (
-              <StScriptAddButton onClick={handleScriptAdd} />
-            )}
-          </StScriptTitleContainer>
-        )}
+          {videoData?.names && scriptTitleList.length > 0 && scriptTitleList.length !== SCRIPT_MAX_COUNT && (
+            <StScriptAddButton onClick={handleScriptAdd} />
+          )}
+        </StScriptTitleContainer>
+
         {videoData && (
           <StLearnBox isGuide={isGuide}>
             <VideoDetail {...videoData} setIsModalOpen={setIsModalOpen} />
@@ -611,7 +613,7 @@ function LearnDetail() {
 export default LearnDetail;
 
 const StLearnDetail = styled.div`
-  padding: 14.8rem 10rem 15rem 10rem;
+  padding: 10.2rem 10rem 15rem 10rem;
   min-height: 100vh;
   background: rgba(229, 238, 255, 0.85);
   backdrop-filter: blur(2.8rem);
@@ -629,13 +631,14 @@ const StLearnDetail = styled.div`
 const StScriptTitleContainer = styled.div`
   margin: 0 auto;
   width: 172rem;
+  height: 4.8rem;
   padding-left: 5.6rem;
   display: flex;
   align-items: center;
   gap: 0.8rem;
 `;
 
-const StGuideTitle = styled.div`
+const StGuideTitle = styled.div<{ isGuide: boolean }>`
   display: flex;
   align-items: center;
   position: relative;
@@ -648,6 +651,17 @@ const StGuideTitle = styled.div`
 
   color: ${COLOR.WHITE};
   ${FONT_STYLES.B_20_BODY};
+
+  ${({ isGuide }) =>
+    !isGuide &&
+    css`
+      opacity: 0.6;
+      cursor: pointer;
+
+      &: hover {
+        opacity: 0.8;
+      }
+    `}
 
   & > .guide-info {
     display: flex;
