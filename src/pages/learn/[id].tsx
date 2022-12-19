@@ -57,7 +57,7 @@ export interface MemoInfo {
 function LearnDetail() {
   const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
   const router = useRouter();
-  const { id: detailId } = router.query;
+  const { id: detailId, isGuide } = router.query;
   const isLoggedIn = useRecoilValue(loginState);
   const [videoData, setVideoData] = useState<VideoData>();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -122,7 +122,7 @@ function LearnDetail() {
           return stringLength;
         }
         if (childNodes[i].textContent !== '/') {
-          stringLength += childNodes[i]?.textContent?.length ?? 0;
+          stringLength += childNodes[i]?.textContent?.replaceAll('/', '').length ?? 0;
         }
       }
     }
@@ -279,21 +279,30 @@ function LearnDetail() {
   useEffect(() => {
     (async () => {
       const id = Number(detailId);
-      const data = isLoggedIn
-        ? await api.learnDetailService.getPrivateVideoData(id)
-        : await api.learnDetailService.getPublicVideoData(id);
+      let data;
+      if (isGuide) {
+        data = await api.learnDetailService.getPublicSpeechGuideData(id);
+      } else {
+        data = isLoggedIn
+          ? await api.learnDetailService.getPrivateVideoData(id)
+          : await api.learnDetailService.getPublicVideoData(id);
+      }
       setVideoData(data);
       const { memos, names } = data;
+      if (isGuide && memos) {
+        setMemoList(memos);
+        return;
+      }
       if (isLoggedIn && memos && names) {
         setMemoList(memos);
         setScriptTitleList(names);
       }
     })();
-  }, [isLoggedIn, detailId, isEditing]);
+  }, [isLoggedIn, detailId, isEditing, isGuide]);
 
   useEffect(() => {
     (async () => {
-      if (isLoggedIn) {
+      if (isLoggedIn && !isGuide) {
         const data = await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedScriptTitleIndex);
         setVideoData(data);
         const { memos, names } = data;
@@ -303,7 +312,7 @@ function LearnDetail() {
         }
       }
     })();
-  }, [clickedScriptTitleIndex, detailId, isLoggedIn]);
+  }, [clickedScriptTitleIndex, detailId, isLoggedIn, isGuide]);
 
   useEffect(() => {
     if (!player) return;

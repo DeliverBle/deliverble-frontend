@@ -27,7 +27,17 @@ function NewsList(props: NewsListProps) {
     <StNewsList isGuide={isGuide}>
       {newsList.map(({ id, title, category, channel, thumbnail, reportDate, isFavorite = false, haveGuide }) => {
         return (
-          <StNewsWrapper key={id} onClick={() => router.push(`/learn/${id}`)}>
+          <StNewsWrapper
+            key={id}
+            onClick={() =>
+              router.push(
+                {
+                  pathname: `/learn/${id}`,
+                  query: { isGuide },
+                },
+                // `/learn/${id}`,
+              )
+            }>
             {isGuide && (
               <StGuideTitle>
                 <ImageDiv className="guide-logo" src={icSpeechGuideLogo} alt="" />
