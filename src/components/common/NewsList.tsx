@@ -123,11 +123,13 @@ const StNewsWrapper = styled.article`
 
   @media (max-width: 500px) {
     flex-direction: row;
+    gap: 1.6rem;
   }
 `;
 
 const StThumbnail = styled.div<{ type: string }>`
   position: relative;
+  margin-bottom: 1.6rem;
   border-radius: 1rem;
   cursor: pointer;
 
@@ -172,6 +174,8 @@ const StThumbnail = styled.div<{ type: string }>`
   }
 
   @media (max-width: 500px) {
+    margin-bottom: 0;
+
     & > div {
       min-width: 21.9rem;
       min-height: 12.2rem;
@@ -199,7 +203,6 @@ const StInfo = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin-top: 1.6rem;
 `;
 
 const StTitle = styled.p`
@@ -219,6 +222,7 @@ const StCaption = styled.div`
   color: ${COLOR.GRAY_30};
 
   @media (max-width: 500px) {
+    margin-top: 0;
     ${FONT_STYLES.M_15_CAPTION};
   }
 `;
