@@ -420,7 +420,7 @@ function LearnDetail() {
                           ref={contextMenuRef}
                           onContextMenu={(e) => {
                             e.preventDefault();
-                            handleRightClick(e, videoData.scriptsId, order);
+                            !isGuide && handleRightClick(e, videoData.scriptsId, order);
                           }}
                           key={id}
                           onClick={() => player?.seekTo(startTime, true)}
