@@ -39,7 +39,7 @@ import {
 } from 'public/assets/icons';
 import React, { useEffect, useRef, useState } from 'react';
 import YouTube from 'react-youtube';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import styled, { css } from 'styled-components';
 import { imgHighlightTooltip, imgSpacingTooltip } from 'public/assets/images';
 import { useMutation } from 'react-query';
@@ -61,7 +61,7 @@ function LearnDetail() {
   const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
   const router = useRouter();
   const { id: detailId } = router.query;
-  const isGuide = useRecoilValue(isGuideAtom);
+  const [isGuide, setIsGuide] = useRecoilState(isGuideAtom);
   const isLoggedIn = useRecoilValue(loginState);
   const [videoData, setVideoData] = useState<VideoData>();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -589,6 +589,7 @@ function LearnDetail() {
                 <p>{SPEECH_GUIDE_TOOLTIP_TEXT.description}</p>
               </StGuideTooltip>
             )}
+            {isGuide && <StLearnButton onClick={() => setIsGuide((prev) => !prev)}>학습하러 가기</StLearnButton>}
           </StLearnBox>
         )}
         {isModalOpen && <GuideModal closeModal={() => setIsModalOpen(false)} />}
@@ -714,6 +715,21 @@ const StGuideTooltip = styled.div`
   & > p:last-child {
     ${FONT_STYLES.M_16_CAPTION}
   }
+`;
+
+const StLearnButton = styled.button`
+  position: absolute;
+  top: 98.2rem;
+  left: 75.6rem;
+
+  width: 20.9rem;
+  height: 8.2rem;
+  border-radius: 4.8rem;
+
+  background-color: ${COLOR.MAIN_BLUE};
+  box-shadow: 0.4rem 0.4rem 2rem rgba(22, 15, 53, 0.15);
+  color: ${COLOR.WHITE};
+  ${FONT_STYLES.SB_24_HEADLINE}
 `;
 
 const StLearnSection = styled.section<{ isGuide: boolean }>`
