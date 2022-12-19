@@ -286,10 +286,8 @@ function LearnDetail() {
       const id = Number(detailId);
       let data;
       if (isGuide) {
-        console.log('가이드임');
         data = await api.learnDetailService.getPublicSpeechGuideData(id);
       } else {
-        console.log('가이드아님');
         data = isLoggedIn
           ? await api.learnDetailService.getPrivateVideoData(id)
           : await api.learnDetailService.getPublicVideoData(id);
@@ -370,7 +368,7 @@ function LearnDetail() {
       <NavigationBar />
       <StLearnDetail>
         <ImageDiv onClick={() => router.push(prevLink)} src={icXButton} className="close" layout="fill" alt="x" />
-        {isGuide && (
+        {videoData?.name === '스피치 가이드' && (
           <StScriptTitleContainer>
             <StGuideTitle>
               <p>스피치 가이드</p>

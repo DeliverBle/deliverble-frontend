@@ -32,6 +32,7 @@ export type VideoData = {
   scripts: Script[];
   memos?: MemoData[];
   names?: Name[];
+  name?: string;
 };
 
 export type MemoData = {
