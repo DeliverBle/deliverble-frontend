@@ -95,8 +95,6 @@ function LearnDetail() {
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const [contextMenuPoint, setContextMenuPoint] = useState({ x: 0, y: 0 });
   const [isContextMenuOpen, setIsContextMenuOpen] = useState<boolean>(false);
-  const [haveGuide, setHaveGuide] = useState<boolean>(false);
-  const [isSpeechGuide, setIsSpeechGuide] = useState<boolean>(false);
 
   const handleContextMenuPoint = (target: HTMLDivElement) => {
     let x = 0;
@@ -302,8 +300,6 @@ function LearnDetail() {
           : await api.learnDetailService.getPublicVideoData(id);
       }
       setVideoData(data);
-      setHaveGuide(data.haveGuide);
-      setIsSpeechGuide(isGuide);
       const { memos, names } = data;
       if (isGuide && memos) {
         setMemoList(memos);
@@ -380,15 +376,15 @@ function LearnDetail() {
       <StLearnDetail>
         <ImageDiv onClick={() => router.push(prevLink)} src={icXButton} className="close" layout="fill" alt="x" />
         <StScriptTitleContainer>
-          {haveGuide && (
-            <StGuideTitle isGuide={isGuide} onClick={() => !isSpeechGuide && setIsGuide((prev) => !prev)}>
+          {videoData?.haveGuide && (
+            <StGuideTitle isGuide={isGuide} onClick={() => !isGuide && setIsGuide((prev) => !prev)}>
               <p>스피치 가이드</p>
               <ImageDiv
                 className="guide-info"
                 src={icSpeechGuideInfo}
                 alt="speech-guide-info"
-                onMouseOver={() => isSpeechGuide && setIsGuideOver((prev) => !prev)}
-                onMouseOut={() => isSpeechGuide && setIsGuideOver((prev) => !prev)}
+                onMouseOver={() => isGuide && setIsGuideOver((prev) => !prev)}
+                onMouseOut={() => isGuide && setIsGuideOver((prev) => !prev)}
               />
             </StGuideTitle>
           )}
