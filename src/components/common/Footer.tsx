@@ -1,22 +1,34 @@
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { icDeliverbleBlue, icSocial } from 'public/assets/icons';
+import { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import styled from 'styled-components';
 import ImageDiv from './ImageDiv';
 
 function Footer() {
-  const is500 = useMediaQuery({
+  const [mounted, setMounted] = useState(false);
+  const smallBanner = useMediaQuery({
     query: '(max-width: 500px)',
   });
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const BannerText = () => {
+    return smallBanner
+      ? `언제 어디서나 당당할 당신의
+    말하기를 딜리버블이 응원합니다.`
+      : `언제 어디서나 당당할 당신의 말하기를
+      딜리버블이 응원합니다.`;
+  };
 
   return (
     <StFooter>
       <StLogo>
         <ImageDiv className="logo" src={icDeliverbleBlue} alt="딜리버블" />
-        <h4>
-          언제 어디서나 당당할 당신의 {is500 && <br />}말하기를{!is500 && <br />} 딜리버블이 응원합니다.
-        </h4>
+        <h4>{mounted && BannerText()}</h4>
       </StLogo>
       <StInfo>
         <StFeedback>
@@ -88,6 +100,7 @@ const StLogo = styled.div`
     margin-top: 1.6rem;
     color: ${COLOR.MAIN_BLUE};
     ${FONT_STYLES.SB_24_HEADLINE};
+    white-space: pre-line;
   }
 
   @media (max-width: 500px) {
