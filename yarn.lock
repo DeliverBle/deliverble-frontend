@@ -356,7 +356,7 @@
 
 "@types/react-responsive@^8.0.5":
   version "8.0.5"
-  resolved "https://registry.npmjs.org/@types/react-responsive/-/react-responsive-8.0.5.tgz"
+  resolved "https://registry.yarnpkg.com/@types/react-responsive/-/react-responsive-8.0.5.tgz#77769862d2a0711434feb972be08e3e6c334440a"
   integrity sha512-k3gQJgI87oP5IrVZe//3LKJFnAeFaqqWmmtl5eoYL2H3HqFcIhUaE30kRK1CsW3DHdojZxcVj4ZNc2ClsEu2PA==
   dependencies:
     "@types/react" "*"
@@ -1943,6 +1943,11 @@ react-dom@18.2.0:
   dependencies:
     loose-envify "^1.1.0"
     scheduler "^0.23.0"
+
+react-hotjar@^5.3.0:
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/react-hotjar/-/react-hotjar-5.3.0.tgz#ec466e625c76e1e8305997df24cc018ff0681b9f"
+  integrity sha512-QkqVxrKR0cjloce6QozOwEjQlRI9iuGluBz3c2aqxDK97n1Za37PIsQ0bhLYea3SvRTuzrZ+Gu3Yg2n7YF/l1w==
 
 react-is@^16.13.1, react-is@^16.7.0:
   version "16.13.1"

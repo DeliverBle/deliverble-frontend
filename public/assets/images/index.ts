@@ -1,13 +1,13 @@
-export { default as imgLandingBgFirst } from './img_landing_first_bg.svg';
-export { default as imgLandingBgSecond } from './img_landing_second_bg.svg';
-export { default as imgLandingBgLast } from './img_landing_last_bg.svg';
+export { default as imgLandingBgFirst } from './img_landing_first_bg.png';
+export { default as imgLandingBgSecond } from './img_landing_second_bg.png';
+export { default as imgLandingBgLast } from './img_landing_last_bg.png';
 export { default as imgLandingBubble } from './img_landing_bubble.svg';
 export { default as imgLandingEar } from './img_landing_ear.svg';
 export { default as imgLandingFist } from './img_landing_fist.svg';
 export { default as imgLandingMic } from './img_landing_mic.svg';
 export { default as imgBannerBackground } from './img_banner_background.png';
 export { default as imgBigBannerMic } from './img_big_banner_mic.png';
-export { default as imgSmallBannerMic } from './img_small_banner_mic.png';
+export { default as imgMediumBannerMic } from './img_medium_banner_mic.png';
 export { default as img404Background } from './img_404_background.png';
 export { default as imgReviewEmpty } from './img_review_empty.svg';
 export { default as imgMemoEmpty } from './img_memo_empty.svg';

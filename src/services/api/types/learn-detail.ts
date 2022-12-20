@@ -5,9 +5,15 @@ export type Tag = {
 
 export type Script = {
   id: number;
+  order: number;
   text: string;
   startTime: number;
   endTime: number;
+};
+
+export type Name = {
+  id: number;
+  name: string;
 };
 
 export type VideoData = {
@@ -23,18 +29,16 @@ export type VideoData = {
   scriptsId: number;
   tags: Tag[];
   scripts: Script[];
+  memos?: MemoData[];
+  names?: Name[];
 };
 
-export type HighlightData = {
-  scriptId: number;
-  highlightId: number;
-  startingIndex: number;
-  endingIndex: number;
-  memo: {
-    id?: number;
-    keyword?: string;
-    content?: string;
-  };
+export type MemoData = {
+  id?: number;
+  order: number;
+  startIndex: number;
+  keyword: string;
+  content: string;
 };
 
 export type GroupedObjectKey = {

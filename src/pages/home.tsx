@@ -5,35 +5,43 @@ import SEO from '@src/components/common/SEO';
 import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
 import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/home';
+import { loginState } from '@src/stores/loginState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import dynamic from 'next/dynamic';
-import { imgBigBannerMic, imgSmallBannerMic } from 'public/assets/images';
+import { imgBigBannerMic, imgMediumBannerMic } from 'public/assets/images';
 import { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
+import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 
 function Home() {
+  const isLoggedIn = useRecoilValue(loginState);
   const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
   const [newsList, setNewsList] = useState<VideoData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const is960 = useMediaQuery({
-    query: '(min-width: 501px) and (max-width: 960px)',
+  const [mounted, setMounted] = useState(false);
+  const MediumBanner = useMediaQuery({
+    query: '(min-width: 501px)',
   });
-  const is500 = useMediaQuery({
-    query: '(max-width: 500px)',
+  const BigBanner = useMediaQuery({
+    query: '(min-width: 961px)',
   });
 
-  const getVideoList = async () => {
-    const { videoList } = await api.homeService.getVideoData();
-    setNewsList(videoList);
-  };
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     setIsLoading(true);
-    getVideoList();
+    (async () => {
+      const { videoList } = isLoggedIn
+        ? await api.homeService.getPrivateVideoData()
+        : await api.homeService.getPublicVideoData();
+      setNewsList(videoList);
+    })();
     setIsLoading(false);
-  }, []);
+  }, [isLoggedIn]);
 
   const handleClickLike = async (id: number) => {
     const { id: likeId, isFavorite } = await api.likeService.postLikeData(id);
@@ -51,42 +59,59 @@ function Home() {
     });
   };
 
+  const selectBannerImage = () => {
+    if (BigBanner) {
+      return <ImageDiv className="big-mic" src={imgBigBannerMic} alt="" layout="fill" />;
+    }
+    if (MediumBanner) {
+      return <ImageDiv className="medium-mic" src={imgMediumBannerMic} alt="" />;
+    }
+  };
+
   return (
-    <>
+    <StPageWrapper>
       <SEO title="Deliverble" />
       <NavigationBar />
       <StHome>
-        <StBannerText>
-          <h1>
-            우리는 말하는 법은 배웠지만,
-            <br />잘 말하는 법은 배우지 못했다!
-          </h1>
-          <p>딜리버블과 함께 잘 말하는 법을 배워봐요!</p>
-        </StBannerText>
-        {is960 ? (
-          <ImageDiv className="small-mic" src={imgSmallBannerMic} alt="" />
-        ) : (
-          !is500 && <ImageDiv className="big-mic" src={imgBigBannerMic} alt="" layout="fill" />
-        )}
+        <StBanner>
+          <StBannerText>
+            <h1>
+              우리는 말하는 법은 배웠지만,
+              <br />잘 말하는 법은 배우지 못했다!
+            </h1>
+            <p>딜리버블과 함께 잘 말하는 법을 배워봐요!</p>
+          </StBannerText>
+          {mounted && selectBannerImage()}
+        </StBanner>
+        <StNews>
+          <h3>딜리버블의 추천 뉴스를 만나보세요.</h3>
+          <div>
+            {isLoading ? (
+              <VideoListSkeleton itemNumber={8} />
+            ) : (
+              <NewsList onClickLike={handleClickLike} newsList={newsList} />
+            )}
+          </div>
+        </StNews>
       </StHome>
-      <StNews>
-        <h3>딜리버블의 추천 뉴스를 만나보세요.</h3>
-        <div>
-          {isLoading ? (
-            <VideoListSkeleton itemNumber={8} />
-          ) : (
-            <NewsList onClickLike={handleClickLike} newsList={newsList} />
-          )}
-        </div>
-      </StNews>
       <Footer />
-    </>
+    </StPageWrapper>
   );
 }
 
 export default Home;
 
+const StPageWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
+
 const StHome = styled.div`
+  flex: 1;
+`;
+
+const StBanner = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: end;
@@ -107,7 +132,7 @@ const StHome = styled.div`
   }
 
   @media (max-width: 960px) {
-    .small-mic {
+    .medium-mic {
       position: absolute;
       top: 0rem;
       left: 24.5rem;
