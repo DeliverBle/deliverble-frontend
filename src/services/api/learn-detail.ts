@@ -11,4 +11,5 @@ export interface LearnDetailService {
   deleteScriptData(scriptId: number): Promise<{ isSuccess: boolean }>;
   updateScriptNameData(scriptId: number, name: string): Promise<Name>;
   getPublicSpeechGuideData(videoId: number): Promise<VideoData>;
+  getPrivateSpeechGuideData(videoId: number): Promise<VideoData>;
 }

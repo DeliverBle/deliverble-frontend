@@ -27,7 +27,7 @@ function NewsList(props: NewsListProps) {
 
   return (
     <StNewsList type={type}>
-      {newsList.map(({ id, title, category, channel, thumbnail, reportDate, isFavorite = false, haveGuide }) => {
+      {newsList.map(({ id, title, category, channel, thumbnail, reportDate, isFavorite, haveGuide }) => {
         return (
           <StNewsWrapper
             key={id}

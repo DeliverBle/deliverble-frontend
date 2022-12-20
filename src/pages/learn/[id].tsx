@@ -288,7 +288,9 @@ function LearnDetail() {
       const id = Number(detailId);
       let data;
       if (isGuide) {
-        data = await api.learnDetailService.getPublicSpeechGuideData(id);
+        data = isLoggedIn
+          ? await api.learnDetailService.getPrivateSpeechGuideData(id)
+          : await api.learnDetailService.getPublicSpeechGuideData(id);
       } else {
         data = isLoggedIn
           ? await api.learnDetailService.getPrivateVideoData(id)
@@ -406,7 +408,6 @@ function LearnDetail() {
             <StScriptAddButton onClick={handleScriptAdd} />
           )}
         </StScriptTitleContainer>
-
         {videoData && (
           <StLearnBox isGuide={isGuide}>
             <VideoDetail {...videoData} setIsModalOpen={setIsModalOpen} />
