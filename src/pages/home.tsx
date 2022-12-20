@@ -50,18 +50,10 @@ function Home() {
 
   const handleClickLike = async (id: number) => {
     const { id: likeId, isFavorite } = await api.likeService.postLikeData(id);
-
-    setNewsList((prev) => {
-      return prev.map((news) => {
-        if (news.id === likeId) {
-          return {
-            ...news,
-            isFavorite,
-          };
-        }
-        return news;
-      });
-    });
+    const setterList = [setNewsList, setSpeechGuideList];
+    setterList.map((setter) =>
+      setter((prev) => prev.map((news) => (news.id === likeId ? { ...news, isFavorite } : news))),
+    );
   };
 
   const selectBannerImage = () => {

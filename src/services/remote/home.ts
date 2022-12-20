@@ -43,7 +43,7 @@ export function homeDataRemote(): HomeService {
   };
 
   const getPrivateSpeechGuideData = async () => {
-    const response = await publicAPI.get({ url: `/news/guide` });
+    const response = await privateAPI.get({ url: `/news/guide` });
     if (response.status === 200) {
       return {
         videoList: response.data
