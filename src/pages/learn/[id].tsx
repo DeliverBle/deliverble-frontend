@@ -23,6 +23,8 @@ import {
   DELETE_SCRIPT_CONFIRM_MODAL_TEXT,
   SCRIPT_MAX_COUNT,
   SPEECH_GUIDE_TOOLTIP_TEXT,
+  CONTEXT_MENU_WIDTH,
+  ABSOLUTE_RIGHT_LIMIT,
 } from '@src/utils/constant';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -104,16 +106,19 @@ function LearnDetail() {
     if (article) {
       const articleAbsoluteTop = article.getBoundingClientRect().top;
       const articleAbsoluteLeft = article.getBoundingClientRect().left;
-      const absoluteTop = target.getBoundingClientRect().top;
-      const absoluteRight = target.getBoundingClientRect().right;
 
-      y = absoluteTop - articleAbsoluteTop - 10;
-      if (absoluteRight <= 830) {
-        x = absoluteRight - articleAbsoluteLeft - 15;
+      const targetRect = target.getBoundingClientRect();
+      const absoluteTop = targetRect.top + 20;
+      const absoluteLeft = targetRect.left - 22;
+      const absoluteRight = targetRect.right - 22;
+
+      const highlightWidth = targetRect.right - targetRect.left;
+      if (highlightWidth > CONTEXT_MENU_WIDTH || absoluteRight > ABSOLUTE_RIGHT_LIMIT - (scrollX + scrollX / 2)) {
+        x = absoluteRight - articleAbsoluteLeft - CONTEXT_MENU_WIDTH;
       } else {
-        const absoluteLeft = target.getBoundingClientRect().left;
-        x = absoluteLeft - articleAbsoluteLeft - 175;
+        x = absoluteLeft - articleAbsoluteLeft;
       }
+      y = absoluteTop - articleAbsoluteTop;
     }
 
     return { x, y };
@@ -764,6 +769,7 @@ const StLearnSection = styled.section<{ isGuide: boolean }>`
     font-size: 2.6rem;
     line-height: 5.8rem;
     word-break: keep-all;
+    box-sizing: border-box;
 
     div::selection {
       background: ${COLOR.SUB_BLUE_30};

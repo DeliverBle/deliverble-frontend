@@ -31,10 +31,14 @@ export const SPEECH_GUIDE_TOOLTIP_TEXT = {
     어디를 강조해야 하는지, 무엇을 유의하며 읽어야 하는지 파악해보세요.`,
 };
 
+export const HJID = 3283852;
+export const HJSV = 6;
 export const MEMO_CONTENT_MAX = 30;
 export const SCRIPT_MAX_COUNT = 3;
 export const SCRIPT_TITLE_MAX_LENGTH = 100;
 export const MEMO_CONTENT_MAX_LENGTH = 70;
+export const CONTEXT_MENU_WIDTH = 144;
+export const ABSOLUTE_RIGHT_LIMIT = 830;
 export const BLOCK_SIZE = 10;
 export const LIST_SIZE = 12;
 export const ALL = '전체';
