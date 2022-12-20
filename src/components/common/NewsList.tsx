@@ -63,17 +63,17 @@ function NewsList(props: NewsListProps) {
               />
             </StThumbnail>
             <StInfo>
-              <StTitle>{title}</StTitle>
+              <StTitle haveGuide={haveGuide}>{title}</StTitle>
               <StCaption>
                 {channel} | {category} | {reportDate.replaceAll('-', '.')}
               </StCaption>
+              {haveGuide && type === 'normal' && (
+                <StSpeechGuide>
+                  <ImageDiv className="guide-logo" src={icSpeechGuideLogo} alt="" />
+                  <p>스피치 가이드</p>
+                </StSpeechGuide>
+              )}
             </StInfo>
-            {haveGuide && type === 'normal' && (
-              <StSpeechGuide>
-                <ImageDiv className="guide-logo" src={icSpeechGuideLogo} alt="" />
-                <p>스피치 가이드</p>
-              </StSpeechGuide>
-            )}
           </StNewsWrapper>
         );
       })}
@@ -117,19 +117,18 @@ const StNewsWrapper = styled.article`
   display: flex;
   flex-direction: column;
   position: relative;
+  gap: 1.6rem;
 
   width: 100%;
   height: 100%;
 
   @media (max-width: 500px) {
     flex-direction: row;
-    gap: 1.6rem;
   }
 `;
 
 const StThumbnail = styled.div<{ type: string }>`
   position: relative;
-  margin-bottom: 1.6rem;
   border-radius: 1rem;
   cursor: pointer;
 
@@ -203,16 +202,32 @@ const StInfo = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  @media (max-width: 500px) {
+    ${FONT_STYLES.M_15_CAPTION};
+  }
 `;
 
-const StTitle = styled.p`
+const StTitle = styled.p<{ haveGuide: boolean }>`
   height: 5.8rem;
   ${FONT_STYLES.SB_21_BODY};
   color: ${COLOR.BLACK};
   cursor: pointer;
 
   @media (max-width: 500px) {
+    width: 21.7rem;
     ${FONT_STYLES.SB_18_CAPTION};
+
+    ${({ haveGuide }) =>
+      haveGuide &&
+      css`
+        height: 5.6rem;
+        word-wrap: break-word;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+      `}
   }
 `;
 
@@ -242,5 +257,17 @@ const StSpeechGuide = styled.div`
   & > .guide-logo {
     display: flex;
     align-items: center;
+  }
+
+  @media (max-width: 500px) {
+    margin-top: 0.8rem;
+    width: 9.3rem;
+    height: 2.6rem;
+    ${FONT_STYLES.SB_12_CAPTION};
+
+    & > .guide-logo {
+      width: 1.6rem;
+      height: 1.6rem;
+    }
   }
 `;
