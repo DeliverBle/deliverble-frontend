@@ -96,7 +96,7 @@ const StNavigationBar = styled.div`
   align-items: center;
   position: sticky;
   top: 0;
-  z-index: 2;
+  z-index: 1;
 
   width: 100%;
   height: 8.8rem;
