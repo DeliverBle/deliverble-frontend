@@ -9,6 +9,7 @@ export const LEARN_DATA = {
         thumbnail: 'https://img.youtube.com/vi/mDW6crrUVpA/hqdefault.jpg',
         reportDate: '2022-07-06',
         isFavorite: true,
+        haveGuide: true,
       },
       {
         id: 3,
@@ -18,6 +19,7 @@ export const LEARN_DATA = {
         thumbnail: 'https://img.youtube.com/vi/45IAfzlB_tQ/hqdefault.jpg',
         reportDate: '2022-07-06',
         isFavorite: true,
+        haveGuide: true,
       },
       {
         id: 4,
@@ -27,6 +29,7 @@ export const LEARN_DATA = {
         thumbnail: 'https://img.youtube.com/vi/sId-zbgWuZU/hqdefault.jpg',
         reportDate: '2022-07-05',
         isFavorite: true,
+        haveGuide: true,
       },
       {
         id: 9,
@@ -36,6 +39,7 @@ export const LEARN_DATA = {
         thumbnail: 'https://img.youtube.com/vi/WtuMp5G3yNo/hqdefault.jpg',
         reportDate: '2022-07-05',
         isFavorite: true,
+        haveGuide: true,
       },
       {
         id: 5,
@@ -45,6 +49,7 @@ export const LEARN_DATA = {
         thumbnail: 'https://img.youtube.com/vi/IisQfwEp8D8/hqdefault.jpg',
         reportDate: '2022-07-04',
         isFavorite: true,
+        haveGuide: true,
       },
       {
         id: 2,
@@ -54,6 +59,7 @@ export const LEARN_DATA = {
         thumbnail: 'https://img.youtube.com/vi/ee-0DeY21rU/hqdefault.jpg',
         reportDate: '2022-06-30',
         isFavorite: true,
+        haveGuide: true,
       },
       {
         id: 14,
@@ -63,6 +69,7 @@ export const LEARN_DATA = {
         thumbnail: 'https://img.youtube.com/vi/srjLy3NQO6w/hqdefault.jpg',
         reportDate: '2022-06-21',
         isFavorite: true,
+        haveGuide: true,
       },
       {
         id: 1,
@@ -72,6 +79,7 @@ export const LEARN_DATA = {
         thumbnail: 'https://img.youtube.com/vi/S_gtbu2VRlI/hqdefault.jpg',
         reportDate: '2022-06-19',
         isFavorite: true,
+        haveGuide: true,
       },
       {
         id: 10,
@@ -81,6 +89,7 @@ export const LEARN_DATA = {
         thumbnail: 'https://img.youtube.com/vi/nsTeNVwGRMQ/hqdefault.jpg',
         reportDate: '2022-06-01',
         isFavorite: true,
+        haveGuide: true,
       },
       {
         id: 13,
@@ -90,6 +99,7 @@ export const LEARN_DATA = {
         thumbnail: 'https://img.youtube.com/vi/IL_-MlTZAmQ/hqdefault.jpg',
         reportDate: '2022-04-07',
         isFavorite: false,
+        haveGuide: true,
       },
       {
         id: 7,
@@ -99,6 +109,7 @@ export const LEARN_DATA = {
         thumbnail: 'https://img.youtube.com/vi/-XsbzwxjiVo/hqdefault.jpg',
         reportDate: '2022-02-02',
         isFavorite: false,
+        haveGuide: true,
       },
     ],
     paging: {
