@@ -11,7 +11,7 @@ import VideoDetail from '@src/components/learnDetail/VideoDetail';
 import LoginModal from '@src/components/login/LoginModal';
 import ScriptTitle from '@src/components/learnDetail/ScriptTitle';
 import { api } from '@src/services/api';
-import { MemoData, VideoData } from '@src/services/api/types/learn-detail';
+import { MemoData, Name, VideoData } from '@src/services/api/types/learn-detail';
 import { loginState } from '@src/stores/loginState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
@@ -22,6 +22,8 @@ import {
   INITIAL_MEMO,
   DELETE_SCRIPT_CONFIRM_MODAL_TEXT,
   SCRIPT_MAX_COUNT,
+  CONTEXT_MENU_WIDTH,
+  ABSOLUTE_RIGHT_LIMIT,
 } from '@src/utils/constant';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -39,6 +41,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import YouTube from 'react-youtube';
 import { useRecoilValue } from 'recoil';
 import styled, { css } from 'styled-components';
+import { useMutation } from 'react-query';
 
 export interface MemoState {
   newMemoId: number;
@@ -74,7 +77,7 @@ function LearnDetail() {
   const [isHighlightOver, setIsHighlightOver] = useState<boolean>(false);
   const [isSpacingOver, setIsSpacingOver] = useState<boolean>(false);
   const [highlightIndex, setHighlightIndex] = useState<number>(INITIAL_NUMBER);
-  const [scriptTitleList, setScriptTitleList] = useState(['스크립트 1']);
+  const [scriptTitleList, setScriptTitleList] = useState<Name[]>([]);
   const [clickedScriptTitleIndex, setClickedScriptTitleIndex] = useState(0);
   const [isScriptTitleInputVisible, setIsScriptTitleInputVisible] = useState(false);
   const [scriptTitleInputIndex, setTitleInputIndex] = useState(-1);
@@ -95,16 +98,19 @@ function LearnDetail() {
     if (article) {
       const articleAbsoluteTop = article.getBoundingClientRect().top;
       const articleAbsoluteLeft = article.getBoundingClientRect().left;
-      const absoulteTop = target.getBoundingClientRect().top;
-      const absoulteRight = target.getBoundingClientRect().right;
 
-      y = absoulteTop - articleAbsoluteTop - 10;
-      if (absoulteRight <= 830) {
-        x = absoulteRight - articleAbsoluteLeft - 15;
+      const targetRect = target.getBoundingClientRect();
+      const absoluteTop = targetRect.top + 20;
+      const absoluteLeft = targetRect.left - 22;
+      const absoluteRight = targetRect.right - 22;
+
+      const highlightWidth = targetRect.right - targetRect.left;
+      if (highlightWidth > CONTEXT_MENU_WIDTH || absoluteRight > ABSOLUTE_RIGHT_LIMIT - (scrollX + scrollX / 2)) {
+        x = absoluteRight - articleAbsoluteLeft - CONTEXT_MENU_WIDTH;
       } else {
-        const absoulteLeft = target.getBoundingClientRect().left;
-        x = absoulteLeft - articleAbsoluteLeft - 175;
+        x = absoluteLeft - articleAbsoluteLeft;
       }
+      y = absoluteTop - articleAbsoluteTop;
     }
 
     return { x, y };
@@ -170,12 +176,58 @@ function LearnDetail() {
     setContextMenuPoint(handleContextMenuPoint(contextTarget));
   };
 
-  const handleScriptDelete = () => {
+  const handleScriptAdd = async () => {
+    const response = await api.learnDetailService.postNewScriptData(Number(detailId));
+    if (response.isSuccess) {
+      const newIndex = scriptTitleList.length;
+      setClickedScriptTitleIndex(newIndex);
+      setTitleInputIndex(newIndex);
+    }
+  };
+
+  const handleScriptDelete = async () => {
+    const scriptId = videoData?.scriptsId ?? INITIAL_NUMBER;
+    const response = await api.learnDetailService.deleteScriptData(scriptId);
+    if (response.isSuccess && clickedScriptTitleIndex) {
+      setClickedScriptTitleIndex(0);
+      return;
+    }
+    if (response.isSuccess && clickedScriptTitleIndex === 0) {
+      const data = await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedScriptTitleIndex);
+      setVideoData(data);
+      const { memos, names } = data;
+      if (memos && names) {
+        setMemoList(memos);
+        setScriptTitleList(names);
+      }
+      return;
+    }
+  };
+
+  const handleScriptDeleteModal = () => {
     setConfirmModalText(DELETE_SCRIPT_CONFIRM_MODAL_TEXT);
     setIsConfirmOpen(true);
   };
 
-  const handleScriptRename = (index: number) => {
+  const renameScriptTitle = async (name: string) => {
+    const scriptId = videoData?.scriptsId ?? INITIAL_NUMBER;
+    return await api.learnDetailService.updateScriptNameData(scriptId, name);
+  };
+
+  const { mutate: mutateRenameScript } = useMutation(renameScriptTitle, {
+    onSuccess: (data) => {
+      if (videoData?.names) {
+        const newNameList = videoData.names.slice();
+        newNameList[clickedScriptTitleIndex] = data;
+        setVideoData({
+          ...videoData,
+          names: newNameList,
+        });
+      }
+    },
+  });
+
+  const handleScriptTitleInputChange = (index: number) => {
     setClickedScriptTitleIndex(index);
     setTitleInputIndex(index);
     setIsScriptTitleInputVisible(true);
@@ -234,12 +286,28 @@ function LearnDetail() {
       const data = isLoggedIn
         ? await api.learnDetailService.getPrivateVideoData(id)
         : await api.learnDetailService.getPublicVideoData(id);
-      if (data) {
-        setVideoData(data);
-        data.memos && setMemoList(data.memos);
+      setVideoData(data);
+      const { memos, names } = data;
+      if (isLoggedIn && memos && names) {
+        setMemoList(memos);
+        setScriptTitleList(names);
       }
     })();
   }, [isLoggedIn, detailId, isEditing]);
+
+  useEffect(() => {
+    (async () => {
+      if (isLoggedIn) {
+        const data = await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedScriptTitleIndex);
+        setVideoData(data);
+        const { memos, names } = data;
+        if (memos && names) {
+          setMemoList(memos);
+          setScriptTitleList(names);
+        }
+      }
+    })();
+  }, [clickedScriptTitleIndex, detailId, isLoggedIn]);
 
   useEffect(() => {
     if (!player) return;
@@ -290,11 +358,12 @@ function LearnDetail() {
       <NavigationBar />
       <StLearnDetail>
         <ImageDiv onClick={() => router.push(prevLink)} src={icXButton} className="close" layout="fill" alt="x" />
-        {isLoggedIn && (
+        {videoData?.names && (
           <StScriptTitleContainer>
-            {scriptTitleList.map((_, i) => (
+            {videoData.names.map(({ id, name }, i) => (
               <ScriptTitle
-                key={i}
+                key={id}
+                name={name}
                 isOne={scriptTitleList.length === 1}
                 isScriptTitleInputVisible={isScriptTitleInputVisible}
                 currentScriptTitleIndex={i}
@@ -302,19 +371,13 @@ function LearnDetail() {
                 scriptTitleInputIndex={scriptTitleInputIndex}
                 setIsScriptTitleInputVisible={setIsScriptTitleInputVisible}
                 setClickedScriptTitleIndex={setClickedScriptTitleIndex}
-                onScriptDelete={handleScriptDelete}
-                onScriptRename={(index: number) => handleScriptRename(index)}
+                onScriptDelete={handleScriptDeleteModal}
+                onScriptTitleInputChange={(index: number) => handleScriptTitleInputChange(index)}
+                onScriptRename={mutateRenameScript}
               />
             ))}
-            {scriptTitleList.length !== SCRIPT_MAX_COUNT && (
-              <StScriptAddButton
-                onClick={() => {
-                  // 서버에 post 요청
-                  setScriptTitleList((scriptTitleList) => [...scriptTitleList, '스크립트 ${scriptTitleList.length}']);
-                  setClickedScriptTitleIndex(clickedScriptTitleIndex + 1);
-                  setTitleInputIndex(clickedScriptTitleIndex + 1);
-                }}
-              />
+            {scriptTitleList.length > 0 && scriptTitleList.length !== SCRIPT_MAX_COUNT && (
+              <StScriptAddButton onClick={handleScriptAdd} />
             )}
           </StScriptTitleContainer>
         )}
@@ -350,10 +413,11 @@ function LearnDetail() {
                     )}
                     {isEditing && (
                       <ScriptEdit
-                        scriptsId={videoData.scriptsId}
+                        scriptsId={videoData.names ? videoData.names[clickedScriptTitleIndex].id : videoData.scriptsId}
                         scripts={videoData.scripts}
                         isHighlight={isHighlight}
                         isSpacing={isSpacing}
+                        clickedScriptTitleIndex={clickedScriptTitleIndex}
                       />
                     )}
                   </div>
@@ -499,13 +563,10 @@ function LearnDetail() {
         {isConfirmOpen && (
           <ConfirmModal
             confirmModalText={confirmModalText}
-            scriptTitleList={scriptTitleList}
-            clickedScriptTitleIndex={clickedScriptTitleIndex}
             setMemoState={setMemoState}
             setIsConfirmOpen={setIsConfirmOpen}
             setClickedDeleteMemo={setClickedDeleteMemo}
-            setScriptTitleList={setScriptTitleList}
-            setClickedScriptTitleIndex={setClickedScriptTitleIndex}
+            onScriptDelete={handleScriptDelete}
           />
         )}
         {isLoginModalOpen && <LoginModal closeModal={() => setIsLoginModalOpen(false)} />}
@@ -587,6 +648,7 @@ const StLearnSection = styled.section`
     font-size: 2.6rem;
     line-height: 5.8rem;
     word-break: keep-all;
+    box-sizing: border-box;
 
     div::selection {
       background: ${COLOR.SUB_BLUE_30};

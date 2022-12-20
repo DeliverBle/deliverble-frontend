@@ -6,60 +6,54 @@ import SEO from '@src/components/common/SEO';
 import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
 import SelectBox from '@src/components/learn/SelectBox';
 import { api } from '@src/services/api';
-import { VideoData } from '@src/services/api/types/home';
+import { PostSearchConditionRequestBody, VideoData } from '@src/services/api/types/learn';
+import { loginState } from '@src/stores/loginState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { BLOCK_SIZE, categoryList, channelList, LIST_SIZE, speakerList } from '@src/utils/constant';
 import dynamic from 'next/dynamic';
 import { icSearch } from 'public/assets/icons';
 import { useEffect, useState } from 'react';
+import { useMutation } from 'react-query';
+import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 
 function Learn() {
   const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
+  const isLoggedIn = useRecoilValue(loginState);
   const [selectedChannelList, setSelectedChannelList] = useState<string[]>([]);
   const [selectedCategoryList, setSelectedCategoryList] = useState<string[]>([]);
   const [selectedSpeakerList, setSelectedSpeakerList] = useState<string[]>([]);
   const [totalCount, setTotalCount] = useState(0);
-  const [lastPage, setLastPage] = useState(0);
+  const [lastPage, setLastPage] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [resultList, setResultList] = useState<VideoData[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSearch = async () => {
-    setIsLoading(true);
+  const { mutate, isLoading } = useMutation(
+    async (requestBody: PostSearchConditionRequestBody) => {
+      return isLoggedIn
+        ? await api.learnService.postSearchConditionWithToken(requestBody)
+        : await api.learnService.postSearchConditionWithoutToken(requestBody);
+    },
+    {
+      onSuccess: (data) => {
+        const { paging, videoList } = data;
+        setTotalCount(paging.totalCount);
+        setLastPage(paging.lastPage);
+        setResultList(videoList);
+      },
+    },
+  );
 
-    const { paging, videoList } = await api.learnService.postSearchCondition({
-      channel: selectedChannelList,
-      category: selectedCategoryList,
-      announcerGender: selectedSpeakerList,
-      currentPage: 1,
-      listSize: LIST_SIZE,
-    });
-
-    setCurrentPage(1);
-    setTotalCount(paging.totalCount);
-    setLastPage(paging.lastPage);
-    setResultList(videoList);
-    setIsLoading(false);
-  };
-
-  const handlePageChange = async (page: number) => {
-    setIsLoading(true);
-
-    const { paging, videoList } = await api.learnService.postSearchCondition({
+  const handlePageChange = (page: number) => {
+    mutate({
       channel: selectedChannelList,
       category: selectedCategoryList,
       announcerGender: selectedSpeakerList,
       currentPage: page,
       listSize: LIST_SIZE,
     });
-
     setCurrentPage(page);
-    setTotalCount(paging.totalCount);
-    setLastPage(paging.lastPage);
-    setResultList(videoList);
-    setIsLoading(false);
   };
 
   const handleClickLike = async (id: number) => {
@@ -79,21 +73,15 @@ function Learn() {
   };
 
   useEffect(() => {
-    (async () => {
-      setIsLoading(true);
-      const { paging, videoList } = await api.learnService.postSearchCondition({
-        channel: [],
-        category: [],
-        announcerGender: [],
-        currentPage: 1,
-        listSize: LIST_SIZE,
-      });
-      setTotalCount(paging.totalCount);
-      setLastPage(paging.lastPage);
-      setResultList(videoList);
-      setIsLoading(false);
-    })();
-  }, []);
+    mutate({
+      channel: selectedChannelList,
+      category: selectedCategoryList,
+      announcerGender: selectedSpeakerList,
+      currentPage: 1,
+      listSize: LIST_SIZE,
+    });
+    setCurrentPage(1);
+  }, [mutate, selectedCategoryList, selectedChannelList, selectedSpeakerList]);
 
   return (
     <StPageWrapper>
@@ -110,7 +98,6 @@ function Learn() {
             <SelectBox optionName="분야" optionList={categoryList} setConditionList={setSelectedCategoryList} />
             <SelectBox optionName="발화자" optionList={speakerList} setConditionList={setSelectedSpeakerList} />
           </StSelectBoxContainer>
-          <button onClick={handleSearch}>검색하기</button>
         </StSearch>
         {isLoading ? (
           <VideoListSkeleton itemNumber={12} />
@@ -179,17 +166,6 @@ const StSearch = styled.div`
   display: flex;
   align-items: flex-end;
   margin-bottom: 8rem;
-
-  & > button {
-    background-color: ${COLOR.MAIN_BLUE};
-    color: ${COLOR.WHITE};
-    ${FONT_STYLES.SB_20_BODY};
-    padding: 1.4rem 4rem 1.4rem 3.9rem;
-    border-radius: 1.4rem;
-    margin-left: 4rem;
-    min-width: fit-content;
-    height: 5.6rem;
-  }
 `;
 
 const StSelectBoxContainer = styled.div`
