@@ -587,7 +587,7 @@ function LearnDetail() {
                 </StMemoContainer>
               </aside>
             </main>
-            {!isGuideOver && (
+            {isGuideOver && (
               <StGuideTooltip>
                 <p>{SPEECH_GUIDE_TOOLTIP_TEXT.title}</p>
                 <p>{SPEECH_GUIDE_TOOLTIP_TEXT.description}</p>
