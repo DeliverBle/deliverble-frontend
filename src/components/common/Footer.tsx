@@ -1,49 +1,43 @@
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { icDeliverbleBlue, icSocial } from 'public/assets/icons';
-import { useMediaQuery } from 'react-responsive';
 import styled from 'styled-components';
 import ImageDiv from './ImageDiv';
 
 function Footer() {
-  const is500 = useMediaQuery({
-    query: '(max-width: 500px)',
-  });
-
   return (
     <StFooter>
       <StLogo>
-        <ImageDiv className="logo" src={icDeliverbleBlue} alt="딜리버블" />
+        <ImageDiv className="logo" src={icDeliverbleBlue} alt="딜리버블" layout="fill" />
         <h4>
-          언제 어디서나 당당할 당신의 {is500 && <br />}말하기를{!is500 && <br />} 딜리버블이 응원합니다.
+          언제 어디서나 당당할 당신의 말하기를
+          <br />
+          딜리버블이 응원합니다.
         </h4>
+        <a target="_blank" href="https://www.instagram.com/deliverble_official/" rel="noreferrer noopener">
+          <ImageDiv className="social-link" src={icSocial} alt="인스타그램 링크" />
+        </a>
       </StLogo>
       <StInfo>
-        <StFeedback>
-          <StInfoTitle>Feedback</StInfoTitle>
-          <a target="_blank" href="https://forms.gle/BGQGeGBLXTM6RBCR7" rel="noreferrer">
-            <StUnderlineText>서비스 피드백</StUnderlineText>
-          </a>
-        </StFeedback>
         <StService>
           <StInfoTitle>Service</StInfoTitle>
           <a
             target="_blank"
             href="https://airy-fang-202.notion.site/DeliverBle-42f2392a86714b02b369e7cb1c3e7dd9"
-            rel="noreferrer">
-            <StUnderlineText>딜리버블 서비스 소개</StUnderlineText>
+            rel="noreferrer noopener">
+            <StUnderlineText>서비스 소개</StUnderlineText>
           </a>
         </StService>
+        <StFeedback>
+          <StInfoTitle>Feedback</StInfoTitle>
+          <a target="_blank" href="https://forms.gle/BGQGeGBLXTM6RBCR7" rel="noreferrer noopener">
+            <StUnderlineText>서비스 피드백</StUnderlineText>
+          </a>
+        </StFeedback>
         <StContact>
           <StInfoTitle>Contact Us</StInfoTitle>
           <p>deliverble.team@gmail.com</p>
         </StContact>
-        <StSocial>
-          <StInfoTitle>Social</StInfoTitle>
-          <a target="_blank" href="https://www.instagram.com/deliverble_official/" rel="noreferrer">
-            <ImageDiv className="social-link" src={icSocial} alt="인스타그램 링크" />
-          </a>
-        </StSocial>
       </StInfo>
     </StFooter>
   );
@@ -52,13 +46,13 @@ function Footer() {
 export default Footer;
 
 const StFooter = styled.div`
-  display: grid;
-  grid-template-columns: 4fr 6fr;
+  display: flex;
   justify-content: space-between;
+  gap: 15rem;
 
   width: 100%;
   height: 40rem;
-  padding: 12.4rem 0rem 13.1rem 16rem;
+  padding: 8.8rem 16rem 17.2rem 16rem;
   background-color: ${COLOR.GRAY_5};
 
   p {
@@ -67,62 +61,77 @@ const StFooter = styled.div`
   }
 
   @media (max-width: 960px) {
-    display: block;
-    padding: 10rem 0rem 0rem 8.6rem;
-    height: 53.4rem;
+    gap: 0;
+    padding: 8.8rem 8.6rem 7.7rem 8.6rem;
+    p {
+      margin-top: 0.4rem;
+    }
   }
 
   @media (max-width: 500px) {
-    display: block;
-    padding: 8rem 0rem 8rem 2.4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding: 7.8rem 7.5rem 8.4rem 7.4rem;
     height: 79.5rem;
+
+    text-align: center;
   }
 `;
 
 const StLogo = styled.div`
   .logo {
-    height: 6rem;
+    position: relative;
+    width: 17.3rem;
+    height: 4.6rem;
   }
 
   & > h4 {
     margin-top: 1.6rem;
+    min-width: 35.1rem;
     color: ${COLOR.MAIN_BLUE};
     ${FONT_STYLES.SB_24_HEADLINE};
   }
 
-  @media (max-width: 500px) {
-    .logo {
-      width: 12rem;
-      height: 3.7rem;
-    }
+  .social-link {
+    margin-top: 5.6rem;
+  }
 
-    & > h4 {
-      ${FONT_STYLES.SB_21_BODY};
-    }
+  @media (max-width: 500px) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 `;
 
 const StInfo = styled.div`
   display: grid;
-  grid-template-columns: 2.1fr 2.6fr 3.2fr 2.1fr;
-  column-gap: 3rem;
   padding-top: 2.6rem;
+  grid-template-columns: repeat(3, 1fr);
 
   @media (max-width: 960px) {
-    padding-top: 9.6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3.2rem;
+    padding-top: 0;
+    text-align: right;
   }
 
   @media (max-width: 500px) {
-    grid-template-columns: repeat(1, 1fr);
-    row-gap: 4.8rem;
+    gap: 2.8rem;
     padding-top: 6.4rem;
-    height: 46rem;
+    text-align: center;
   }
 `;
 
 const StInfoTitle = styled.div`
   color: ${COLOR.GRAY_30};
   ${FONT_STYLES.SB_24_HEADLINE};
+
+  @media (max-width: 960px) {
+    ${FONT_STYLES.SB_18_CAPTION};
+  }
 `;
 
 const StUnderlineText = styled.p`
@@ -131,32 +140,15 @@ const StUnderlineText = styled.p`
   text-underline-position: under;
 `;
 
-const StFeedback = styled.div`
-  min-width: 10.8rem;
+const StService = styled.div`
+  min-width: fit-content;
 `;
 
-const StService = styled.div`
-  min-width: 18.1rem;
+const StFeedback = styled.div`
+  min-width: fit-content;
 `;
 
 const StContact = styled.div`
-  min-width: 24.7rem;
+  min-width: fit-content;
   ${FONT_STYLES.M_20_FOOTER};
-`;
-
-const StSocial = styled.div`
-  width: 6.6rem;
-
-  & > a {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 1.6rem;
-  }
-
-  @media (max-width: 500px) {
-    & > a {
-      align-items: start;
-    }
-  }
 `;
