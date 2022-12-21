@@ -9,9 +9,8 @@ import { loginState } from '@src/stores/loginState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import dynamic from 'next/dynamic';
-import { imgBigBannerMic, imgMediumBannerMic } from 'public/assets/images';
+import { imgBannerVer1Mic } from 'public/assets/images';
 import { useEffect, useState } from 'react';
-import { useMediaQuery } from 'react-responsive';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 
@@ -20,17 +19,6 @@ function Home() {
   const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
   const [newsList, setNewsList] = useState<VideoData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const MediumBanner = useMediaQuery({
-    query: '(min-width: 501px)',
-  });
-  const BigBanner = useMediaQuery({
-    query: '(min-width: 961px)',
-  });
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     setIsLoading(true);
@@ -59,15 +47,6 @@ function Home() {
     });
   };
 
-  const selectBannerImage = () => {
-    if (BigBanner) {
-      return <ImageDiv className="big-mic" src={imgBigBannerMic} alt="" layout="fill" />;
-    }
-    if (MediumBanner) {
-      return <ImageDiv className="medium-mic" src={imgMediumBannerMic} alt="" />;
-    }
-  };
-
   return (
     <StPageWrapper>
       <SEO title="Deliverble" />
@@ -81,7 +60,7 @@ function Home() {
             </h1>
             <p>딜리버블과 함께 잘 말하는 법을 배워봐요!</p>
           </StBannerText>
-          {mounted && selectBannerImage()}
+          <ImageDiv className="mic" src={imgBannerVer1Mic} alt="" layout="fill" />
         </StBanner>
         <StNews>
           <h3>딜리버블의 추천 뉴스를 만나보세요.</h3>
@@ -117,27 +96,44 @@ const StBanner = styled.div`
   align-items: end;
   position: relative;
 
-  height: 60rem;
   margin: 13.6rem 0 14.4rem 0;
+  height: 60rem;
+  background: url('/assets/images/img_banner_ver1_l.png') no-repeat left/cover;
 
-  background: no-repeat url('/assets/images/img_banner_background.png');
-  background-size: cover;
-  background-position: center;
-
-  .big-mic {
+  .mic {
     position: absolute;
     right: 0rem;
-    width: 122.4rem;
-    height: 68.6rem;
+    width: 109.5rem;
+    height: 68.8rem;
+  }
+
+  @media (min-width: 501px) {
+    .mic {
+      transition: opacity 0.2s ease-in;
+    }
   }
 
   @media (max-width: 960px) {
-    .medium-mic {
+    .mic {
+      opacity: 0;
+    }
+
+    &::before {
+      content: '';
       position: absolute;
-      top: 0rem;
-      left: 24.5rem;
-      width: 96rem;
-      height: 60rem;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('/assets/images/img_banner_ver1_m.png') no-repeat center / 960px;
+      transition: opacity 0.2s ease-in;
+    }
+  }
+
+  @media (max-width: 500px) {
+    &::before {
+      opacity: 0;
+      transition: opacity 0.2s ease-in;
     }
   }
 `;
