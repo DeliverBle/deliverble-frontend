@@ -9,7 +9,11 @@ function Footer() {
     <StFooter>
       <StLogo>
         <ImageDiv className="logo" src={icDeliverbleBlue} alt="딜리버블" layout="fill" />
-        <h4>언제 어디서나 당당할 당신의 말하기를{<br />} 딜리버블이 응원합니다.</h4>
+        <h4>
+          언제 어디서나 당당할 당신의 말하기를
+          <br />
+          딜리버블이 응원합니다.
+        </h4>
         <a target="_blank" href="https://www.instagram.com/deliverble_official/" rel="noreferrer noopener">
           <ImageDiv className="social-link" src={icSocial} alt="인스타그램 링크" />
         </a>
