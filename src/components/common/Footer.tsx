@@ -10,7 +10,7 @@ function Footer() {
       <StLogo>
         <ImageDiv className="logo" src={icDeliverbleBlue} alt="딜리버블" layout="fill" />
         <h4>언제 어디서나 당당할 당신의 말하기를{<br />} 딜리버블이 응원합니다.</h4>
-        <a target="_blank" href="https://www.instagram.com/deliverble_official/" rel="noreferrer">
+        <a target="_blank" href="https://www.instagram.com/deliverble_official/" rel="noreferrer noopener">
           <ImageDiv className="social-link" src={icSocial} alt="인스타그램 링크" />
         </a>
       </StLogo>
@@ -20,13 +20,13 @@ function Footer() {
           <a
             target="_blank"
             href="https://airy-fang-202.notion.site/DeliverBle-42f2392a86714b02b369e7cb1c3e7dd9"
-            rel="noreferrer">
+            rel="noreferrer noopener">
             <StUnderlineText>서비스 소개</StUnderlineText>
           </a>
         </StService>
         <StFeedback>
           <StInfoTitle>Feedback</StInfoTitle>
-          <a target="_blank" href="https://forms.gle/BGQGeGBLXTM6RBCR7" rel="noreferrer">
+          <a target="_blank" href="https://forms.gle/BGQGeGBLXTM6RBCR7" rel="noreferrer noopener">
             <StUnderlineText>서비스 피드백</StUnderlineText>
           </a>
         </StFeedback>
