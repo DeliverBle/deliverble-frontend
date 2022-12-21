@@ -587,7 +587,7 @@ function LearnDetail() {
                 </StMemoContainer>
               </aside>
             </main>
-            {isGuideOver && (
+            {!isGuideOver && (
               <StGuideTooltip>
                 <p>{SPEECH_GUIDE_TOOLTIP_TEXT.title}</p>
                 <p>{SPEECH_GUIDE_TOOLTIP_TEXT.description}</p>
@@ -715,12 +715,14 @@ const StLearnBox = styled.div<{ isGuide: boolean }>`
 const StGuideTooltip = styled.div`
   position: absolute;
   left: 178px;
-  top: 8px;
+  top: 1.6rem;
 
-  padding: 2.4rem 0 1.6rem 1.6rem;
+  padding: 1.6rem;
   width: 46.3rem;
-  height: 11.7rem;
-  background-image: url('/assets/images/img_guide_tooltip.png');
+  height: 10.9rem;
+  border-radius: 0.6rem;
+
+  background: rgba(22, 15, 53, 0.7);
   color: white;
   white-space: pre-line;
 
@@ -730,6 +732,18 @@ const StGuideTooltip = styled.div`
 
   & > p:last-child {
     ${FONT_STYLES.M_16_CAPTION}
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 2.6rem;
+    bottom: 100%;
+
+    border: solid transparent;
+    border-width: 0.8rem;
+    border-bottom-color: rgba(22, 15, 53, 0.7);
+    pointer-events: none;
   }
 `;
 

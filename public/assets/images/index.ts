@@ -13,4 +13,3 @@ export { default as imgReviewEmpty } from './img_review_empty.svg';
 export { default as imgMemoEmpty } from './img_memo_empty.svg';
 export { default as imgHighlightTooltip } from './img_highlight_tooltip.svg';
 export { default as imgSpacingTooltip } from './img_spacing_tooltip.svg';
-export { default as imgGuideTooltip } from './img_guide_tooltip.png';
