@@ -28,6 +28,9 @@ function Home() {
   const BigBanner = useMediaQuery({
     query: '(min-width: 961px)',
   });
+  const smallBanner = useMediaQuery({
+    query: '(max-width: 500px)',
+  });
 
   useEffect(() => {
     setMounted(true);
@@ -81,7 +84,7 @@ function Home() {
           {mounted && selectBannerImage()}
         </StBanner>
         <StNews type="guide">
-          <h3>스스로 학습하기 전, 스피치 가이드를 살펴보세요.</h3>
+          <h3>스스로 학습하기 전, {mounted && smallBanner && <br />}스피치 가이드를 살펴보세요.</h3>
           <div>
             {isLoading ? (
               <VideoListSkeleton itemNumber={4} />
@@ -215,6 +218,7 @@ const StNews = styled.div<{ type: string }>`
     & > h3 {
       margin-bottom: 3.2rem;
       ${FONT_STYLES.SB_21_BODY};
+      zoom: 150%;
     }
   }
 `;
