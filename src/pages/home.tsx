@@ -9,6 +9,7 @@ import { loginState } from '@src/stores/loginState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import dynamic from 'next/dynamic';
+import { icLeftArrowWhite, icRightArrowWhite } from 'public/assets/icons';
 import { imgBannerVer1Mic } from 'public/assets/images';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
@@ -59,6 +60,15 @@ function Home() {
               <br />잘 말하는 법은 배우지 못했다!
             </h1>
             <p>딜리버블과 함께 잘 말하는 법을 배워봐요!</p>
+            <StSlideButton>
+              <button>
+                <ImageDiv className="arrow" src={icLeftArrowWhite} alt="left-arrow" layout="fill" />
+              </button>
+              <p>1/3</p>
+              <button>
+                <ImageDiv className="arrow" src={icRightArrowWhite} alt="left-arrow" layout="fill" />
+              </button>
+            </StSlideButton>
           </StBannerText>
           <ImageDiv className="mic" src={imgBannerVer1Mic} alt="" layout="fill" />
         </StBanner>
@@ -139,7 +149,7 @@ const StBanner = styled.div`
 `;
 
 const StBannerText = styled.div`
-  margin: 20.1rem 0 20.1rem 16rem;
+  margin: 16rem 0 10rem 16rem;
 
   min-width: 50.4rem;
   height: fit-content;
@@ -166,6 +176,32 @@ const StBannerText = styled.div`
     & > p {
       ${FONT_STYLES.M_18_CAPTION}
     }
+  }
+`;
+
+const StSlideButton = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-top: 12.8rem;
+  width: 12.9rem;
+  height: 4rem;
+
+  background: rgba(22, 15, 53, 0.2);
+  border-radius: 20px;
+  ${FONT_STYLES.SB_16_CAPTION}
+  letter-spacing: 0.8rem;
+
+  & > p {
+    width: 4.1rem;
+    height: 2.2rem;
+  }
+
+  .arrow {
+    position: relative;
+    width: 2.4rem;
+    height: 2.4rem;
   }
 `;
 

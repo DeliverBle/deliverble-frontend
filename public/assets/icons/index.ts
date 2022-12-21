@@ -41,3 +41,5 @@ export { default as icScriptAddDark } from './ic_script_add_dark.svg';
 export { default as icScriptDeleteLight } from './ic_script_delete_light.svg';
 export { default as icScriptDeleteDark } from './ic_script_delete_dark.svg';
 export { default as icNotAllowedCursor } from './ic_not_allowed_cursor.svg';
+export { default as icLeftArrowWhite } from './ic_left_arrow_white.svg';
+export { default as icRightArrowWhite } from './ic_right_arrow_white.svg';
