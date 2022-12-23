@@ -382,9 +382,9 @@ function LearnDetail() {
               <ImageDiv
                 className="guide-info"
                 src={icSpeechGuideInfo}
-                alt="speech-guide-info"
-                onMouseOver={() => isGuide && setIsGuideOver((prev) => !prev)}
-                onMouseOut={() => isGuide && setIsGuideOver((prev) => !prev)}
+                alt="스피치 가이드 설명"
+                onMouseOver={() => setIsGuideOver(true)}
+                onMouseOut={() => setIsGuideOver(false)}
               />
             </StGuideTitle>
           )}

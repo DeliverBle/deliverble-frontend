@@ -13,7 +13,7 @@ import ImageDiv from './ImageDiv';
 import Like from './Like';
 
 interface NewsListProps {
-  type: string;
+  type: 'normal' | 'guide';
   newsList: VideoData[];
   onClickLike?: (id: number) => void;
 }
@@ -32,7 +32,7 @@ function NewsList(props: NewsListProps) {
           <StNewsWrapper
             key={id}
             onClick={() => {
-              type === 'guide' ? setIsGuide(true) : setIsGuide(false);
+              setIsGuide(type === 'guide' ? true : false);
               router.push(`/learn/${id}`);
             }}>
             {type === 'guide' && (
