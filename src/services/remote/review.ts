@@ -16,6 +16,7 @@ export function reviewDataRemote(): ReviewService {
               thumbnail: video.thumbnail,
               reportDate: video.reportDate,
               isFavorite: video.isFavorite,
+              haveGuide: video.haveGuide,
             }))
           : [],
         paging: {

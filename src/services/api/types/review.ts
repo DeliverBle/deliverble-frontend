@@ -6,6 +6,7 @@ export type VideoData = {
   thumbnail: string;
   reportDate: string;
   isFavorite: boolean;
+  haveGuide: boolean;
 };
 
 export type Paging = {

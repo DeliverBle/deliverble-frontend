@@ -1,32 +1,47 @@
 import { VideoData } from '@src/services/api/types/home';
 import { loginState } from '@src/stores/loginState';
+import { isGuideAtom } from '@src/stores/newsState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { useRouter } from 'next/router';
+import { icSpeechGuideLogo } from 'public/assets/icons';
 import { useState } from 'react';
-import { useRecoilValue } from 'recoil';
-import styled from 'styled-components';
+import { useSetRecoilState, useRecoilValue } from 'recoil';
+import styled, { css } from 'styled-components';
 import LoginModal from '../login/LoginModal';
 import ImageDiv from './ImageDiv';
 import Like from './Like';
 
 interface NewsListProps {
+  type: 'normal' | 'guide';
   newsList: VideoData[];
   onClickLike?: (id: number) => void;
 }
 
 function NewsList(props: NewsListProps) {
-  const { newsList, onClickLike } = props;
+  const setIsGuide = useSetRecoilState(isGuideAtom);
+  const { type, newsList, onClickLike } = props;
   const router = useRouter();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const login = useRecoilValue(loginState);
 
   return (
-    <StNewsList>
-      {newsList.map(({ id, title, category, channel, thumbnail, reportDate, isFavorite = false }) => {
+    <StNewsList type={type}>
+      {newsList.map(({ id, title, category, channel, thumbnail, reportDate, isFavorite, haveGuide }) => {
         return (
-          <StNewsWrapper key={id} onClick={() => router.push(`/learn/${id}`)}>
-            <StThumbnail>
+          <StNewsWrapper
+            key={id}
+            onClick={() => {
+              setIsGuide(type === 'guide' ? true : false);
+              router.push(`/learn/${id}`);
+            }}>
+            {type === 'guide' && (
+              <StGuideTitle>
+                <ImageDiv className="guide-logo" src={icSpeechGuideLogo} alt="" />
+                <p>스피치 가이드</p>
+              </StGuideTitle>
+            )}
+            <StThumbnail type={type}>
               <ImageDiv
                 className="thumbnail"
                 src={thumbnail}
@@ -48,10 +63,16 @@ function NewsList(props: NewsListProps) {
               />
             </StThumbnail>
             <StInfo>
-              <StTitle>{title}</StTitle>
+              <StTitle haveGuide={haveGuide}>{title}</StTitle>
               <StCaption>
                 {channel} | {category} | {reportDate.replaceAll('-', '.')}
               </StCaption>
+              {haveGuide && type === 'normal' && (
+                <StSpeechGuide>
+                  <ImageDiv className="guide-logo" src={icSpeechGuideLogo} alt="" />
+                  <p>스피치 가이드</p>
+                </StSpeechGuide>
+              )}
             </StInfo>
           </StNewsWrapper>
         );
@@ -63,11 +84,17 @@ function NewsList(props: NewsListProps) {
 
 export default NewsList;
 
-const StNewsList = styled.section`
+const StNewsList = styled.section<{ type: string }>`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-row-gap: 8rem;
   grid-column-gap: 2rem;
+
+  ${({ type }) =>
+    type === 'guide' &&
+    css`
+      grid-column-gap: 3rem;
+    `}
 
   @media (max-width: 1280px) {
     grid-template-columns: repeat(3, 1fr);
@@ -89,6 +116,7 @@ const StNewsList = styled.section`
 const StNewsWrapper = styled.article`
   display: flex;
   flex-direction: column;
+  position: relative;
   gap: 1.6rem;
 
   width: 100%;
@@ -99,10 +127,16 @@ const StNewsWrapper = styled.article`
   }
 `;
 
-const StThumbnail = styled.div`
+const StThumbnail = styled.div<{ type: string }>`
   position: relative;
   border-radius: 1rem;
   cursor: pointer;
+
+  ${({ type }) =>
+    type === 'guide' &&
+    css`
+      outline: 0.5rem solid ${COLOR.MAIN_BLUE};
+    `}
 
   &::before {
     position: absolute;
@@ -139,6 +173,8 @@ const StThumbnail = styled.div`
   }
 
   @media (max-width: 500px) {
+    margin-bottom: 0;
+
     & > div {
       min-width: 21.9rem;
       min-height: 12.2rem;
@@ -146,28 +182,92 @@ const StThumbnail = styled.div`
   }
 `;
 
+const StGuideTitle = styled.div`
+  display: flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  padding: 0.4rem 1.6rem 1.2rem 0.4rem;
+  width: 13rem;
+  height: 4rem;
+  background-image: url('/assets/icons/ic_speech_guide_corner.svg');
+
+  color: ${COLOR.WHITE};
+  ${FONT_STYLES.SB_16_CAPTION}
+  z-index: 1;
+`;
+
 const StInfo = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  @media (max-width: 500px) {
+    ${FONT_STYLES.M_15_CAPTION};
+  }
 `;
 
-const StTitle = styled.p`
+const StTitle = styled.p<{ haveGuide: boolean }>`
   height: 5.8rem;
   ${FONT_STYLES.SB_21_BODY};
   color: ${COLOR.BLACK};
   cursor: pointer;
 
   @media (max-width: 500px) {
+    width: 21.7rem;
     ${FONT_STYLES.SB_18_CAPTION};
+
+    ${({ haveGuide }) =>
+      haveGuide &&
+      css`
+        height: 5.6rem;
+        word-wrap: break-word;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+      `}
   }
 `;
 
 const StCaption = styled.div`
+  margin-top: 1.6rem;
   ${FONT_STYLES.M_18_CAPTION};
   color: ${COLOR.GRAY_30};
 
   @media (max-width: 500px) {
+    margin-top: 0;
     ${FONT_STYLES.M_15_CAPTION};
+  }
+`;
+
+const StSpeechGuide = styled.div`
+  display: flex;
+  margin-top: 1.2rem;
+  padding: 0.5rem 0.8rem 0.6rem 0.4rem;
+  width: 12.2rem;
+  height: 3.3rem;
+  border-radius: 0.6rem;
+
+  background-color: ${COLOR.MAIN_BLUE};
+  color: ${COLOR.WHITE};
+  ${FONT_STYLES.SB_16_CAPTION}
+
+  & > .guide-logo {
+    display: flex;
+    align-items: center;
+  }
+
+  @media (max-width: 500px) {
+    margin-top: 0.8rem;
+    width: 9.3rem;
+    height: 2.6rem;
+    ${FONT_STYLES.SB_12_CAPTION};
+
+    & > .guide-logo {
+      width: 1.6rem;
+      height: 1.6rem;
+    }
   }
 `;

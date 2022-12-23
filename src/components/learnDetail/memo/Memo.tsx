@@ -10,6 +10,8 @@ import { MemoState } from '@src/pages/learn/[id]';
 import ImageDiv from '@src/components/common/ImageDiv';
 import { icArrowUp } from 'public/assets/icons';
 import { MemoData } from '@src/services/api/types/learn-detail';
+import { useRecoilValue } from 'recoil';
+import { isGuideAtom } from '@src/stores/newsState';
 
 interface MemoProps {
   scriptId: number;
@@ -22,6 +24,7 @@ interface MemoProps {
 }
 
 function Memo(props: MemoProps) {
+  const isGuide = useRecoilValue(isGuideAtom);
   const { scriptId, memoData, memoState, setMemoList, setMemoState, setIsConfirmOpen, setConfirmModalText } = props;
   const { id, keyword, content } = memoData;
   const [foldButton, setFoldButton] = useState(false);
@@ -63,12 +66,14 @@ function Memo(props: MemoProps) {
       ) : (
         <>
           <StContent>{showContent()}</StContent>
-          <MemoDotButton
-            memoData={memoData}
-            setMemoState={setMemoState}
-            setIsConfirmOpen={setIsConfirmOpen}
-            setConfirmModalText={setConfirmModalText}
-          />
+          {!isGuide && (
+            <MemoDotButton
+              memoData={memoData}
+              setMemoState={setMemoState}
+              setIsConfirmOpen={setIsConfirmOpen}
+              setConfirmModalText={setConfirmModalText}
+            />
+          )}
         </>
       )}
     </StMemo>
