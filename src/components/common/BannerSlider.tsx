@@ -153,6 +153,22 @@ const StBannerText = styled.div`
     padding-left: 6.4rem;
     min-width: 36.7rem;
   }
+
+  @media (max-width: 500px) {
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    width: 100%;
+    text-align: center;
+
+    & > h1 {
+      ${FONT_STYLES.SB_28_HEADLINE}
+    }
+
+    & > p {
+      display: none;
+    }
+  }
 `;
 
 const StSlideButton = styled.div`
@@ -191,5 +207,9 @@ const StSlideButton = styled.div`
 
   @media (max-width: 960px) {
     left: 6.4rem;
+  }
+
+  @media (max-width: 500px) {
+    display: none;
   }
 `;
