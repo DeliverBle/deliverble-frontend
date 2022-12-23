@@ -18,6 +18,7 @@ export function learnDataRemote(): LearnService {
             thumbnail: video.thumbnail,
             reportDate: video.reportDate,
             isFavorite: video.isFavorite,
+            haveGuide: video.haveGuide,
           }))
         : [],
       paging: {
@@ -41,6 +42,7 @@ export function learnDataRemote(): LearnService {
             channel: video.channel,
             thumbnail: video.thumbnail,
             reportDate: video.reportDate,
+            haveGuide: video.haveGuide,
           }))
         : [],
       paging: {

@@ -33,7 +33,7 @@ function VideoContainer(props: VideoContainerProps) {
         {tab === 'isFavorite' ? (
           videoList.length ? (
             <StNewsList>
-              <NewsList newsList={videoList} onClickLike={onClickLike} />
+              <NewsList newsList={videoList} onClickLike={onClickLike} type="normal" />
               <Pagination
                 listSize={LIST_SIZE}
                 blockSize={BLOCK_SIZE}

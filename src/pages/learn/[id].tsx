@@ -22,6 +22,7 @@ import {
   INITIAL_MEMO,
   DELETE_SCRIPT_CONFIRM_MODAL_TEXT,
   SCRIPT_MAX_COUNT,
+  SPEECH_GUIDE_TOOLTIP_TEXT,
   CONTEXT_MENU_WIDTH,
   ABSOLUTE_RIGHT_LIMIT,
 } from '@src/utils/constant';
@@ -35,14 +36,16 @@ import {
   icSpacingClicked,
   icSpacingDefault,
   icSpacingHover,
+  icSpeechGuideInfo,
   icXButton,
 } from 'public/assets/icons';
 import React, { useEffect, useRef, useState } from 'react';
 import YouTube from 'react-youtube';
-import { useRecoilValue } from 'recoil';
-import styled from 'styled-components';
+import { useRecoilValue, useRecoilState } from 'recoil';
+import styled, { css } from 'styled-components';
 import { imgHighlightTooltip, imgSpacingTooltip } from 'public/assets/images';
 import { useMutation } from 'react-query';
+import { isGuideAtom } from '@src/stores/newsState';
 
 export interface MemoState {
   newMemoId: number;
@@ -60,6 +63,7 @@ function LearnDetail() {
   const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
   const router = useRouter();
   const { id: detailId } = router.query;
+  const [isGuide, setIsGuide] = useRecoilState(isGuideAtom);
   const isLoggedIn = useRecoilValue(loginState);
   const [videoData, setVideoData] = useState<VideoData>();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -77,6 +81,7 @@ function LearnDetail() {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isHighlightOver, setIsHighlightOver] = useState<boolean>(false);
   const [isSpacingOver, setIsSpacingOver] = useState<boolean>(false);
+  const [isGuideOver, setIsGuideOver] = useState<boolean>(false);
   const [highlightIndex, setHighlightIndex] = useState<number>(INITIAL_NUMBER);
   const [scriptTitleList, setScriptTitleList] = useState<Name[]>([]);
   const [clickedScriptTitleIndex, setClickedScriptTitleIndex] = useState(0);
@@ -127,7 +132,7 @@ function LearnDetail() {
           return stringLength;
         }
         if (childNodes[i].textContent !== '/') {
-          stringLength += childNodes[i]?.textContent?.length ?? 0;
+          stringLength += childNodes[i]?.textContent?.replaceAll('/', '').length ?? 0;
         }
       }
     }
@@ -284,21 +289,32 @@ function LearnDetail() {
   useEffect(() => {
     (async () => {
       const id = Number(detailId);
-      const data = isLoggedIn
-        ? await api.learnDetailService.getPrivateVideoData(id)
-        : await api.learnDetailService.getPublicVideoData(id);
+      let data;
+      if (isGuide) {
+        data = isLoggedIn
+          ? await api.learnDetailService.getPrivateSpeechGuideData(id)
+          : await api.learnDetailService.getPublicSpeechGuideData(id);
+      } else {
+        data = isLoggedIn
+          ? await api.learnDetailService.getPrivateVideoData(id)
+          : await api.learnDetailService.getPublicVideoData(id);
+      }
       setVideoData(data);
       const { memos, names } = data;
+      if (isGuide && memos) {
+        setMemoList(memos);
+        return;
+      }
       if (isLoggedIn && memos && names) {
         setMemoList(memos);
         setScriptTitleList(names);
       }
     })();
-  }, [isLoggedIn, detailId, isEditing]);
+  }, [isLoggedIn, detailId, isEditing, isGuide]);
 
   useEffect(() => {
     (async () => {
-      if (isLoggedIn) {
+      if (isLoggedIn && !isGuide) {
         const data = await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedScriptTitleIndex);
         setVideoData(data);
         const { memos, names } = data;
@@ -308,7 +324,7 @@ function LearnDetail() {
         }
       }
     })();
-  }, [clickedScriptTitleIndex, detailId, isLoggedIn]);
+  }, [clickedScriptTitleIndex, detailId, isLoggedIn, isGuide]);
 
   useEffect(() => {
     if (!player) return;
@@ -359,9 +375,21 @@ function LearnDetail() {
       <NavigationBar />
       <StLearnDetail>
         <ImageDiv onClick={() => router.push(prevLink)} src={icXButton} className="close" layout="fill" alt="x" />
-        {videoData?.names && (
-          <StScriptTitleContainer>
-            {videoData.names.map(({ id, name }, i) => (
+        <StScriptTitleContainer>
+          {videoData?.haveGuide && (
+            <StGuideTitle isGuide={isGuide} onClick={() => !isGuide && setIsGuide((prev) => !prev)}>
+              <p>스피치 가이드</p>
+              <ImageDiv
+                className="guide-info"
+                src={icSpeechGuideInfo}
+                alt="스피치 가이드 설명"
+                onMouseOver={() => setIsGuideOver(true)}
+                onMouseOut={() => setIsGuideOver(false)}
+              />
+            </StGuideTitle>
+          )}
+          {videoData?.names &&
+            videoData.names.map(({ id, name }, i) => (
               <ScriptTitle
                 key={id}
                 name={name}
@@ -377,16 +405,15 @@ function LearnDetail() {
                 onScriptRename={mutateRenameScript}
               />
             ))}
-            {scriptTitleList.length > 0 && scriptTitleList.length !== SCRIPT_MAX_COUNT && (
-              <StScriptAddButton onClick={handleScriptAdd} />
-            )}
-          </StScriptTitleContainer>
-        )}
+          {videoData?.names && scriptTitleList.length > 0 && scriptTitleList.length !== SCRIPT_MAX_COUNT && (
+            <StScriptAddButton onClick={handleScriptAdd} />
+          )}
+        </StScriptTitleContainer>
         {videoData && (
-          <StLearnBox>
+          <StLearnBox isGuide={isGuide}>
             <VideoDetail {...videoData} setIsModalOpen={setIsModalOpen} />
             <main>
-              <StLearnSection>
+              <StLearnSection isGuide={isGuide}>
                 <article>
                   <div ref={learnRef}>
                     {!isEditing &&
@@ -395,7 +422,7 @@ function LearnDetail() {
                           ref={contextMenuRef}
                           onContextMenu={(e) => {
                             e.preventDefault();
-                            handleRightClick(e, videoData.scriptsId, order);
+                            !isGuide && handleRightClick(e, videoData.scriptsId, order);
                           }}
                           key={id}
                           onClick={() => player?.seekTo(startTime, true)}
@@ -423,75 +450,77 @@ function LearnDetail() {
                     )}
                   </div>
                   <div>
-                    <StButtonContainer>
-                      <StButton
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (getLoginStatus() === '') {
-                            setIsLoginModalOpen(true);
-                          } else {
-                            isHighlight ? setIsHighlight(false) : setIsHighlight(true);
-                            setIsSpacing(false);
-                            setIsHighlightOver(false);
-                          }
-                        }}>
-                        {isHighlight ? (
-                          <ImageDiv className="function-button" src={icHighlighterClicked} alt="하이라이트" />
-                        ) : (
-                          <>
-                            <ImageDiv className="function-button" src={icHighlighterHover} alt="하이라이트" />
-                            <ImageDiv
-                              className="default function-button"
-                              src={icHighlighterDefault}
-                              alt="하이라이트"
-                              onMouseOver={() => {
-                                setIsHighlightOver(true);
-                              }}
-                              onMouseOut={(e) => {
-                                e.stopPropagation();
-                                setIsHighlightOver(false);
-                              }}
-                            />
-                          </>
-                        )}
-                      </StButton>
-                      <StButton
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (getLoginStatus() === '') {
-                            setIsLoginModalOpen(true);
-                          } else {
-                            isSpacing ? setIsSpacing(false) : setIsSpacing(true);
-                            setIsHighlight(false);
-                            setIsSpacingOver(false);
-                          }
-                        }}>
-                        {isSpacing ? (
-                          <ImageDiv className="spacing function-button" src={icSpacingClicked} alt="끊어 읽기" />
-                        ) : (
-                          <>
-                            <ImageDiv
-                              className="spacing function-button spacing-hover"
-                              src={icSpacingHover}
-                              alt="끊어 읽기"
-                            />
-                            <ImageDiv
-                              className="spacing default function-button"
-                              src={icSpacingDefault}
-                              alt="끊어 읽기"
-                              onMouseOver={(e) => {
-                                e.stopPropagation();
-                                setIsSpacingOver(true);
-                              }}
-                              onMouseOut={(e) => {
-                                e.stopPropagation();
-                                setIsSpacingOver(false);
-                              }}
-                            />
-                          </>
-                        )}
-                      </StButton>
-                    </StButtonContainer>
+                    {!isGuide && (
+                      <StButtonContainer>
+                        <StButton
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (getLoginStatus() === '') {
+                              setIsLoginModalOpen(true);
+                            } else {
+                              isHighlight ? setIsHighlight(false) : setIsHighlight(true);
+                              setIsSpacing(false);
+                              setIsHighlightOver(false);
+                            }
+                          }}>
+                          {isHighlight ? (
+                            <ImageDiv className="function-button" src={icHighlighterClicked} alt="하이라이트" />
+                          ) : (
+                            <>
+                              <ImageDiv className="function-button" src={icHighlighterHover} alt="하이라이트" />
+                              <ImageDiv
+                                className="default function-button"
+                                src={icHighlighterDefault}
+                                alt="하이라이트"
+                                onMouseOver={() => {
+                                  setIsHighlightOver(true);
+                                }}
+                                onMouseOut={(e) => {
+                                  e.stopPropagation();
+                                  setIsHighlightOver(false);
+                                }}
+                              />
+                            </>
+                          )}
+                        </StButton>
+                        <StButton
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (getLoginStatus() === '') {
+                              setIsLoginModalOpen(true);
+                            } else {
+                              isSpacing ? setIsSpacing(false) : setIsSpacing(true);
+                              setIsHighlight(false);
+                              setIsSpacingOver(false);
+                            }
+                          }}>
+                          {isSpacing ? (
+                            <ImageDiv className="spacing function-button" src={icSpacingClicked} alt="끊어 읽기" />
+                          ) : (
+                            <>
+                              <ImageDiv
+                                className="spacing function-button spacing-hover"
+                                src={icSpacingHover}
+                                alt="끊어 읽기"
+                              />
+                              <ImageDiv
+                                className="spacing default function-button"
+                                src={icSpacingDefault}
+                                alt="끊어 읽기"
+                                onMouseOver={(e) => {
+                                  e.stopPropagation();
+                                  setIsSpacingOver(true);
+                                }}
+                                onMouseOut={(e) => {
+                                  e.stopPropagation();
+                                  setIsSpacingOver(false);
+                                }}
+                              />
+                            </>
+                          )}
+                        </StButton>
+                      </StButtonContainer>
+                    )}
                   </div>
                 </article>
                 <StTooltipContainer isHighlightOver={isHighlightOver} isSpacingOver={isSpacingOver}>
@@ -558,6 +587,13 @@ function LearnDetail() {
                 </StMemoContainer>
               </aside>
             </main>
+            {isGuideOver && (
+              <StGuideTooltip>
+                <p>{SPEECH_GUIDE_TOOLTIP_TEXT.title}</p>
+                <p>{SPEECH_GUIDE_TOOLTIP_TEXT.description}</p>
+              </StGuideTooltip>
+            )}
+            {isGuide && <StLearnButton onClick={() => setIsGuide((prev) => !prev)}>학습하러 가기</StLearnButton>}
           </StLearnBox>
         )}
         {isModalOpen && <GuideModal closeModal={() => setIsModalOpen(false)} />}
@@ -579,7 +615,7 @@ function LearnDetail() {
 export default LearnDetail;
 
 const StLearnDetail = styled.div`
-  padding: 14.8rem 10rem 15rem 10rem;
+  padding: 10.2rem 10rem 15rem 10rem;
   min-height: 100vh;
   background: rgba(229, 238, 255, 0.85);
   backdrop-filter: blur(2.8rem);
@@ -597,10 +633,43 @@ const StLearnDetail = styled.div`
 const StScriptTitleContainer = styled.div`
   margin: 0 auto;
   width: 172rem;
+  height: 4.8rem;
   padding-left: 5.6rem;
   display: flex;
   align-items: center;
   gap: 0.8rem;
+`;
+
+const StGuideTitle = styled.div<{ isGuide: boolean }>`
+  display: flex;
+  align-items: center;
+  position: relative;
+
+  padding: 1rem 0 1rem 2.4rem;
+  width: 19.2rem;
+  height: 4.8rem;
+  border-radius: 1.6rem 1.6rem 0 0;
+  background-color: ${COLOR.MAIN_BLUE};
+
+  color: ${COLOR.WHITE};
+  ${FONT_STYLES.B_20_BODY};
+
+  ${({ isGuide }) =>
+    !isGuide &&
+    css`
+      opacity: 0.6;
+      cursor: pointer;
+
+      &: hover {
+        opacity: 0.8;
+      }
+    `}
+
+  & > .guide-info {
+    display: flex;
+    align-items: center;
+    padding-left: 1.2rem;
+  }
 `;
 
 const StScriptAddButton = styled.button`
@@ -615,9 +684,11 @@ const StScriptAddButton = styled.button`
   }
 `;
 
-const StLearnBox = styled.div`
+const StLearnBox = styled.div<{ isGuide: boolean }>`
   display: flex;
   flex-direction: column;
+  position: relative;
+
   margin: 0 auto;
   width: 172rem;
   height: 123.6rem;
@@ -630,9 +701,68 @@ const StLearnBox = styled.div`
     display: flex;
     gap: 4.8rem;
   }
+
+  ${({ isGuide }) => {
+    return (
+      isGuide &&
+      css`
+        outline: 0.6rem solid ${COLOR.MAIN_BLUE};
+      `
+    );
+  }}
 `;
 
-const StLearnSection = styled.section`
+const StGuideTooltip = styled.div`
+  position: absolute;
+  left: 178px;
+  top: 1.6rem;
+
+  padding: 1.6rem;
+  width: 46.3rem;
+  height: 10.9rem;
+  border-radius: 0.6rem;
+
+  background: rgba(22, 15, 53, 0.7);
+  color: white;
+  white-space: pre-line;
+
+  & > p:first-child {
+    ${FONT_STYLES.B_20_BODY}
+  }
+
+  & > p:last-child {
+    ${FONT_STYLES.M_16_CAPTION}
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 2.6rem;
+    bottom: 100%;
+
+    border: solid transparent;
+    border-width: 0.8rem;
+    border-bottom-color: rgba(22, 15, 53, 0.7);
+    pointer-events: none;
+  }
+`;
+
+const StLearnButton = styled.button`
+  position: absolute;
+  top: 98.2rem;
+  left: 75.6rem;
+
+  width: 20.9rem;
+  height: 8.2rem;
+  border-radius: 4.8rem;
+
+  background-color: ${COLOR.MAIN_BLUE};
+  box-shadow: 0.4rem 0.4rem 2rem rgba(22, 15, 53, 0.15);
+  color: ${COLOR.WHITE};
+  ${FONT_STYLES.SB_24_HEADLINE}
+`;
+
+const StLearnSection = styled.section<{ isGuide: boolean }>`
   display: flex;
   flex-direction: column;
   padding-bottom: 8rem;
@@ -683,7 +813,7 @@ const StLearnSection = styled.section`
       justify-content: flex-end;
       padding-top: 1.8rem;
       margin-top: 2.4rem;
-      border-top: 0.2rem solid ${COLOR.GRAY_10};
+      border-top: ${({ isGuide }) => !isGuide && `0.2rem solid ${COLOR.GRAY_10}`};
     }
   }
 `;

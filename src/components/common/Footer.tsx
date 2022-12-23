@@ -92,6 +92,7 @@ const StLogo = styled.div`
     min-width: 35.1rem;
     color: ${COLOR.MAIN_BLUE};
     ${FONT_STYLES.SB_24_HEADLINE};
+    white-space: pre-line;
   }
 
   .social-link {
