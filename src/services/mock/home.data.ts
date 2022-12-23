@@ -8,6 +8,7 @@ export const HOME_DATA = {
       thumbnail: 'https://img.youtube.com/vi/mDW6crrUVpA/hqdefault.jpg',
       reportDate: '2022-07-06',
       isFavorite: true,
+      haveGuide: false,
     },
     {
       id: 8,
@@ -17,6 +18,7 @@ export const HOME_DATA = {
       thumbnail: 'https://img.youtube.com/vi/1SRz_AE8R9E/hqdefault.jpg',
       reportDate: '2022-07-06',
       isFavorite: true,
+      haveGuide: false,
     },
     {
       id: 3,
@@ -26,6 +28,7 @@ export const HOME_DATA = {
       thumbnail: 'https://img.youtube.com/vi/45IAfzlB_tQ/hqdefault.jpg',
       reportDate: '2022-07-06',
       isFavorite: false,
+      haveGuide: false,
     },
     {
       id: 4,
@@ -35,6 +38,7 @@ export const HOME_DATA = {
       thumbnail: 'https://img.youtube.com/vi/sId-zbgWuZU/hqdefault.jpg',
       reportDate: '2022-07-05',
       isFavorite: false,
+      haveGuide: false,
     },
     {
       id: 9,
@@ -44,6 +48,7 @@ export const HOME_DATA = {
       thumbnail: 'https://img.youtube.com/vi/WtuMp5G3yNo/hqdefault.jpg',
       reportDate: '2022-07-05',
       isFavorite: false,
+      haveGuide: false,
     },
     {
       id: 2,
@@ -53,6 +58,7 @@ export const HOME_DATA = {
       thumbnail: 'https://img.youtube.com/vi/ee-0DeY21rU/hqdefault.jpg',
       reportDate: '2022-06-30',
       isFavorite: false,
+      haveGuide: true,
     },
     {
       id: 14,
@@ -62,6 +68,7 @@ export const HOME_DATA = {
       thumbnail: 'https://img.youtube.com/vi/srjLy3NQO6w/hqdefault.jpg',
       reportDate: '2022-06-21',
       isFavorite: false,
+      haveGuide: true,
     },
     {
       id: 1,
@@ -71,6 +78,7 @@ export const HOME_DATA = {
       thumbnail: 'https://img.youtube.com/vi/S_gtbu2VRlI/hqdefault.jpg',
       reportDate: '2022-06-19',
       isFavorite: false,
+      haveGuide: true,
     },
   ],
 };

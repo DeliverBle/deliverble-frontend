@@ -24,6 +24,7 @@ export type VideoData = {
   link: string;
   reportDate: string;
   isFavorite: boolean;
+  haveGuide: boolean;
   startTime: number;
   endTime: number;
   scriptsId: number;
@@ -31,6 +32,7 @@ export type VideoData = {
   scripts: Script[];
   memos?: MemoData[];
   names?: Name[];
+  name?: string;
 };
 
 export type MemoData = {

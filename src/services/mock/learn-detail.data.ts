@@ -10,6 +10,7 @@ export const LEARN_DETAIL_DATA = {
     startTime: 0,
     endTime: 27.16,
     scriptsId: 22,
+    haveGuide: false,
     tags: [
       {
         name: '범죄',

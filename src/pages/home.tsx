@@ -12,6 +12,7 @@ import dynamic from 'next/dynamic';
 import { icLeftArrowWhite, icRightArrowWhite } from 'public/assets/icons';
 import { imgBannerVer1Mic } from 'public/assets/images';
 import { useEffect, useState } from 'react';
+import { useMediaQuery } from 'react-responsive';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 
@@ -19,7 +20,16 @@ function Home() {
   const isLoggedIn = useRecoilValue(loginState);
   const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
   const [newsList, setNewsList] = useState<VideoData[]>([]);
+  const [speechGuideList, setSpeechGuideList] = useState<VideoData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const smallBanner = useMediaQuery({
+    query: '(max-width: 500px)',
+  });
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     setIsLoading(true);
@@ -27,25 +37,21 @@ function Home() {
       const { videoList } = isLoggedIn
         ? await api.homeService.getPrivateVideoData()
         : await api.homeService.getPublicVideoData();
+      const { videoList: guideList } = isLoggedIn
+        ? await api.homeService.getPrivateSpeechGuideData()
+        : await api.homeService.getPublicSpeechGuideData();
       setNewsList(videoList);
+      setSpeechGuideList(guideList);
     })();
     setIsLoading(false);
   }, [isLoggedIn]);
 
   const handleClickLike = async (id: number) => {
     const { id: likeId, isFavorite } = await api.likeService.postLikeData(id);
-
-    setNewsList((prev) => {
-      return prev.map((news) => {
-        if (news.id === likeId) {
-          return {
-            ...news,
-            isFavorite,
-          };
-        }
-        return news;
-      });
-    });
+    const setterList = [setNewsList, setSpeechGuideList];
+    setterList.map((setter) =>
+      setter((prev) => prev.map((news) => (news.id === likeId ? { ...news, isFavorite } : news))),
+    );
   };
 
   return (
@@ -72,13 +78,23 @@ function Home() {
           </StBannerText>
           <ImageDiv className="mic" src={imgBannerVer1Mic} alt="" layout="fill" />
         </StBanner>
-        <StNews>
+        <StNews type="guide">
+          <h3>스스로 학습하기 전, {mounted && smallBanner && <br />}스피치 가이드를 살펴보세요.</h3>
+          <div>
+            {isLoading ? (
+              <VideoListSkeleton itemNumber={4} />
+            ) : (
+              <NewsList onClickLike={handleClickLike} newsList={speechGuideList} type="guide" />
+            )}
+          </div>
+        </StNews>
+        <StNews type="normal">
           <h3>딜리버블의 추천 뉴스를 만나보세요.</h3>
           <div>
             {isLoading ? (
               <VideoListSkeleton itemNumber={8} />
             ) : (
-              <NewsList onClickLike={handleClickLike} newsList={newsList} />
+              <NewsList onClickLike={handleClickLike} newsList={newsList} type="normal" />
             )}
           </div>
         </StNews>
@@ -166,16 +182,8 @@ const StBannerText = styled.div`
   }
 
   @media (max-width: 960px) {
-    margin: 23.2rem 0 23.1rem 6.4rem;
+    margin-left: 6.4rem;
     min-width: 36.7rem;
-
-    & > h1 {
-      ${FONT_STYLES.SB_32_HEADLINE}
-    }
-
-    & > p {
-      ${FONT_STYLES.M_18_CAPTION}
-    }
   }
 `;
 
@@ -205,8 +213,9 @@ const StSlideButton = styled.div`
   }
 `;
 
-const StNews = styled.div`
-  padding: 0 0 30rem 16rem;
+const StNews = styled.div<{ type: string }>`
+  padding-left: 16rem;
+  padding-bottom: ${({ type }) => (type === 'guide' ? '20rem' : '30rem')};
 
   & > div {
     margin: 0 auto;
@@ -239,6 +248,7 @@ const StNews = styled.div`
     & > h3 {
       margin-bottom: 3.2rem;
       ${FONT_STYLES.SB_21_BODY};
+      zoom: 150%;
     }
   }
 `;
