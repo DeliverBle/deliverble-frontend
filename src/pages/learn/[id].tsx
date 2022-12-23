@@ -383,8 +383,8 @@ function LearnDetail() {
                 className="guide-info"
                 src={icSpeechGuideInfo}
                 alt="스피치 가이드 설명"
-                onMouseOver={() => setIsGuideOver(true)}
-                onMouseOut={() => setIsGuideOver(false)}
+                onMouseOver={() => isGuide && setIsGuideOver(true)}
+                onMouseOut={() => isGuide && setIsGuideOver(false)}
               />
             </StGuideTitle>
           )}

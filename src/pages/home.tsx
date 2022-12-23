@@ -170,16 +170,8 @@ const StBannerText = styled.div`
   }
 
   @media (max-width: 960px) {
-    margin: 23.2rem 0 23.1rem 6.4rem;
+    margin-left: 6.4rem;
     min-width: 36.7rem;
-
-    & > h1 {
-      ${FONT_STYLES.SB_32_HEADLINE}
-    }
-
-    & > p {
-      ${FONT_STYLES.M_18_CAPTION}
-    }
   }
 `;
 
