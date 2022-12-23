@@ -59,7 +59,7 @@ function ScriptEdit(props: ScriptEditProps) {
     }
   }, [highlightAlert]);
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent) => {
     const selection = window.getSelection();
     const range = selection?.getRangeAt(0);
     const startIndex = range?.startOffset;
@@ -73,7 +73,7 @@ function ScriptEdit(props: ScriptEditProps) {
     const isValidate = isLeftBlank || isRightBlank;
 
     let isOverlap = false;
-    if (selection?.type === 'Range') {
+    if (selection?.type === 'Range' && isHighlight) {
       const markList = document.getElementsByTagName('mark');
       for (let i = 0; i < markList.length; i++) {
         if (selection?.containsNode(markList[i], true) === true) {
@@ -87,7 +87,10 @@ function ScriptEdit(props: ScriptEditProps) {
     if (selection?.type === 'Caret' && isValidate && isSpacing) {
       const fragment = document.createDocumentFragment();
       const div = document.createElement('div');
-      isLeftBlank ? (div.innerHTML = '<span class=left >/</span>') : (div.innerHTML = '<span class=right >/</span>');
+      const uniqueId = e.clientX + '.' + e.clientY + '.' + selection.anchorOffset;
+      isLeftBlank
+        ? (div.innerHTML = `<span id=${uniqueId}>/</span>`)
+        : (div.innerHTML = `<span id=${uniqueId}>/</span>`);
 
       while (div.firstChild) {
         fragment.appendChild(div.firstChild);
@@ -101,13 +104,30 @@ function ScriptEdit(props: ScriptEditProps) {
         return;
       }
 
+      // 끊어읽기 위에 하이라이팅이 될 때
       if (text.includes('/')) {
-        text = text.split('/').join('<span>/</span>');
+        const spanIdList = [];
+        let textList = [];
+        let htmlText = '';
+        textList = text.split('/');
+        if (range?.commonAncestorContainer) {
+          for (let i = 0; i < range?.commonAncestorContainer?.childNodes?.length; i++) {
+            const childNodeItem = range?.commonAncestorContainer.childNodes[i];
+            if (childNodeItem.nodeName == 'SPAN') {
+              spanIdList.push(`<span id=${childNodeItem.firstChild?.parentElement?.id}>/</span>`);
+            }
+          }
+        }
+        for (let i = 0; i < textList.length - 1; i++) {
+          htmlText += textList[i] + spanIdList[i];
+        }
+        htmlText += textList[textList.length - 1];
+        text = htmlText;
       }
-
       const fragment = document.createDocumentFragment();
       const div = document.createElement('div');
-      div.innerHTML = '<mark>' + text + '</mark>';
+      const uniqueId = e.clientX + '.' + e.clientY + '.' + selection.anchorOffset; // id에 넣을 값
+      div.innerHTML = `<mark id=${uniqueId}>${text}</mark>`;
       while (div.firstChild) {
         fragment.appendChild(div.firstChild);
       }
@@ -132,25 +152,21 @@ function ScriptEdit(props: ScriptEditProps) {
     if (!isHighlightOverSpacing && anchorNode?.childNodes) {
       for (let i = 0; i < anchorNode?.childNodes.length; i++) {
         const childNodeItem = anchorNode?.childNodes[i];
+        const elementId = childNodeItem.firstChild?.parentElement?.id;
         switch (childNodeItem.nodeName) {
           case '#text':
             textValue += childNodeItem.nodeValue;
             break;
-
           case 'MARK':
             if (childNodeItem.textContent?.includes('/')) {
-              let text = childNodeItem.textContent;
-              if (text) {
-                text = text.split('/').join('<span>/</span>');
-              }
-              textValue += `<mark>${text}</mark>`;
+              const markInnerHTML = childNodeItem.firstChild?.parentElement?.innerHTML;
+              textValue += `<mark id=${elementId}>${markInnerHTML}</mark>`;
             } else {
-              textValue += `<mark>${childNodeItem.textContent}</mark>`;
+              textValue += `<mark id=${elementId}>${childNodeItem.textContent}</mark>`;
             }
             break;
-
           case 'SPAN':
-            textValue += '<span>/</span>';
+            textValue += `<span id=${elementId}>/</span>`;
             break;
         }
       }
@@ -162,7 +178,7 @@ function ScriptEdit(props: ScriptEditProps) {
     <>
       <StWrapper
         contentEditable="true"
-        onClick={handleClick}
+        onClick={(e) => handleClick(e)}
         suppressContentEditableWarning={true}
         spellCheck="false"
         onCut={(e) => e.preventDefault()}
