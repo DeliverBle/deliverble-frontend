@@ -31,6 +31,25 @@ export const SPEECH_GUIDE_TOOLTIP_TEXT = {
     어디를 강조해야 하는지, 무엇을 유의하며 읽어야 하는지 파악해보세요.`,
 };
 
+export const BANNER_LIST = [
+  {
+    mainText: `우리는 말하는 법은 배웠지만,
+    잘 말하는 법은 배우지 못했다!`,
+    subText: `딜리버블과 함께 잘 말하는 방법을 학습해요!`,
+  },
+  {
+    mainText: `아나운서 쉐도잉으로 
+    따라 하며 쑥쑥 느는 스피치 자신감!`,
+    subText: `잘 말하는 법, 어디서 배워야 할까? 
+    비싸고 귀찮은 학원 등록 없이, 아나운서를 따라하며 잘 말하는 법을 체화해 보세요!`,
+  },
+  {
+    mainText: `스피치 자신감을 채워줄
+    160개의 뉴스 영상`,
+    subText: `딜리버블이 제공하는 160개의 뉴스 영상과 스크립트로 연습에만 집중하세요!`,
+  },
+];
+
 export const HJID = 3283852;
 export const HJSV = 6;
 export const MEMO_CONTENT_MAX = 30;

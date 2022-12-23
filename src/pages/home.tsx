@@ -1,5 +1,5 @@
+import BannerSlider from '@src/components/common/BannerSlider';
 import Footer from '@src/components/common/Footer';
-import ImageDiv from '@src/components/common/ImageDiv';
 import NewsList from '@src/components/common/NewsList';
 import SEO from '@src/components/common/SEO';
 import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
@@ -9,8 +9,6 @@ import { loginState } from '@src/stores/loginState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import dynamic from 'next/dynamic';
-import { icLeftArrowWhite, icRightArrowWhite } from 'public/assets/icons';
-import { imgBannerVer1Mic } from 'public/assets/images';
 import { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { useRecoilValue } from 'recoil';
@@ -59,25 +57,7 @@ function Home() {
       <SEO title="Deliverble" />
       <NavigationBar />
       <StHome>
-        <StBanner>
-          <StBannerText>
-            <h1>
-              우리는 말하는 법은 배웠지만,
-              <br />잘 말하는 법은 배우지 못했다!
-            </h1>
-            <p>딜리버블과 함께 잘 말하는 법을 배워봐요!</p>
-            <StSlideButton>
-              <button>
-                <ImageDiv className="arrow" src={icLeftArrowWhite} alt="left-arrow" layout="fill" />
-              </button>
-              <p>1/3</p>
-              <button>
-                <ImageDiv className="arrow" src={icRightArrowWhite} alt="left-arrow" layout="fill" />
-              </button>
-            </StSlideButton>
-          </StBannerText>
-          <ImageDiv className="mic" src={imgBannerVer1Mic} alt="" layout="fill" />
-        </StBanner>
+        <BannerSlider />
         <StNews type="guide">
           <h3>스스로 학습하기 전, {mounted && smallBanner && <br />}스피치 가이드를 살펴보세요.</h3>
           <div>
@@ -113,104 +93,8 @@ const StPageWrapper = styled.div`
 `;
 
 const StHome = styled.div`
-  flex: 1;
-`;
-
-const StBanner = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: end;
   position: relative;
-
-  margin: 13.6rem 0 14.4rem 0;
-  height: 60rem;
-  background: url('/assets/images/img_banner_ver1_l.png') no-repeat left/cover;
-
-  .mic {
-    position: absolute;
-    right: 0rem;
-    width: 109.5rem;
-    height: 68.8rem;
-  }
-
-  @media (min-width: 501px) {
-    .mic {
-      transition: opacity 0.2s ease-in;
-    }
-  }
-
-  @media (max-width: 960px) {
-    .mic {
-      opacity: 0;
-    }
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: url('/assets/images/img_banner_ver1_m.png') no-repeat center / 960px;
-      transition: opacity 0.2s ease-in;
-    }
-  }
-
-  @media (max-width: 500px) {
-    &::before {
-      opacity: 0;
-      transition: opacity 0.2s ease-in;
-    }
-  }
-`;
-
-const StBannerText = styled.div`
-  margin: 16rem 0 10rem 16rem;
-
-  min-width: 50.4rem;
-  height: fit-content;
-
-  color: ${COLOR.WHITE};
-
-  & > h1 {
-    ${FONT_STYLES.SB_44_HEADLINE}
-  }
-
-  & > p {
-    padding-top: 3.2rem;
-    ${FONT_STYLES.M_24_HEADLINE}
-  }
-
-  @media (max-width: 960px) {
-    margin-left: 6.4rem;
-    min-width: 36.7rem;
-  }
-`;
-
-const StSlideButton = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  margin-top: 12.8rem;
-  width: 12.9rem;
-  height: 4rem;
-
-  background: rgba(22, 15, 53, 0.2);
-  border-radius: 20px;
-  ${FONT_STYLES.SB_16_CAPTION}
-  letter-spacing: 0.8rem;
-
-  & > p {
-    width: 4.1rem;
-    height: 2.2rem;
-  }
-
-  .arrow {
-    position: relative;
-    width: 2.4rem;
-    height: 2.4rem;
-  }
+  flex: 1;
 `;
 
 const StNews = styled.div<{ type: string }>`
