@@ -57,6 +57,11 @@ export function learnDetailDataMock(): LearnDetailService {
     return LEARN_DETAIL_DATA.VIDEO_DATA;
   };
 
+  const uploadRecordData = async () => {
+    await wait(500);
+    return LEARN_DETAIL_DATA.RECORD_DATA;
+  };
+
   return {
     getPrivateVideoData,
     getPublicVideoData,
@@ -69,6 +74,7 @@ export function learnDetailDataMock(): LearnDetailService {
     updateScriptNameData,
     getPrivateSpeechGuideData,
     getPublicSpeechGuideData,
+    uploadRecordData,
   };
 }
 

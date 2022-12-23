@@ -1,5 +1,5 @@
 import { LearnDetailService } from '../api/learn-detail';
-import { Script, SentenceData, Tag, MemoData, Name } from '../api/types/learn-detail';
+import { Script, SentenceData, Tag, MemoData, Name, UploadRecordData } from '../api/types/learn-detail';
 import { privateAPI, publicAPI } from './base';
 
 export function learnDetailDataRemote(): LearnDetailService {
@@ -249,6 +249,21 @@ export function learnDetailDataRemote(): LearnDetailService {
     } else throw '서버 통신 실패';
   };
 
+  const uploadRecordData = async (body: UploadRecordData) => {
+    const response = await privateAPI.post({
+      url: '/script/recording/upload',
+      data: body,
+    });
+    if (response.status === 200) {
+      return {
+        link: response.link,
+        name: response.name,
+        scriptId: response.scriptId,
+        date: response.date,
+      };
+    } else throw '서버 통신 실패';
+  };
+
   return {
     getPrivateVideoData,
     getPublicVideoData,
@@ -261,5 +276,6 @@ export function learnDetailDataRemote(): LearnDetailService {
     updateScriptNameData,
     getPublicSpeechGuideData,
     getPrivateSpeechGuideData,
+    uploadRecordData,
   };
 }

@@ -1,4 +1,4 @@
-import { SentenceData, VideoData, MemoData, Name } from './types/learn-detail';
+import { SentenceData, VideoData, MemoData, Name, UploadRecordData, UploadRecordResponse } from './types/learn-detail';
 
 export interface LearnDetailService {
   getPrivateVideoData(videoId: number, index?: number): Promise<VideoData>;
@@ -12,4 +12,5 @@ export interface LearnDetailService {
   updateScriptNameData(scriptId: number, name: string): Promise<Name>;
   getPublicSpeechGuideData(videoId: number): Promise<VideoData>;
   getPrivateSpeechGuideData(videoId: number): Promise<VideoData>;
+  uploadRecordData(body: UploadRecordData): Promise<UploadRecordResponse>;
 }

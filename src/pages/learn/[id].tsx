@@ -10,6 +10,7 @@ import ScriptEdit from '@src/components/learnDetail/ScriptEdit';
 import VideoDetail from '@src/components/learnDetail/VideoDetail';
 import LoginModal from '@src/components/login/LoginModal';
 import ScriptTitle from '@src/components/learnDetail/ScriptTitle';
+import RecordStatusBar from '@src/components/learnDetail/record/RecordStatusBar';
 import { api } from '@src/services/api';
 import { MemoData, Name, VideoData } from '@src/services/api/types/learn-detail';
 import { loginState } from '@src/stores/loginState';
@@ -452,6 +453,7 @@ function LearnDetail() {
                   <div>
                     {!isGuide && (
                       <StButtonContainer>
+                        <RecordStatusBar />
                         <StButton
                           onClick={(e) => {
                             e.stopPropagation();
