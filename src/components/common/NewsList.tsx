@@ -210,7 +210,7 @@ const StInfo = styled.div`
 
 const StTitle = styled.p<{ haveGuide: boolean }>`
   height: 5.8rem;
-  ${FONT_STYLES.SB_21_BODY};
+  ${FONT_STYLES.SB_24_HEADLINE};
   color: ${COLOR.BLACK};
   cursor: pointer;
 
