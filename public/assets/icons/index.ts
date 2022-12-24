@@ -48,3 +48,4 @@ export { default as icRecordMicActive } from './ic_record_mic_active.svg';
 export { default as icRecordMicDefault } from './ic_record_mic_default.svg';
 export { default as icRecordStart } from './ic_record_start.svg';
 export { default as icRecordStop } from './ic_record_stop.svg';
+export { default as icRecordSaveToast } from './ic_record_save_toast.svg';

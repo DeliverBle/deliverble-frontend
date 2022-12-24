@@ -1,7 +1,13 @@
 import ImageDiv from '@src/components/common/ImageDiv';
 import styled, { css } from 'styled-components';
 import { COLOR } from '@src/styles/color';
-import { icRecordMicDefault, icRecordMicActive, icRecordStart, icRecordStop } from 'public/assets/icons';
+import {
+  icRecordMicDefault,
+  icRecordMicActive,
+  icRecordStart,
+  icRecordStop,
+  icRecordSaveToast,
+} from 'public/assets/icons';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { useEffect, useState } from 'react';
 import { api } from '@src/services/api';
@@ -21,6 +27,7 @@ function RecordStatusBar(props: RecordStatusBarProps) {
   const [minutes, setMinutes] = useState<number>(0);
   const [seconds, setSeconds] = useState<number>(0);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
+  const [isSaved, setIsSaved] = useState(false);
 
   useEffect(() => {
     const currentTime = new Date().getTime();
@@ -74,6 +81,10 @@ function RecordStatusBar(props: RecordStatusBarProps) {
     intervalId && clearInterval(intervalId);
     setMinutes(0);
     setSeconds(0);
+    setIsSaved(true);
+    setTimeout(() => {
+      setIsSaved(false);
+    }, 2000);
   };
 
   const submitAudioFile = (audioUrl: BlobPart) => {
@@ -112,15 +123,15 @@ function RecordStatusBar(props: RecordStatusBarProps) {
   };
 
   return (
-    <>
-      <StRecordStatusBar isRecording={isRecording}>
+    <StRecordStatusBar>
+      <StRecordStatus isRecording={isRecording}>
         {isRecording ? (
           <ImageDiv src={icRecordMicActive} className="icRecordMic" layout="fill" alt="" />
         ) : (
           <ImageDiv src={icRecordMicDefault} className="icRecordMic" layout="fill" alt="" />
         )}
 
-        <RecordTime>
+        <RecordTime isRecording={isRecording}>
           {twoDigitsNumber(minutes)}:{twoDigitsNumber(handleTimerSecond(seconds))}
         </RecordTime>
         {isRecording ? (
@@ -128,14 +139,37 @@ function RecordStatusBar(props: RecordStatusBarProps) {
         ) : (
           <ImageDiv src={icRecordStart} className="icRecordStart" layout="fill" alt="녹음 시작" onClick={startRecord} />
         )}
-      </StRecordStatusBar>
-    </>
+      </StRecordStatus>
+      {isSaved && (
+        <>
+          <ImageDiv src={icRecordSaveToast} className="icRecordSaveToast" layout="fill" alt="" />
+          <p>저장되었습니다.</p>
+        </>
+      )}
+    </StRecordStatusBar>
   );
 }
 
 export default RecordStatusBar;
 
-const StRecordStatusBar = styled.div<{ isRecording: boolean }>`
+const StRecordStatusBar = styled.div`
+  p {
+    ${FONT_STYLES.SB_15_CAPTION};
+    color: ${COLOR.WHITE};
+    position: absolute;
+    bottom: 7rem;
+    left: 7rem;
+  }
+  .icRecordSaveToast {
+    position: absolute;
+    width: 11.4rem;
+    height: 4.9rem;
+    bottom: 5.2rem;
+    left: 6rem;
+  }
+`;
+
+const StRecordStatus = styled.div<{ isRecording: boolean }>`
   display: flex;
   align-items: center;
   width: 14.1rem;
@@ -165,10 +199,24 @@ const StRecordStatusBar = styled.div<{ isRecording: boolean }>`
     height: 3.2rem;
     margin-left: 0.8rem;
   }
+
+  .icRecordSaveToast {
+    position: relative;
+    width: 11.4rem;
+    height: 4.9rem;
+  }
 `;
 
-const RecordTime = styled.span`
+const RecordTime = styled.span<{ isRecording: boolean }>`
   ${FONT_STYLES.M_16_CAPTION};
-  color: ${COLOR.GRAY_30};
+  ${({ isRecording }) =>
+    isRecording
+      ? css`
+          color: ${COLOR.BLACK};
+        `
+      : css`
+          color: ${COLOR.GRAY_30};
+        `}
+
   margin-left: 0.8rem;
 `;
