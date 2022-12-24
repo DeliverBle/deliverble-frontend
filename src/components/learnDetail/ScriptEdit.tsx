@@ -155,9 +155,9 @@ function ScriptEdit(props: ScriptEditProps) {
     const range = selection?.getRangeAt(0);
     const startIndex = range?.startOffset;
 
-    const selectedDiv = range?.startContainer as Node;
+    const selectedDiv = range?.startContainer as HTMLElement;
     const serializer = new XMLSerializer();
-    const selectedLine = serializer.serializeToString(selectedDiv);
+    let selectedLine = serializer.serializeToString(selectedDiv);
 
     const isLeftBlank = startIndex && selectedLine[startIndex - 1] === ' ';
     const isRightBlank = startIndex && selectedLine[startIndex] === ' ';
@@ -179,13 +179,19 @@ function ScriptEdit(props: ScriptEditProps) {
       const fragment = document.createDocumentFragment();
       const div = document.createElement('div');
       const uniqueId = e.clientX + '.' + e.clientY + '.' + selection.anchorOffset;
-      isLeftBlank
-        ? (div.innerHTML = `<span id=${uniqueId}>/</span>`)
-        : (div.innerHTML = `<span id=${uniqueId}>/</span>`);
-
+      const blankIndex = isLeftBlank ? startIndex - 1 : startIndex;
+      if (blankIndex) {
+        selectedLine =
+          selectedLine.substring(0, blankIndex) +
+          `<span id=${uniqueId}>/</span>` +
+          selectedLine.substring(blankIndex + 1);
+      }
+      div.innerHTML = selectedLine;
       while (div.firstChild) {
         fragment.appendChild(div.firstChild);
       }
+      range.selectNode(range?.startContainer);
+      range?.deleteContents();
       range?.insertNode(fragment);
     } else if (!isOverlap && selection?.type === 'Range' && isHighlight) {
       let text = selection.toString();
@@ -369,14 +375,8 @@ const StScriptText = styled.div`
   & > span {
     font-size: 3.2rem;
     font-weight: 600;
-    color: #4e8aff;
-  }
-
-  & > .left {
+    color: ${COLOR.MAIN_BLUE};
     margin-right: 0.4rem;
-  }
-
-  & > .right {
     margin-left: 0.4rem;
   }
 
@@ -387,13 +387,7 @@ const StScriptText = styled.div`
       font-size: 3.2rem;
       font-weight: 600;
       color: ${COLOR.MAIN_BLUE};
-    }
-
-    & > .left {
       margin-right: 0.4rem;
-    }
-
-    & > .right {
       margin-left: 0.4rem;
     }
   }
