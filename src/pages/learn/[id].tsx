@@ -254,13 +254,13 @@ function LearnDetail() {
   };
 
   useEffect(() => {
-    setIsContextMenuOpen(false);
     setIsDeleteBtnClicked(false);
     const parentElement = contextHTML?.parentElement;
     const removeElement = document.getElementById(contextElementId);
 
     if (isDeleteBtnClicked) {
       deleteElem(parentElement, removeElement);
+      setIsContextMenuOpen(false);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
