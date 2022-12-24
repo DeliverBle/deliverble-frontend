@@ -851,6 +851,7 @@ const StButtonContainer = styled.div`
 
 const StTooltipContanier = styled.div<{ isHighlightOver: boolean; isSpacingOver: boolean }>`
   position: fixed;
+  z-index: 2;
 
   ${({ isHighlightOver }) =>
     isHighlightOver
