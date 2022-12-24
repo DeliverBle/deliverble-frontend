@@ -89,6 +89,14 @@ function LearnDetail() {
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const [contextMenuPoint, setContextMenuPoint] = useState({ x: 0, y: 0 });
   const [isContextMenuOpen, setIsContextMenuOpen] = useState<boolean>(false);
+  const [contextElementId, setContextElementId] = useState<string>('');
+  const [contextHTML, setContextHTML] = useState<HTMLElement>();
+  const [contextElementType, setContextElementType] = useState<string>('');
+  const [deletedType, setDeletedType] = useState<string>('');
+  const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState<boolean>(false);
+  const [order, setOrder] = useState<number>();
+  const [text, setText] = useState<string>();
+  const [firstLineId, setFirstLineId] = useState<number>();
 
   const handleContextMenuPoint = (target: HTMLDivElement) => {
     let x = 0;
@@ -159,7 +167,110 @@ function LearnDetail() {
     return styles;
   };
 
+  useEffect(() => {
+    setFirstLineId(videoData?.scripts[0].id);
+  }, [firstLineId, videoData?.scripts]);
+
+  const findLineOrder = (currentLineId: number) => {
+    if (currentLineId && firstLineId) {
+      const order = currentLineId - firstLineId + 1;
+      setOrder(order);
+    }
+  };
+
+  useEffect(() => {
+    (async () => {
+      if (order && text && videoData?.scriptsId) {
+        await api.learnDetailService.postSentenceData(
+          {
+            order,
+            text,
+          },
+          videoData?.scriptsId,
+          clickedScriptTitleIndex,
+        );
+      }
+    })();
+  }, [order, text, clickedScriptTitleIndex, videoData?.scriptsId]);
+
+  let isHighlightOverSpacing = false;
+  const nodeToText = (anchorNode: Node | null | undefined) => {
+    let textValue = '';
+    if (anchorNode?.nodeName === 'MARK') {
+      nodeToText(anchorNode.parentNode);
+      isHighlightOverSpacing = true;
+      return;
+    }
+
+    isHighlightOverSpacing = false;
+    if (!isHighlightOverSpacing && anchorNode?.childNodes) {
+      for (let i = 0; i < anchorNode?.childNodes.length; i++) {
+        const childNodeItem = anchorNode?.childNodes[i];
+        const elementId = childNodeItem.firstChild?.parentElement?.id;
+        switch (childNodeItem.nodeName) {
+          case '#text':
+            textValue += childNodeItem.nodeValue;
+            break;
+          case 'MARK':
+            if (childNodeItem.textContent?.includes('/')) {
+              const markInnerHTML = childNodeItem.firstChild?.parentElement?.innerHTML;
+              textValue += `<mark id=${elementId}>${markInnerHTML}</mark>`;
+            } else {
+              textValue += `<mark id=${elementId}>${childNodeItem.textContent}</mark>`;
+            }
+            break;
+          case 'SPAN':
+            textValue += `<span id=${elementId}>/</span>`;
+            break;
+        }
+      }
+      setText(textValue);
+    }
+  };
+
+  const deleteElem = (parentElement: HTMLElement | null | undefined, removeElement: HTMLElement | null | undefined) => {
+    const fragment = document.createDocumentFragment();
+    const div = document.createElement('div');
+
+    switch (deletedType) {
+      case 'MARK':
+        if (removeElement?.innerHTML) {
+          div.innerHTML = removeElement?.innerHTML;
+        }
+        while (div.firstChild) {
+          fragment.appendChild(div.firstChild);
+        }
+        removeElement?.replaceWith(fragment);
+        nodeToText(parentElement);
+        break;
+      case 'SPAN':
+        if (removeElement) {
+          parentElement?.removeChild(removeElement);
+        }
+        nodeToText(parentElement);
+        break;
+    }
+  };
+
+  useEffect(() => {
+    setIsContextMenuOpen(false);
+    setIsDeleteBtnClicked(false);
+    const parentElement = contextHTML?.parentElement;
+    const removeElement = document.getElementById(contextElementId);
+
+    if (isDeleteBtnClicked) {
+      deleteElem(parentElement, removeElement);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contextElementId, contextHTML?.parentElement, isDeleteBtnClicked]);
+
   const handleRightClick = (e: React.MouseEvent, scriptId: number, order: number) => {
+    const eventTarget = e.target as HTMLElement;
+    setContextElementId(eventTarget.id);
+    setContextHTML(eventTarget);
+    setContextElementType(eventTarget.nodeName);
+
     const contextTarget = e.target as HTMLDivElement;
     const startIndex = getHighlightIndex(contextTarget?.parentNode, contextTarget.innerText);
     const markTag = contextTarget.closest('mark');
@@ -327,7 +438,13 @@ function LearnDetail() {
   useEffect(() => {
     const handleClickOutside = (e: Event) => {
       const eventTarget = e.target as HTMLElement;
-      if (isContextMenuOpen && !contextMenuRef?.current?.contains(eventTarget) && eventTarget.tagName !== 'MARK') {
+
+      if (
+        isContextMenuOpen &&
+        !contextMenuRef?.current?.contains(eventTarget) &&
+        eventTarget.tagName !== 'MARK' &&
+        eventTarget.tagName !== 'SPAN'
+      ) {
         setIsContextMenuOpen(false);
         setHighlightIndex(INITIAL_NUMBER);
       }
@@ -395,6 +512,7 @@ function LearnDetail() {
                           onContextMenu={(e) => {
                             e.preventDefault();
                             handleRightClick(e, videoData.scriptsId, order);
+                            findLineOrder(id);
                           }}
                           key={id}
                           onClick={() => player?.seekTo(startTime, true)}
@@ -407,14 +525,18 @@ function LearnDetail() {
                       <ContextMenu
                         contextMenuPoint={contextMenuPoint}
                         clickedMemoId={clickedMemo?.id}
+                        contextElementType={contextElementType}
+                        isEditing={isEditing}
                         setMemoState={setMemoState}
                         setIsContextMenuOpen={setIsContextMenuOpen}
+                        setDeletedType={setDeletedType}
+                        setIsDeleteBtnClicked={setIsDeleteBtnClicked}
                       />
                     )}
                     {isEditing && (
                       <ScriptEdit
                         scriptsId={videoData.names ? videoData.names[clickedScriptTitleIndex].id : videoData.scriptsId}
-                        scripts={videoData.scripts}
+                        isEditing={isEditing}
                         isHighlight={isHighlight}
                         isSpacing={isSpacing}
                         clickedScriptTitleIndex={clickedScriptTitleIndex}
