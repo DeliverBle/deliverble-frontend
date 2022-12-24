@@ -11,6 +11,9 @@ import {
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { useEffect, useState } from 'react';
 import { api } from '@src/services/api';
+import { loginState } from '@src/stores/loginState';
+import { useRecoilValue } from 'recoil';
+import LoginModal from '@src/components/login/LoginModal';
 
 interface RecordStatusBarProps {
   scriptId: number;
@@ -28,6 +31,8 @@ function RecordStatusBar(props: RecordStatusBarProps) {
   const [seconds, setSeconds] = useState<number>(0);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
   const [isSaved, setIsSaved] = useState(false);
+  const isLoggedIn = useRecoilValue(loginState);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   useEffect(() => {
     const currentTime = new Date().getTime();
@@ -123,36 +128,52 @@ function RecordStatusBar(props: RecordStatusBarProps) {
   };
 
   return (
-    <StRecordStatusBar>
-      <StRecordStatus isRecording={isRecording}>
-        {isRecording ? (
-          <ImageDiv src={icRecordMicActive} className="icRecordMic" layout="fill" alt="" />
-        ) : (
-          <ImageDiv src={icRecordMicDefault} className="icRecordMic" layout="fill" alt="" />
-        )}
+    <>
+      <StRecordStatusBar
+        onClick={(e) => {
+          e.stopPropagation();
+          !isLoggedIn && setIsLoginModalOpen(true);
+        }}>
+        <StRecordStatus isRecording={isRecording}>
+          {isRecording ? (
+            <ImageDiv src={icRecordMicActive} className="icRecordMic" layout="fill" alt="" />
+          ) : (
+            <ImageDiv src={icRecordMicDefault} className="icRecordMic" layout="fill" alt="" />
+          )}
 
-        <RecordTime isRecording={isRecording}>
-          {twoDigitsNumber(minutes)}:{twoDigitsNumber(handleTimerSecond(seconds))}
-        </RecordTime>
-        {isRecording ? (
-          <ImageDiv src={icRecordStop} className="icRecordStop" layout="fill" alt="녹음 중지" onClick={stopRecord} />
-        ) : (
-          <ImageDiv src={icRecordStart} className="icRecordStart" layout="fill" alt="녹음 시작" onClick={startRecord} />
+          <RecordTime isRecording={isRecording}>
+            {twoDigitsNumber(minutes)}:{twoDigitsNumber(handleTimerSecond(seconds))}
+          </RecordTime>
+          {isRecording ? (
+            <ImageDiv src={icRecordStop} className="icRecordStop" layout="fill" alt="녹음 중지" onClick={stopRecord} />
+          ) : (
+            <ImageDiv
+              src={icRecordStart}
+              className="icRecordStart"
+              layout="fill"
+              alt="녹음 시작"
+              onClick={() => {
+                isLoggedIn && startRecord();
+              }}
+            />
+          )}
+        </StRecordStatus>
+        {isSaved && (
+          <>
+            <ImageDiv src={icRecordSaveToast} className="icRecordSaveToast" layout="fill" alt="" />
+            <p>저장되었습니다.</p>
+          </>
         )}
-      </StRecordStatus>
-      {isSaved && (
-        <>
-          <ImageDiv src={icRecordSaveToast} className="icRecordSaveToast" layout="fill" alt="" />
-          <p>저장되었습니다.</p>
-        </>
-      )}
-    </StRecordStatusBar>
+      </StRecordStatusBar>
+      {isLoginModalOpen && <LoginModal closeModal={() => setIsLoginModalOpen(false)} />}
+    </>
   );
 }
 
 export default RecordStatusBar;
 
 const StRecordStatusBar = styled.div`
+  cursor: pointer;
   p {
     ${FONT_STYLES.SB_15_CAPTION};
     color: ${COLOR.WHITE};
