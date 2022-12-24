@@ -5,7 +5,6 @@ import { icRecordMicDefault, icRecordMicActive, icRecordStart, icRecordStop } fr
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { useEffect, useState } from 'react';
 import { api } from '@src/services/api';
-import { useRouter } from 'next/router';
 
 interface RecordStatusBarProps {
   scriptId: number;
@@ -17,32 +16,20 @@ function RecordStatusBar(props: RecordStatusBarProps) {
   const [media, setMedia] = useState<MediaRecorder>();
   const [isRecording, setIsRecording] = useState(false);
   const [source, setSource] = useState<MediaStreamAudioSourceNode>();
-  const [audioUrl, setAudioUrl] = useState<Blob>();
   const [recordFormData, setRecordFormData] = useState<FormData>();
   const [recordStartTime, setRecordStartTime] = useState<number>(0);
-  const [minute, setMinute] = useState<number>(0);
-  const [second, setSecond] = useState<number>(0);
+  const [minutes, setMinutes] = useState<number>(0);
+  const [seconds, setSeconds] = useState<number>(0);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
-  const router = useRouter();
-  //get test.
-  //   useEffect(() => {
-  //     getRecordDataArr().then((dataArr) => {
-  //       console.log(dataArr);
-  //     });
-  //   }, []);
-
-  //   const getRecordDataArr = async () => {
-  //     const dataArr = await api.learnDetailService.getRecordData(63);
-  //     return dataArr;
-  //   };
 
   useEffect(() => {
-    setRecordStartTime(new Date().getTime());
+    const currentTime = new Date().getTime();
+    setRecordStartTime(currentTime);
   }, [isRecording, recordStartTime]);
 
-  const padNumber = (num: number) => {
-    return String(num).padStart(2, '0');
-  };
+  useEffect(() => {
+    recordFormData && api.learnDetailService.uploadRecordData(recordFormData);
+  }, [recordFormData]);
 
   const startRecord = () => {
     const audioCtx = new window.AudioContext();
@@ -61,28 +48,20 @@ function RecordStatusBar(props: RecordStatusBarProps) {
       makeSound(stream);
     });
 
-    // setStartClickTime(new Date().getTime());
     setIntervalId(
       setInterval(() => {
-        setSecond((prev) => prev + 1);
+        setSeconds((prev) => prev + 1);
         return;
       }, 1000),
     );
   };
 
-  const handleTimerSecond = (second: number) => {
-    if (second === 60) {
-      setSecond(0);
-      setMinute((prev) => prev + 1);
-    }
-    return second;
-  };
-
   const stopRecord = () => {
     media &&
       (media.ondataavailable = function (e: BlobEvent) {
-        setAudioUrl(e.data);
+        const audioUrl = e.data;
         setIsRecording(false);
+        submitAudioFile(audioUrl);
       });
 
     stream &&
@@ -92,11 +71,22 @@ function RecordStatusBar(props: RecordStatusBarProps) {
 
     media?.stop();
     source?.disconnect();
-    // setStopClickTime(new Date().getTime());
     intervalId && clearInterval(intervalId);
-    setMinute(0);
-    setSecond(0);
-    submitAudioFile();
+    setMinutes(0);
+    setSeconds(0);
+  };
+
+  const submitAudioFile = (audioUrl: BlobPart) => {
+    const formData = new FormData();
+    const soundFile = audioUrl && new Blob([audioUrl], { type: 'mp3' });
+    const recordStopTime = new Date().getTime();
+    const duration = Math.floor((recordStopTime - recordStartTime) / 1000);
+    soundFile && formData.append('file', soundFile);
+    formData.append('scriptId', scriptId.toString());
+    formData.append('endtime', duration.toString());
+    formData.append('date', getDate());
+    console.log(duration);
+    setRecordFormData(formData);
   };
 
   const getDate = () => {
@@ -109,22 +99,17 @@ function RecordStatusBar(props: RecordStatusBarProps) {
     return dateInForm + ' ' + time;
   };
 
-  const submitAudioFile = () => {
-    const formData = new FormData();
-    const soundFile = audioUrl && new Blob([audioUrl], { type: 'mp3' });
-    const recordStopTime = new Date().getTime();
-    const duration = Math.floor((recordStopTime - recordStartTime) / 1000);
-    console.log(soundFile);
-    soundFile && formData.append('file', soundFile);
-    formData.append('scriptId', scriptId.toString());
-    formData.append('endtime', duration.toString());
-    formData.append('date', getDate());
-    setRecordFormData(formData);
+  const handleTimerSecond = (second: number) => {
+    if (second === 60) {
+      setSeconds(0);
+      setMinutes((prev) => prev + 1);
+    }
+    return second;
   };
 
-  //   useEffect(() => {
-  //     recordFormData && api.learnDetailService.uploadRecordData(recordFormData);
-  //   }, [recordFormData]);
+  const twoDigitsNumber = (num: number) => {
+    return String(num).padStart(2, '0');
+  };
 
   return (
     <>
@@ -136,7 +121,7 @@ function RecordStatusBar(props: RecordStatusBarProps) {
         )}
 
         <RecordTime>
-          {padNumber(minute)}:{padNumber(handleTimerSecond(second))}
+          {twoDigitsNumber(minutes)}:{twoDigitsNumber(handleTimerSecond(seconds))}
         </RecordTime>
         {isRecording ? (
           <ImageDiv src={icRecordStop} className="icRecordStop" layout="fill" alt="녹음 중지" onClick={stopRecord} />
