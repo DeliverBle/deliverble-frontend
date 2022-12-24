@@ -26,18 +26,12 @@ function RecordStatusBar(props: RecordStatusBarProps) {
   const [isRecording, setIsRecording] = useState(false);
   const [source, setSource] = useState<MediaStreamAudioSourceNode>();
   const [recordFormData, setRecordFormData] = useState<FormData>();
-  const [recordStartTime, setRecordStartTime] = useState<number>(0);
   const [minutes, setMinutes] = useState<number>(0);
   const [seconds, setSeconds] = useState<number>(0);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
   const [isSaved, setIsSaved] = useState(false);
   const isLoggedIn = useRecoilValue(loginState);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-
-  useEffect(() => {
-    const currentTime = new Date().getTime();
-    setRecordStartTime(currentTime);
-  }, [isRecording, recordStartTime]);
 
   useEffect(() => {
     recordFormData && api.learnDetailService.uploadRecordData(recordFormData);
@@ -92,8 +86,7 @@ function RecordStatusBar(props: RecordStatusBarProps) {
   const submitAudioFile = (audioUrl: BlobPart) => {
     const formData = new FormData();
     const soundFile = audioUrl && new Blob([audioUrl], { type: 'mp3' });
-    const recordStopTime = new Date().getTime();
-    const duration = Math.floor((recordStopTime - recordStartTime) / 1000);
+    const duration = minutes * 60 + seconds;
     soundFile && formData.append('file', soundFile);
     formData.append('scriptId', scriptId.toString());
     formData.append('endtime', duration.toString());
