@@ -125,12 +125,12 @@ function ScriptEdit(props: ScriptEditProps) {
   };
 
   useEffect(() => {
-    setIsContextMenuOpen(false);
     setIsDeleteBtnClicked(false);
     const parentElement = contextHTML?.parentElement;
     const removeElement = document.getElementById(contextElementId);
 
     if (isDeleteBtnClicked) {
+      setIsContextMenuOpen(false);
       deleteElem(parentElement, removeElement);
     }
 
@@ -142,7 +142,9 @@ function ScriptEdit(props: ScriptEditProps) {
     setContextElementId(eventTarget.id);
     setContextHTML(eventTarget);
     setContextElementType(eventTarget.nodeName);
-    if (eventTarget.nodeName == 'MARK' || eventTarget.nodeName == 'SPAN') setIsContextMenuOpen(true);
+    if (eventTarget.closest('mark') || eventTarget.closest('span')) {
+      setIsContextMenuOpen(true);
+    }
 
     const contextTarget = e.target as HTMLDivElement;
     setContextMenuPoint(handleContextMenuPoint(contextTarget));
