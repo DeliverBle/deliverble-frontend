@@ -103,6 +103,7 @@ function ScriptEdit(props: ScriptEditProps) {
   const deleteElem = (parentElement: HTMLElement | null | undefined, removeElement: HTMLElement | null | undefined) => {
     const fragment = document.createDocumentFragment();
     const div = document.createElement('div');
+    const blank = document.createTextNode(' ');
 
     switch (deletedType) {
       case 'MARK':
@@ -117,7 +118,7 @@ function ScriptEdit(props: ScriptEditProps) {
         break;
       case 'SPAN':
         if (removeElement) {
-          parentElement?.removeChild(removeElement);
+          parentElement?.replaceChild(blank, removeElement);
         }
         nodeToText(parentElement);
         break;

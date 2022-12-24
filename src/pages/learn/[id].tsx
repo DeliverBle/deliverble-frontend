@@ -231,6 +231,7 @@ function LearnDetail() {
   const deleteElem = (parentElement: HTMLElement | null | undefined, removeElement: HTMLElement | null | undefined) => {
     const fragment = document.createDocumentFragment();
     const div = document.createElement('div');
+    const blank = document.createTextNode(' ');
 
     switch (deletedType) {
       case 'MARK':
@@ -245,7 +246,7 @@ function LearnDetail() {
         break;
       case 'SPAN':
         if (removeElement) {
-          parentElement?.removeChild(removeElement);
+          parentElement?.replaceChild(blank, removeElement);
         }
         nodeToText(parentElement);
         break;
@@ -280,7 +281,7 @@ function LearnDetail() {
         scriptId,
         order,
         startIndex,
-        keyword: markTag.innerText.replaceAll('/', ''),
+        keyword: markTag.innerText.replaceAll('/', ' '),
       });
       setClickedMemo(memoList.find((memo) => memo.startIndex === startIndex && memo.order === order));
     }
@@ -820,7 +821,8 @@ const StScriptText = styled.div<{ isActive: boolean; markStyles: string }>`
     font-size: 3.2rem;
     font-weight: 600;
     color: ${COLOR.MAIN_BLUE};
-    margin: 0 0.02rem 0 0.02rem;
+    margin-right: 0.4rem;
+    margin-left: 0.4rem;
   }
 
   mark {
