@@ -167,7 +167,9 @@ function RecordStatusBar(props: RecordStatusBarProps) {
 export default RecordStatusBar;
 
 const StRecordStatusBar = styled.div`
-  cursor: pointer;
+  width: 14.1rem;
+  height: 4.8rem;
+  margin-right: 54.9rem;
 
   p {
     position: absolute;
@@ -216,6 +218,7 @@ const StRecordStatus = styled.div<{ isRecording: boolean }>`
     left: 10.1rem;
     width: 3.2rem;
     height: 3.2rem;
+    cursor: pointer;
   }
 
   .icRecordSaveToast {
