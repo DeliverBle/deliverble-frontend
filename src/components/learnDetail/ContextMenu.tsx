@@ -10,12 +10,23 @@ interface ContextMenuProps {
     y: number;
   };
   clickedMemoId?: number;
+  contextElementType: string;
   setMemoState: Dispatch<SetStateAction<MemoState>>;
   setIsContextMenuOpen: (open: boolean) => void;
+  setDeletedType: (type: string) => void;
+  setIsDeleteBtnClicked: (isDelete: boolean) => void;
 }
 
 function ContextMenu(props: ContextMenuProps) {
-  const { contextMenuPoint, clickedMemoId, setMemoState, setIsContextMenuOpen } = props;
+  const {
+    contextMenuPoint,
+    clickedMemoId,
+    contextElementType,
+    setMemoState,
+    setIsContextMenuOpen,
+    setDeletedType,
+    setIsDeleteBtnClicked,
+  } = props;
   const { x, y } = contextMenuPoint;
 
   const handleMemoState = (e: React.MouseEvent) => {
@@ -26,33 +37,68 @@ function ContextMenu(props: ContextMenuProps) {
     setIsContextMenuOpen(false);
   };
 
+  const handleHighlightDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsDeleteBtnClicked(true);
+    setDeletedType('MARK');
+    setIsContextMenuOpen(false);
+  };
+
+  const handleSpacingDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsDeleteBtnClicked(true);
+    setDeletedType('SPAN');
+    setIsContextMenuOpen(false);
+  };
+
   return (
-    <StContextMenu top={y} left={x}>
-      <ul>
-        <li>
-          <button type="button" onClick={(e) => handleMemoState(e)}>
-            {clickedMemoId ? '메모 수정' : '메모 추가'}
-          </button>
-        </li>
-        <li>
-          <button type="button">하이라이트 삭제</button>
-        </li>
-      </ul>
+    <StContextMenu top={y} left={x} contextElementType={contextElementType}>
+      {contextElementType === 'MARK' ? (
+        <ul>
+          <li>
+            <button type="button" onClick={(e) => handleMemoState(e)}>
+              {clickedMemoId ? '메모 수정' : '메모 추가'}
+            </button>
+          </li>
+          <li>
+            <button type="button" onClick={(e) => handleHighlightDelete(e)}>
+              하이라이트 삭제
+            </button>
+          </li>
+        </ul>
+      ) : (
+        <ul>
+          <li>
+            <button type="button" onClick={(e) => handleSpacingDelete(e)}>
+              끊어읽기 삭제
+            </button>
+          </li>
+        </ul>
+      )}
     </StContextMenu>
   );
 }
 
 export default ContextMenu;
 
-const StContextMenu = styled.div<{ top: number; left: number }>`
+const StContextMenu = styled.div<{ top: number; left: number; contextElementType: string }>`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 
   position: absolute;
-  width: 14.4rem;
-  height: 8rem;
+
+  ${({ contextElementType }) =>
+    contextElementType === 'MARK'
+      ? css`
+          width: 14.4rem;
+          height: 8rem;
+        `
+      : css`
+          width: 13rem;
+          height: 4.4rem;
+        `}
   z-index: 1;
 
   border-radius: 1.2rem;
