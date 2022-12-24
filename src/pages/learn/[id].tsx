@@ -228,7 +228,10 @@ function LearnDetail() {
     }
   };
 
-  const deleteElem = (parentElement: HTMLElement | null | undefined, removeElement: HTMLElement | null | undefined) => {
+  const deleteElement = (
+    parentElement: HTMLElement | null | undefined,
+    removeElement: HTMLElement | null | undefined,
+  ) => {
     const fragment = document.createDocumentFragment();
     const div = document.createElement('div');
     const blank = document.createTextNode(' ');
@@ -259,7 +262,7 @@ function LearnDetail() {
     const removeElement = document.getElementById(contextElementId);
 
     if (isDeleteBtnClicked) {
-      deleteElem(parentElement, removeElement);
+      deleteElement(parentElement, removeElement);
       setIsContextMenuOpen(false);
     }
 

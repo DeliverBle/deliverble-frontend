@@ -100,7 +100,10 @@ function ScriptEdit(props: ScriptEditProps) {
     }
   }, [highlightAlert]);
 
-  const deleteElem = (parentElement: HTMLElement | null | undefined, removeElement: HTMLElement | null | undefined) => {
+  const deleteElement = (
+    parentElement: HTMLElement | null | undefined,
+    removeElement: HTMLElement | null | undefined,
+  ) => {
     const fragment = document.createDocumentFragment();
     const div = document.createElement('div');
     const blank = document.createTextNode(' ');
@@ -132,7 +135,7 @@ function ScriptEdit(props: ScriptEditProps) {
 
     if (isDeleteBtnClicked) {
       setIsContextMenuOpen(false);
-      deleteElem(parentElement, removeElement);
+      deleteElement(parentElement, removeElement);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
