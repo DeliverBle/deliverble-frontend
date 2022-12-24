@@ -34,18 +34,6 @@ function RecordStatusBar(props: RecordStatusBarProps) {
   const isLoggedIn = useRecoilValue(loginState);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
-  //get record data test code.
-  useEffect(() => {
-    const getRecordDataArr = async () => {
-      const dataArr = await api.learnDetailService.getRecordData(scriptId);
-      return dataArr;
-    };
-    isLoggedIn &&
-      getRecordDataArr().then((dataArr) => {
-        console.log(dataArr);
-      });
-  }, [scriptId, isLoggedIn]);
-
   useEffect(() => {
     const currentTime = new Date().getTime();
     setRecordStartTime(currentTime);
