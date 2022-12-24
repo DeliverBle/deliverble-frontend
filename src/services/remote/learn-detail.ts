@@ -272,7 +272,7 @@ export function learnDetailDataRemote(): LearnDetailService {
       url: `/script/recording/find?scriptId=${scriptId}`,
     });
     if (response.axiosStatus === 200) {
-      return response[0].map((record: GetRecordData) => ({
+      return response.data[0].map((record: GetRecordData) => ({
         name: record.name,
         link: record.link,
         endTime: record.endTime,

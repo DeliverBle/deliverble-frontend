@@ -34,6 +34,18 @@ function RecordStatusBar(props: RecordStatusBarProps) {
   const isLoggedIn = useRecoilValue(loginState);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
+  //get record data test code.
+  useEffect(() => {
+    const getRecordDataArr = async () => {
+      const dataArr = await api.learnDetailService.getRecordData(scriptId);
+      return dataArr;
+    };
+    isLoggedIn &&
+      getRecordDataArr().then((dataArr) => {
+        console.log(dataArr);
+      });
+  }, [scriptId, isLoggedIn]);
+
   useEffect(() => {
     const currentTime = new Date().getTime();
     setRecordStartTime(currentTime);
@@ -45,12 +57,10 @@ function RecordStatusBar(props: RecordStatusBarProps) {
 
   const startRecord = () => {
     const audioCtx = new window.AudioContext();
-
     const makeSound = (stream: MediaStream) => {
       const source = audioCtx.createMediaStreamSource(stream);
       setSource(source);
     };
-
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
       const mediaRecorder = new MediaRecorder(stream);
       mediaRecorder.start();
@@ -75,15 +85,14 @@ function RecordStatusBar(props: RecordStatusBarProps) {
         setIsRecording(false);
         submitAudioFile(audioUrl);
       });
-
     stream &&
       stream.getAudioTracks().forEach(function (track: MediaStreamTrack) {
         track.stop();
       });
-
     media?.stop();
     source?.disconnect();
     intervalId && clearInterval(intervalId);
+
     setMinutes(0);
     setSeconds(0);
     setIsSaved(true);
@@ -101,17 +110,14 @@ function RecordStatusBar(props: RecordStatusBarProps) {
     formData.append('scriptId', scriptId.toString());
     formData.append('endtime', duration.toString());
     formData.append('date', getDate());
-    console.log(duration);
     setRecordFormData(formData);
   };
 
   const getDate = () => {
     const TIME_ZONE = 3240 * 10000;
     const date = new Date();
-
     const dateInForm = new Date(+date + TIME_ZONE).toISOString().split('T')[0];
     const time = date.toTimeString().split(' ')[0];
-
     return dateInForm + ' ' + time;
   };
 
@@ -174,19 +180,21 @@ export default RecordStatusBar;
 
 const StRecordStatusBar = styled.div`
   cursor: pointer;
+
   p {
-    ${FONT_STYLES.SB_15_CAPTION};
-    color: ${COLOR.WHITE};
     position: absolute;
     bottom: 7rem;
     left: 7rem;
+    color: ${COLOR.WHITE};
+    ${FONT_STYLES.SB_15_CAPTION};
   }
+
   .icRecordSaveToast {
     position: absolute;
-    width: 11.4rem;
-    height: 4.9rem;
     bottom: 5.2rem;
     left: 6rem;
+    width: 11.4rem;
+    height: 4.9rem;
   }
 `;
 
@@ -197,6 +205,7 @@ const StRecordStatus = styled.div<{ isRecording: boolean }>`
   height: 4.8rem;
   margin-right: 54.9rem;
   border-radius: 5rem;
+
   ${({ isRecording }) =>
     isRecording
       ? css`
@@ -215,10 +224,10 @@ const StRecordStatus = styled.div<{ isRecording: boolean }>`
 
   .icRecordStart,
   .icRecordStop {
-    position: relative;
+    position: absolute;
+    left: 10.1rem;
     width: 3.2rem;
     height: 3.2rem;
-    margin-left: 0.8rem;
   }
 
   .icRecordSaveToast {
@@ -229,7 +238,9 @@ const StRecordStatus = styled.div<{ isRecording: boolean }>`
 `;
 
 const RecordTime = styled.span<{ isRecording: boolean }>`
+  margin-left: 0.8rem;
   ${FONT_STYLES.M_16_CAPTION};
+
   ${({ isRecording }) =>
     isRecording
       ? css`
@@ -238,6 +249,4 @@ const RecordTime = styled.span<{ isRecording: boolean }>`
       : css`
           color: ${COLOR.GRAY_30};
         `}
-
-  margin-left: 0.8rem;
 `;
