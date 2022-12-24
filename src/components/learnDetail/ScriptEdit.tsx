@@ -1,24 +1,65 @@
 import { useEffect, useRef, useState } from 'react';
-import { Script } from '@src/services/api/types/learn-detail';
 import HighlightModal from './HighlightModal';
 import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { api } from '@src/services/api';
+import ContextMenu from '@src/components/learnDetail/ContextMenu';
+import { VideoData } from '@src/services/api/types/learn-detail';
+import { CONTEXT_MENU_WIDTH, ABSOLUTE_RIGHT_LIMIT } from '@src/utils/constant';
+import { useRouter } from 'next/router';
+
 interface ScriptEditProps {
   scriptsId: number;
-  scripts: Script[];
+  isEditing: boolean;
   isHighlight: boolean;
   isSpacing: boolean;
   clickedScriptTitleIndex: number;
 }
 
 function ScriptEdit(props: ScriptEditProps) {
-  const { scriptsId, scripts, isHighlight, isSpacing, clickedScriptTitleIndex } = props;
+  const router = useRouter();
+  const { id: detailId } = router.query;
+  const { scriptsId, isEditing, isHighlight, isSpacing, clickedScriptTitleIndex } = props;
   const [highlightAlert, setHighlightAlert] = useState<boolean>(false);
   const [firstLineId, setFirstLineId] = useState<number>();
   const [order, setOrder] = useState<number>();
   const [text, setText] = useState<string>();
+  const [videoData, setVideoData] = useState<VideoData>();
   const learnRef = useRef<HTMLDivElement>(null);
+  const [isContextMenuOpen, setIsContextMenuOpen] = useState<boolean>(false);
+  const contextMenuRef = useRef<HTMLDivElement>(null);
+  const [contextMenuPoint, setContextMenuPoint] = useState({ x: 0, y: 0 });
+  const [contextElementType, setContextElementType] = useState<string>('');
+  const [deletedType, setDeletedType] = useState<string>('');
+  const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState<boolean>(false);
+  const [contextHTML, setContextHTML] = useState<HTMLElement>();
+  const [contextElementId, setContextElementId] = useState<string>('');
+
+  const handleContextMenuPoint = (target: HTMLDivElement) => {
+    let x = 0;
+    let y = 0;
+
+    const article = target.parentElement?.closest('article');
+    if (article) {
+      const articleAbsoluteTop = article.getBoundingClientRect().top;
+      const articleAbsoluteLeft = article.getBoundingClientRect().left;
+
+      const targetRect = target.getBoundingClientRect();
+      const absoluteTop = targetRect.top + 20;
+      const absoluteLeft = targetRect.left - 22;
+      const absoluteRight = targetRect.right - 22;
+
+      const highlightWidth = targetRect.right - targetRect.left;
+      if (highlightWidth > CONTEXT_MENU_WIDTH || absoluteRight > ABSOLUTE_RIGHT_LIMIT - (scrollX + scrollX / 2)) {
+        x = absoluteRight - articleAbsoluteLeft - CONTEXT_MENU_WIDTH;
+      } else {
+        x = absoluteLeft - articleAbsoluteLeft;
+      }
+      y = absoluteTop - articleAbsoluteTop;
+    }
+
+    return { x, y };
+  };
 
   useEffect(() => {
     (async () => {
@@ -36,8 +77,8 @@ function ScriptEdit(props: ScriptEditProps) {
   }, [order, text, scriptsId, clickedScriptTitleIndex]);
 
   useEffect(() => {
-    setFirstLineId(scripts[0].id);
-  }, [firstLineId, scripts]);
+    setFirstLineId(videoData?.scripts[0].id);
+  }, [firstLineId, videoData?.scripts]);
 
   const findLineOrder = (currentLineId: number) => {
     if (currentLineId && firstLineId) {
@@ -58,6 +99,54 @@ function ScriptEdit(props: ScriptEditProps) {
       }
     }
   }, [highlightAlert]);
+
+  const deleteElem = (parentElement: HTMLElement | null | undefined, removeElement: HTMLElement | null | undefined) => {
+    const fragment = document.createDocumentFragment();
+    const div = document.createElement('div');
+
+    switch (deletedType) {
+      case 'MARK':
+        if (removeElement?.innerHTML) {
+          div.innerHTML = removeElement?.innerHTML;
+        }
+        while (div.firstChild) {
+          fragment.appendChild(div.firstChild);
+        }
+        removeElement?.replaceWith(fragment);
+        nodeToText(parentElement);
+        break;
+      case 'SPAN':
+        if (removeElement) {
+          parentElement?.removeChild(removeElement);
+        }
+        nodeToText(parentElement);
+        break;
+    }
+  };
+
+  useEffect(() => {
+    setIsContextMenuOpen(false);
+    setIsDeleteBtnClicked(false);
+    const parentElement = contextHTML?.parentElement;
+    const removeElement = document.getElementById(contextElementId);
+
+    if (isDeleteBtnClicked) {
+      deleteElem(parentElement, removeElement);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contextElementId, contextHTML?.parentElement, isDeleteBtnClicked]);
+
+  const handleRightClick = (e: React.MouseEvent) => {
+    const eventTarget = e.target as HTMLElement;
+    setContextElementId(eventTarget.id);
+    setContextHTML(eventTarget);
+    setContextElementType(eventTarget.nodeName);
+    if (eventTarget.nodeName == 'MARK' || eventTarget.nodeName == 'SPAN') setIsContextMenuOpen(true);
+
+    const contextTarget = e.target as HTMLDivElement;
+    setContextMenuPoint(handleContextMenuPoint(contextTarget));
+  };
 
   const handleClick = (e: React.MouseEvent) => {
     const selection = window.getSelection();
@@ -174,6 +263,45 @@ function ScriptEdit(props: ScriptEditProps) {
     }
   };
 
+  useEffect(() => {
+    (async () => {
+      const id = Number(detailId);
+      const data = await api.learnDetailService.getPrivateVideoData(id);
+      setVideoData(data);
+    })();
+  }, [detailId]);
+
+  useEffect(() => {
+    (async () => {
+      const data = await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedScriptTitleIndex);
+      setVideoData(data);
+    })();
+  }, [clickedScriptTitleIndex, detailId]);
+
+  useEffect(() => {
+    const handleClickOutside = (e: Event) => {
+      const eventTarget = e.target as HTMLElement;
+
+      if (
+        isContextMenuOpen &&
+        !contextMenuRef?.current?.contains(eventTarget) &&
+        eventTarget.tagName !== 'MARK' &&
+        eventTarget.tagName !== 'SPAN'
+      ) {
+        setIsContextMenuOpen(false);
+      }
+    };
+
+    if (isContextMenuOpen) {
+      window.addEventListener('click', handleClickOutside);
+      window.addEventListener('contextmenu', handleClickOutside);
+    }
+    return () => {
+      window.removeEventListener('click', handleClickOutside);
+      window.removeEventListener('contextmenu', handleClickOutside);
+    };
+  }, [isContextMenuOpen]);
+
   return (
     <>
       <StWrapper
@@ -186,12 +314,28 @@ function ScriptEdit(props: ScriptEditProps) {
         onPaste={(e) => e.preventDefault()}
         onKeyDown={(e) => e.preventDefault()}
         ref={learnRef}>
-        {scripts.map(({ id, text }) => (
+        {videoData?.scripts.map(({ id, text }) => (
           <StScriptText
+            ref={contextMenuRef}
+            onContextMenu={(e) => {
+              e.preventDefault();
+              handleRightClick(e);
+              findLineOrder(id);
+            }}
             key={id}
             onClick={() => findLineOrder(id)}
             dangerouslySetInnerHTML={{ __html: text }}></StScriptText>
         ))}
+        {isContextMenuOpen && (
+          <ContextMenu
+            contextMenuPoint={contextMenuPoint}
+            contextElementType={contextElementType}
+            isEditing={isEditing}
+            setIsContextMenuOpen={setIsContextMenuOpen}
+            setDeletedType={setDeletedType}
+            setIsDeleteBtnClicked={setIsDeleteBtnClicked}
+          />
+        )}
       </StWrapper>
       {highlightAlert && <HighlightModal closeModal={() => setHighlightAlert(false)} />}
     </>
