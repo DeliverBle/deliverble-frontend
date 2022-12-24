@@ -103,23 +103,28 @@ const StContextMenu = styled.div<{ top: number; left: number; contextElementType
 
   position: absolute;
 
-  ${({ contextElementType }) =>
-    contextElementType === 'MARK'
-      ? css`
-          width: 14.4rem;
-        `
-      : css`
-          width: 13rem;
-        `}
+  ${({ contextElementType, isEditing }) =>
+    contextElementType === 'MARK' &&
+    !isEditing &&
+    css`
+      width: 14.4rem;
+      height: 8rem;
+    `}
 
-  ${({ isEditing }) =>
-    isEditing
-      ? css`
-          height: 4.4rem;
-        `
-      : css`
-          height: 8rem;
-        `}
+  ${({ contextElementType, isEditing }) =>
+    contextElementType === 'MARK' &&
+    isEditing &&
+    css`
+      width: 14.4rem;
+      height: 4.4rem;
+    `}
+
+    ${({ contextElementType }) =>
+    contextElementType === 'SPAN' &&
+    css`
+      width: 13rem;
+      height: 4.4rem;
+    `}
 
   z-index: 1;
 
