@@ -11,7 +11,8 @@ interface ContextMenuProps {
   };
   clickedMemoId?: number;
   contextElementType: string;
-  setMemoState: Dispatch<SetStateAction<MemoState>>;
+  isEditing: boolean;
+  setMemoState?: Dispatch<SetStateAction<MemoState>>;
   setIsContextMenuOpen: (open: boolean) => void;
   setDeletedType: (type: string) => void;
   setIsDeleteBtnClicked: (isDelete: boolean) => void;
@@ -22,6 +23,7 @@ function ContextMenu(props: ContextMenuProps) {
     contextMenuPoint,
     clickedMemoId,
     contextElementType,
+    isEditing,
     setMemoState,
     setIsContextMenuOpen,
     setDeletedType,
@@ -31,9 +33,11 @@ function ContextMenu(props: ContextMenuProps) {
 
   const handleMemoState = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setMemoState((prev: MemoState) =>
-      clickedMemoId ? { ...prev, editMemoId: clickedMemoId } : { ...prev, newMemoId: 0 },
-    );
+    if (setMemoState) {
+      setMemoState((prev: MemoState) =>
+        clickedMemoId ? { ...prev, editMemoId: clickedMemoId } : { ...prev, newMemoId: 0 },
+      );
+    }
     setIsContextMenuOpen(false);
   };
 
@@ -52,8 +56,8 @@ function ContextMenu(props: ContextMenuProps) {
   };
 
   return (
-    <StContextMenu top={y} left={x} contextElementType={contextElementType}>
-      {contextElementType === 'MARK' ? (
+    <StContextMenu top={y} left={x} contextElementType={contextElementType} isEditing={isEditing}>
+      {contextElementType === 'MARK' && !isEditing && (
         <ul>
           <li>
             <button type="button" onClick={(e) => handleMemoState(e)}>
@@ -66,7 +70,17 @@ function ContextMenu(props: ContextMenuProps) {
             </button>
           </li>
         </ul>
-      ) : (
+      )}
+      {contextElementType === 'MARK' && isEditing && (
+        <ul>
+          <li>
+            <button type="button" onClick={(e) => handleHighlightDelete(e)}>
+              하이라이트 삭제
+            </button>
+          </li>
+        </ul>
+      )}
+      {contextElementType === 'SPAN' && (
         <ul>
           <li>
             <button type="button" onClick={(e) => handleSpacingDelete(e)}>
@@ -81,7 +95,7 @@ function ContextMenu(props: ContextMenuProps) {
 
 export default ContextMenu;
 
-const StContextMenu = styled.div<{ top: number; left: number; contextElementType: string }>`
+const StContextMenu = styled.div<{ top: number; left: number; contextElementType: string; isEditing: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -93,12 +107,20 @@ const StContextMenu = styled.div<{ top: number; left: number; contextElementType
     contextElementType === 'MARK'
       ? css`
           width: 14.4rem;
-          height: 8rem;
         `
       : css`
           width: 13rem;
-          height: 4.4rem;
         `}
+
+  ${({ isEditing }) =>
+    isEditing
+      ? css`
+          height: 4.4rem;
+        `
+      : css`
+          height: 8rem;
+        `}
+
   z-index: 1;
 
   border-radius: 1.2rem;
