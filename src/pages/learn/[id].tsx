@@ -453,7 +453,7 @@ function LearnDetail() {
                   <div>
                     {!isGuide && (
                       <StButtonContainer>
-                        <RecordStatusBar />
+                        <RecordStatusBar scriptId={videoData?.scriptsId ?? INITIAL_NUMBER} />
                         <StButton
                           onClick={(e) => {
                             e.stopPropagation();

@@ -1,5 +1,5 @@
 import { LearnDetailService } from '../api/learn-detail';
-import { Script, SentenceData, Tag, MemoData, Name, UploadRecordData } from '../api/types/learn-detail';
+import { Script, SentenceData, Tag, MemoData, Name, UploadRecordData, GetRecordData } from '../api/types/learn-detail';
 import { privateAPI, publicAPI } from './base';
 
 export function learnDetailDataRemote(): LearnDetailService {
@@ -253,14 +253,33 @@ export function learnDetailDataRemote(): LearnDetailService {
     const response = await privateAPI.post({
       url: '/script/recording/upload',
       data: body,
+      type: 'multipart',
     });
+    console.log(response);
+    //성공 처리
     if (response.status === 200) {
       return {
-        link: response.link,
-        name: response.name,
-        scriptId: response.scriptId,
-        date: response.date,
+        link: response.data.link,
+        name: response.data.name,
+        scriptId: response.data.scriptId,
+        date: response.data.date,
       };
+    } else throw '서버 통신 실패';
+  };
+
+  const getRecordData = async (scriptId: number) => {
+    const response = await privateAPI.get({
+      url: `/script/recording/find?scriptId=${scriptId}`,
+    });
+    if (response.axiosStatus === 200) {
+      return response[0].map((record: GetRecordData) => ({
+        name: record.name,
+        link: record.link,
+        endTime: record.endTime,
+        isDeleted: record.isDeleted,
+        date: record.date,
+        scriptId: record.scriptId,
+      }));
     } else throw '서버 통신 실패';
   };
 
@@ -277,5 +296,6 @@ export function learnDetailDataRemote(): LearnDetailService {
     getPublicSpeechGuideData,
     getPrivateSpeechGuideData,
     uploadRecordData,
+    getRecordData,
   };
 }

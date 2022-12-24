@@ -83,3 +83,12 @@ export type UploadRecordResponse = {
   scriptId: string;
   date: string;
 };
+
+export type GetRecordData = {
+  name: string;
+  link: string;
+  endTime: number;
+  isDeleted: boolean;
+  date: string;
+  scriptId: number;
+};

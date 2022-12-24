@@ -24,6 +24,23 @@ const basePublicHeaders = {
   'Content-Type': `application/json`,
 };
 
+const getBasePrivateMultipartHeaders = () => {
+  const accessToken = getAccessToken();
+  const headers = {
+    Accept: `*/*`,
+    'Content-Type': `multipart/form-data`,
+  };
+
+  if (accessToken) {
+    return {
+      ...headers,
+      Authorization: `Bearer ${accessToken}`,
+    };
+  }
+
+  return headers;
+};
+
 interface Request {
   url: string;
   headers?: object;
@@ -37,6 +54,7 @@ interface RequestWithParams extends Request {
 
 interface RequestWithData extends Request {
   data?: object;
+  type?: 'json' | 'multipart';
 }
 
 const sendRequest = ({ url, params, method, headers, isPrivate }: RequestWithParams) => {
@@ -49,8 +67,12 @@ const sendRequest = ({ url, params, method, headers, isPrivate }: RequestWithPar
   });
 };
 
-const sendRequestForData = ({ url, data, method, headers, isPrivate }: RequestWithData) => {
-  const baseHeaders = isPrivate ? getBasePrivateHeaders() : basePublicHeaders;
+const sendRequestForData = ({ url, data, method, headers, isPrivate, type }: RequestWithData) => {
+  const baseHeaders = isPrivate
+    ? type === 'json'
+      ? getBasePrivateHeaders()
+      : getBasePrivateMultipartHeaders()
+    : basePublicHeaders;
   return axios[method](BASEURL + url, data, {
     headers: { ...baseHeaders, ...headers },
   }).then((response) => {
@@ -73,13 +95,14 @@ const sendRequestForDelete = ({ url, data, headers, isPrivate }: Omit<RequestWit
 export const privateAPI = {
   get: ({ url, params, headers }: Omit<RequestWithParams, 'isPrivate' | 'method'>) =>
     sendRequest({ url, params, method: 'get', headers, isPrivate: true }),
-  post: ({ url, data, headers }: Omit<RequestWithData, 'isPrivate' | 'method'>) =>
+  post: ({ url, data, headers, type }: Omit<RequestWithData, 'isPrivate' | 'method'>) =>
     sendRequestForData({
       url,
       data,
       method: 'post',
       headers,
       isPrivate: true,
+      type: type ?? 'json',
     }),
   patch: ({ url, data, headers }: Omit<RequestWithData, 'isPrivate' | 'method'>) =>
     sendRequestForData({
