@@ -78,4 +78,30 @@ export const LEARN_DETAIL_DATA = {
     id: 0,
     name: '이름 바꾼 스크립트',
   },
+
+  RECORD_DATA: {
+    link: 'https://deliverable-recording.s3.ap-northeast-2.amazonaws.com/1669604151.mp3',
+    name: '나만의 녹음',
+    scriptId: '63',
+    date: '2022-05-03 17:42:30',
+  },
+
+  RECORD_DATA_LIST: [
+    {
+      name: '녹음 1',
+      link: 'https://deliverable-recording.s3.ap-northeast-2.amazonaws.com/1669604151.mp3',
+      endTime: 61,
+      isDeleted: false,
+      date: '2022-05-03 17:42:30',
+      scriptId: 63,
+    },
+    {
+      name: '녹음 1',
+      link: 'https://deliverable-recording.s3.ap-northeast-2.amazonaws.com/1669604151.mp3',
+      endTime: 61,
+      isDeleted: false,
+      date: '2022-05-03 17:42:30',
+      scriptId: 63,
+    },
+  ],
 };
