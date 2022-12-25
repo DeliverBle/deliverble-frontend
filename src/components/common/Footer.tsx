@@ -23,7 +23,7 @@ function Footer() {
           <StInfoTitle>Service</StInfoTitle>
           <a
             target="_blank"
-            href="https://airy-fang-202.notion.site/DeliverBle-42f2392a86714b02b369e7cb1c3e7dd9"
+            href="https://airy-fang-202.notion.site/DeliverBle-0b7935fb736246d5a7cdfec64a804e97"
             rel="noreferrer noopener">
             <StUnderlineText>서비스 소개</StUnderlineText>
           </a>
