@@ -1,13 +1,12 @@
 import ImageDiv from '@src/components/common/ImageDiv';
 import { icLeftArrowWhite, icRightArrowWhite } from 'public/assets/icons';
-import { imgBannerVer1Mic } from 'public/assets/images';
 import { useEffect, useRef, useState } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, { Navigation, Pagination, Autoplay } from 'swiper';
-import { BANNER_LIST } from '@src/utils/constant';
+import { BANNER_TEXT_LIST } from '@src/utils/constant';
 import 'swiper/css';
 
 function BannerSlider() {
@@ -51,14 +50,21 @@ function BannerSlider() {
     <>
       {swiperSetting && (
         <Swiper {...swiperSetting}>
-          {BANNER_LIST.map(({ mainText, subText }) => (
+          {BANNER_TEXT_LIST.map(({ mainText, subText }, i) => (
             <SwiperSlide key={mainText}>
-              <StBanner>
-                <StBannerText>
+              <StBanner ver={i + 1}>
+                <StBannerText ver={i + 1}>
                   <h1>{mainText}</h1>
                   <p>{subText}</p>
                 </StBannerText>
-                <ImageDiv className="mic" src={imgBannerVer1Mic} alt="" layout="fill" />
+                {!i && (
+                  <ImageDiv
+                    className="banner_ver1_deco"
+                    src="/assets/images/img_banner_ver1_deco1.png"
+                    alt=""
+                    layout="fill"
+                  />
+                )}
               </StBanner>
             </SwiperSlide>
           ))}
@@ -79,7 +85,17 @@ function BannerSlider() {
 
 export default BannerSlider;
 
-const StBanner = styled.div`
+const defaultBefore = css`
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transition: opacity 0.2s ease-in;
+`;
+
+const StBanner = styled.div<{ ver: number }>`
   display: flex;
   justify-content: space-between;
   align-items: end;
@@ -88,47 +104,62 @@ const StBanner = styled.div`
   margin: 13.6rem 0 14.4rem 0;
   width: 100%;
   height: 60rem;
-  background: url('/assets/images/img_banner_ver1_l.png') no-repeat left/cover;
 
-  .mic {
-    position: absolute;
-    right: 0rem;
-    width: 109.5rem;
-    height: 68.8rem;
-  }
+  ${({ ver }) =>
+    ver === 1 &&
+    css`
+      background: url('/assets/images/img_banner_ver1_background.png') no-repeat left/cover;
 
-  @media (min-width: 501px) {
-    .mic {
-      transition: opacity 0.2s ease-in;
-    }
-  }
+      .banner_ver1_deco {
+        position: absolute;
+        right: 0rem;
+        width: 109.5rem;
+        height: 68.8rem;
+      }
 
-  @media (max-width: 960px) {
-    .mic {
-      opacity: 0;
-    }
+      @media (max-width: 960px) {
+        .banner_ver1_deco {
+          opacity: 0;
+        }
 
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: url('/assets/images/img_banner_ver1_m.png') no-repeat center / 960px;
-      transition: opacity 0.2s ease-in;
-    }
-  }
+        &::before {
+          ${defaultBefore}
+          background: url('/assets/images/img_banner_ver1_deco2.png') no-repeat center / 96rem;
+        }
+      }
 
-  @media (max-width: 500px) {
-    &::before {
-      opacity: 0;
-      transition: opacity 0.2s ease-in;
-    }
-  }
+      @media (min-width: 501px) {
+        .banner_ver1_deco {
+          transition: opacity 0.2s ease-in;
+        }
+      }
+
+      @media (max-width: 500px) {
+        &::before {
+          opacity: 0;
+        }
+      }
+    `}
+
+  ${({ ver }) =>
+    ver !== 1 &&
+    css`
+      background: url('/assets/images/img_banner_ver${ver}_background.png') no-repeat center / cover;
+
+      &::before {
+        ${defaultBefore}
+        background: url('/assets/images/img_banner_ver${ver}_deco.png') no-repeat right / auto;
+      }
+
+      @media (max-width: 960px) {
+        &::before {
+          opacity: ${ver === 2 ? 0.2 : 0.15};
+        }
+      }
+    `}
 `;
 
-const StBannerText = styled.div`
+const StBannerText = styled.div<{ ver: number }>`
   display: flex;
   flex-direction: column;
 
@@ -136,9 +167,10 @@ const StBannerText = styled.div`
   min-width: 50.4rem;
   height: 60rem;
 
-  color: ${COLOR.WHITE};
+  color: ${({ ver }) => (ver !== 3 ? COLOR.WHITE : COLOR.BLACK)};
   text-align: left;
   white-space: pre-line;
+  z-index: 10;
 
   & > h1 {
     ${FONT_STYLES.SB_44_HEADLINE}

@@ -31,7 +31,7 @@ export const SPEECH_GUIDE_TOOLTIP_TEXT = {
     어디를 강조해야 하는지, 무엇을 유의하며 읽어야 하는지 파악해보세요.`,
 };
 
-export const BANNER_LIST = [
+export const BANNER_TEXT_LIST = [
   {
     mainText: `우리는 말하는 법은 배웠지만,
     잘 말하는 법은 배우지 못했다!`,
