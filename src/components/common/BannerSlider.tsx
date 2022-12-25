@@ -35,6 +35,7 @@ function BannerSlider() {
           el: pageRef.current,
           type: 'fraction',
         },
+        touchRatio: 0,
         autoplay: {
           delay: 5000,
           disableOnInteraction: false,
