@@ -29,6 +29,7 @@ export default class MyDocument extends Document {
     return (
       <Html>
         <Head>
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link rel="icon" type="image/png" href="/assets/favicon/fav_16.png" sizes="16x16" />
           <link rel="icon" type="image/png" href="/assets/favicon/fav_32.png" sizes="32x32" />
           <link rel="icon" type="image/png" href="/assets/favicon/fav_64.png" sizes="64x64" />
