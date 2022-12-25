@@ -74,3 +74,21 @@ export type SentenceData = {
   order: number;
   text: string;
 };
+
+export type UploadRecordData = FormData;
+
+export type UploadRecordResponse = {
+  link: string;
+  name: string;
+  scriptId: string;
+  date: string;
+};
+
+export type GetRecordData = {
+  name: string;
+  link: string;
+  endTime: number;
+  isDeleted: boolean;
+  date: string;
+  scriptId: number;
+};
