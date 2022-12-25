@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import { Swiper, SwiperSlide, SwiperProps } from 'swiper/react';
+import { Swiper, SwiperSlide, SwiperProps, SwiperRef } from 'swiper/react';
 import SwiperCore, { Navigation, Pagination, Autoplay } from 'swiper';
 import { BANNER_TEXT_LIST } from '@src/utils/constant';
 import 'swiper/css';
@@ -13,6 +13,7 @@ function BannerSlider() {
   const prevRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
   const pageRef = useRef<HTMLDivElement>(null);
+  const swiperRef = useRef<SwiperRef>(null);
   const [swiperSetting, setSwiperSetting] = useState<SwiperProps | null>(null);
 
   useEffect(() => {
@@ -37,7 +38,7 @@ function BannerSlider() {
         },
         touchRatio: 0,
         autoplay: {
-          delay: 5000,
+          delay: 1000,
           disableOnInteraction: false,
         },
         spaceBetween: 30,
@@ -50,10 +51,13 @@ function BannerSlider() {
   return (
     <>
       {swiperSetting && (
-        <Swiper {...swiperSetting}>
+        <Swiper {...swiperSetting} ref={swiperRef}>
           {BANNER_TEXT_LIST.map(({ mainText, subText }, i) => (
             <SwiperSlide key={mainText}>
-              <StBanner ver={i + 1}>
+              <StBanner
+                ver={i + 1}
+                onMouseEnter={() => swiperRef.current?.swiper.autoplay.stop()}
+                onMouseLeave={() => swiperRef.current?.swiper.autoplay.start()}>
                 <StBannerText ver={i + 1}>
                   <h1>{mainText}</h1>
                   <p>{subText}</p>
