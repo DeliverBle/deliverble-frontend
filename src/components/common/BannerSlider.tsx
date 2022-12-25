@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { Swiper, SwiperSlide, SwiperProps } from 'swiper/react';
 import SwiperCore, { Navigation, Pagination, Autoplay } from 'swiper';
 import { BANNER_TEXT_LIST } from '@src/utils/constant';
 import 'swiper/css';
@@ -13,7 +13,7 @@ function BannerSlider() {
   const prevRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
   const pageRef = useRef<HTMLDivElement>(null);
-  const [swiperSetting, setSwiperSetting] = useState<Swiper | null>(null);
+  const [swiperSetting, setSwiperSetting] = useState<SwiperProps | null>(null);
 
   useEffect(() => {
     if (!swiperSetting) {
@@ -33,7 +33,7 @@ function BannerSlider() {
         },
         pagination: {
           el: pageRef.current,
-          type: 'fraction',
+          type: 'fraction' as 'bullets' | 'fraction',
         },
         touchRatio: 0,
         autoplay: {
@@ -217,7 +217,7 @@ const StSlideButton = styled.div`
   height: 4rem;
 
   background: rgba(22, 15, 53, 0.2);
-  border-radius: 20px;
+  border-radius: 2rem;
   ${FONT_STYLES.SB_16_CAPTION}
 
   & > div {
