@@ -38,7 +38,7 @@ function BannerSlider() {
         },
         touchRatio: 0,
         autoplay: {
-          delay: 1000,
+          delay: 5000,
           disableOnInteraction: false,
         },
         spaceBetween: 30,
