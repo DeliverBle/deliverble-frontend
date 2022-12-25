@@ -23,7 +23,7 @@ function Footer() {
           <StInfoTitle>Service</StInfoTitle>
           <a
             target="_blank"
-            href="https://airy-fang-202.notion.site/DeliverBle-42f2392a86714b02b369e7cb1c3e7dd9"
+            href="https://airy-fang-202.notion.site/DeliverBle-0b7935fb736246d5a7cdfec64a804e97"
             rel="noreferrer noopener">
             <StUnderlineText>서비스 소개</StUnderlineText>
           </a>
@@ -81,6 +81,10 @@ const StFooter = styled.div`
 `;
 
 const StLogo = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 21.8rem;
+
   .logo {
     position: relative;
     width: 17.3rem;
@@ -88,20 +92,18 @@ const StLogo = styled.div`
   }
 
   & > h4 {
-    margin-top: 1.6rem;
+    margin: 1.6rem 0 5.6rem 0;
     min-width: 35.1rem;
     color: ${COLOR.MAIN_BLUE};
     ${FONT_STYLES.SB_24_HEADLINE};
     white-space: pre-line;
   }
 
-  .social-link {
-    margin-top: 5.6rem;
+  & > a {
+    width: fit-content;
   }
 
   @media (max-width: 500px) {
-    display: flex;
-    flex-direction: column;
     align-items: center;
   }
 `;
@@ -114,12 +116,14 @@ const StInfo = styled.div`
   @media (max-width: 960px) {
     display: flex;
     flex-direction: column;
+    align-items: flex-end;
     gap: 3.2rem;
     padding-top: 0;
     text-align: right;
   }
 
   @media (max-width: 500px) {
+    align-items: center;
     gap: 2.8rem;
     padding-top: 6.4rem;
     text-align: center;
@@ -143,10 +147,12 @@ const StUnderlineText = styled.p`
 
 const StService = styled.div`
   min-width: fit-content;
+  width: fit-content;
 `;
 
 const StFeedback = styled.div`
   min-width: fit-content;
+  width: fit-content;
 `;
 
 const StContact = styled.div`
