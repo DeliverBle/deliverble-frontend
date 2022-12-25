@@ -1,5 +1,5 @@
+import BannerSlider from '@src/components/common/BannerSlider';
 import Footer from '@src/components/common/Footer';
-import ImageDiv from '@src/components/common/ImageDiv';
 import NewsList from '@src/components/common/NewsList';
 import SEO from '@src/components/common/SEO';
 import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
@@ -9,7 +9,6 @@ import { loginState } from '@src/stores/loginState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import dynamic from 'next/dynamic';
-import { imgBigBannerMic, imgMediumBannerMic } from 'public/assets/images';
 import { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { useRecoilValue } from 'recoil';
@@ -22,12 +21,6 @@ function Home() {
   const [speechGuideList, setSpeechGuideList] = useState<VideoData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const MediumBanner = useMediaQuery({
-    query: '(min-width: 501px)',
-  });
-  const BigBanner = useMediaQuery({
-    query: '(min-width: 961px)',
-  });
   const smallBanner = useMediaQuery({
     query: '(max-width: 500px)',
   });
@@ -59,30 +52,12 @@ function Home() {
     );
   };
 
-  const selectBannerImage = () => {
-    if (BigBanner) {
-      return <ImageDiv className="big-mic" src={imgBigBannerMic} alt="" layout="fill" />;
-    }
-    if (MediumBanner) {
-      return <ImageDiv className="medium-mic" src={imgMediumBannerMic} alt="" />;
-    }
-  };
-
   return (
     <StPageWrapper>
       <SEO title="Deliverble" />
       <NavigationBar />
       <StHome>
-        <StBanner>
-          <StBannerText>
-            <h1>
-              우리는 말하는 법은 배웠지만,
-              <br />잘 말하는 법은 배우지 못했다!
-            </h1>
-            <p>딜리버블과 함께 잘 말하는 법을 배워봐요!</p>
-          </StBannerText>
-          {mounted && selectBannerImage()}
-        </StBanner>
+        <BannerSlider />
         <StNews type="guide">
           <h3>스스로 학습하기 전, {mounted && smallBanner && <br />}스피치 가이드를 살펴보세요.</h3>
           <div>
@@ -118,61 +93,8 @@ const StPageWrapper = styled.div`
 `;
 
 const StHome = styled.div`
-  flex: 1;
-`;
-
-const StBanner = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: end;
   position: relative;
-
-  height: 60rem;
-  margin: 13.6rem 0 14.4rem 0;
-
-  background: no-repeat url('/assets/images/img_banner_background.png');
-  background-size: cover;
-  background-position: center;
-
-  .big-mic {
-    position: absolute;
-    right: 0rem;
-    width: 122.4rem;
-    height: 68.6rem;
-  }
-
-  @media (max-width: 960px) {
-    .medium-mic {
-      position: absolute;
-      top: 0rem;
-      left: 24.5rem;
-      width: 96rem;
-      height: 60rem;
-    }
-  }
-`;
-
-const StBannerText = styled.div`
-  margin: 20.1rem 0 20.1rem 16rem;
-
-  min-width: 50.4rem;
-  height: fit-content;
-
-  color: ${COLOR.WHITE};
-
-  & > h1 {
-    ${FONT_STYLES.SB_44_HEADLINE}
-  }
-
-  & > p {
-    padding-top: 3.2rem;
-    ${FONT_STYLES.M_24_HEADLINE}
-  }
-
-  @media (max-width: 960px) {
-    margin-left: 6.4rem;
-    min-width: 36.7rem;
-  }
+  flex: 1;
 `;
 
 const StNews = styled.div<{ type: string }>`
