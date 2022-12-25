@@ -77,11 +77,11 @@ function BannerSlider() {
       )}
       <StSlideButton>
         <button ref={prevRef}>
-          <ImageDiv className="arrow" src={icLeftArrowWhite} alt="left-arrow" layout="fill" />
+          <ImageDiv className="arrow" src={icLeftArrowWhite} alt="이전" layout="fill" />
         </button>
-        <div ref={pageRef}></div>
+        <div ref={pageRef} />
         <button ref={nextRef}>
-          <ImageDiv className="arrow" src={icRightArrowWhite} alt="left-arrow" layout="fill" />
+          <ImageDiv className="arrow" src={icRightArrowWhite} alt="다음" layout="fill" />
         </button>
       </StSlideButton>
     </>
