@@ -10,6 +10,7 @@ import ScriptEdit from '@src/components/learnDetail/ScriptEdit';
 import VideoDetail from '@src/components/learnDetail/VideoDetail';
 import LoginModal from '@src/components/login/LoginModal';
 import ScriptTitle from '@src/components/learnDetail/ScriptTitle';
+import RecordStatusBar from '@src/components/learnDetail/record/RecordStatusBar';
 import { api } from '@src/services/api';
 import { MemoData, Name, VideoData } from '@src/services/api/types/learn-detail';
 import { loginState } from '@src/stores/loginState';
@@ -452,6 +453,7 @@ function LearnDetail() {
                   <div>
                     {!isGuide && (
                       <StButtonContainer>
+                        <RecordStatusBar scriptId={videoData.scriptsId} />
                         <StButton
                           onClick={(e) => {
                             e.stopPropagation();
@@ -714,7 +716,7 @@ const StLearnBox = styled.div<{ isGuide: boolean }>`
 
 const StGuideTooltip = styled.div`
   position: absolute;
-  left: 178px;
+  left: 17.8rem;
   top: 1.6rem;
 
   padding: 1.6rem;
