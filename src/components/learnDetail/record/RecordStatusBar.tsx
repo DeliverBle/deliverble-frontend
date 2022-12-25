@@ -1,13 +1,7 @@
 import ImageDiv from '@src/components/common/ImageDiv';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
-import {
-  icRecordMicDefault,
-  icRecordMicActive,
-  icRecordStart,
-  icRecordStop,
-  icRecordSaveToast,
-} from 'public/assets/icons';
+import { icRecordMicDefault, icRecordMicActive, icRecordStart, icRecordStop } from 'public/assets/icons';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { useEffect, useState } from 'react';
 import { api } from '@src/services/api';
@@ -122,12 +116,12 @@ function RecordStatusBar(props: RecordStatusBarProps) {
           !isLoggedIn && setIsLoginModalOpen(true);
         }}>
         <StRecordStatus isRecording={isRecording}>
-          {isRecording ? (
-            <ImageDiv src={icRecordMicActive} className="icRecordMic" layout="fill" alt="" />
-          ) : (
-            <ImageDiv src={icRecordMicDefault} className="icRecordMic" layout="fill" alt="" />
-          )}
-
+          <ImageDiv
+            src={isRecording ? icRecordMicActive : icRecordMicDefault}
+            className="icRecordMic"
+            layout="fill"
+            alt=""
+          />
           <RecordTime isRecording={isRecording}>
             {twoDigitsNumber(minutes)}:{twoDigitsNumber(handleTimerSecond(seconds))}
           </RecordTime>
@@ -146,10 +140,9 @@ function RecordStatusBar(props: RecordStatusBarProps) {
           )}
         </StRecordStatus>
         {isSaved && (
-          <>
-            <ImageDiv src={icRecordSaveToast} className="icRecordSaveToast" layout="fill" alt="" />
+          <StGuideTooltip>
             <p>저장되었습니다.</p>
-          </>
+          </StGuideTooltip>
         )}
       </StRecordStatusBar>
       {isLoginModalOpen && <LoginModal closeModal={() => setIsLoginModalOpen(false)} />}
@@ -163,22 +156,6 @@ const StRecordStatusBar = styled.div`
   width: 14.1rem;
   height: 4.8rem;
   margin-right: 54.9rem;
-
-  p {
-    position: absolute;
-    bottom: 7rem;
-    left: 7rem;
-    color: ${COLOR.WHITE};
-    ${FONT_STYLES.SB_15_CAPTION};
-  }
-
-  .icRecordSaveToast {
-    position: absolute;
-    bottom: 5.2rem;
-    left: 6rem;
-    width: 11.4rem;
-    height: 4.9rem;
-  }
 `;
 
 const StRecordStatus = styled.div<{ isRecording: boolean }>`
@@ -188,15 +165,7 @@ const StRecordStatus = styled.div<{ isRecording: boolean }>`
   height: 4.8rem;
   margin-right: 54.9rem;
   border-radius: 5rem;
-
-  ${({ isRecording }) =>
-    isRecording
-      ? css`
-          border: 0.2rem solid ${COLOR.MAIN_BLUE};
-        `
-      : css`
-          border: 0.2rem solid ${COLOR.GRAY_5};
-        `}
+  border: 0.2rem solid ${({ isRecording }) => (isRecording ? COLOR.MAIN_BLUE : COLOR.GRAY_5)};
 
   .icRecordMic {
     position: relative;
@@ -213,24 +182,40 @@ const StRecordStatus = styled.div<{ isRecording: boolean }>`
     height: 3.2rem;
     cursor: pointer;
   }
-
-  .icRecordSaveToast {
-    position: relative;
-    width: 11.4rem;
-    height: 4.9rem;
-  }
 `;
 
 const RecordTime = styled.span<{ isRecording: boolean }>`
   margin-left: 0.8rem;
   ${FONT_STYLES.M_16_CAPTION};
+  color: 0.2rem solid ${({ isRecording }) => (isRecording ? COLOR.BLACK : COLOR.GRAY_30)};
+`;
 
-  ${({ isRecording }) =>
-    isRecording
-      ? css`
-          color: ${COLOR.BLACK};
-        `
-      : css`
-          color: ${COLOR.GRAY_30};
-        `}
+const StGuideTooltip = styled.div`
+  position: absolute;
+  bottom: 6rem;
+  left: 6rem;
+  width: 11.4rem;
+  height: 4.1rem;
+  border-radius: 0.6rem;
+  background-color: rgba(22, 15, 53, 0.7);
+
+  &:after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 4.9rem;
+
+    border: solid transparent;
+    border-width: 0.8rem;
+    border-top-color: rgba(22, 15, 53, 0.7);
+    pointer-events: none;
+  }
+
+  p {
+    position: relative;
+    top: 1rem;
+    left: 1rem;
+    color: ${COLOR.WHITE};
+    ${FONT_STYLES.SB_15_CAPTION};
+  }
 `;

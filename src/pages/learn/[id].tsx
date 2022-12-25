@@ -453,7 +453,7 @@ function LearnDetail() {
                   <div>
                     {!isGuide && (
                       <StButtonContainer>
-                        <RecordStatusBar scriptId={videoData?.scriptsId ?? INITIAL_NUMBER} />
+                        <RecordStatusBar scriptId={videoData.scriptsId} />
                         <StButton
                           onClick={(e) => {
                             e.stopPropagation();
@@ -716,7 +716,7 @@ const StLearnBox = styled.div<{ isGuide: boolean }>`
 
 const StGuideTooltip = styled.div`
   position: absolute;
-  left: 178px;
+  left: 17.8rem;
   top: 1.6rem;
 
   padding: 1.6rem;
