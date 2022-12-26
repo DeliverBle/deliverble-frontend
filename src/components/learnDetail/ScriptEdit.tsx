@@ -184,12 +184,12 @@ function ScriptEdit(props: ScriptEditProps) {
       const div = document.createElement('div');
       const uniqueId = e.clientX + '.' + e.clientY + '.' + selection.anchorOffset;
       const blankIndex = isLeftBlank ? startIndex - 1 : startIndex;
-      if (blankIndex) {
-        selectedLine =
-          selectedLine.substring(0, blankIndex) +
-          `<span id=${uniqueId}>/</span>` +
-          selectedLine.substring(blankIndex + 1);
-      }
+
+      selectedLine =
+        selectedLine.substring(0, blankIndex) +
+        `<span id=${uniqueId}>/</span>` +
+        selectedLine.substring(blankIndex + 1);
+
       div.innerHTML = selectedLine;
       while (div.firstChild) {
         fragment.appendChild(div.firstChild);
