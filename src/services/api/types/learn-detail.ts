@@ -24,6 +24,7 @@ export type VideoData = {
   link: string;
   reportDate: string;
   isFavorite: boolean;
+  haveGuide: boolean;
   startTime: number;
   endTime: number;
   scriptsId: number;
@@ -31,6 +32,7 @@ export type VideoData = {
   scripts: Script[];
   memos?: MemoData[];
   names?: Name[];
+  name?: string;
 };
 
 export type MemoData = {
@@ -71,4 +73,22 @@ export type spacingGroupedObject = {
 export type SentenceData = {
   order: number;
   text: string;
+};
+
+export type UploadRecordData = FormData;
+
+export type UploadRecordResponse = {
+  link: string;
+  name: string;
+  scriptId: string;
+  date: string;
+};
+
+export type GetRecordData = {
+  name: string;
+  link: string;
+  endTime: number;
+  isDeleted: boolean;
+  date: string;
+  scriptId: number;
 };

@@ -1,5 +1,5 @@
 import { LearnDetailService } from '../api/learn-detail';
-import { Script, SentenceData, Tag, MemoData, Name } from '../api/types/learn-detail';
+import { Script, SentenceData, Tag, MemoData, Name, UploadRecordData, GetRecordData } from '../api/types/learn-detail';
 import { privateAPI, publicAPI } from './base';
 
 export function learnDetailDataRemote(): LearnDetailService {
@@ -14,6 +14,7 @@ export function learnDetailDataRemote(): LearnDetailService {
         link: response.data.link,
         reportDate: response.data.reportDate,
         isFavorite: response.data.isFavorite,
+        haveGuide: response.data.haveGuide,
         startTime: response.data.startTime,
         endTime: response.data.endTime,
         scriptsId: response.data2[index ?? 0].id,
@@ -54,6 +55,7 @@ export function learnDetailDataRemote(): LearnDetailService {
         link: response.data.link,
         reportDate: response.data.reportDate,
         isFavorite: response.data.isFavorite,
+        haveGuide: response.data.haveGuide,
         startTime: response.data.startTime,
         endTime: response.data.endTime,
         scriptsId: response.data2[0].id,
@@ -64,8 +66,85 @@ export function learnDetailDataRemote(): LearnDetailService {
         scripts: response.data2[0].sentences.map((sentence: Script) => ({
           id: sentence.id,
           text: sentence.text,
+          order: sentence.order,
           startTime: sentence.startTime,
           endTime: sentence.endTime,
+        })),
+      };
+    } else throw '서버 통신 실패';
+  };
+
+  const getPublicSpeechGuideData = async (videoId: number) => {
+    const response = await publicAPI.get({ url: `/news/guide/detail/${videoId}` });
+    if (response.status === 200) {
+      return {
+        id: response.data.id,
+        title: response.data.title,
+        category: response.data.category,
+        channel: response.data.channel,
+        link: response.data.link,
+        reportDate: response.data.reportDate,
+        isFavorite: response.data.isFavorite,
+        haveGuide: response.data.haveGuide,
+        startTime: response.data.startTime,
+        endTime: response.data.endTime,
+        scriptsId: response.data2[0].id,
+        name: response.data2[0].name,
+        tags: response.data.tagsForView.map((tag: Tag) => ({
+          id: tag.id,
+          name: tag.name,
+        })),
+        scripts: response.data2[0].sentences.map((sentence: Script) => ({
+          id: sentence.id,
+          text: sentence.text,
+          order: sentence.order,
+          startTime: sentence.startTime,
+          endTime: sentence.endTime,
+        })),
+        memos: response.data2[0].memoGuides.map((memo: MemoData) => ({
+          id: memo.id,
+          keyword: memo.keyword,
+          order: memo.order,
+          startIndex: memo.startIndex,
+          content: memo.content,
+        })),
+      };
+    } else throw '서버 통신 실패';
+  };
+
+  const getPrivateSpeechGuideData = async (videoId: number) => {
+    const response = await privateAPI.get({ url: `/news/guide/detail/${videoId}` });
+    if (response.status === 200) {
+      return {
+        id: response.data.id,
+        title: response.data.title,
+        category: response.data.category,
+        channel: response.data.channel,
+        link: response.data.link,
+        reportDate: response.data.reportDate,
+        isFavorite: response.data.isFavorite,
+        haveGuide: response.data.haveGuide,
+        startTime: response.data.startTime,
+        endTime: response.data.endTime,
+        scriptsId: response.data2[0].id,
+        name: response.data2[0].name,
+        tags: response.data.tagsForView.map((tag: Tag) => ({
+          id: tag.id,
+          name: tag.name,
+        })),
+        scripts: response.data2[0].sentences.map((sentence: Script) => ({
+          id: sentence.id,
+          text: sentence.text,
+          order: sentence.order,
+          startTime: sentence.startTime,
+          endTime: sentence.endTime,
+        })),
+        memos: response.data2[0].memoGuides.map((memo: MemoData) => ({
+          id: memo.id,
+          keyword: memo.keyword,
+          order: memo.order,
+          startIndex: memo.startIndex,
+          content: memo.content,
         })),
       };
     } else throw '서버 통신 실패';
@@ -85,6 +164,7 @@ export function learnDetailDataRemote(): LearnDetailService {
         link: response.data.link,
         reportDate: response.data.reportDate,
         isFavorite: response.data.isFavorite,
+        haveGuide: response.data.haveGuide,
         startTime: response.data.startTime,
         endTime: response.data.endTime,
         scriptsId: response.data2[scriptIndex]?.id,
@@ -169,6 +249,40 @@ export function learnDetailDataRemote(): LearnDetailService {
     } else throw '서버 통신 실패';
   };
 
+  const uploadRecordData = async (body: UploadRecordData) => {
+    const response = await privateAPI.post({
+      url: '/script/recording/upload',
+      data: body,
+      type: 'multipart',
+    });
+    console.log(response);
+    //성공 처리
+    if (response.status === 200) {
+      return {
+        link: response.data.link,
+        name: response.data.name,
+        scriptId: response.data.scriptId,
+        date: response.data.date,
+      };
+    } else throw '서버 통신 실패';
+  };
+
+  const getRecordData = async (scriptId: number) => {
+    const response = await privateAPI.get({
+      url: `/script/recording/find?scriptId=${scriptId}`,
+    });
+    if (response.axiosStatus === 200) {
+      return response.data[0].map((record: GetRecordData) => ({
+        name: record.name,
+        link: record.link,
+        endTime: record.endTime,
+        isDeleted: record.isDeleted,
+        date: record.date,
+        scriptId: record.scriptId,
+      }));
+    } else throw '서버 통신 실패';
+  };
+
   return {
     getPrivateVideoData,
     getPublicVideoData,
@@ -179,5 +293,9 @@ export function learnDetailDataRemote(): LearnDetailService {
     postNewScriptData,
     deleteScriptData,
     updateScriptNameData,
+    getPublicSpeechGuideData,
+    getPrivateSpeechGuideData,
+    uploadRecordData,
+    getRecordData,
   };
 }
