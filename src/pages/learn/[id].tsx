@@ -199,17 +199,14 @@ function LearnDetail() {
     })();
   }, [order, text, clickedScriptTitleIndex, videoData?.scriptsId]);
 
-  let isHighlightOverSpacing = false;
   const nodeToText = (anchorNode: Node | null | undefined) => {
     let textValue = '';
     if (anchorNode?.nodeName === 'MARK') {
       nodeToText(anchorNode.parentNode);
-      isHighlightOverSpacing = true;
       return;
     }
 
-    isHighlightOverSpacing = false;
-    if (!isHighlightOverSpacing && anchorNode?.childNodes) {
+    if (anchorNode?.childNodes) {
       for (let i = 0; i < anchorNode?.childNodes.length; i++) {
         const childNodeItem = anchorNode?.childNodes[i];
         const elementId = childNodeItem.firstChild?.parentElement?.id;
@@ -440,6 +437,7 @@ function LearnDetail() {
         }
       }
     })();
+    console.log('clickedScriptTitleIndex', clickedScriptTitleIndex);
   }, [clickedScriptTitleIndex, detailId, isLoggedIn, isGuide]);
 
   useEffect(() => {
@@ -490,6 +488,13 @@ function LearnDetail() {
       setPrevLink(prevPath || '/');
     }
   }, []);
+
+  useEffect(() => {
+    console.log('videoData', videoData);
+    console.log('유무', videoData?.names);
+    videoData?.names && console.log('ScriptIndex id', videoData?.names[clickedScriptTitleIndex].id);
+    console.log('default id', videoData?.scriptsId);
+  }, [clickedScriptTitleIndex, videoData]);
 
   return (
     <>

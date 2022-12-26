@@ -240,17 +240,14 @@ function ScriptEdit(props: ScriptEditProps) {
     nodeToText(selection?.anchorNode);
   };
 
-  let isHighlightOverSpacing = false;
   const nodeToText = (anchorNode: Node | null | undefined) => {
     let textValue = '';
     if (anchorNode?.nodeName === 'MARK') {
       nodeToText(anchorNode.parentNode);
-      isHighlightOverSpacing = true;
       return;
     }
 
-    isHighlightOverSpacing = false;
-    if (!isHighlightOverSpacing && anchorNode?.childNodes) {
+    if (anchorNode?.childNodes) {
       for (let i = 0; i < anchorNode?.childNodes.length; i++) {
         const childNodeItem = anchorNode?.childNodes[i];
         const elementId = childNodeItem.firstChild?.parentElement?.id;
