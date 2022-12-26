@@ -3,9 +3,10 @@ import { useEffect, useState } from 'react';
 import { GetRecordData } from '@src/services/api/types/learn-detail';
 import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
-import { icRecordPlayDefault } from 'public/assets/icons';
+import { icRecordPlayDefault, icRecordPauseDefault } from 'public/assets/icons';
 import ImageDiv from '@src/components/common/ImageDiv';
 import { FONT_STYLES } from '@src/styles/fontStyle';
+import { useRef } from 'react';
 
 interface RecordStatusBarProps {
   scriptId: number;
@@ -14,7 +15,9 @@ interface RecordStatusBarProps {
 function RecordLog(props: RecordStatusBarProps) {
   const { scriptId } = props;
   const [recordList, setRecordList] = useState<GetRecordData[]>([]);
-
+  const [linkPlaying, setIsLinkPlaying] = useState('');
+  //   const [isPaused, setIsPaused] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
   useEffect(() => {
     getMemo(scriptId);
   }, [scriptId]);
@@ -35,13 +38,74 @@ function RecordLog(props: RecordStatusBarProps) {
     return `${Math.floor(endTime / 60)}:${twoDigitsNumber(endTime % 60)}`;
   };
 
+  //   const handlePlayRecord = (link: string, endTime: number) => {
+  //     const audio = new Audio(link);
+  //     //재생중인 링크가 있는데 다른 링크를 누른 경우 ,,, 아무것도 없는데 링크를 누른 경우
+  //     if (link !== linkPlaying || linkPlaying === '') {
+  //       setIsLinkPlaying(link);
+  //       audio.play();
+
+  //       //재생 끝난 경우
+  //       setTimeout(() => {
+  //         audio.pause();
+  //         setIsLinkPlaying('');
+  //       }, endTime * 1000);
+  //     }
+  //   };
+
+  //   const handlePauseRecord = () => {
+  //     setIsPaused(true);
+  //   };
+
+  const handlePauseRecord = (link: string) => {
+    // const audio = new Audio(link);
+    // setIsLinkPlaying('');
+    // audio.pause();
+    console.log(link);
+  };
+
+  const handlePlayRecord = (link: string, endTime: number) => {
+    //재생중인 링크가 있는데 다른 링크를 누른 경우 ,,, 아무것도 없는데 링크를 누른 경우
+    if ((link !== linkPlaying || linkPlaying === '') && audioRef.current) {
+      setIsLinkPlaying(link);
+      console.log(audioRef.current);
+      audioRef.current.play();
+    }
+
+    //endTime경과.
+    setTimeout(() => {
+      setIsLinkPlaying('');
+    }, endTime * 1000);
+  };
+
   return (
     <StRecordLogContainer>
       {recordList.map(({ name, link, endTime, date }) => (
         <StRecord key={link}>
-          <ImageDiv src={icRecordPlayDefault} className="icRecordPlay" alt="녹음 재생" layout="fill" />
+          {link === linkPlaying ? (
+            <ImageDiv
+              src={icRecordPauseDefault}
+              className="icRecordPlay"
+              alt="녹음 중지"
+              layout="fill"
+              onClick={() => {
+                handlePauseRecord(link);
+              }}
+            />
+          ) : (
+            <ImageDiv
+              src={icRecordPlayDefault}
+              className="icRecordPlay"
+              alt="녹음 재생"
+              layout="fill"
+              onClick={() => {
+                link !== linkPlaying && handlePlayRecord(link, endTime);
+              }}
+            />
+          )}
           <StRecordInfo>
             <h1>{name}</h1>
+            {link === linkPlaying && <StRecordPlayBar />}
             <div>
               <p>{handleDate(date)}</p>
               <p>{handleEndTime(endTime)}</p>
@@ -49,6 +113,7 @@ function RecordLog(props: RecordStatusBarProps) {
           </StRecordInfo>
         </StRecord>
       ))}
+      <audio src={linkPlaying} ref={audioRef}></audio>
     </StRecordLogContainer>
   );
 }
@@ -99,7 +164,7 @@ const StRecordInfo = styled.div`
 
   & > h1 {
     ${FONT_STYLES.SB_25_MEMO};
-    margin-bottom: 1rem;
+    margin-bottom: 0.8rem;
   }
 
   & > div {
@@ -111,4 +176,12 @@ const StRecordInfo = styled.div`
   & > div > p:first-of-type {
     color: ${COLOR.GRAY_45};
   }
+`;
+
+const StRecordPlayBar = styled.div`
+  width: 47.4rem;
+  height: 0.8rem;
+  background-color: ${COLOR.SUB_BLUE_30};
+  margin-bottom: 0.8rem;
+  border-radius: 1rem;
 `;
