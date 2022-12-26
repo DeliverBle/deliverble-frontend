@@ -26,9 +26,8 @@ function RecordStatusBar(props: RecordStatusBarProps) {
   const isLoggedIn = useRecoilValue(loginState);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
-  const uploadRecordData = async (recordFormData: FormData) => {
-    const response = await api.learnDetailService.uploadRecordData(recordFormData);
-    console.log(response);
+  const uploadRecordData = async (formData: FormData) => {
+    await api.learnDetailService.uploadRecordData(formData);
   };
 
   const startRecord = () => {
