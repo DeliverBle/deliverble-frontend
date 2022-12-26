@@ -17,6 +17,8 @@ function RecordLog(props: RecordStatusBarProps) {
   const [recordList, setRecordList] = useState<GetRecordData[]>([]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [linkClicked, setLinkClicked] = useState('');
+  const progressRef = useRef<HTMLDivElement>(null);
+  const audioRef = useRef(new Audio());
 
   useEffect(() => {
     getRecordData(scriptId);
@@ -38,13 +40,19 @@ function RecordLog(props: RecordStatusBarProps) {
     return `${Math.floor(endTime / 60)}:${twoDigitsNumber(endTime % 60)}`;
   };
 
-  const audioRef = useRef(new Audio());
-  const handlePlayRecord = (link: string) => {
-    console.log(link);
-    console.log(linkClicked);
+  const handlePlayRecord = (link: string, endTime: number) => {
+    const updateProgress = (e) => {
+      const { currentTime } = e.target;
+      const progressPercentage = (currentTime / (endTime - 0.5)) * 100;
+      console.log(progressPercentage);
+      progressRef.current && (progressRef.current.style.width = (47.4 * (progressPercentage / 100)).toString() + 'rem');
+    };
+
     if (!isPlaying) {
+      // 이전에 재생했던 녹음이 아닐 경우
       if (linkClicked !== link) {
         audioRef.current.src = link;
+        audioRef.current.addEventListener('timeupdate', updateProgress);
       }
       audioRef.current.play();
       setIsPlaying(true);
@@ -52,10 +60,6 @@ function RecordLog(props: RecordStatusBarProps) {
       audioRef.current.pause();
       setIsPlaying(false);
     }
-
-    setTimeout(() => {
-      //   audioRef.current.pause();
-    }, audioRef.current.duration * 1000);
   };
 
   return (
@@ -69,35 +73,14 @@ function RecordLog(props: RecordStatusBarProps) {
             layout="fill"
             onClick={() => {
               setLinkClicked(link);
-              handlePlayRecord(link);
+              handlePlayRecord(link, endTime);
             }}
           />
-          {/* {link === audioRef.current.src && isPlaying ? (
-            <ImageDiv
-              src={icRecordPauseDefault}
-              className="icRecordPlay"
-              alt={link === audioRef.current.src ? '녹음 중지' : '녹음 재생'}
-              layout="fill"
-              onClick={() => {
-                handlePlayRecord(link);
-              }}
-            />
-          ) : (
-            <ImageDiv
-              src={icRecordPlayDefault}
-              className="icRecordPlay"
-              alt={link === audioRef.current.src ? '녹음 중지' : '녹음 재생'}
-              layout="fill"
-              onClick={() => {
-                handlePlayRecord(link);
-              }}
-            />
-          )} */}
           <StRecordInfo>
             <h1>{name}</h1>
             {link === audioRef.current.src && (
               <StRecordPlayBar>
-                <StRecordPlayStatus />
+                <StRecordPlayStatus ref={progressRef} />
               </StRecordPlayBar>
             )}
             <div>
@@ -180,13 +163,14 @@ const StRecordPlayBar = styled.div`
   background-color: ${COLOR.SUB_BLUE_30};
   margin-bottom: 0.8rem;
   border-radius: 1rem;
+  overflow: hidden;
 `;
 
 const StRecordPlayStatus = styled.div`
   position: absolute;
-  width: 47.4rem;
+  transition: width 0.1s linear;
   height: 0.8rem;
-  background-color: black;
+  background-color: ${COLOR.MAIN_BLUE};
 
   border-radius: 1rem;
 `;
