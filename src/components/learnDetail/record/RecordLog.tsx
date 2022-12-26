@@ -16,9 +16,11 @@ function RecordLog(props: RecordStatusBarProps) {
   const { scriptId } = props;
   const [recordList, setRecordList] = useState<GetRecordData[]>([]);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isPausing, setIsPausing] = useState(false);
   const [linkClicked, setLinkClicked] = useState('');
   const progressRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef(new Audio());
+  const [currentTime, setCurrentTime] = useState(0);
 
   useEffect(() => {
     getRecordData(scriptId);
@@ -33,19 +35,25 @@ function RecordLog(props: RecordStatusBarProps) {
     return date.substring(0, 10).replace(/-/g, '.').concat('.');
   };
 
-  const handleEndTime = (endTime: number) => {
+  const handleTime = (time: number) => {
+    const naturalNumber = Math.floor(time);
     const twoDigitsNumber = (num: number) => {
       return String(num).padStart(2, '0');
     };
-    return `${Math.floor(endTime / 60)}:${twoDigitsNumber(endTime % 60)}`;
+    return `${Math.floor(naturalNumber / 60)}:${twoDigitsNumber(naturalNumber % 60)}`;
   };
 
   const handlePlayRecord = (link: string, endTime: number) => {
     const updateProgress = (e) => {
-      const { currentTime } = e.target;
+      const { currentTime } = e.currentTarget;
+      setCurrentTime(currentTime);
       const progressPercentage = (currentTime / (endTime - 0.5)) * 100;
-      console.log(progressPercentage);
       progressRef.current && (progressRef.current.style.width = (47.4 * (progressPercentage / 100)).toString() + 'rem');
+      if (progressPercentage > 99) {
+        setIsPlaying(false);
+        setIsPausing(false);
+        audioRef.current.src = '';
+      }
     };
 
     if (!isPlaying) {
@@ -54,11 +62,15 @@ function RecordLog(props: RecordStatusBarProps) {
         audioRef.current.src = link;
         audioRef.current.addEventListener('timeupdate', updateProgress);
       }
+
       audioRef.current.play();
       setIsPlaying(true);
+      setIsPausing(true);
+      // 중지 버튼을 눌렀을 경우.
     } else {
       audioRef.current.pause();
       setIsPlaying(false);
+      setIsPausing(false);
     }
   };
 
@@ -69,7 +81,7 @@ function RecordLog(props: RecordStatusBarProps) {
           <ImageDiv
             src={link === audioRef.current.src && isPlaying ? icRecordPauseDefault : icRecordPlayDefault}
             className="icRecordPlay"
-            alt={link === audioRef.current.src ? '녹음 중지' : '녹음 재생'}
+            alt={link === audioRef.current.src && isPlaying ? '녹음 중지' : '녹음 재생'}
             layout="fill"
             onClick={() => {
               setLinkClicked(link);
@@ -78,14 +90,18 @@ function RecordLog(props: RecordStatusBarProps) {
           />
           <StRecordInfo>
             <h1>{name}</h1>
-            {link === audioRef.current.src && (
+            {link === audioRef.current.src && (isPlaying || !isPausing) && (
               <StRecordPlayBar>
                 <StRecordPlayStatus ref={progressRef} />
               </StRecordPlayBar>
             )}
             <div>
-              <p>{handleDate(date)}</p>
-              <p>{handleEndTime(endTime)}</p>
+              {link === audioRef.current.src && (isPlaying || !isPausing) ? (
+                <p style={{ color: `${COLOR.MAIN_BLUE}` }}>{handleTime(currentTime)}</p>
+              ) : (
+                <p>{handleDate(date)}</p>
+              )}
+              <p>{handleTime(endTime)}</p>
             </div>
           </StRecordInfo>
           <audio src={link} ref={audioRef} />
