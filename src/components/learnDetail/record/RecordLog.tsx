@@ -16,7 +16,7 @@ function RecordLog(props: RecordStatusBarProps) {
   const { scriptId } = props;
   const [recordList, setRecordList] = useState<GetRecordData[]>([]);
   const [linkPlaying, setIsLinkPlaying] = useState('');
-  const audioRef = useRef(new Audio());
+  const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
     getRecordData(scriptId);
@@ -38,65 +38,52 @@ function RecordLog(props: RecordStatusBarProps) {
     return `${Math.floor(endTime / 60)}:${twoDigitsNumber(endTime % 60)}`;
   };
 
-  const handlePlayRecord = (link: string, endTime: number) => {
+  const audioRef = useRef(new Audio());
+  const handlePlayRecord = (link: string, linkPlaying: string) => {
+    audioRef.current.src = link;
+    setIsLinkPlaying(link);
     console.log(link);
-    console.log(linkPlaying);
-    if (link === linkPlaying) {
+    if (isPlaying) {
       audioRef.current.pause();
       setIsLinkPlaying('');
+      setIsPlaying(false);
     } else if (linkPlaying === '') {
       audioRef.current.play();
       setIsLinkPlaying(link);
-      setTimeout(() => {
-        audioRef.current.pause();
-        setIsLinkPlaying('');
-      }, endTime * 1000);
+      setIsPlaying(true);
     }
+
+    setTimeout(() => {
+      setIsLinkPlaying('');
+    }, audioRef.current.duration * 1000);
   };
 
   return (
     <StRecordLogContainer>
       {recordList.map(({ name, link, endTime, date }) => (
         <StRecord key={link}>
-          {/* {link === linkPlaying ? (
-            <ImageDiv
-              src={icRecordPauseDefault}
-              className="icRecordPlay"
-              alt="녹음 중지"
-              layout="fill"
-              //   onClick={() => {
-              //     handlePauseRecord(link, endTime);
-              //   }}
-            />
-          ) : (
-            <ImageDiv
-              src={icRecordPlayDefault}
-              className="icRecordPlay"
-              alt="녹음 재생"
-              layout="fill"
-              onClick={() => {
-                link !== linkPlaying && handlePlayRecord(link, endTime);
-              }}
-            />
-          )} */}
           <ImageDiv
             src={link === linkPlaying ? icRecordPauseDefault : icRecordPlayDefault}
             className="icRecordPlay"
-            alt="녹음 재생"
+            alt={link === linkPlaying ? '녹음 중지' : '녹음 재생'}
             layout="fill"
             onClick={() => {
-              handlePlayRecord(link, endTime);
+              handlePlayRecord(link, linkPlaying);
             }}
           />
-          <audio src={link} ref={audioRef} />
           <StRecordInfo>
             <h1>{name}</h1>
-            {link === linkPlaying && <StRecordPlayBar />}
+            {link === linkPlaying && (
+              <StRecordPlayBar>
+                <StRecordPlayStatus />
+              </StRecordPlayBar>
+            )}
             <div>
               <p>{handleDate(date)}</p>
               <p>{handleEndTime(endTime)}</p>
             </div>
           </StRecordInfo>
+          <audio src={link} ref={audioRef} />
         </StRecord>
       ))}
     </StRecordLogContainer>
@@ -165,9 +152,19 @@ const StRecordInfo = styled.div`
 `;
 
 const StRecordPlayBar = styled.div`
+  position: relative;
   width: 47.4rem;
   height: 0.8rem;
   background-color: ${COLOR.SUB_BLUE_30};
   margin-bottom: 0.8rem;
+  border-radius: 1rem;
+`;
+
+const StRecordPlayStatus = styled.div`
+  position: absolute;
+  width: 47.4rem;
+  height: 0.8rem;
+  background-color: black;
+
   border-radius: 1rem;
 `;
