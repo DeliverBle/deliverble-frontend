@@ -255,7 +255,6 @@ export function learnDetailDataRemote(): LearnDetailService {
       data: body,
       type: 'multipart',
     });
-    console.log(response);
     //성공 처리
     if (response.status === 200) {
       return {
@@ -280,7 +279,9 @@ export function learnDetailDataRemote(): LearnDetailService {
         date: record.date,
         scriptId: record.scriptId,
       }));
-    } else throw '서버 통신 실패';
+    } else if (response.status === 404) {
+      return 'empty view 보여줘';
+    } else throw response.message;
   };
 
   return {
