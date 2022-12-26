@@ -49,3 +49,8 @@ export { default as icRecordMicActive } from './ic_record_mic_active.svg';
 export { default as icRecordMicDefault } from './ic_record_mic_default.svg';
 export { default as icRecordStart } from './ic_record_start.svg';
 export { default as icRecordStop } from './ic_record_stop.svg';
+export { default as icRecordPlayDefault } from './ic_record_play_default.svg';
+export { default as icRecordPlayActive } from './ic_record_play_active.svg';
+export { default as icRecordPlayUnactivated } from './ic_record_play_unactivated.svg';
+export { default as icRecordPauseDefault } from './ic_record_pause_default.svg';
+export { default as icRecordPauseActive } from './ic_record_pause_active.svg';
