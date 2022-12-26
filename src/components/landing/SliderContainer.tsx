@@ -446,14 +446,14 @@ const StLottieWrapper = styled.div`
     width: 57.7rem;
     height: 30.5rem;
 
-    margin: 0 25.6rem 0 25.6rem;
+    margin: 0 25.6rem 0 25.5rem;
   }
 
   &.step2 {
-    width: 57.8rem;
-    height: 35.9rem;
+    width: 64rem;
+    height: 40rem;
 
-    margin: 0 16.1rem 0 34.9rem;
+    margin: 0 18.4rem 0 26.4rem;
   }
 
   &.step3 {
