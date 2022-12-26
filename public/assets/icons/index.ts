@@ -17,7 +17,6 @@ export { default as icScript } from './ic_script.svg';
 export { default as icDeliverbleBlue } from './ic_deliverble_blue.svg';
 export { default as icDeliverbleWhite } from './ic_deliverble_white.svg';
 export { default as icDeliverbleNav } from './ic_deliverble_nav.svg';
-export { default as icMemo } from './ic_memo.svg';
 export { default as icAnnounce } from './ic_announce.svg';
 export { default as icHighlighterDefault } from './ic_highlighter_default.svg';
 export { default as icHighlighterHover } from './ic_highlighter_hover.svg';

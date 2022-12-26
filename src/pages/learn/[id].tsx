@@ -33,7 +33,6 @@ import {
   icHighlighterClicked,
   icHighlighterDefault,
   icHighlighterHover,
-  icMemo,
   icSpacingClicked,
   icSpacingDefault,
   icSpacingHover,
@@ -564,7 +563,6 @@ function LearnDetail() {
                 </StVideoWrapper>
                 <StMemoContainer>
                   <StMemoTitle>
-                    <ImageDiv src={icMemo} className="memo" layout="fill" />
                     <h2>메모</h2>
                   </StMemoTitle>
                   <StMemoWrapper>
@@ -925,12 +923,6 @@ const StMemoTitle = styled.div`
   & > h2 {
     color: ${COLOR.BLACK};
     ${FONT_STYLES.SB_24_HEADLINE};
-  }
-
-  .memo {
-    position: relative;
-    width: 3.2rem;
-    height: 3.2rem;
   }
 `;
 
