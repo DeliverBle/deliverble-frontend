@@ -15,7 +15,6 @@ interface RecordStatusBarProps {
 function RecordLog(props: RecordStatusBarProps) {
   const { scriptId } = props;
   const [recordList, setRecordList] = useState<GetRecordData[]>([]);
-  const [linkPlaying, setIsLinkPlaying] = useState('');
   const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
@@ -39,23 +38,33 @@ function RecordLog(props: RecordStatusBarProps) {
   };
 
   const audioRef = useRef(new Audio());
-  const handlePlayRecord = (link: string, linkPlaying: string) => {
+  const handlePlayRecord = (link: string) => {
     audioRef.current.src = link;
-    setIsLinkPlaying(link);
-    console.log(link);
     if (isPlaying) {
       audioRef.current.pause();
-      setIsLinkPlaying('');
       setIsPlaying(false);
-    } else if (linkPlaying === '') {
+    } else {
       audioRef.current.play();
-      setIsLinkPlaying(link);
       setIsPlaying(true);
+      console.log('here');
     }
+    // audioRef.current.src = link;
+    // audioRef.current.play();
+    // setIsPlaying(true);
+
+    // if (isPlaying) {
+    //   audioRef.current.pause();
+    //   setIsPlaying(false);
+    // }
 
     setTimeout(() => {
-      setIsLinkPlaying('');
+      setIsPlaying(false);
     }, audioRef.current.duration * 1000);
+  };
+
+  const handlePauseRecord = () => {
+    audioRef.current.pause();
+    setIsPlaying(false);
   };
 
   return (
@@ -63,17 +72,17 @@ function RecordLog(props: RecordStatusBarProps) {
       {recordList.map(({ name, link, endTime, date }) => (
         <StRecord key={link}>
           <ImageDiv
-            src={link === linkPlaying ? icRecordPauseDefault : icRecordPlayDefault}
+            src={link === audioRef.current.src && !isPlaying ? icRecordPauseDefault : icRecordPlayDefault}
             className="icRecordPlay"
-            alt={link === linkPlaying ? '녹음 중지' : '녹음 재생'}
+            alt={link === audioRef.current.src ? '녹음 중지' : '녹음 재생'}
             layout="fill"
             onClick={() => {
-              handlePlayRecord(link, linkPlaying);
+              link === audioRef.current.src && !isPlaying ? handlePauseRecord() : handlePlayRecord(link);
             }}
           />
           <StRecordInfo>
             <h1>{name}</h1>
-            {link === linkPlaying && (
+            {link === audioRef.current.src && (
               <StRecordPlayBar>
                 <StRecordPlayStatus />
               </StRecordPlayBar>
