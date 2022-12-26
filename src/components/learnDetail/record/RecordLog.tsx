@@ -16,6 +16,7 @@ function RecordLog(props: RecordStatusBarProps) {
   const { scriptId } = props;
   const [recordList, setRecordList] = useState<GetRecordData[]>([]);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [linkClicked, setLinkClicked] = useState('');
 
   useEffect(() => {
     getRecordData(scriptId);
@@ -39,32 +40,22 @@ function RecordLog(props: RecordStatusBarProps) {
 
   const audioRef = useRef(new Audio());
   const handlePlayRecord = (link: string) => {
-    audioRef.current.src = link;
-    if (isPlaying) {
-      audioRef.current.pause();
-      setIsPlaying(false);
-    } else {
+    console.log(link);
+    console.log(linkClicked);
+    if (!isPlaying) {
+      if (linkClicked !== link) {
+        audioRef.current.src = link;
+      }
       audioRef.current.play();
       setIsPlaying(true);
-      console.log('here');
+    } else {
+      audioRef.current.pause();
+      setIsPlaying(false);
     }
-    // audioRef.current.src = link;
-    // audioRef.current.play();
-    // setIsPlaying(true);
-
-    // if (isPlaying) {
-    //   audioRef.current.pause();
-    //   setIsPlaying(false);
-    // }
 
     setTimeout(() => {
-      setIsPlaying(false);
+      //   audioRef.current.pause();
     }, audioRef.current.duration * 1000);
-  };
-
-  const handlePauseRecord = () => {
-    audioRef.current.pause();
-    setIsPlaying(false);
   };
 
   return (
@@ -72,14 +63,36 @@ function RecordLog(props: RecordStatusBarProps) {
       {recordList.map(({ name, link, endTime, date }) => (
         <StRecord key={link}>
           <ImageDiv
-            src={link === audioRef.current.src && !isPlaying ? icRecordPauseDefault : icRecordPlayDefault}
+            src={link === audioRef.current.src && isPlaying ? icRecordPauseDefault : icRecordPlayDefault}
             className="icRecordPlay"
             alt={link === audioRef.current.src ? '녹음 중지' : '녹음 재생'}
             layout="fill"
             onClick={() => {
-              link === audioRef.current.src && !isPlaying ? handlePauseRecord() : handlePlayRecord(link);
+              setLinkClicked(link);
+              handlePlayRecord(link);
             }}
           />
+          {/* {link === audioRef.current.src && isPlaying ? (
+            <ImageDiv
+              src={icRecordPauseDefault}
+              className="icRecordPlay"
+              alt={link === audioRef.current.src ? '녹음 중지' : '녹음 재생'}
+              layout="fill"
+              onClick={() => {
+                handlePlayRecord(link);
+              }}
+            />
+          ) : (
+            <ImageDiv
+              src={icRecordPlayDefault}
+              className="icRecordPlay"
+              alt={link === audioRef.current.src ? '녹음 중지' : '녹음 재생'}
+              layout="fill"
+              onClick={() => {
+                handlePlayRecord(link);
+              }}
+            />
+          )} */}
           <StRecordInfo>
             <h1>{name}</h1>
             {link === audioRef.current.src && (
