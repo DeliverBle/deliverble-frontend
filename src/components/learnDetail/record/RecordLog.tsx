@@ -46,6 +46,7 @@ function RecordLog(props: RecordStatusBarProps) {
   const handlePlayRecord = (link: string, endTime: number) => {
     const updateProgress = (e) => {
       const { currentTime } = e.currentTarget;
+      console.log(endTime);
       setCurrentTime(currentTime);
       const progressPercentage = (currentTime / (endTime - 0.5)) * 100;
       progressRef.current && (progressRef.current.style.width = (47.4 * (progressPercentage / 100)).toString() + 'rem');
@@ -57,8 +58,11 @@ function RecordLog(props: RecordStatusBarProps) {
     };
 
     if (!isPlaying) {
-      // 이전에 재생했던 녹음이 아닐 경우
+      // 이전에 재생했던 녹음이 아닐 경우 //한번 재생했던 녹음을 다시 재생할 경우.
       if (linkClicked !== link) {
+        audioRef.current.src = link;
+        audioRef.current.addEventListener('timeupdate', updateProgress);
+      } else if (!isPausing && currentTime === 0) {
         audioRef.current.src = link;
         audioRef.current.addEventListener('timeupdate', updateProgress);
       }
