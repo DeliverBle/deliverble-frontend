@@ -46,7 +46,6 @@ function RecordLog(props: RecordStatusBarProps) {
   const handlePlayRecord = (link: string, endTime: number) => {
     const updateProgress = (e) => {
       const { currentTime } = e.currentTarget;
-      console.log(endTime);
       setCurrentTime(currentTime);
       const progressPercentage = (currentTime / (endTime - 0.5)) * 100;
       progressRef.current && (progressRef.current.style.width = (47.4 * (progressPercentage / 100)).toString() + 'rem');
@@ -54,6 +53,7 @@ function RecordLog(props: RecordStatusBarProps) {
         setIsPlaying(false);
         setIsPausing(false);
         audioRef.current.src = '';
+        audioRef.current.removeEventListener('timeupdate', updateProgress);
       }
     };
 
@@ -64,7 +64,6 @@ function RecordLog(props: RecordStatusBarProps) {
         audioRef.current.addEventListener('timeupdate', updateProgress);
       } else if (!isPausing && currentTime === 0) {
         audioRef.current.src = link;
-        audioRef.current.addEventListener('timeupdate', updateProgress);
       }
 
       audioRef.current.play();
