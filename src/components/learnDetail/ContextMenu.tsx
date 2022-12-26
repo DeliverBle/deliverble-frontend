@@ -131,10 +131,19 @@ const StContextMenu = styled.div<{ top: number; left: number; contextElementType
     justify-content: center;
 
     border-radius: 0.8rem;
-    & > button {
-      width: 13.2rem;
-      height: 3.2rem;
-      padding: 0.5rem 1.6rem;
+    ${({ contextElementType, isEditing }) =>
+      contextElementType === 'MARK' && !isEditing
+        ? css`
+      & > button {
+        width: 13.2rem;
+        height: 3.2rem;
+        padding: 0.5rem 1.6rem;
+        `
+        : css`
+        & > button {
+          width: 11.8rem;
+          height: 3.2rem;
+          `}
 
       ${FONT_STYLES.SB_16_CAPTION}
       color: ${COLOR.BLACK};
