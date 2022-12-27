@@ -53,8 +53,6 @@ function RecordLog(props: RecordStatusBarProps) {
         setIsPlaying(false);
         setIsPausing(false);
         audioRef.current.src = '';
-        audioRef.current.currentTime = 0;
-        setCurrentTime(0);
         audioRef.current.removeEventListener('timeupdate', updateProgress);
       }
     };
@@ -63,10 +61,12 @@ function RecordLog(props: RecordStatusBarProps) {
     if (!isPlaying) {
       // 이전에 재생했던 녹음이 아닐 경우
       if (linkClicked !== link) {
+        audioRef.current.removeEventListener('timeupdate', updateProgress);
         audioRef.current.src = link;
         audioRef.current.addEventListener('timeupdate', updateProgress);
         //한번 재생했던 녹음을 다시 재생할 경우.
       } else if (!isPausing) {
+        audioRef.current.removeEventListener('timeupdate', updateProgress);
         audioRef.current.src = link;
         audioRef.current.addEventListener('timeupdate', updateProgress);
       }
