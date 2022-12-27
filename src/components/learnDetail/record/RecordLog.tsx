@@ -27,15 +27,15 @@ function RecordLog(props: RecordStatusBarProps) {
   const audioRef = useRef(new Audio());
   const [currentTime, setCurrentTime] = useState(0);
   const [isDataEmpty, setIsDataEmpty] = useState(false);
-  const [isDeleted, setIsDeleted] = useState(false);
+  const [isDataChanged, setIsDataChanged] = useState(false);
 
   const { data } = useQuery(
-    ['recordData', isRecordSaved, isDeleted],
+    ['recordData', isRecordSaved, isDataChanged],
     () => api.learnDetailService.getRecordData(scriptId),
     {
       onSuccess: (data) => {
         !data && setIsDataEmpty(true);
-        setIsDeleted(false);
+        setIsDataChanged(false);
       },
       onError: () => {
         console.error('녹음 데이터 요청 에러');
@@ -134,7 +134,7 @@ function RecordLog(props: RecordStatusBarProps) {
                 </div>
               </StRecordInfo>
               <audio src={link} ref={audioRef} />
-              {!isGuide && <RecordDotButton link={link} scriptId={scriptId} setIsDeleted={setIsDeleted} />}
+              {!isGuide && <RecordDotButton link={link} scriptId={scriptId} setIsDataChanged={setIsDataChanged} />}
             </StRecord>
           ))}
         </>

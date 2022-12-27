@@ -8,15 +8,15 @@ import { Dispatch, SetStateAction } from 'react';
 interface RecordDropdownProps {
   link: string;
   scriptId: number;
-  setIsDeleted: Dispatch<SetStateAction<boolean>>;
+  setIsDataChanged: Dispatch<SetStateAction<boolean>>;
 }
 
 function RecordDropdown(props: RecordDropdownProps) {
-  const { link, scriptId, setIsDeleted } = props;
+  const { link, scriptId, setIsDataChanged } = props;
 
   const { mutate } = useMutation(['recordData'], () => api.learnDetailService.deleteRecordData({ link, scriptId }), {
     onSuccess: () => {
-      setIsDeleted(true);
+      setIsDataChanged(true);
     },
     onError: () => {
       alert('녹음 삭제에 실패했습니다.');
