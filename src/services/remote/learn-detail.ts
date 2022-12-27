@@ -267,10 +267,10 @@ export function learnDetailDataRemote(): LearnDetailService {
   };
 
   const getRecordData = async (scriptId: number) => {
-    const response = await privateAPI.get({
-      url: `/script/recording/find?scriptId=${scriptId}`,
-    });
-    if (response.axiosStatus === 200) {
+    try {
+      const response = await privateAPI.get({
+        url: `/script/recording/find?scriptId=${scriptId}`,
+      });
       return response.data[0].map((record: GetRecordData) => ({
         name: record.name,
         link: record.link,
@@ -279,9 +279,9 @@ export function learnDetailDataRemote(): LearnDetailService {
         date: record.date,
         scriptId: record.scriptId,
       }));
-    } else if (response.status === 404) {
-      return 'empty view 보여줘';
-    } else throw response.message;
+    } catch {
+      return undefined;
+    }
   };
 
   return {

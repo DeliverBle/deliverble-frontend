@@ -7,6 +7,7 @@ import { icRecordPlayDefault, icRecordPauseDefault } from 'public/assets/icons';
 import ImageDiv from '@src/components/common/ImageDiv';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { useRef } from 'react';
+import EmptyRecord from './EmptyRecord';
 
 interface RecordStatusBarProps {
   scriptId: number;
@@ -21,6 +22,7 @@ function RecordLog(props: RecordStatusBarProps) {
   const progressRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef(new Audio());
   const [currentTime, setCurrentTime] = useState(0);
+  const [isDataEmpty, setIsDataEmpty] = useState(false);
 
   useEffect(() => {
     getRecordData(scriptId);
@@ -29,6 +31,7 @@ function RecordLog(props: RecordStatusBarProps) {
   const getRecordData = async (scriptId: number) => {
     const response = await api.learnDetailService.getRecordData(scriptId);
     setRecordList(response);
+    !response && setIsDataEmpty(true);
   };
 
   const handleDate = (date: string) => {
@@ -47,7 +50,7 @@ function RecordLog(props: RecordStatusBarProps) {
     const updateProgress = (e) => {
       const { currentTime } = e.currentTarget;
       setCurrentTime(currentTime);
-      const progressPercentage = (currentTime / (endTime - 0.5)) * 100;
+      const progressPercentage = (currentTime / (endTime - 0.75)) * 100;
       progressRef.current && (progressRef.current.style.width = (47.4 * (progressPercentage / 100)).toString() + 'rem');
       if (progressPercentage > 99) {
         setIsPlaying(false);
@@ -84,37 +87,43 @@ function RecordLog(props: RecordStatusBarProps) {
 
   return (
     <StRecordLogContainer>
-      {recordList.map(({ name, link, endTime, date }) => (
-        <StRecord key={link}>
-          <ImageDiv
-            src={link === audioRef.current.src && isPlaying ? icRecordPauseDefault : icRecordPlayDefault}
-            className="icRecordPlay"
-            alt={link === audioRef.current.src && isPlaying ? '녹음 중지' : '녹음 재생'}
-            layout="fill"
-            onClick={() => {
-              setLinkClicked(link);
-              handlePlayRecord(link, endTime);
-            }}
-          />
-          <StRecordInfo>
-            <h1>{name}</h1>
-            {link === audioRef.current.src && (isPlaying || isPausing) && (
-              <StRecordPlayBar>
-                <StRecordPlayStatus ref={progressRef} />
-              </StRecordPlayBar>
-            )}
-            <div>
-              {link === audioRef.current.src && (isPlaying || isPausing) ? (
-                <p style={{ color: `${COLOR.MAIN_BLUE}` }}>{handleTime(currentTime)}</p>
-              ) : (
-                <p>{handleDate(date)}</p>
-              )}
-              <p>{handleTime(endTime)}</p>
-            </div>
-          </StRecordInfo>
-          <audio src={link} ref={audioRef} />
-        </StRecord>
-      ))}
+      {isDataEmpty ? (
+        <EmptyRecord />
+      ) : (
+        <>
+          {recordList.map(({ name, link, endTime, date }) => (
+            <StRecord key={link}>
+              <ImageDiv
+                src={link === audioRef.current.src && isPlaying ? icRecordPauseDefault : icRecordPlayDefault}
+                className="icRecordPlay"
+                alt={link === audioRef.current.src && isPlaying ? '녹음 중지' : '녹음 재생'}
+                layout="fill"
+                onClick={() => {
+                  setLinkClicked(link);
+                  handlePlayRecord(link, endTime);
+                }}
+              />
+              <StRecordInfo>
+                <h1>{name}</h1>
+                {link === audioRef.current.src && (isPlaying || isPausing) && (
+                  <StRecordPlayBar>
+                    <StRecordPlayStatus ref={progressRef} />
+                  </StRecordPlayBar>
+                )}
+                <div>
+                  {link === audioRef.current.src && (isPlaying || isPausing) ? (
+                    <p style={{ color: `${COLOR.MAIN_BLUE}` }}>{handleTime(currentTime)}</p>
+                  ) : (
+                    <p>{handleDate(date)}</p>
+                  )}
+                  <p>{handleTime(endTime)}</p>
+                </div>
+              </StRecordInfo>
+              <audio src={link} ref={audioRef} />
+            </StRecord>
+          ))}
+        </>
+      )}
     </StRecordLogContainer>
   );
 }

@@ -54,3 +54,4 @@ export { default as icRecordPlayActive } from './ic_record_play_active.svg';
 export { default as icRecordPlayUnactivated } from './ic_record_play_unactivated.svg';
 export { default as icRecordPauseDefault } from './ic_record_pause_default.svg';
 export { default as icRecordPauseActive } from './ic_record_pause_active.svg';
+export { default as icRecordEmpty } from './ic_record_empty.svg';
