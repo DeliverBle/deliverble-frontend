@@ -8,10 +8,12 @@ interface RecordDotButtonProps {
   link: string;
   scriptId: number;
   setIsDataChanged: Dispatch<SetStateAction<boolean>>;
+  setIsNameChanging: Dispatch<SetStateAction<boolean>>;
+  setRecordLinkChanging: Dispatch<SetStateAction<string>>;
 }
 
 function RecordDotButton(props: RecordDotButtonProps) {
-  const { link, scriptId, setIsDataChanged } = props;
+  const { link, scriptId, setIsDataChanged, setIsNameChanging, setRecordLinkChanging } = props;
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const recordDropdownRef = useRef<HTMLDivElement>(null);
 
@@ -38,7 +40,15 @@ function RecordDotButton(props: RecordDotButtonProps) {
         <ImageDiv className="dot" src={icDotHover} alt="..." layout="fill" />
         <ImageDiv className="dot default" src={icDotDefault} alt="..." layout="fill" />
       </StRecordDotImage>
-      {isDropdownOpen && <RecordDropdown link={link} scriptId={scriptId} setIsDataChanged={setIsDataChanged} />}
+      {isDropdownOpen && (
+        <RecordDropdown
+          link={link}
+          scriptId={scriptId}
+          setIsDataChanged={setIsDataChanged}
+          setIsNameChanging={setIsNameChanging}
+          setRecordLinkChanging={setRecordLinkChanging}
+        />
+      )}
     </StRecordDotButton>
   );
 }

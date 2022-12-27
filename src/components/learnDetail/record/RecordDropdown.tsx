@@ -9,10 +9,12 @@ interface RecordDropdownProps {
   link: string;
   scriptId: number;
   setIsDataChanged: Dispatch<SetStateAction<boolean>>;
+  setIsNameChanging: Dispatch<SetStateAction<boolean>>;
+  setRecordLinkChanging: Dispatch<SetStateAction<string>>;
 }
 
 function RecordDropdown(props: RecordDropdownProps) {
-  const { link, scriptId, setIsDataChanged } = props;
+  const { link, scriptId, setIsDataChanged, setIsNameChanging, setRecordLinkChanging } = props;
 
   const { mutate } = useMutation(['recordData'], () => api.learnDetailService.deleteRecordData({ link, scriptId }), {
     onSuccess: () => {
@@ -31,7 +33,14 @@ function RecordDropdown(props: RecordDropdownProps) {
             다운로드
           </a>
         </button>
-        <button type="button">이름 바꾸기</button>
+        <button
+          type="button"
+          onClick={() => {
+            setIsNameChanging(true);
+            setRecordLinkChanging(link);
+          }}>
+          이름 바꾸기
+        </button>
         <button
           type="button"
           onClick={() => {

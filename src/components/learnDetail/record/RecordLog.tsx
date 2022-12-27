@@ -2,7 +2,7 @@ import { api } from '@src/services/api';
 import { useState } from 'react';
 import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
-import { icRecordPlayDefault, icRecordPauseDefault } from 'public/assets/icons';
+import { icRecordPlayDefault, icRecordPauseDefault, icMemoXButton, icCheckButton } from 'public/assets/icons';
 import ImageDiv from '@src/components/common/ImageDiv';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { useRef } from 'react';
@@ -28,6 +28,8 @@ function RecordLog(props: RecordStatusBarProps) {
   const [currentTime, setCurrentTime] = useState(0);
   const [isDataEmpty, setIsDataEmpty] = useState(false);
   const [isDataChanged, setIsDataChanged] = useState(false);
+  const [isNameChanging, setIsNameChanging] = useState(false);
+  const [recordLinkChanging, setRecordLinkChanging] = useState('');
 
   const { data } = useQuery(
     ['recordData', isRecordSaved, isDataChanged],
@@ -118,23 +120,54 @@ function RecordLog(props: RecordStatusBarProps) {
                 }}
               />
               <StRecordInfo>
-                <h1>{name}</h1>
-                {link === audioRef.current?.src && (isPlaying || isPausing) && (
-                  <StRecordPlayBar>
-                    <StRecordPlayStatus ref={progressRef} />
-                  </StRecordPlayBar>
+                {isNameChanging && link === recordLinkChanging ? (
+                  <>
+                    <StNameChanging>{name ?? ''}</StNameChanging>
+                    <StButtonContainer>
+                      <button type="button">
+                        <ImageDiv
+                          className="icNameChange"
+                          src={icMemoXButton}
+                          alt="취소"
+                          onClick={() => {
+                            setIsNameChanging(false);
+                          }}
+                        />
+                      </button>
+                      <button type="button">
+                        <ImageDiv className="icNameChange" src={icCheckButton} alt="완료" />
+                      </button>
+                    </StButtonContainer>
+                  </>
+                ) : (
+                  <>
+                    <h1>{name}</h1>
+                    {link === audioRef.current?.src && (isPlaying || isPausing) && (
+                      <StRecordPlayBar>
+                        <StRecordPlayStatus ref={progressRef} />
+                      </StRecordPlayBar>
+                    )}
+                    <div>
+                      {link === audioRef.current?.src && (isPlaying || isPausing) ? (
+                        <p style={{ color: `${COLOR.MAIN_BLUE}` }}>{handleTime(currentTime)}</p>
+                      ) : (
+                        <p>{handleDate(date)}</p>
+                      )}
+                      <p>{handleTime(endTime)}</p>
+                    </div>
+                  </>
                 )}
-                <div>
-                  {link === audioRef.current?.src && (isPlaying || isPausing) ? (
-                    <p style={{ color: `${COLOR.MAIN_BLUE}` }}>{handleTime(currentTime)}</p>
-                  ) : (
-                    <p>{handleDate(date)}</p>
-                  )}
-                  <p>{handleTime(endTime)}</p>
-                </div>
               </StRecordInfo>
               <audio src={link} ref={audioRef} />
-              {!isGuide && <RecordDotButton link={link} scriptId={scriptId} setIsDataChanged={setIsDataChanged} />}
+              {!isGuide && (
+                <RecordDotButton
+                  link={link}
+                  scriptId={scriptId}
+                  setIsDataChanged={setIsDataChanged}
+                  setIsNameChanging={setIsNameChanging}
+                  setRecordLinkChanging={setRecordLinkChanging}
+                />
+              )}
             </StRecord>
           ))}
         </>
@@ -229,4 +262,44 @@ const StRecordPlayStatus = styled.div`
   background-color: ${COLOR.MAIN_BLUE};
 
   border-radius: 1rem;
+`;
+
+const StNameChanging = styled.textarea`
+  padding: 0.8rem 0.8rem 1rem 1.2rem;
+  width: 49.8rem;
+  height: 5.5rem;
+
+  border: 0.2rem solid ${COLOR.SUB_BLUE_50};
+  border-radius: 1.2rem;
+  background-color: transparent;
+
+  font-family: 'Pretendard';
+  ${FONT_STYLES.M_25_BODY};
+  color: ${COLOR.BLACK};
+
+  resize: none;
+  &:focus {
+    outline: none;
+  }
+  &::-webkit-scrollbar {
+    width: 1rem;
+    background-color: transparent;
+  }
+`;
+
+const StButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+
+  width: 6.8rem;
+  height: 3rem;
+  margin-top: 1rem;
+  margin-left: 42.2rem;
+
+  .icNameChange {
+    position: relative;
+    width: 3rem;
+    height: 3rem;
+  }
 `;

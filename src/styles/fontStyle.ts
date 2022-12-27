@@ -41,6 +41,7 @@ export const FONT_STYLES = {
   B_20_BODY: FONT({ size: 20, weight: 'B', position: 'Body', height: 140 }),
   SB_20_BODY: FONT({ size: 20, weight: 'SB', position: 'Body', height: 140 }),
   M_20_BODY: FONT({ size: 20, weight: 'M', position: 'Body', height: 140 }),
+  M_25_BODY: FONT({ size: 25, weight: 'M', position: 'Body', height: 140 }),
   R_20_BODY: FONT({ size: 20, weight: 'R', position: 'Body', height: 180 }),
   SB_18_CAPTION: FONT({ size: 18, weight: 'SB', position: 'Caption', height: 140 }),
   M_18_CAPTION: FONT({ size: 18, weight: 'M', position: 'Caption', height: 140 }),
