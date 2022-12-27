@@ -1,24 +1,44 @@
+import { api } from '@src/services/api';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import styled from 'styled-components';
+import { useMutation } from 'react-query';
+import { Dispatch, SetStateAction } from 'react';
 
 interface RecordDropdownProps {
   link: string;
+  scriptId: number;
+  setIsDeleted: Dispatch<SetStateAction<boolean>>;
 }
 
 function RecordDropdown(props: RecordDropdownProps) {
-  const { link } = props;
+  const { link, scriptId, setIsDeleted } = props;
+
+  const { mutate } = useMutation(['recordData'], () => api.learnDetailService.deleteRecordData({ link, scriptId }), {
+    onSuccess: () => {
+      setIsDeleted(true);
+    },
+    onError: () => {
+      alert('녹음 삭제에 실패했습니다.');
+    },
+  });
 
   return (
     <>
       <StRecordDropdown>
         <button>
-          <a href={link} download="filename.mp3">
+          <a href={link} download="녹음 파일.mp3">
             다운로드
           </a>
         </button>
         <button type="button">이름 바꾸기</button>
-        <button type="button">녹음 삭제</button>
+        <button
+          type="button"
+          onClick={() => {
+            mutate();
+          }}>
+          녹음 삭제
+        </button>
       </StRecordDropdown>
     </>
   );

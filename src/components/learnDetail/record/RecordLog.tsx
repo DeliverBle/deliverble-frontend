@@ -27,16 +27,22 @@ function RecordLog(props: RecordStatusBarProps) {
   const audioRef = useRef(new Audio());
   const [currentTime, setCurrentTime] = useState(0);
   const [isDataEmpty, setIsDataEmpty] = useState(false);
+  const [isDeleted, setIsDeleted] = useState(false);
 
-  const { data } = useQuery(['recordData', isRecordSaved], () => api.learnDetailService.getRecordData(scriptId), {
-    onSuccess: (data) => {
-      !data && setIsDataEmpty(true);
+  const { data } = useQuery(
+    ['recordData', isRecordSaved, isDeleted],
+    () => api.learnDetailService.getRecordData(scriptId),
+    {
+      onSuccess: (data) => {
+        !data && setIsDataEmpty(true);
+        setIsDeleted(false);
+      },
+      onError: () => {
+        console.error('녹음 데이터 요청 에러');
+      },
+      enabled: !!scriptId,
     },
-    onError: () => {
-      console.error('녹음 데이터 요청 에러');
-    },
-    enabled: !!scriptId,
-  });
+  );
 
   const handleDate = (date: string) => {
     return date.substring(0, 10).replace(/-/g, '.').concat('.');
@@ -98,12 +104,12 @@ function RecordLog(props: RecordStatusBarProps) {
           {data?.map(({ name, link, endTime, date }) => (
             <StRecord key={link}>
               <ImageDiv
-                src={link === audioRef.current.src && isPlaying ? icRecordPauseDefault : icRecordPlayDefault}
+                src={link === audioRef.current?.src && isPlaying ? icRecordPauseDefault : icRecordPlayDefault}
                 className="icRecordPlay"
-                alt={link === audioRef.current.src && isPlaying ? '녹음 중지' : '녹음 재생'}
+                alt={link === audioRef.current?.src && isPlaying ? '녹음 중지' : '녹음 재생'}
                 layout="fill"
                 onClick={() => {
-                  if (link !== audioRef.current.src && (isPlaying || isPausing)) {
+                  if (link !== audioRef.current?.src && (isPlaying || isPausing)) {
                     return;
                   } else {
                     setLinkClicked(link);
@@ -113,13 +119,13 @@ function RecordLog(props: RecordStatusBarProps) {
               />
               <StRecordInfo>
                 <h1>{name}</h1>
-                {link === audioRef.current.src && (isPlaying || isPausing) && (
+                {link === audioRef.current?.src && (isPlaying || isPausing) && (
                   <StRecordPlayBar>
                     <StRecordPlayStatus ref={progressRef} />
                   </StRecordPlayBar>
                 )}
                 <div>
-                  {link === audioRef.current.src && (isPlaying || isPausing) ? (
+                  {link === audioRef.current?.src && (isPlaying || isPausing) ? (
                     <p style={{ color: `${COLOR.MAIN_BLUE}` }}>{handleTime(currentTime)}</p>
                   ) : (
                     <p>{handleDate(date)}</p>
@@ -128,7 +134,7 @@ function RecordLog(props: RecordStatusBarProps) {
                 </div>
               </StRecordInfo>
               <audio src={link} ref={audioRef} />
-              {!isGuide && <RecordDotButton link={link} />}
+              {!isGuide && <RecordDotButton link={link} scriptId={scriptId} setIsDeleted={setIsDeleted} />}
             </StRecord>
           ))}
         </>

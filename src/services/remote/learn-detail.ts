@@ -1,5 +1,14 @@
 import { LearnDetailService } from '../api/learn-detail';
-import { Script, SentenceData, Tag, MemoData, Name, UploadRecordData, GetRecordData } from '../api/types/learn-detail';
+import {
+  Script,
+  SentenceData,
+  Tag,
+  MemoData,
+  Name,
+  UploadRecordData,
+  GetRecordData,
+  DeleteRecordData,
+} from '../api/types/learn-detail';
 import { privateAPI, publicAPI } from './base';
 
 export function learnDetailDataRemote(): LearnDetailService {
@@ -255,7 +264,6 @@ export function learnDetailDataRemote(): LearnDetailService {
       data: body,
       type: 'multipart',
     });
-    //성공 처리
     if (response.status === 200) {
       return {
         link: response.data.link,
@@ -284,6 +292,21 @@ export function learnDetailDataRemote(): LearnDetailService {
     }
   };
 
+  const deleteRecordData = async (body: DeleteRecordData) => {
+    const response = await privateAPI.post({
+      url: '/script/recording/delete',
+      data: body,
+    });
+    console.log(response);
+    if (response.status === 200) {
+      return {
+        link: response.data.link,
+        deleted: response.data.deleted,
+        scriptId: response.data.scriptId,
+      };
+    } else throw '서버 통신 실패';
+  };
+
   return {
     getPrivateVideoData,
     getPublicVideoData,
@@ -298,5 +321,6 @@ export function learnDetailDataRemote(): LearnDetailService {
     getPrivateSpeechGuideData,
     uploadRecordData,
     getRecordData,
+    deleteRecordData,
   };
 }

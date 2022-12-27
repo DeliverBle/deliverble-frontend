@@ -6,6 +6,8 @@ import {
   UploadRecordData,
   UploadRecordResponse,
   GetRecordData,
+  DeleteRecordData,
+  DeleteRecordResponse,
 } from './types/learn-detail';
 
 export interface LearnDetailService {
@@ -22,4 +24,5 @@ export interface LearnDetailService {
   getPrivateSpeechGuideData(videoId: number): Promise<VideoData>;
   uploadRecordData(body: UploadRecordData): Promise<UploadRecordResponse>;
   getRecordData(scriptId: number): Promise<GetRecordData[]>;
+  deleteRecordData(body: DeleteRecordData): Promise<DeleteRecordResponse>;
 }
