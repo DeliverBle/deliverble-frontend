@@ -53,27 +53,32 @@ function RecordLog(props: RecordStatusBarProps) {
         setIsPlaying(false);
         setIsPausing(false);
         audioRef.current.src = '';
+        audioRef.current.currentTime = 0;
+        setCurrentTime(0);
         audioRef.current.removeEventListener('timeupdate', updateProgress);
       }
     };
 
+    // 재생 버튼을 눌렀을 경우.
     if (!isPlaying) {
-      // 이전에 재생했던 녹음이 아닐 경우 //한번 재생했던 녹음을 다시 재생할 경우.
+      // 이전에 재생했던 녹음이 아닐 경우
       if (linkClicked !== link) {
         audioRef.current.src = link;
         audioRef.current.addEventListener('timeupdate', updateProgress);
-      } else if (!isPausing && currentTime === 0) {
+        //한번 재생했던 녹음을 다시 재생할 경우.
+      } else if (!isPausing) {
         audioRef.current.src = link;
+        audioRef.current.addEventListener('timeupdate', updateProgress);
       }
 
       audioRef.current.play();
       setIsPlaying(true);
-      setIsPausing(true);
+      setIsPausing(false);
       // 중지 버튼을 눌렀을 경우.
     } else {
       audioRef.current.pause();
       setIsPlaying(false);
-      setIsPausing(false);
+      setIsPausing(true);
     }
   };
 
@@ -93,13 +98,13 @@ function RecordLog(props: RecordStatusBarProps) {
           />
           <StRecordInfo>
             <h1>{name}</h1>
-            {link === audioRef.current.src && (isPlaying || !isPausing) && (
+            {link === audioRef.current.src && (isPlaying || isPausing) && (
               <StRecordPlayBar>
                 <StRecordPlayStatus ref={progressRef} />
               </StRecordPlayBar>
             )}
             <div>
-              {link === audioRef.current.src && (isPlaying || !isPausing) ? (
+              {link === audioRef.current.src && (isPlaying || isPausing) ? (
                 <p style={{ color: `${COLOR.MAIN_BLUE}` }}>{handleTime(currentTime)}</p>
               ) : (
                 <p>{handleDate(date)}</p>
