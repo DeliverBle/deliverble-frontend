@@ -50,7 +50,10 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       {isDeviceMobile ? (
-        <Mobile />
+        <>
+          <GlobalStyle />
+          <Mobile />
+        </>
       ) : (
         <>
           <QueryClientProvider client={queryClient}>
