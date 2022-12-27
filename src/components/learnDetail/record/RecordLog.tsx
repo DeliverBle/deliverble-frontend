@@ -106,8 +106,12 @@ function RecordLog(props: RecordStatusBarProps) {
                 alt={link === audioRef.current.src && isPlaying ? '녹음 중지' : '녹음 재생'}
                 layout="fill"
                 onClick={() => {
-                  setLinkClicked(link);
-                  handlePlayRecord(link, endTime);
+                  if (link !== audioRef.current.src && (isPlaying || isPausing)) {
+                    return;
+                  } else {
+                    setLinkClicked(link);
+                    handlePlayRecord(link, endTime);
+                  }
                 }}
               />
               <StRecordInfo>
