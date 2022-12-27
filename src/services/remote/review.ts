@@ -1,5 +1,5 @@
 import { ReviewService } from '../api/review';
-import { PostFavoriteRequestBody, VideoData } from '../api/types/review';
+import { PostFavoriteRequestBody, PostHistoryRequestBody, VideoData } from '../api/types/review';
 import { privateAPI } from './base';
 
 export function reviewDataRemote(): ReviewService {
@@ -19,7 +19,7 @@ export function reviewDataRemote(): ReviewService {
               haveGuide: video.haveGuide,
             }))
           : [],
-        paging: {
+        favoritePaging: {
           lastPage: response.data2.paginationInfo.lastPage,
           totalCount: response.data2.paginationInfo.totalCount,
         },
@@ -27,5 +27,29 @@ export function reviewDataRemote(): ReviewService {
     } else throw '서버 통신 실패';
   };
 
-  return { postFavoriteVideoList };
+  const postHistoryVideoList = async (body: PostHistoryRequestBody) => {
+    const response = await privateAPI.post({ url: `/news/history`, data: body });
+    if (response.status === 200) {
+      return {
+        historyList: response.data
+          ? response.data.exploreNewsDtoCollection.map((video: VideoData) => ({
+              id: video.id,
+              title: video.title,
+              category: video.category,
+              channel: video.channel,
+              thumbnail: video.thumbnail,
+              reportDate: video.reportDate,
+              isFavorite: video.isFavorite,
+              haveGuide: video.haveGuide,
+            }))
+          : [],
+        historyPaging: {
+          lastPage: response.data2.paginationInfo.lastPage,
+          totalCount: response.data2.paginationInfo.totalCount,
+        },
+      };
+    } else throw '서버 통신 실패';
+  };
+
+  return { postFavoriteVideoList, postHistoryVideoList };
 }

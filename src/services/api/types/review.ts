@@ -21,5 +21,15 @@ export type PostFavoriteRequestBody = {
 
 export type PostFavoriteResponse = {
   favoriteList: VideoData[];
-  paging: Paging;
+  favoritePaging: Paging;
+};
+
+export type PostHistoryRequestBody = {
+  currentPage: number;
+  listSize: number;
+};
+
+export type PostHistoryResponse = {
+  historyList: VideoData[];
+  historyPaging: Paging;
 };
