@@ -8,6 +8,9 @@ import ImageDiv from '@src/components/common/ImageDiv';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { useRef } from 'react';
 import EmptyRecord from './EmptyRecord';
+import RecordDotButton from './RecordDotButton';
+import { useRecoilValue } from 'recoil';
+import { isGuideAtom } from '@src/stores/newsState';
 
 interface RecordStatusBarProps {
   scriptId: number;
@@ -15,6 +18,7 @@ interface RecordStatusBarProps {
 
 function RecordLog(props: RecordStatusBarProps) {
   const { scriptId } = props;
+  const isGuide = useRecoilValue(isGuideAtom);
   const [recordList, setRecordList] = useState<GetRecordData[]>([]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPausing, setIsPausing] = useState(false);
@@ -120,6 +124,7 @@ function RecordLog(props: RecordStatusBarProps) {
                 </div>
               </StRecordInfo>
               <audio src={link} ref={audioRef} />
+              {!isGuide && <RecordDotButton />}
             </StRecord>
           ))}
         </>
@@ -165,6 +170,14 @@ const StRecord = styled.div`
     width: 6rem;
     height: 6rem;
     cursor: pointer;
+  }
+
+  &:hover .dot {
+    opacity: 1;
+  }
+
+  &:hover .fold-button {
+    opacity: 1;
   }
 `;
 
