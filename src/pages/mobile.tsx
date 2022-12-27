@@ -14,7 +14,6 @@ function Mobile() {
   const scrollListener = () => {
     setIsFirstScrolled(window.scrollY > 0);
   };
-
   useEffect(() => {
     window.addEventListener('scroll', scrollListener);
     return () => {
