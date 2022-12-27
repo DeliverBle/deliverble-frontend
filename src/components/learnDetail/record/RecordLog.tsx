@@ -1,6 +1,5 @@
 import { api } from '@src/services/api';
 import { useState } from 'react';
-import { GetRecordData } from '@src/services/api/types/learn-detail';
 import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { icRecordPlayDefault, icRecordPauseDefault } from 'public/assets/icons';
@@ -21,7 +20,6 @@ interface RecordStatusBarProps {
 function RecordLog(props: RecordStatusBarProps) {
   const { scriptId, isRecordSaved } = props;
   const isGuide = useRecoilValue(isGuideAtom);
-  const [recordList, setRecordList] = useState<GetRecordData[]>([]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPausing, setIsPausing] = useState(false);
   const [linkClicked, setLinkClicked] = useState('');
@@ -30,9 +28,8 @@ function RecordLog(props: RecordStatusBarProps) {
   const [currentTime, setCurrentTime] = useState(0);
   const [isDataEmpty, setIsDataEmpty] = useState(false);
 
-  const {} = useQuery(['recordData', isRecordSaved], () => api.learnDetailService.getRecordData(scriptId), {
+  const { data } = useQuery(['recordData', isRecordSaved], () => api.learnDetailService.getRecordData(scriptId), {
     onSuccess: (data) => {
-      setRecordList(data);
       !data && setIsDataEmpty(true);
     },
     onError: () => {
@@ -54,8 +51,8 @@ function RecordLog(props: RecordStatusBarProps) {
   };
 
   const handlePlayRecord = (link: string, endTime: number) => {
-    const updateProgress = (e) => {
-      const { currentTime } = e.currentTarget;
+    const updateProgress = (e: Event) => {
+      const { currentTime } = e.target as HTMLAudioElement;
       setCurrentTime(currentTime);
       const progressPercentage = (currentTime / (endTime - 0.75)) * 100;
       progressRef.current && (progressRef.current.style.width = (47.4 * (progressPercentage / 100)).toString() + 'rem');
@@ -98,7 +95,7 @@ function RecordLog(props: RecordStatusBarProps) {
         <EmptyRecord />
       ) : (
         <>
-          {recordList.map(({ name, link, endTime, date }) => (
+          {data?.map(({ name, link, endTime, date }) => (
             <StRecord key={link}>
               <ImageDiv
                 src={link === audioRef.current.src && isPlaying ? icRecordPauseDefault : icRecordPlayDefault}
