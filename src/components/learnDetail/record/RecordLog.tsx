@@ -124,7 +124,7 @@ function RecordLog(props: RecordStatusBarProps) {
                 </div>
               </StRecordInfo>
               <audio src={link} ref={audioRef} />
-              {!isGuide && <RecordDotButton />}
+              {!isGuide && <RecordDotButton link={link} />}
             </StRecord>
           ))}
         </>

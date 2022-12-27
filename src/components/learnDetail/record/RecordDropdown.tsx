@@ -2,15 +2,21 @@ import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import styled from 'styled-components';
 
-// interface MemoDropdownProps {}
+interface RecordDropdownProps {
+  link: string;
+}
 
-function RecordDropdown() {
-  //   const {} = props;
+function RecordDropdown(props: RecordDropdownProps) {
+  const { link } = props;
 
   return (
     <>
       <StRecordDropdown>
-        <button type="button">다운로드</button>
+        <button>
+          <a href={link} download="filename.mp3">
+            다운로드
+          </a>
+        </button>
         <button type="button">이름 바꾸기</button>
         <button type="button">녹음 삭제</button>
       </StRecordDropdown>

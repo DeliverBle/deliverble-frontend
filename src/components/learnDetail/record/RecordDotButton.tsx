@@ -4,10 +4,12 @@ import { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import RecordDropdown from './RecordDropdown';
 
-// interface MemoDotButtonProps {
-// }
+interface RecordDotButtonProps {
+  link: string;
+}
 
-function RecordDotButton() {
+function RecordDotButton(props: RecordDotButtonProps) {
+  const { link } = props;
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const recordDropdownRef = useRef<HTMLDivElement>(null);
 
@@ -34,7 +36,7 @@ function RecordDotButton() {
         <ImageDiv className="dot" src={icDotHover} alt="..." layout="fill" />
         <ImageDiv className="dot default" src={icDotDefault} alt="..." layout="fill" />
       </StRecordDotImage>
-      {isDropdownOpen && <RecordDropdown />}
+      {isDropdownOpen && <RecordDropdown link={link} />}
     </StRecordDotButton>
   );
 }
