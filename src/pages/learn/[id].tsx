@@ -97,6 +97,11 @@ function LearnDetail() {
   const [contextMenuPoint, setContextMenuPoint] = useState({ x: 0, y: 0 });
   const [isContextMenuOpen, setIsContextMenuOpen] = useState<boolean>(false);
   const [studyLogTab, setStudyLogTab] = useState<string>('memo');
+  const [isRecordSaved, setIsRecordSaved] = useState<boolean>(false);
+
+  useEffect(() => {
+    isRecordSaved && setStudyLogTab('record');
+  }, [isRecordSaved]);
 
   const handleContextMenuPoint = (target: HTMLDivElement) => {
     let x = 0;
@@ -454,7 +459,11 @@ function LearnDetail() {
                   <div>
                     {!isGuide && (
                       <StButtonContainer>
-                        <RecordStatusBar scriptId={videoData.scriptsId} />
+                        <RecordStatusBar
+                          scriptId={videoData.scriptsId}
+                          isRecordSaved={isRecordSaved}
+                          setIsRecordSaved={setIsRecordSaved}
+                        />
                         <StButton
                           onClick={(e) => {
                             e.stopPropagation();

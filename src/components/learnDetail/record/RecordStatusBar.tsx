@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { icRecordMicDefault, icRecordMicActive, icRecordStart, icRecordStop } from 'public/assets/icons';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { api } from '@src/services/api';
 import { loginState } from '@src/stores/loginState';
 import { useRecoilValue } from 'recoil';
@@ -11,10 +11,12 @@ import LoginModal from '@src/components/login/LoginModal';
 
 interface RecordStatusBarProps {
   scriptId: number;
+  isRecordSaved: boolean;
+  setIsRecordSaved: Dispatch<SetStateAction<boolean>>;
 }
 
 function RecordStatusBar(props: RecordStatusBarProps) {
-  const { scriptId } = props;
+  const { scriptId, isRecordSaved, setIsRecordSaved } = props;
   const [stream, setStream] = useState<MediaStream>();
   const [media, setMedia] = useState<MediaRecorder>();
   const [isRecording, setIsRecording] = useState(false);
@@ -22,7 +24,6 @@ function RecordStatusBar(props: RecordStatusBarProps) {
   const [minutes, setMinutes] = useState<number>(0);
   const [seconds, setSeconds] = useState<number>(0);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
-  const [isSaved, setIsSaved] = useState(false);
   const isLoggedIn = useRecoilValue(loginState);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
@@ -70,9 +71,9 @@ function RecordStatusBar(props: RecordStatusBarProps) {
 
     setMinutes(0);
     setSeconds(0);
-    setIsSaved(true);
+    setIsRecordSaved(true);
     setTimeout(() => {
-      setIsSaved(false);
+      setIsRecordSaved(false);
     }, 2000);
   };
 
@@ -138,7 +139,7 @@ function RecordStatusBar(props: RecordStatusBarProps) {
             />
           )}
         </StRecordStatus>
-        {isSaved && (
+        {isRecordSaved && (
           <StGuideTooltip>
             <p>저장되었습니다.</p>
           </StGuideTooltip>
