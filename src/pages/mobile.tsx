@@ -29,7 +29,8 @@ function Mobile() {
 
       <StFirstSlide>
         <p>
-          아나운서 쉐도잉으로 키우는 <br />
+          아나운서 쉐도잉으로 키우는
+          <br />
           스피치 자신감, 딜리버블
         </p>
         <p>딜리버블은 PC에서 이용해 주세요.</p>
@@ -46,7 +47,8 @@ function Mobile() {
             <ImageDiv src={imgMobileEar} className="ear" layout="fill" alt="" />
             <div>
               <p>
-                발음을 교정하고 싶은데, <br />
+                발음을 교정하고 싶은데,
+                <br />
                 학원 가격이 너무 부담돼요.
               </p>
               <p>26살 취준생 김○○</p>
@@ -67,7 +69,8 @@ function Mobile() {
             <ImageDiv src={imgMobileMic} className="mic" layout="fill" alt="" />
             <div>
               <p>
-                아나운서 준비를 시작했는데, <br />
+                아나운서 준비를 시작했는데,
+                <br />
                 뉴스리딩은 처음이라 막막해요.
               </p>
               <p>26살 취준생 김○○</p>
@@ -85,7 +88,8 @@ function Mobile() {
         <StTextWrapper>
           <p>Step 1.</p>
           <p>
-            아나운서의 정확한 뉴스리딩, <br />한 문장씩 듣고 따라하기
+            아나운서의 정확한 뉴스리딩,
+            <br />한 문장씩 듣고 따라하기
           </p>
           <p>
             아나운서의 좋은 발성과 발음을 따라하며
@@ -116,7 +120,8 @@ function Mobile() {
         <StTextWrapper>
           <p>Step 3.</p>
           <p>
-            즐겨찾는 영상과 <br />
+            즐겨찾는 영상과
+            <br />
             내가 학습한 영상 모두 모아보기
           </p>
           <p>
@@ -129,7 +134,8 @@ function Mobile() {
 
       <StFourthSlide>
         <p>
-          PC에서 딜리버블과 함께 <br />
+          PC에서 딜리버블과 함께
+          <br />
           스피치 자신감을 키워보세요!
         </p>
       </StFourthSlide>
