@@ -8,9 +8,12 @@ import Script from 'next/script';
 import * as gtag from '../utils/gtag';
 import { hotjar } from 'react-hotjar';
 import { HJID, HJSV } from '@src/utils/constant';
+import { isMobile } from 'react-device-detect';
+import Mobile from './mobile';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(() => new QueryClient());
+  const [isDeviceMobile, setIsDeviceMoblie] = useState<boolean>(false);
 
   const router = useRouter();
   useEffect(() => storePathValues, [router.pathname]);
@@ -41,21 +44,30 @@ function MyApp({ Component, pageProps }: AppProps) {
     if (process.env.NODE_ENV !== 'development') {
       hotjar.initialize(HJID, HJSV);
     }
+    if (isMobile) setIsDeviceMoblie(true);
   }, []);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <RecoilRoot>
-        <GlobalStyle />
-        <Script
-          strategy="afterInteractive"
-          src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
-        />
-        <Script
-          id="gtag-init"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
+    <>
+      {isDeviceMobile ? (
+        <>
+          <GlobalStyle />
+          <Mobile />
+        </>
+      ) : (
+        <>
+          <QueryClientProvider client={queryClient}>
+            <RecoilRoot>
+              <GlobalStyle />
+              <Script
+                strategy="afterInteractive"
+                src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
+              />
+              <Script
+                id="gtag-init"
+                strategy="afterInteractive"
+                dangerouslySetInnerHTML={{
+                  __html: `
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
@@ -63,11 +75,14 @@ function MyApp({ Component, pageProps }: AppProps) {
               page_path: window.location.pathname,
             });
           `,
-          }}
-        />
-        <Component {...pageProps} />
-      </RecoilRoot>
-    </QueryClientProvider>
+                }}
+              />
+              <Component {...pageProps} />
+            </RecoilRoot>
+          </QueryClientProvider>
+        </>
+      )}
+    </>
   );
 }
 
