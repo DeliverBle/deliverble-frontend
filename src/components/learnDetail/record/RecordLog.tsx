@@ -25,12 +25,13 @@ function RecordLog(props: RecordStatusBarProps) {
   const [linkClicked, setLinkClicked] = useState('');
   const progressRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef(new Audio());
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const nameInputRef = useRef<HTMLInputElement>(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [isDataEmpty, setIsDataEmpty] = useState(false);
   const [isDataChanged, setIsDataChanged] = useState(false);
   const [isNameChanging, setIsNameChanging] = useState(false);
   const [recordLinkChanging, setRecordLinkChanging] = useState('');
+  const [isTextLengthExceeded, setIsTextLengthExceeded] = useState(false);
 
   const { data } = useQuery(
     ['recordData', isRecordSaved, isDataChanged],
@@ -104,7 +105,7 @@ function RecordLog(props: RecordStatusBarProps) {
       api.learnDetailService.changeRecordNameData({
         link: recordLinkChanging,
         scriptId: scriptId,
-        newName: textareaRef.current ? textareaRef.current.value : '',
+        newName: nameInputRef.current ? nameInputRef.current.value : '',
       }),
     {
       onSuccess: () => {
@@ -116,6 +117,14 @@ function RecordLog(props: RecordStatusBarProps) {
       },
     },
   );
+
+  const onChange = () => {
+    if (nameInputRef.current && nameInputRef.current.value.length > 99) {
+      setIsTextLengthExceeded(true);
+    } else {
+      setIsTextLengthExceeded(false);
+    }
+  };
 
   return (
     <StRecordLogContainer>
@@ -142,7 +151,12 @@ function RecordLog(props: RecordStatusBarProps) {
               <StRecordInfo>
                 {isNameChanging && link === recordLinkChanging ? (
                   <>
-                    <StNameChanging ref={textareaRef} defaultValue={name}></StNameChanging>
+                    <StNameChanging
+                      ref={nameInputRef}
+                      defaultValue={name}
+                      onChange={onChange}
+                      maxLength={100}
+                      isTextLengthExceeded={isTextLengthExceeded}></StNameChanging>
                     <StButtonContainer>
                       <button type="button">
                         <ImageDiv
@@ -186,7 +200,7 @@ function RecordLog(props: RecordStatusBarProps) {
                 )}
               </StRecordInfo>
               <audio src={link} ref={audioRef} />
-              {!isGuide && (
+              {!isGuide && !isNameChanging && (
                 <RecordDotButton
                   link={link}
                   scriptId={scriptId}
@@ -291,12 +305,12 @@ const StRecordPlayStatus = styled.div`
   border-radius: 1rem;
 `;
 
-const StNameChanging = styled.textarea`
+const StNameChanging = styled.input<{ isTextLengthExceeded: boolean }>`
   padding: 0.8rem 0.8rem 1rem 1.2rem;
   width: 49.8rem;
   height: 5.5rem;
 
-  border: 0.2rem solid ${COLOR.SUB_BLUE_50};
+  border: 0.2rem solid ${({ isTextLengthExceeded }) => (isTextLengthExceeded ? COLOR.RED : COLOR.SUB_BLUE_50)};
   border-radius: 1.2rem;
   background-color: transparent;
 
