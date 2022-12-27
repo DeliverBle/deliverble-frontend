@@ -89,7 +89,6 @@ export function learnDetailDataRemote(): LearnDetailService {
         startTime: response.data.startTime,
         endTime: response.data.endTime,
         scriptsId: response.data2[0].id,
-        name: response.data2[0].name,
         tags: response.data.tagsForView.map((tag: Tag) => ({
           id: tag.id,
           name: tag.name,
@@ -127,7 +126,6 @@ export function learnDetailDataRemote(): LearnDetailService {
         startTime: response.data.startTime,
         endTime: response.data.endTime,
         scriptsId: response.data2[0].id,
-        name: response.data2[0].name,
         tags: response.data.tagsForView.map((tag: Tag) => ({
           id: tag.id,
           name: tag.name,
