@@ -611,7 +611,7 @@ function LearnDetail() {
                       )}
                     </StMemoWrapper>
                   ) : (
-                    <RecordLog scriptId={videoData.scriptsId} />
+                    <RecordLog scriptId={videoData.scriptsId} isRecordSaved={isRecordSaved} />
                   )}
                 </StStudyLogContainer>
               </aside>

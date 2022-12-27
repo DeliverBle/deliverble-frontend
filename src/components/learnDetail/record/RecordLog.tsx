@@ -1,5 +1,5 @@
 import { api } from '@src/services/api';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { GetRecordData } from '@src/services/api/types/learn-detail';
 import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
@@ -11,13 +11,15 @@ import EmptyRecord from './EmptyRecord';
 import RecordDotButton from './RecordDotButton';
 import { useRecoilValue } from 'recoil';
 import { isGuideAtom } from '@src/stores/newsState';
+import { useQuery } from 'react-query';
 
 interface RecordStatusBarProps {
   scriptId: number;
+  isRecordSaved: boolean;
 }
 
 function RecordLog(props: RecordStatusBarProps) {
-  const { scriptId } = props;
+  const { scriptId, isRecordSaved } = props;
   const isGuide = useRecoilValue(isGuideAtom);
   const [recordList, setRecordList] = useState<GetRecordData[]>([]);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -28,15 +30,16 @@ function RecordLog(props: RecordStatusBarProps) {
   const [currentTime, setCurrentTime] = useState(0);
   const [isDataEmpty, setIsDataEmpty] = useState(false);
 
-  useEffect(() => {
-    getRecordData(scriptId);
-  }, [scriptId]);
-
-  const getRecordData = async (scriptId: number) => {
-    const response = await api.learnDetailService.getRecordData(scriptId);
-    setRecordList(response);
-    !response && setIsDataEmpty(true);
-  };
+  const {} = useQuery(['recordData', isRecordSaved], () => api.learnDetailService.getRecordData(scriptId), {
+    onSuccess: (data) => {
+      setRecordList(data);
+      !data && setIsDataEmpty(true);
+    },
+    onError: () => {
+      console.error('녹음 데이터 요청 에러');
+    },
+    enabled: !!scriptId,
+  });
 
   const handleDate = (date: string) => {
     return date.substring(0, 10).replace(/-/g, '.').concat('.');
