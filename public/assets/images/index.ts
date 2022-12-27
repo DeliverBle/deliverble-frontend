@@ -8,7 +8,7 @@ export { default as imgLandingMic } from './img_landing_mic.svg';
 export { default as img404Background } from './img_404_background.png';
 export { default as imgReviewEmpty } from './img_review_empty.svg';
 export { default as imgMemoEmpty } from './img_memo_empty.svg';
-export { default as imgMobileBgLast } from './img_mobile_bg_last.svg';
+export { default as imgMobileBgLast } from './img_mobile_bg_last.png';
 export { default as imgMobileBgFirst } from './img_mobile_bg.svg';
 export { default as imgMobileEar } from './img_mobile_ear.svg';
 export { default as imgMobileFist } from './img_mobile_fist.svg';
