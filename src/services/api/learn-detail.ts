@@ -8,6 +8,7 @@ import {
   GetRecordData,
   DeleteRecordData,
   DeleteRecordResponse,
+  ChangeRecordNameData,
 } from './types/learn-detail';
 
 export interface LearnDetailService {
@@ -25,4 +26,5 @@ export interface LearnDetailService {
   uploadRecordData(body: UploadRecordData): Promise<UploadRecordResponse>;
   getRecordData(scriptId: number): Promise<GetRecordData[]>;
   deleteRecordData(body: DeleteRecordData): Promise<DeleteRecordResponse>;
+  changeRecordNameData(body: ChangeRecordNameData): Promise<ChangeRecordNameData>;
 }

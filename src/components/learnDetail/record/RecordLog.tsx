@@ -10,7 +10,7 @@ import EmptyRecord from './EmptyRecord';
 import RecordDotButton from './RecordDotButton';
 import { useRecoilValue } from 'recoil';
 import { isGuideAtom } from '@src/stores/newsState';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 
 interface RecordStatusBarProps {
   scriptId: number;
@@ -25,6 +25,7 @@ function RecordLog(props: RecordStatusBarProps) {
   const [linkClicked, setLinkClicked] = useState('');
   const progressRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef(new Audio());
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [isDataEmpty, setIsDataEmpty] = useState(false);
   const [isDataChanged, setIsDataChanged] = useState(false);
@@ -97,6 +98,25 @@ function RecordLog(props: RecordStatusBarProps) {
     }
   };
 
+  const { mutate } = useMutation(
+    ['recordData'],
+    () =>
+      api.learnDetailService.changeRecordNameData({
+        link: recordLinkChanging,
+        scriptId: scriptId,
+        newName: textareaRef.current ? textareaRef.current.value : '',
+      }),
+    {
+      onSuccess: () => {
+        setIsNameChanging(false);
+        setIsDataChanged(true);
+      },
+      onError: () => {
+        alert('녹음 이름 변경에 실패했습니다.');
+      },
+    },
+  );
+
   return (
     <StRecordLogContainer>
       {isDataEmpty ? (
@@ -122,7 +142,7 @@ function RecordLog(props: RecordStatusBarProps) {
               <StRecordInfo>
                 {isNameChanging && link === recordLinkChanging ? (
                   <>
-                    <StNameChanging>{name ?? ''}</StNameChanging>
+                    <StNameChanging ref={textareaRef} defaultValue={name}></StNameChanging>
                     <StButtonContainer>
                       <button type="button">
                         <ImageDiv
@@ -135,7 +155,14 @@ function RecordLog(props: RecordStatusBarProps) {
                         />
                       </button>
                       <button type="button">
-                        <ImageDiv className="icNameChange" src={icCheckButton} alt="완료" />
+                        <ImageDiv
+                          className="icNameChange"
+                          src={icCheckButton}
+                          alt="완료"
+                          onClick={() => {
+                            mutate();
+                          }}
+                        />
                       </button>
                     </StButtonContainer>
                   </>

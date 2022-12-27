@@ -297,11 +297,24 @@ export function learnDetailDataRemote(): LearnDetailService {
       url: '/script/recording/delete',
       data: body,
     });
-    console.log(response);
     if (response.status === 200) {
       return {
         link: response.data.link,
         deleted: response.data.deleted,
+        scriptId: response.data.scriptId,
+      };
+    } else throw '서버 통신 실패';
+  };
+
+  const changeRecordNameData = async (body: ChangeRecordNameData) => {
+    const response = await privateAPI.post({
+      url: '/script/recording/change-name',
+      data: body,
+    });
+    if (response.status === 200) {
+      return {
+        link: response.data.link,
+        newName: response.data.newName,
         scriptId: response.data.scriptId,
       };
     } else throw '서버 통신 실패';
@@ -322,5 +335,6 @@ export function learnDetailDataRemote(): LearnDetailService {
     uploadRecordData,
     getRecordData,
     deleteRecordData,
+    changeRecordNameData,
   };
 }

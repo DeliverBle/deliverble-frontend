@@ -103,3 +103,9 @@ export type DeleteRecordResponse = {
   deleted: boolean;
   scriptId: string;
 };
+
+export type ChangeRecordNameData = {
+  scriptId: number;
+  link: string;
+  newName: string;
+};

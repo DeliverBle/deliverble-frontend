@@ -72,6 +72,11 @@ export function learnDetailDataMock(): LearnDetailService {
     return LEARN_DETAIL_DATA.RECORD_DELETE_RESPONSE;
   };
 
+  const changeRecordNameData = async () => {
+    await wait(500);
+    return LEARN_DETAIL_DATA.RECORD_NAME_CHANGE_DATA;
+  };
+
   return {
     getPrivateVideoData,
     getPublicVideoData,
@@ -87,6 +92,7 @@ export function learnDetailDataMock(): LearnDetailService {
     uploadRecordData,
     getRecordData,
     deleteRecordData,
+    changeRecordNameData,
   };
 }
 
