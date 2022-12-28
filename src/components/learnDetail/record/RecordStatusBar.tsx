@@ -74,7 +74,7 @@ function RecordStatusBar(props: RecordStatusBarProps) {
     setIsRecordSaved(true);
     setTimeout(() => {
       setIsRecordSaved(false);
-    }, 2000);
+    }, 1000);
   };
 
   const submitAudioFile = (audioUrl: BlobPart) => {

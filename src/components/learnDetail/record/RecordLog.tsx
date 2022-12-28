@@ -23,15 +23,15 @@ function RecordLog(props: RecordStatusBarProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPausing, setIsPausing] = useState(false);
   const [linkClicked, setLinkClicked] = useState('');
-  const progressRef = useRef<HTMLDivElement>(null);
-  const audioRef = useRef(new Audio());
-  const nameInputRef = useRef<HTMLInputElement>(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [isDataEmpty, setIsDataEmpty] = useState(false);
   const [isDataChanged, setIsDataChanged] = useState(false);
   const [isNameChanging, setIsNameChanging] = useState(false);
   const [recordLinkChanging, setRecordLinkChanging] = useState('');
   const [isTextLengthExceeded, setIsTextLengthExceeded] = useState(false);
+  const progressRef = useRef<HTMLDivElement>(null);
+  const audioRef = useRef(new Audio());
+  const nameInputRef = useRef<HTMLInputElement>(null);
 
   const { data } = useQuery(
     ['recordData', isRecordSaved, isDataChanged],
@@ -40,6 +40,9 @@ function RecordLog(props: RecordStatusBarProps) {
       onSuccess: (data) => {
         !data && setIsDataEmpty(true);
         setIsDataChanged(false);
+        setIsPlaying(false);
+        setIsPausing(false);
+        setLinkClicked('');
       },
       onError: () => {
         console.error('녹음 데이터 요청 에러');
@@ -69,31 +72,41 @@ function RecordLog(props: RecordStatusBarProps) {
       if (progressPercentage > 99) {
         setIsPlaying(false);
         setIsPausing(false);
-        audioRef.current.src = '';
-        audioRef.current.removeEventListener('timeupdate', updateProgress);
+        audioRef.current && (audioRef.current.src = '');
+        audioRef.current?.removeEventListener('timeupdate', updateProgress);
       }
     };
 
     // 재생 버튼을 눌렀을 경우.
     if (!isPlaying) {
       // 이전에 재생했던 녹음이 아닐 경우
-      if (linkClicked !== link) {
+      if (audioRef.current && linkClicked !== link) {
         audioRef.current.removeEventListener('timeupdate', updateProgress);
-        audioRef.current.src = link;
+        audioRef.current && (audioRef.current.src = link);
         audioRef.current.addEventListener('timeupdate', updateProgress);
         //한번 재생했던 녹음을 다시 재생할 경우.
-      } else if (!isPausing) {
+      } else if (audioRef.current && !isPausing) {
+        console.log(audioRef.current);
+        console.log('hello');
         audioRef.current.removeEventListener('timeupdate', updateProgress);
         audioRef.current.src = link;
         audioRef.current.addEventListener('timeupdate', updateProgress);
       }
 
-      audioRef.current.play();
+      if (!audioRef.current) {
+        console.log('im working');
+        audioRef.current = new Audio();
+        audioRef.current.removeEventListener('timeupdate', updateProgress);
+        audioRef.current && (audioRef.current.src = link);
+        audioRef.current.addEventListener('timeupdate', updateProgress);
+      }
+
+      audioRef.current?.play();
       setIsPlaying(true);
       setIsPausing(false);
       // 중지 버튼을 눌렀을 경우.
     } else {
-      audioRef.current.pause();
+      audioRef.current?.pause();
       setIsPlaying(false);
       setIsPausing(true);
     }
@@ -111,6 +124,7 @@ function RecordLog(props: RecordStatusBarProps) {
       onSuccess: () => {
         setIsNameChanging(false);
         setIsDataChanged(true);
+        setIsPlaying(false);
       },
       onError: () => {
         alert('녹음 이름 변경에 실패했습니다.');
@@ -140,7 +154,7 @@ function RecordLog(props: RecordStatusBarProps) {
                 alt={link === audioRef.current?.src && isPlaying ? '녹음 중지' : '녹음 재생'}
                 layout="fill"
                 onClick={() => {
-                  if (link !== audioRef.current?.src && (isPlaying || isPausing)) {
+                  if (link !== audioRef.current?.src && isPlaying) {
                     return;
                   } else {
                     setLinkClicked(link);
@@ -153,10 +167,15 @@ function RecordLog(props: RecordStatusBarProps) {
                   <>
                     <StNameChanging
                       ref={nameInputRef}
-                      defaultValue={name}
+                      defaultValue={isNameChanging && link === recordLinkChanging ? name : ''}
                       onChange={onChange}
                       maxLength={100}
                       isTextLengthExceeded={isTextLengthExceeded}></StNameChanging>
+                    {isTextLengthExceeded && (
+                      <StWarningTooltip>
+                        <span>최대 글자수를 초과했어요!</span>
+                      </StWarningTooltip>
+                    )}
                     <StButtonContainer>
                       <button type="button">
                         <ImageDiv
@@ -306,6 +325,8 @@ const StRecordPlayStatus = styled.div`
 `;
 
 const StNameChanging = styled.input<{ isTextLengthExceeded: boolean }>`
+  position: relative;
+  top: -1.6rem;
   padding: 0.8rem 0.8rem 1rem 1.2rem;
   width: 49.8rem;
   height: 5.5rem;
@@ -331,16 +352,40 @@ const StNameChanging = styled.input<{ isTextLengthExceeded: boolean }>`
 const StButtonContainer = styled.div`
   display: flex;
   justify-content: flex-end;
-  gap: 0.8rem;
-
   width: 6.8rem;
   height: 3rem;
-  margin-top: 1rem;
   margin-left: 42.2rem;
 
   .icNameChange {
     position: relative;
     width: 3rem;
     height: 3rem;
+  }
+`;
+
+const StWarningTooltip = styled.div`
+  position: absolute;
+  top: 8.7rem;
+  width: 17.3rem;
+  height: 4.1rem;
+  border-radius: 0.6rem;
+  background-color: rgba(255, 79, 79, 0.2);
+  padding: 1rem 1rem;
+
+  &:after {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 1.6rem;
+
+    border: solid transparent;
+    border-width: 0.8rem;
+    border-bottom-color: rgba(255, 79, 79, 0.2);
+    pointer-events: none;
+  }
+
+  & > span {
+    color: ${COLOR.RED};
+    ${FONT_STYLES.SB_15_CAPTION};
   }
 `;
