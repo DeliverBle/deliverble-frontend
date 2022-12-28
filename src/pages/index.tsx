@@ -4,11 +4,11 @@ import SEO from '@src/components/common/SEO';
 import Nav from '@src/components/landing/Nav';
 import ScrollControl from '@src/components/landing/ScrollControl';
 import SliderContainer from '@src/components/landing/SliderContainer';
-import { useMediaQuery } from 'react-responsive';
 import { icMobileLogoWhite, icMobileLogo } from 'public/assets/icons';
 import MobileContainer from '@src/components/landing/mobileContainer';
 import ImageDiv from '@src/components/common/ImageDiv';
 import { COLOR } from '@src/styles/color';
+import { useIsMobile } from '@src/hooks/useIsMobile';
 
 function Landing() {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
@@ -17,8 +17,7 @@ function Landing() {
   const [slideNumber, setSlideNumber] = useState<number>(1);
   const [stopObserve, setStopObserve] = useState<boolean>(false);
   const [deviceType, setDeviceType] = useState<string>('');
-  const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
-  const isDeskTop = useMediaQuery({ query: '(min-width: 768px)' });
+  const isMobile = useIsMobile();
 
   const scrollListener = () => {
     setIsScrolled(window.scrollY > 0);
@@ -35,8 +34,8 @@ function Landing() {
 
   useEffect(() => {
     isMobile && setDeviceType('mobile');
-    isDeskTop && setDeviceType('desktop');
-  }, [isDeskTop, isMobile]);
+    !isMobile && setDeviceType('desktop');
+  }, [isMobile]);
 
   return (
     <div>
