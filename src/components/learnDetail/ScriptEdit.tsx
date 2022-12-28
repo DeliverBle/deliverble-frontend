@@ -89,10 +89,9 @@ function ScriptEdit(props: ScriptEditProps) {
     }
   }, [highlightAlert]);
 
-  const deleteElement = (
-    parentElement: HTMLElement | null | undefined,
-    removeElement: HTMLElement | null | undefined,
-  ) => {
+  const deleteElement = (contextHTML: HTMLElement) => {
+    const parentElement = contextHTML?.parentElement;
+    const removeElement = document.getElementById(contextElementId);
     const fragment = document.createDocumentFragment();
     const div = document.createElement('div');
     const blank = document.createTextNode(' ');
@@ -119,12 +118,8 @@ function ScriptEdit(props: ScriptEditProps) {
 
   useEffect(() => {
     setIsDeleteBtnClicked(false);
-    const parentElement = contextHTML?.parentElement;
-    const removeElement = document.getElementById(contextElementId);
-
-    if (isDeleteBtnClicked) {
-      setIsContextMenuOpen(false);
-      deleteElement(parentElement, removeElement);
+    if (isDeleteBtnClicked && contextHTML) {
+      deleteElement(contextHTML);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
