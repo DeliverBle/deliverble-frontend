@@ -1,9 +1,9 @@
 import { ReviewService } from '../api/review';
-import { PostFavoriteRequestBody, PostHistoryRequestBody, VideoData } from '../api/types/review';
+import { PostReviewRequestBody, VideoData } from '../api/types/review';
 import { privateAPI } from './base';
 
 export function reviewDataRemote(): ReviewService {
-  const postFavoriteVideoList = async (body: PostFavoriteRequestBody) => {
+  const postFavoriteVideoList = async (body: PostReviewRequestBody) => {
     const response = await privateAPI.post({ url: `/news/favorite`, data: body });
     if (response.status === 200) {
       return {
@@ -27,7 +27,7 @@ export function reviewDataRemote(): ReviewService {
     } else throw '서버 통신 실패';
   };
 
-  const postHistoryVideoList = async (body: PostHistoryRequestBody) => {
+  const postHistoryVideoList = async (body: PostReviewRequestBody) => {
     const response = await privateAPI.post({ url: `/news/history`, data: body });
     if (response.status === 200) {
       return {
