@@ -41,54 +41,29 @@ function ContextMenu(props: ContextMenuProps) {
     setIsContextMenuOpen(false);
   };
 
-  const handleHighlightDelete = (e: React.MouseEvent) => {
+  const handleContextMenu = (e: React.MouseEvent, type: string) => {
     e.stopPropagation();
     setIsDeleteBtnClicked(true);
-    setDeletedType('MARK');
-    setIsContextMenuOpen(false);
-  };
-
-  const handleSpacingDelete = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsDeleteBtnClicked(true);
-    setDeletedType('SPAN');
+    setDeletedType(type);
     setIsContextMenuOpen(false);
   };
 
   return (
     <StContextMenu top={y} left={x} contextElementType={contextElementType} isEditing={isEditing}>
-      {contextElementType === 'MARK' && !isEditing && (
-        <ul>
+      <ul>
+        {contextElementType === 'MARK' && !isEditing && (
           <li>
             <button type="button" onClick={(e) => handleMemoState(e)}>
               {clickedMemoId ? '메모 수정' : '메모 추가'}
             </button>
           </li>
-          <li>
-            <button type="button" onClick={(e) => handleHighlightDelete(e)}>
-              하이라이트 삭제
-            </button>
-          </li>
-        </ul>
-      )}
-      {contextElementType === 'MARK' && isEditing && (
-        <ul>
-          <li>
-            <button type="button" onClick={(e) => handleHighlightDelete(e)}>
-              하이라이트 삭제
-            </button>
-          </li>
-        </ul>
-      )}
-      {contextElementType === 'SPAN' && (
-        <ul>
-          <li>
-            <button type="button" onClick={(e) => handleSpacingDelete(e)}>
-              끊어읽기 삭제
-            </button>
-          </li>
-        </ul>
-      )}
+        )}
+        <li>
+          <button type="button" onClick={(e) => handleContextMenu(e, contextElementType)}>
+            {contextElementType === 'MARK' ? '하이라이트' : '끊어읽기'} 삭제
+          </button>
+        </li>
+      </ul>
     </StContextMenu>
   );
 }
