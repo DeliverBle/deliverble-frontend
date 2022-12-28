@@ -426,7 +426,6 @@ function LearnDetail() {
         }
       }
     })();
-    console.log('clickedScriptTitleIndex', clickedScriptTitleIndex);
   }, [clickedScriptTitleIndex, detailId, isLoggedIn, isGuide]);
 
   useEffect(() => {
@@ -477,13 +476,6 @@ function LearnDetail() {
       setPrevLink(prevPath || '/');
     }
   }, []);
-
-  useEffect(() => {
-    console.log('videoData', videoData);
-    console.log('유무', videoData?.names);
-    videoData?.names && console.log('ScriptIndex id', videoData?.names[clickedScriptTitleIndex].id);
-    console.log('default id', videoData?.scriptsId);
-  }, [clickedScriptTitleIndex, videoData]);
 
   return (
     <>
