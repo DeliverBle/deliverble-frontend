@@ -103,7 +103,7 @@ function LearnDetail() {
   const [order, setOrder] = useState<number>();
   const [text, setText] = useState<string>();
 
-  const handleContextMenuPoint = (target: HTMLDivElement) => {
+  const handleContextMenuPoint = (target: HTMLElement) => {
     let x = 0;
     let y = 0;
 
@@ -175,18 +175,20 @@ function LearnDetail() {
 
   useEffect(() => {
     (async () => {
-      if (order && text && videoData?.scriptsId) {
+      if (order !== -1 && text !== '' && order && text && videoData?.scriptsId && videoData?.names) {
+        const id = videoData?.names[clickedScriptTitleIndex].id;
         await api.learnDetailService.postSentenceData(
           {
             order,
             text,
           },
-          videoData?.scriptsId,
+          id,
           clickedScriptTitleIndex,
         );
       }
     })();
-  }, [order, text, clickedScriptTitleIndex, videoData?.scriptsId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [order, text]);
 
   const nodeToText = (anchorNode: Node | null | undefined) => {
     let textValue = '';
@@ -262,12 +264,13 @@ function LearnDetail() {
   }, [contextElementId, contextHTML?.parentElement, isDeleteBtnClicked]);
 
   const handleRightClick = (e: React.MouseEvent, scriptId: number, order: number) => {
-    const eventTarget = e.target as HTMLElement;
-    setContextElementId(eventTarget.id);
-    setContextHTML(eventTarget);
-    setContextElementType(eventTarget.nodeName);
+    const contextTarget = e.target as HTMLElement;
+    if (contextTarget.closest('mark') || contextTarget.closest('span')) {
+      setContextElementId(contextTarget.id);
+      setContextHTML(contextTarget);
+      setContextElementType(contextTarget.nodeName);
+    }
 
-    const contextTarget = e.target as HTMLDivElement;
     const startIndex = getHighlightIndex(contextTarget?.parentNode, contextTarget.id);
     const markTag = contextTarget.closest('mark');
 
@@ -554,7 +557,6 @@ function LearnDetail() {
                     )}
                     {isEditing && (
                       <ScriptEdit
-                        scriptsId={videoData.names ? videoData.names[clickedScriptTitleIndex].id : videoData.scriptsId}
                         isEditing={isEditing}
                         isHighlight={isHighlight}
                         isSpacing={isSpacing}

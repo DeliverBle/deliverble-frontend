@@ -9,7 +9,6 @@ import { CONTEXT_MENU_WIDTH, ABSOLUTE_RIGHT_LIMIT } from '@src/utils/constant';
 import { useRouter } from 'next/router';
 
 interface ScriptEditProps {
-  scriptsId: number;
   isEditing: boolean;
   isHighlight: boolean;
   isSpacing: boolean;
@@ -19,7 +18,7 @@ interface ScriptEditProps {
 function ScriptEdit(props: ScriptEditProps) {
   const router = useRouter();
   const { id: detailId } = router.query;
-  const { scriptsId, isEditing, isHighlight, isSpacing, clickedScriptTitleIndex } = props;
+  const { isEditing, isHighlight, isSpacing, clickedScriptTitleIndex } = props;
   const [highlightAlert, setHighlightAlert] = useState<boolean>(false);
   const [order, setOrder] = useState<number>();
   const [text, setText] = useState<string>();
@@ -34,7 +33,7 @@ function ScriptEdit(props: ScriptEditProps) {
   const [contextHTML, setContextHTML] = useState<HTMLElement>();
   const [contextElementId, setContextElementId] = useState<string>('');
 
-  const handleContextMenuPoint = (target: HTMLDivElement) => {
+  const handleContextMenuPoint = (target: HTMLElement) => {
     let x = 0;
     let y = 0;
 
@@ -62,18 +61,20 @@ function ScriptEdit(props: ScriptEditProps) {
 
   useEffect(() => {
     (async () => {
-      if (order && text && scriptsId) {
+      if (order !== -1 && text !== '' && order && text && videoData?.names) {
+        const id = videoData?.names[clickedScriptTitleIndex].id;
         await api.learnDetailService.postSentenceData(
           {
             order,
             text,
           },
-          scriptsId,
+          id,
           clickedScriptTitleIndex,
         );
       }
     })();
-  }, [order, text, scriptsId, clickedScriptTitleIndex]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [order, text]);
 
   useEffect(() => {
     if (highlightAlert) {
@@ -130,15 +131,13 @@ function ScriptEdit(props: ScriptEditProps) {
   }, [contextElementId, contextHTML?.parentElement, isDeleteBtnClicked]);
 
   const handleRightClick = (e: React.MouseEvent) => {
-    const eventTarget = e.target as HTMLElement;
-    setContextElementId(eventTarget.id);
-    setContextHTML(eventTarget);
-    setContextElementType(eventTarget.nodeName);
-    if (eventTarget.closest('mark') || eventTarget.closest('span')) {
+    const contextTarget = e.target as HTMLElement;
+    if (contextTarget.closest('mark') || contextTarget.closest('span')) {
       setIsContextMenuOpen(true);
+      setContextElementId(contextTarget.id);
+      setContextHTML(contextTarget);
+      setContextElementType(contextTarget.nodeName);
     }
-
-    const contextTarget = e.target as HTMLDivElement;
     setContextMenuPoint(handleContextMenuPoint(contextTarget));
   };
 
