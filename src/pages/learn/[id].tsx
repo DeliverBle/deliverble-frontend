@@ -243,7 +243,7 @@ function LearnDetail() {
         break;
       case 'SPAN':
         if (removeElement) {
-          parentElement?.replaceChild(blank, removeElement);
+          removeElement.replaceWith(blank);
         }
         nodeToText(parentElement);
         break;
