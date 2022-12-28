@@ -54,7 +54,7 @@ function Review() {
     });
 
     const { historyPaging, historyList } = await api.reviewService.postHistoryVideoList({
-      currentPage: 1,
+      currentPage: page,
       listSize: LIST_SIZE,
     });
 
