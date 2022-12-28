@@ -149,6 +149,14 @@ function RecordLog(props: RecordStatusBarProps) {
     return link === audioRef.current?.src ? true : false;
   };
 
+  const handleTextOverflow = (text: string) => {
+    if (text.length > 20) {
+      return text.slice(0, 19) + '...';
+    } else {
+      return text;
+    }
+  };
+
   return (
     <StRecordLogContainer>
       {isDataEmpty ? (
@@ -243,7 +251,7 @@ function RecordLog(props: RecordStatusBarProps) {
                   </>
                 ) : (
                   <>
-                    <h1>{name}</h1>
+                    <h1>{handleTextOverflow(name)}</h1>
                     {checkRecordClicked(link) && (isPlaying || isPausing) && (
                       <StRecordPlayBar>
                         <StRecordPlayStatus ref={progressRef} />
