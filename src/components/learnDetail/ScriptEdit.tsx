@@ -21,7 +21,6 @@ function ScriptEdit(props: ScriptEditProps) {
   const { id: detailId } = router.query;
   const { scriptsId, isEditing, isHighlight, isSpacing, clickedScriptTitleIndex } = props;
   const [highlightAlert, setHighlightAlert] = useState<boolean>(false);
-  const [firstLineId, setFirstLineId] = useState<number>();
   const [order, setOrder] = useState<number>();
   const [text, setText] = useState<string>();
   const [videoData, setVideoData] = useState<VideoData>();
@@ -75,17 +74,6 @@ function ScriptEdit(props: ScriptEditProps) {
       }
     })();
   }, [order, text, scriptsId, clickedScriptTitleIndex]);
-
-  useEffect(() => {
-    setFirstLineId(videoData?.scripts[0].id);
-  }, [firstLineId, videoData?.scripts]);
-
-  const findLineOrder = (currentLineId: number) => {
-    if (currentLineId && firstLineId) {
-      const order = currentLineId - firstLineId + 1;
-      setOrder(order);
-    }
-  };
 
   useEffect(() => {
     if (highlightAlert) {
@@ -323,16 +311,16 @@ function ScriptEdit(props: ScriptEditProps) {
         onPaste={(e) => e.preventDefault()}
         onKeyDown={(e) => e.preventDefault()}
         ref={learnRef}>
-        {videoData?.scripts.map(({ id, text }) => (
+        {videoData?.scripts.map(({ id, text }, i) => (
           <StScriptText
             ref={contextMenuRef}
             onContextMenu={(e) => {
               e.preventDefault();
               handleRightClick(e);
-              findLineOrder(id);
+              setOrder(i + 1);
             }}
             key={id}
-            onClick={() => findLineOrder(id)}
+            onClick={() => setOrder(i + 1)}
             dangerouslySetInnerHTML={{ __html: text }}></StScriptText>
         ))}
         {isContextMenuOpen && (
