@@ -1,7 +1,8 @@
-import { api } from '@src/services/api';
-import { useState } from 'react';
 import styled from 'styled-components';
+import ImageDiv from '@src/components/common/ImageDiv';
+import { FONT_STYLES } from '@src/styles/fontStyle';
 import { COLOR } from '@src/styles/color';
+import { useState, useRef } from 'react';
 import {
   icRecordPlayDefault,
   icRecordPlayUnactivated,
@@ -11,14 +12,12 @@ import {
   icMemoXButton,
   icCheckButton,
 } from 'public/assets/icons';
-import ImageDiv from '@src/components/common/ImageDiv';
-import { FONT_STYLES } from '@src/styles/fontStyle';
-import { useRef } from 'react';
 import EmptyRecord from './EmptyRecord';
 import RecordDotButton from './RecordDotButton';
+import { api } from '@src/services/api';
+import { useMutation, useQuery } from 'react-query';
 import { useRecoilValue } from 'recoil';
 import { isGuideAtom } from '@src/stores/newsState';
-import { useMutation, useQuery } from 'react-query';
 
 interface RecordStatusBarProps {
   scriptId: number;
@@ -27,12 +26,10 @@ interface RecordStatusBarProps {
 
 function RecordLog(props: RecordStatusBarProps) {
   const { scriptId, isRecordSaved } = props;
-  const isGuide = useRecoilValue(isGuideAtom);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPausing, setIsPausing] = useState(false);
   const [linkClicked, setLinkClicked] = useState('');
   const [currentTime, setCurrentTime] = useState(0);
-  const [isDataEmpty, setIsDataEmpty] = useState(false);
   const [isDataChanged, setIsDataChanged] = useState(false);
   const [isNameChanging, setIsNameChanging] = useState(false);
   const [recordLinkChanging, setRecordLinkChanging] = useState('');
@@ -40,14 +37,13 @@ function RecordLog(props: RecordStatusBarProps) {
   const progressRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef(new Audio());
   const nameInputRef = useRef<HTMLInputElement>(null);
-  const [isButtonActive, setIsButtonActive] = useState(false);
+  const isGuide = useRecoilValue(isGuideAtom);
 
   const { data } = useQuery(
     ['recordData', isRecordSaved, isDataChanged],
     () => api.learnDetailService.getRecordData(scriptId),
     {
-      onSuccess: (data) => {
-        !data && setIsDataEmpty(true);
+      onSuccess: () => {
         setIsDataChanged(false);
         setIsPlaying(false);
         setIsPausing(false);
@@ -159,7 +155,7 @@ function RecordLog(props: RecordStatusBarProps) {
 
   return (
     <StRecordLogContainer>
-      {isDataEmpty ? (
+      {!data ? (
         <EmptyRecord />
       ) : (
         <>
@@ -329,7 +325,7 @@ const StRecord = styled.div`
     width: 6rem;
     height: 6rem;
     position: absolute;
-    top: 0;
+    top: 0.1rem;
     display: none;
   }
 

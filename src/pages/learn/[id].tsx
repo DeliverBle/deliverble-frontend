@@ -100,7 +100,10 @@ function LearnDetail() {
   const [isRecordSaved, setIsRecordSaved] = useState<boolean>(false);
 
   useEffect(() => {
-    isRecordSaved && setStudyLogTab('record');
+    isRecordSaved &&
+      setTimeout(() => {
+        setStudyLogTab('record');
+      }, 1000);
   }, [isRecordSaved]);
 
   const handleContextMenuPoint = (target: HTMLDivElement) => {
