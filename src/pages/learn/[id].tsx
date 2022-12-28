@@ -129,17 +129,18 @@ function LearnDetail() {
     return { x, y };
   };
 
-  const getHighlightIndex = (parentNode: ParentNode | null, givenString: string) => {
+  const getHighlightIndex = (parentNode: ParentNode | null, targetId: string) => {
     const childNodes = parentNode?.childNodes;
     if (childNodes && childNodes.length !== 1) {
       let stringLength = 0;
       for (let i = 0; i < childNodes.length; i++) {
-        if (childNodes[i].textContent === givenString) {
+        const childElement = childNodes[i] as HTMLElement;
+        if (childElement.id === targetId) {
           setHighlightIndex(stringLength);
           return stringLength;
         }
         if (childNodes[i].textContent !== '/') {
-          stringLength += childNodes[i]?.textContent?.replaceAll('/', '').length ?? 0;
+          stringLength += childNodes[i]?.textContent?.replaceAll('/', ' ').length ?? 0;
         }
       }
     }
@@ -267,7 +268,7 @@ function LearnDetail() {
     setContextElementType(eventTarget.nodeName);
 
     const contextTarget = e.target as HTMLDivElement;
-    const startIndex = getHighlightIndex(contextTarget?.parentNode, contextTarget.innerText);
+    const startIndex = getHighlightIndex(contextTarget?.parentNode, contextTarget.id);
     const markTag = contextTarget.closest('mark');
 
     if (startIndex !== undefined && markTag) {
