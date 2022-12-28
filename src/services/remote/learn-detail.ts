@@ -8,6 +8,7 @@ import {
   UploadRecordData,
   GetRecordData,
   DeleteRecordData,
+  ChangeRecordNameData,
 } from '../api/types/learn-detail';
 import { privateAPI, publicAPI } from './base';
 
