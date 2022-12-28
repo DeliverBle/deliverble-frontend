@@ -5,7 +5,9 @@ import { COLOR } from '@src/styles/color';
 import {
   icRecordPlayDefault,
   icRecordPlayUnactivated,
+  icRecordPlayActive,
   icRecordPauseDefault,
+  icRecordPauseActive,
   icMemoXButton,
   icCheckButton,
 } from 'public/assets/icons';
@@ -38,6 +40,7 @@ function RecordLog(props: RecordStatusBarProps) {
   const progressRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef(new Audio());
   const nameInputRef = useRef<HTMLInputElement>(null);
+  const [isButtonActive, setIsButtonActive] = useState(false);
 
   const { data } = useQuery(
     ['recordData', isRecordSaved, isDataChanged],
@@ -184,6 +187,21 @@ function RecordLog(props: RecordStatusBarProps) {
                   alt={checkRecordClicked(link) && isPlaying ? '녹음 중지' : '녹음 재생'}
                   layout="fill"
                 />
+
+                <ImageDiv
+                  src={
+                    checkRecordClicked(link) && isPlaying
+                      ? icRecordPauseActive
+                      : isNameChanging && link === recordLinkChanging
+                      ? icRecordPlayActive
+                      : isNameChanging && link === recordLinkChanging
+                      ? icRecordPlayActive
+                      : icRecordPlayActive
+                  }
+                  className="icRecordPlay hover"
+                  alt={checkRecordClicked(link) && isPlaying ? '녹음 중지' : '녹음 재생'}
+                  layout="fill"
+                />
               </button>
               <StRecordInfo>
                 {isNameChanging && link === recordLinkChanging ? (
@@ -297,6 +315,18 @@ const StRecord = styled.div`
     height: 6rem;
     margin: 3.8rem 0 3.8rem 4rem;
     cursor: pointer;
+  }
+
+  & > button .hover {
+    width: 6rem;
+    height: 6rem;
+    position: absolute;
+    top: 0;
+    display: none;
+  }
+
+  & > button:hover .hover {
+    display: block;
   }
 
   &:hover .dot {
