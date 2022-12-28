@@ -102,7 +102,6 @@ function LearnDetail() {
   const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState<boolean>(false);
   const [order, setOrder] = useState<number>();
   const [text, setText] = useState<string>();
-  const [firstLineId, setFirstLineId] = useState<number>();
 
   const handleContextMenuPoint = (target: HTMLDivElement) => {
     let x = 0;
@@ -171,17 +170,6 @@ function LearnDetail() {
       }
     });
     return styles;
-  };
-
-  useEffect(() => {
-    setFirstLineId(videoData?.scripts[0].id);
-  }, [firstLineId, videoData?.scripts]);
-
-  const findLineOrder = (currentLineId: number) => {
-    if (currentLineId && firstLineId) {
-      const order = currentLineId - firstLineId + 1;
-      setOrder(order);
-    }
   };
 
   useEffect(() => {
@@ -544,12 +532,12 @@ function LearnDetail() {
                 <article>
                   <div ref={learnRef}>
                     {!isEditing &&
-                      videoData.scripts.map(({ id, order, text, startTime, endTime }) => (
+                      videoData.scripts.map(({ id, order, text, startTime, endTime }, i) => (
                         <StScriptText
                           ref={contextMenuRef}
                           onContextMenu={(e) => {
                             e.preventDefault();
-                            findLineOrder(id);
+                            setOrder(i + 1);
                             !isGuide && handleRightClick(e, videoData.scriptsId, order);
                           }}
                           key={id}
