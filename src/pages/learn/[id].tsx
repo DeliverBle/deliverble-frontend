@@ -397,7 +397,7 @@ function LearnDetail() {
           : await api.learnDetailService.getPublicSpeechGuideData(id);
       } else {
         data = isLoggedIn
-          ? await api.learnDetailService.getPrivateVideoData(id)
+          ? await api.learnDetailService.getPrivateVideoData(id, clickedScriptTitleIndex) // 흐앙 이거였어ㅠㅠ
           : await api.learnDetailService.getPublicVideoData(id);
       }
       setVideoData(data);
@@ -411,7 +411,7 @@ function LearnDetail() {
         setScriptTitleList(names);
       }
     })();
-  }, [isLoggedIn, detailId, isEditing, isGuide]);
+  }, [isLoggedIn, detailId, isEditing, isGuide, clickedScriptTitleIndex]);
 
   useEffect(() => {
     (async () => {
