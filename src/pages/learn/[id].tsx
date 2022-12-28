@@ -79,8 +79,7 @@ function LearnDetail() {
   const getLoginStatus = () => localStorage.getItem('token') ?? '';
   const [prevLink, setPrevLink] = useState('');
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [isHighlightOver, setIsHighlightOver] = useState<boolean>(false);
-  const [isSpacingOver, setIsSpacingOver] = useState<boolean>(false);
+  const [hoveredChild, setHoveredChild] = useState<number>(0);
   const [isGuideOver, setIsGuideOver] = useState<boolean>(false);
   const [highlightIndex, setHighlightIndex] = useState<number>(INITIAL_NUMBER);
   const [scriptTitleList, setScriptTitleList] = useState<Name[]>([]);
@@ -175,7 +174,7 @@ function LearnDetail() {
 
   useEffect(() => {
     (async () => {
-      if (order !== -1 && text !== '' && order && text && videoData?.scriptsId && videoData?.names) {
+      if (order !== -1 && text !== '' && order && text && videoData?.names) {
         const id = videoData?.names[clickedScriptTitleIndex].id;
         await api.learnDetailService.postSentenceData(
           {
@@ -576,7 +575,7 @@ function LearnDetail() {
                             } else {
                               isHighlight ? setIsHighlight(false) : setIsHighlight(true);
                               setIsSpacing(false);
-                              setIsHighlightOver(false);
+                              setHoveredChild(0);
                             }
                           }}>
                           {isHighlight ? (
@@ -589,11 +588,11 @@ function LearnDetail() {
                                 src={icHighlighterDefault}
                                 alt="하이라이트"
                                 onMouseOver={() => {
-                                  setIsHighlightOver(true);
+                                  setHoveredChild(1);
                                 }}
                                 onMouseOut={(e) => {
                                   e.stopPropagation();
-                                  setIsHighlightOver(false);
+                                  setHoveredChild(0);
                                 }}
                               />
                             </>
@@ -607,7 +606,7 @@ function LearnDetail() {
                             } else {
                               isSpacing ? setIsSpacing(false) : setIsSpacing(true);
                               setIsHighlight(false);
-                              setIsSpacingOver(false);
+                              setHoveredChild(0);
                             }
                           }}>
                           {isSpacing ? (
@@ -625,11 +624,11 @@ function LearnDetail() {
                                 alt="끊어 읽기"
                                 onMouseOver={(e) => {
                                   e.stopPropagation();
-                                  setIsSpacingOver(true);
+                                  setHoveredChild(2);
                                 }}
                                 onMouseOut={(e) => {
                                   e.stopPropagation();
-                                  setIsSpacingOver(false);
+                                  setHoveredChild(0);
                                 }}
                               />
                             </>
@@ -639,7 +638,7 @@ function LearnDetail() {
                     )}
                   </div>
                 </article>
-                <StTooltipContanier isHighlightOver={isHighlightOver} isSpacingOver={isSpacingOver}>
+                <StTooltipContanier hoveredChild={hoveredChild}>
                   <p>
                     드래그해서 하이라이트를
                     <br />
@@ -970,77 +969,44 @@ const StButtonContainer = styled.div`
   padding-right: 0.8rem;
 `;
 
-const StTooltipContanier = styled.div<{ isHighlightOver: boolean; isSpacingOver: boolean }>`
+const StTooltipContanier = styled.div<{ hoveredChild: number }>`
   position: fixed;
   z-index: 2;
 
-  ${({ isHighlightOver }) =>
-    isHighlightOver
-      ? css`
-          & > p:first-child {
-            margin: 82.3rem 0 0 60.5rem;
-            position: absolute;
-            top: 4.6rem;
-            background: rgba(22, 15, 53, 0.7);
-            color: ${COLOR.WHITE};
-            width: 16.5rem;
-            padding: 1rem;
-            cursor: default;
-            border-radius: 0.6rem;
-            ${FONT_STYLES.SB_15_CAPTION}
-          }
-          & > p:first-child:after {
-            position: absolute;
-            bottom: 100%;
-            right: 1.6rem;
-            border: solid transparent;
-            content: '';
-            width: 0;
-            height: 0;
-            pointer-events: none;
-            border-width: 0.8rem;
-            border-bottom-color: rgba(22, 15, 53, 0.7);
-          }
-        `
-      : css`
-          & > p:first-child {
-            display: none;
-          }
-        `}
+  & > p {
+    display: none;
+  }
 
-  ${({ isSpacingOver }) =>
-    isSpacingOver
-      ? css`
-          & > p:nth-child(2) {
-            margin: 82.3rem 0 0 77.8rem;
-            position: absolute;
-            top: 4.6rem;
-            background: rgba(22, 15, 53, 0.7);
-            color: ${COLOR.WHITE};
-            width: 13.9rem;
-            padding: 1rem;
-            cursor: default;
-            border-radius: 0.6rem;
-            ${FONT_STYLES.SB_15_CAPTION}
-          }
-          & > p:nth-child(2):after {
-            position: absolute;
-            bottom: 100%;
-            left: 1.6rem;
-            border: solid transparent;
-            content: '';
-            width: 0;
-            height: 0;
-            pointer-events: none;
-            border-width: 0.8rem;
-            border-bottom-color: rgba(22, 15, 53, 0.7);
-          }
-        `
-      : css`
-          & > p:nth-child(2) {
-            display: none;
-          }
-        `}
+  ${({ hoveredChild }) =>
+    hoveredChild &&
+    css`
+      & > p:nth-child(${hoveredChild}) {
+        display: block;
+        position: absolute;
+        top: 4.6rem;
+        width: ${hoveredChild === 1 ? '16.5rem' : '13.9rem'};
+        margin: 82.3rem 0 0 ${hoveredChild === 1 ? '60.5rem' : '77.8rem'};
+        padding: 1rem;
+        border-radius: 0.6rem;
+        background: rgba(22, 15, 53, 0.7);
+        ${FONT_STYLES.SB_15_CAPTION}
+        color: ${COLOR.WHITE};
+        cursor: default;
+      }
+
+      & > p:nth-child(${hoveredChild})::after {
+        position: absolute;
+        bottom: 100%;
+        right: ${hoveredChild === 1 ? '1.6rem' : '10.7rem'};
+        width: 0;
+        height: 0;
+        border: solid transparent;
+        border-width: 0.8rem;
+        border-bottom-color: rgba(22, 15, 53, 0.7);
+        pointer-events: none;
+        content: '';
+      }
+    `}
 `;
 
 const StButton = styled.button`
