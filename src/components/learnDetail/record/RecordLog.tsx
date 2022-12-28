@@ -2,7 +2,13 @@ import { api } from '@src/services/api';
 import { useState } from 'react';
 import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
-import { icRecordPlayDefault, icRecordPauseDefault, icMemoXButton, icCheckButton } from 'public/assets/icons';
+import {
+  icRecordPlayDefault,
+  icRecordPlayUnactivated,
+  icRecordPauseDefault,
+  icMemoXButton,
+  icCheckButton,
+} from 'public/assets/icons';
 import ImageDiv from '@src/components/common/ImageDiv';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { useRef } from 'react';
@@ -51,6 +57,25 @@ function RecordLog(props: RecordStatusBarProps) {
     },
   );
 
+  const { mutate } = useMutation(
+    ['recordData'],
+    () =>
+      api.learnDetailService.changeRecordNameData({
+        link: recordLinkChanging,
+        scriptId: scriptId,
+        newName: nameInputRef.current ? nameInputRef.current.value : '',
+      }),
+    {
+      onSuccess: () => {
+        setIsNameChanging(false);
+        setIsDataChanged(false);
+      },
+      onError: () => {
+        alert('녹음 이름 변경에 실패했습니다.');
+      },
+    },
+  );
+
   const handleDate = (date: string) => {
     return date.substring(0, 10).replace(/-/g, '.').concat('.');
   };
@@ -77,28 +102,28 @@ function RecordLog(props: RecordStatusBarProps) {
       }
     };
 
-    // 재생 버튼을 눌렀을 경우.
-    if (!isPlaying) {
-      // 이전에 재생했던 녹음이 아닐 경우
-      if (audioRef.current && linkClicked !== link) {
-        audioRef.current.removeEventListener('timeupdate', updateProgress);
-        audioRef.current && (audioRef.current.src = link);
-        audioRef.current.addEventListener('timeupdate', updateProgress);
-        //한번 재생했던 녹음을 다시 재생할 경우.
-      } else if (audioRef.current && !isPausing) {
-        console.log(audioRef.current);
-        console.log('hello');
+    const getAudioInfo = () => {
+      if (audioRef.current) {
         audioRef.current.removeEventListener('timeupdate', updateProgress);
         audioRef.current.src = link;
         audioRef.current.addEventListener('timeupdate', updateProgress);
       }
+    };
 
-      if (!audioRef.current) {
-        console.log('im working');
+    // 재생 버튼을 눌렀을 경우.
+    if (!isPlaying) {
+      // 이전에 재생했던 녹음이 아닐 경우
+      if (linkClicked !== link) {
         audioRef.current = new Audio();
-        audioRef.current.removeEventListener('timeupdate', updateProgress);
-        audioRef.current && (audioRef.current.src = link);
-        audioRef.current.addEventListener('timeupdate', updateProgress);
+        getAudioInfo();
+        //한번 재생했던 녹음을 다시 재생할 경우.
+      } else if (!isPausing) {
+        getAudioInfo();
+      }
+      //audioRef에 정보가 없을 경우;
+      if (!audioRef.current) {
+        audioRef.current = new Audio();
+        getAudioInfo();
       }
 
       audioRef.current?.play();
@@ -112,32 +137,13 @@ function RecordLog(props: RecordStatusBarProps) {
     }
   };
 
-  const { mutate } = useMutation(
-    ['recordData'],
-    () =>
-      api.learnDetailService.changeRecordNameData({
-        link: recordLinkChanging,
-        scriptId: scriptId,
-        newName: nameInputRef.current ? nameInputRef.current.value : '',
-      }),
-    {
-      onSuccess: () => {
-        setIsNameChanging(false);
-        setIsDataChanged(true);
-        setIsPlaying(false);
-      },
-      onError: () => {
-        alert('녹음 이름 변경에 실패했습니다.');
-      },
-    },
-  );
-
   const onChange = () => {
-    if (nameInputRef.current && nameInputRef.current.value.length > 99) {
-      setIsTextLengthExceeded(true);
-    } else {
-      setIsTextLengthExceeded(false);
-    }
+    nameInputRef.current &&
+      (nameInputRef.current.value.length > 99 ? setIsTextLengthExceeded(true) : setIsTextLengthExceeded(false));
+  };
+
+  const checkRecordClicked = (link: string) => {
+    return link === audioRef.current?.src ? true : false;
   };
 
   return (
@@ -148,20 +154,37 @@ function RecordLog(props: RecordStatusBarProps) {
         <>
           {data?.map(({ name, link, endTime, date }) => (
             <StRecord key={link}>
-              <ImageDiv
-                src={link === audioRef.current?.src && isPlaying ? icRecordPauseDefault : icRecordPlayDefault}
-                className="icRecordPlay"
-                alt={link === audioRef.current?.src && isPlaying ? '녹음 중지' : '녹음 재생'}
-                layout="fill"
+              <button
+                disabled={isNameChanging && link === recordLinkChanging}
                 onClick={() => {
-                  if (link !== audioRef.current?.src && isPlaying) {
-                    return;
+                  if (isNameChanging) {
+                    setIsNameChanging(false);
+                  }
+                  if (!checkRecordClicked(link) && isPlaying && !isNameChanging) {
+                    setLinkClicked(link);
+                    handlePlayRecord(link, endTime);
+                    setIsPlaying(false);
+                    setIsPausing(false);
                   } else {
                     setLinkClicked(link);
                     handlePlayRecord(link, endTime);
                   }
-                }}
-              />
+                }}>
+                <ImageDiv
+                  src={
+                    checkRecordClicked(link) && isPlaying
+                      ? icRecordPauseDefault
+                      : isNameChanging && link === recordLinkChanging
+                      ? icRecordPlayUnactivated
+                      : isNameChanging && link === recordLinkChanging
+                      ? icRecordPlayUnactivated
+                      : icRecordPlayDefault
+                  }
+                  className="icRecordPlay"
+                  alt={checkRecordClicked(link) && isPlaying ? '녹음 중지' : '녹음 재생'}
+                  layout="fill"
+                />
+              </button>
               <StRecordInfo>
                 {isNameChanging && link === recordLinkChanging ? (
                   <>
@@ -193,6 +216,7 @@ function RecordLog(props: RecordStatusBarProps) {
                           src={icCheckButton}
                           alt="완료"
                           onClick={() => {
+                            setIsDataChanged(true);
                             mutate();
                           }}
                         />
@@ -202,13 +226,13 @@ function RecordLog(props: RecordStatusBarProps) {
                 ) : (
                   <>
                     <h1>{name}</h1>
-                    {link === audioRef.current?.src && (isPlaying || isPausing) && (
+                    {checkRecordClicked(link) && (isPlaying || isPausing) && (
                       <StRecordPlayBar>
                         <StRecordPlayStatus ref={progressRef} />
                       </StRecordPlayBar>
                     )}
                     <div>
-                      {link === audioRef.current?.src && (isPlaying || isPausing) ? (
+                      {checkRecordClicked(link) && (isPlaying || isPausing) ? (
                         <p style={{ color: `${COLOR.MAIN_BLUE}` }}>{handleTime(currentTime)}</p>
                       ) : (
                         <p>{handleDate(date)}</p>
@@ -219,7 +243,7 @@ function RecordLog(props: RecordStatusBarProps) {
                 )}
               </StRecordInfo>
               <audio src={link} ref={audioRef} />
-              {!isGuide && !isNameChanging && (
+              {!isGuide && !isNameChanging && !isPlaying && (
                 <RecordDotButton
                   link={link}
                   scriptId={scriptId}
@@ -262,7 +286,6 @@ const StRecord = styled.div`
   position: relative;
 
   margin-right: 0.8rem;
-  padding: 3.8rem 0 3.8rem 4rem;
   width: 67rem;
 
   background-color: ${COLOR.SUB_BLUE_8};
@@ -272,6 +295,7 @@ const StRecord = styled.div`
     position: relative;
     width: 6rem;
     height: 6rem;
+    margin: 3.8rem 0 3.8rem 4rem;
     cursor: pointer;
   }
 
@@ -288,6 +312,7 @@ const StRecordInfo = styled.div`
   width: 47.4rem;
   height: 7.3rem;
   margin-left: 4rem;
+  margin-top: 3.2rem;
 
   & > h1 {
     ${FONT_STYLES.SB_25_MEMO};
