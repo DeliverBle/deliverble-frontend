@@ -44,19 +44,18 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <>
-      <QueryClientProvider client={queryClient}>
-        <RecoilRoot>
-          <GlobalStyle />
-          <Script
-            strategy="afterInteractive"
-            src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
-          />
-          <Script
-            id="gtag-init"
-            strategy="afterInteractive"
-            dangerouslySetInnerHTML={{
-              __html: `
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot>
+        <GlobalStyle />
+        <Script
+          strategy="afterInteractive"
+          src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
+        />
+        <Script
+          id="gtag-init"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
@@ -64,12 +63,11 @@ function MyApp({ Component, pageProps }: AppProps) {
               page_path: window.location.pathname,
             });
           `,
-            }}
-          />
-          <Component {...pageProps} />
-        </RecoilRoot>
-      </QueryClientProvider>
-    </>
+          }}
+        />
+        <Component {...pageProps} />
+      </RecoilRoot>
+    </QueryClientProvider>
   );
 }
 
