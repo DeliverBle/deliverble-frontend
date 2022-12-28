@@ -944,8 +944,7 @@ const StScriptText = styled.div<{ isActive: boolean; markStyles: string }>`
     font-size: 3.2rem;
     font-weight: 600;
     color: ${COLOR.MAIN_BLUE};
-    margin-right: 0.4rem;
-    margin-left: 0.4rem;
+    margin: 0 0.4rem 0 0.4rem;
   }
 
   mark {
