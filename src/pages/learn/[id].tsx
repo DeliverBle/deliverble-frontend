@@ -245,12 +245,8 @@ function LearnDetail() {
 
   const handleClickLike = async (id: number) => {
     const { id: likeId, isFavorite } = await api.likeService.postLikeData(id);
-    if (videoData && videoData.id === likeId) {
-      setVideoData({
-        ...videoData,
-        isFavorite,
-      });
-    }
+    setVideoData((prev) => prev && (prev.id === likeId ? { ...prev, isFavorite } : prev));
+    setSimilarNewsList((prev) => prev.map((news) => (news.id === likeId ? { ...news, isFavorite } : news)));
   };
 
   useEffect(() => {
