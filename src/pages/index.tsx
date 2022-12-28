@@ -42,6 +42,7 @@ function Landing() {
     <div>
       {deviceType === 'mobile' && (
         <StMoblie>
+          <SEO title="Deliverble" />
           <StNav isFirstScrolled={isScrolled}>
             <ImageDiv src={isScrolled ? icMobileLogo : icMobileLogoWhite} className="logo" layout="fill" alt="" />
           </StNav>
