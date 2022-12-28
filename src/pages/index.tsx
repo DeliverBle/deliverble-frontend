@@ -39,9 +39,9 @@ function Landing() {
 
   return (
     <div>
+      <SEO title="Deliverble" />
       {deviceType === 'mobile' && (
         <StMoblie>
-          <SEO title="Deliverble" />
           <StNav isFirstScrolled={isScrolled}>
             <ImageDiv src={isScrolled ? icMobileLogo : icMobileLogoWhite} className="logo" layout="fill" alt="" />
           </StNav>
@@ -50,7 +50,6 @@ function Landing() {
       )}
       {deviceType === 'desktop' && (
         <StLanding>
-          <SEO title="Deliverble" />
           <ScrollControl slideNumber={slideNumber} setSlideNumber={setSlideNumber} setStopObserve={setStopObserve} />
           <Nav isFirstScrolled={isFirstScrolled} isSecondScrolled={isSecondScrolled} />
           <SliderContainer
