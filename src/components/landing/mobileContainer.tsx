@@ -1,32 +1,14 @@
-import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Lottie from 'lottie-react';
 import { step1Lottie, step2Lottie, step3Lottie } from 'public/assets/lottie';
 import { COLOR } from 'src/styles/color';
 import { FONT_STYLES } from 'src/styles/fontStyle';
 import ImageDiv from '@src/components/common/ImageDiv';
-import { icMobileLogoWhite, icMobileLogo } from 'public/assets/icons';
 import { imgMobileBgFirst, imgMobileBgLast, imgMobileFist, imgMobileEar, imgMobileMic } from 'public/assets/images';
 
-function Mobile() {
-  const [isFirstScrolled, setIsFirstScrolled] = useState<boolean>(false);
-
-  const scrollListener = () => {
-    setIsFirstScrolled(window.scrollY > 0);
-  };
-  useEffect(() => {
-    window.addEventListener('scroll', scrollListener);
-    return () => {
-      window.removeEventListener('scroll', scrollListener);
-    };
-  }, []);
-
+function MobileContainer() {
   return (
-    <StMoblie>
-      <StNav isFirstScrolled={isFirstScrolled}>
-        <ImageDiv src={isFirstScrolled ? icMobileLogo : icMobileLogoWhite} className="logo" layout="fill" alt="" />
-      </StNav>
-
+    <StMoblieContainer>
       <StFirstSlide>
         <p>
           아나운서 쉐도잉으로 키우는
@@ -73,7 +55,7 @@ function Mobile() {
                 <br />
                 뉴스리딩은 처음이라 막막해요.
               </p>
-              <p>26살 취준생 김○○</p>
+              <p>24살 아나운서 지망생 백○○</p>
             </div>
           </StCard>
         </div>
@@ -144,34 +126,14 @@ function Mobile() {
         <p>Contact Us</p>
         <p>deliverble.team@gmail.com</p>
       </StFifthSlide>
-    </StMoblie>
+    </StMoblieContainer>
   );
 }
 
-const StMoblie = styled.div`
+const StMoblieContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-`;
-
-const StNav = styled.nav<{ isFirstScrolled: boolean }>`
-  display: flex;
-  position: fixed;
-  align-items: center;
-  justify-content: center;
-  top: 0;
-  z-index: 2;
-
-  width: 100%;
-  height: 5.4rem;
-
-  background: ${({ isFirstScrolled }) => isFirstScrolled && COLOR.WHITE};
-
-  .logo {
-    position: relative;
-    width: 9.6rem;
-    height: 3rem;
-  }
 `;
 
 const StFirstSlide = styled.div`
@@ -379,4 +341,4 @@ const StFifthSlide = styled.div`
     margin: 0.2rem 0 4rem 0;
   }
 `;
-export default Mobile;
+export default MobileContainer;
