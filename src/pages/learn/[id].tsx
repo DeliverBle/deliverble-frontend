@@ -1046,7 +1046,6 @@ const StTooltipContanier = styled.div<{ isHighlightOver: boolean; isSpacingOver:
             display: none;
           }
         `}
-  }
 `;
 
 const StButton = styled.button`
