@@ -591,94 +591,92 @@ function LearnDetail() {
                     )}
                   </div>
                   <div>
-                    {!isGuide && (
-                      <StButtonContainer>
-                        <RecordStatusBar
-                          scriptId={videoData.scriptsId}
-                          isRecordSaved={isRecordSaved}
-                          setIsRecordSaved={setIsRecordSaved}
-                        />
-                        <StButton
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (getLoginStatus() === '') {
-                              setIsLoginModalOpen(true);
-                            } else {
-                              isHighlight ? setIsHighlight(false) : setIsHighlight(true);
-                              setIsSpacing(false);
-                              setHoveredChild(0);
-                            }
-                          }}>
-                          {isHighlight ? (
-                            <ImageDiv className="function-button" src={icHighlighterClicked} alt="하이라이트" />
-                          ) : (
-                            <>
-                              <ImageDiv className="function-button" src={icHighlighterHover} alt="하이라이트" />
-                              <ImageDiv
-                                className="default function-button"
-                                src={icHighlighterDefault}
-                                alt="하이라이트"
-                                onMouseOver={() => {
-                                  setHoveredChild(1);
-                                }}
-                                onMouseOut={(e) => {
-                                  e.stopPropagation();
-                                  setHoveredChild(0);
-                                }}
-                              />
-                            </>
-                          )}
-                        </StButton>
-                        <StButton
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (getLoginStatus() === '') {
-                              setIsLoginModalOpen(true);
-                            } else {
-                              isSpacing ? setIsSpacing(false) : setIsSpacing(true);
-                              setIsHighlight(false);
-                              setHoveredChild(0);
-                            }
-                          }}>
-                          {isSpacing ? (
-                            <ImageDiv className="spacing function-button" src={icSpacingClicked} alt="끊어 읽기" />
-                          ) : (
-                            <>
-                              <ImageDiv
-                                className="spacing function-button spacing-hover"
-                                src={icSpacingHover}
-                                alt="끊어 읽기"
-                              />
-                              <ImageDiv
-                                className="spacing default function-button"
-                                src={icSpacingDefault}
-                                alt="끊어 읽기"
-                                onMouseOver={(e) => {
-                                  e.stopPropagation();
-                                  setHoveredChild(2);
-                                }}
-                                onMouseOut={(e) => {
-                                  e.stopPropagation();
-                                  setHoveredChild(0);
-                                }}
-                              />
-                            </>
-                          )}
-                        </StButton>
-                        <StTooltipContainer hoveredChild={hoveredChild}>
-                          <p>
-                            드래그해서 하이라이트를
-                            <br />
-                            표시해보세요.
-                          </p>
-                          <p>
-                            클릭해서 끊어읽기를
-                            <br />
-                            표시해보세요.
-                          </p>
-                        </StTooltipContainer>
-                      </StButtonContainer>
-                    )}
+                    <StButtonContainer isGuide={isGuide}>
+                      <RecordStatusBar
+                        scriptId={videoData.scriptsId}
+                        isRecordSaved={isRecordSaved}
+                        setIsRecordSaved={setIsRecordSaved}
+                      />
+                      <StButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (getLoginStatus() === '') {
+                            setIsLoginModalOpen(true);
+                          } else {
+                            isHighlight ? setIsHighlight(false) : setIsHighlight(true);
+                            setIsSpacing(false);
+                            setHoveredChild(0);
+                          }
+                        }}>
+                        {isHighlight ? (
+                          <ImageDiv className="function-button" src={icHighlighterClicked} alt="하이라이트" />
+                        ) : (
+                          <>
+                            <ImageDiv className="function-button" src={icHighlighterHover} alt="하이라이트" />
+                            <ImageDiv
+                              className="default function-button"
+                              src={icHighlighterDefault}
+                              alt="하이라이트"
+                              onMouseOver={() => {
+                                setHoveredChild(1);
+                              }}
+                              onMouseOut={(e) => {
+                                e.stopPropagation();
+                                setHoveredChild(0);
+                              }}
+                            />
+                          </>
+                        )}
+                      </StButton>
+                      <StButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (getLoginStatus() === '') {
+                            setIsLoginModalOpen(true);
+                          } else {
+                            isSpacing ? setIsSpacing(false) : setIsSpacing(true);
+                            setIsHighlight(false);
+                            setHoveredChild(0);
+                          }
+                        }}>
+                        {isSpacing ? (
+                          <ImageDiv className="spacing function-button" src={icSpacingClicked} alt="끊어 읽기" />
+                        ) : (
+                          <>
+                            <ImageDiv
+                              className="spacing function-button spacing-hover"
+                              src={icSpacingHover}
+                              alt="끊어 읽기"
+                            />
+                            <ImageDiv
+                              className="spacing default function-button"
+                              src={icSpacingDefault}
+                              alt="끊어 읽기"
+                              onMouseOver={(e) => {
+                                e.stopPropagation();
+                                setHoveredChild(2);
+                              }}
+                              onMouseOut={(e) => {
+                                e.stopPropagation();
+                                setHoveredChild(0);
+                              }}
+                            />
+                          </>
+                        )}
+                      </StButton>
+                      <StTooltipContainer hoveredChild={hoveredChild}>
+                        <p>
+                          드래그해서 하이라이트를
+                          <br />
+                          표시해보세요.
+                        </p>
+                        <p>
+                          클릭해서 끊어읽기를
+                          <br />
+                          표시해보세요.
+                        </p>
+                      </StTooltipContainer>
+                    </StButtonContainer>
                   </div>
                 </article>
               </StLearnSection>
@@ -1030,7 +1028,8 @@ const StScriptText = styled.div<{ isActive: boolean; markStyles: string }>`
   }
 `;
 
-const StButtonContainer = styled.div`
+const StButtonContainer = styled.div<{ isGuide: boolean }>`
+  visibility: ${({ isGuide }) => (isGuide ? 'hidden' : 'visible')};
   display: flex;
   gap: 0.8rem;
   position: relative;

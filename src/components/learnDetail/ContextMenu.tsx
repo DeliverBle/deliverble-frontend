@@ -104,22 +104,25 @@ const StContextMenu = styled.div<{ top: number; left: number; contextElementType
   & > ul > li {
     display: flex;
     justify-content: center;
-
     border-radius: 0.8rem;
+
     ${({ contextElementType, isEditing }) =>
       contextElementType === 'MARK' && !isEditing
         ? css`
-      & > button {
-        width: 13.2rem;
-        height: 3.2rem;
-        padding: 0.5rem 1.6rem;
-        `
+            & > button {
+              width: 13.2rem;
+              height: 3.2rem;
+              padding: 0.5rem 1.6rem;
+            }
+          `
         : css`
-        & > button {
-          width: 11.8rem;
-          height: 3.2rem;
+            & > button {
+              width: 11.8rem;
+              height: 3.2rem;
+            }
           `}
 
+    & > button {
       ${FONT_STYLES.SB_16_CAPTION}
       color: ${COLOR.BLACK};
     }
@@ -127,7 +130,7 @@ const StContextMenu = styled.div<{ top: number; left: number; contextElementType
 
   & > ul > li:hover {
     cursor: pointer;
-    transition: background-color 0.3s ease-in-out;
+    transition: background-color 0.2s ease-in-out;
     background-color: ${COLOR.GRAY_5};
   }
 `;
