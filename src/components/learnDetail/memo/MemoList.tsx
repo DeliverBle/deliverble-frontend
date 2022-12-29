@@ -80,7 +80,7 @@ const StMemoList = styled.div`
   flex-direction: column;
   gap: 1.2rem;
 
-  height: 47.5rem;
+  height: 40.3rem;
   overflow-x: hidden;
   overflow-y: auto;
 

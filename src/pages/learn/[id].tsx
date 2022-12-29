@@ -737,8 +737,6 @@ function LearnDetail() {
                             setIsConfirmOpen={setIsConfirmOpen}
                             setConfirmModalText={setConfirmModalText}
                           />
-                          <StMemoGradient />
-                          <StMemoFooter />
                         </>
                       ) : (
                         <EmptyMemo />
@@ -1098,7 +1096,7 @@ const StButton = styled.button`
 
 const StVideoWrapper = styled.div`
   position: relative;
-  margin-bottom: 4.8rem;
+  margin-bottom: 4rem;
   width: fit-content;
   height: fit-content;
   border-radius: 2.4rem;
@@ -1150,24 +1148,4 @@ const StMemoWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   position: relative;
-`;
-
-const StMemoGradient = styled.div`
-  position: absolute;
-  bottom: 0;
-  width: 67rem;
-  height: 7rem;
-  pointer-events: none;
-
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #ffffff 100%);
-`;
-
-const StMemoFooter = styled.div`
-  position: absolute;
-  bottom: 0;
-  width: 67rem;
-  height: 2.4rem;
-  pointer-events: none;
-
-  background: ${COLOR.WHITE};
 `;
