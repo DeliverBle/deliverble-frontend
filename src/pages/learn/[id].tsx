@@ -148,7 +148,7 @@ function LearnDetail() {
 
   const getHighlightIndex = (parentNode: ParentNode | null, targetId: string) => {
     const childNodes = parentNode?.childNodes;
-    if (childNodes && childNodes.length !== 1) {
+    if (childNodes) {
       let stringLength = 0;
       for (let i = 0; i < childNodes.length; i++) {
         const childElement = childNodes[i] as HTMLElement;
