@@ -76,6 +76,7 @@ const StTagContainer = styled.div`
 
 const StRight = styled.div`
   padding-top: 0.4rem;
+  min-width: fit-content;
 
   & > button {
     padding: 0;
