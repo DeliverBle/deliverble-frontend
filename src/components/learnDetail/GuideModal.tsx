@@ -26,11 +26,11 @@ function GuideModal(props: GuideModalProps) {
         <div>
           <StModalTitle>어떻게 학습하나요?</StModalTitle>
           <p>
-            1. 재생 버튼을 클릭해 아나운서의 뉴스 리딩을 <span>들어보세요.</span>
+            1. 재생 버튼을 클릭해 아나운서의 뉴스 리딩을 <span>들어보세요</span>
             <br />
-            2. 아나운서의 발음, 발성, 장음, 끊어 읽기를 주의 깊게 들으며 거의 동시에 <span>따라 말해보세요!</span>
+            2. 아나운서의 발음, 발성, 장음, 끊어 읽기를 주의 깊게 들으며 거의 동시에 <span>따라 말해보세요</span>
             <br />
-            3. 더 연습이 필요한 문장을 눌러 해당 시점으로 되돌아가 <span>다시 따라 말해보세요!</span>
+            3. 더 연습이 필요한 문장을 클릭해 해당 시점으로 되돌아가 <span>다시 따라 말해보세요</span>
           </p>
         </div>
         <div>
@@ -40,23 +40,23 @@ function GuideModal(props: GuideModalProps) {
               <ImageDiv src={icGuideHighlight} className="function" layout="fill" alt="" />
               <StFunctionName>하이라이트</StFunctionName>
               <StFunctionDetail>
-                아나운서가 강조하는 단어, 발음이 어려운 단어를 드래그하여 표시해보세요.
+                아나운서가 강조하는 단어, 발음이 어려운 단어를 드래그하여 표시해보세요
               </StFunctionDetail>
             </StFunction>
             <StFunction>
               <ImageDiv src={icGuideSpacing} className="function" layout="fill" alt="" />
               <StFunctionName>끊어읽기</StFunctionName>
-              <StFunctionDetail>아나운서의 끊어읽기를 주의 깊게 듣고 공백에 표시하며 읽어보세요!</StFunctionDetail>
+              <StFunctionDetail>아나운서의 끊어읽기를 주의 깊게 듣고 공백에 표시하며 읽어보세요</StFunctionDetail>
             </StFunction>
             <StFunction>
               <ImageDiv src={icGuideMemo} className="function" layout="fill" alt="" />
               <StFunctionName>메모</StFunctionName>
-              <StFunctionDetail>하이라이트를 우클릭해 주의할 내용을 메모해보세요.</StFunctionDetail>
+              <StFunctionDetail>하이라이트를 우클릭해 주의할 내용을 메모해보세요</StFunctionDetail>
             </StFunction>
             <StFunction>
               <ImageDiv src={icGuideRecord} className="function" layout="fill" alt="" />
               <StFunctionName>녹음</StFunctionName>
-              <StFunctionDetail>아나운서 쉐도잉으로 달라지는 나의 말하기를 녹음하고 점검해보세요.</StFunctionDetail>
+              <StFunctionDetail>아나운서 쉐도잉으로 달라지는 나의 말하기를 녹음하고 점검해보세요</StFunctionDetail>
             </StFunction>
             <StFunction>
               <ImageDiv src={icGuideScript} className="function" layout="fill" alt="" />
@@ -64,7 +64,7 @@ function GuideModal(props: GuideModalProps) {
               <StFunctionDetail>
                 새 스크립트로 다시 연습하며 좋은 말하기를
                 <br />
-                체화해보세요.
+                체화해보세요
               </StFunctionDetail>
             </StFunction>
           </StFunctionContainer>
