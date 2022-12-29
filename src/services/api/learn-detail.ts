@@ -1,3 +1,4 @@
+import { VideoListData } from './types/home';
 import {
   SentenceData,
   VideoData,
@@ -22,4 +23,5 @@ export interface LearnDetailService {
   getPrivateSpeechGuideData(videoId: number): Promise<VideoData>;
   uploadRecordData(body: UploadRecordData): Promise<UploadRecordResponse>;
   getRecordData(scriptId: number): Promise<GetRecordData[]>;
+  getSimilarVideoData(videoId: number): Promise<VideoListData>;
 }

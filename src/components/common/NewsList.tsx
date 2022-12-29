@@ -13,7 +13,7 @@ import ImageDiv from './ImageDiv';
 import Like from './Like';
 
 interface NewsListProps {
-  type: 'normal' | 'guide';
+  type: 'normal' | 'guide' | 'similar';
   newsList: VideoData[];
   onClickLike?: (id: number) => void;
 }
@@ -31,6 +31,7 @@ function NewsList(props: NewsListProps) {
         return (
           <StNewsWrapper
             key={id}
+            type={type}
             onClick={() => {
               setIsGuide(type === 'guide' ? true : false);
               router.push(`/learn/${id}`);
@@ -62,13 +63,15 @@ function NewsList(props: NewsListProps) {
                 }}
               />
             </StThumbnail>
-            <StInfo>
-              <StTitle haveGuide={haveGuide}>{title}</StTitle>
-              <StCaption>
+            <StInfo type={type}>
+              <StTitle haveGuide={haveGuide} type={type}>
+                {title}
+              </StTitle>
+              <StCaption type={type}>
                 {channel} | {category} | {reportDate.replaceAll('-', '.')}
               </StCaption>
               {haveGuide && type === 'normal' && (
-                <StSpeechGuide>
+                <StSpeechGuide type={type}>
                   <ImageDiv className="guide-logo" src={icSpeechGuideLogo} alt="" />
                   <p>스피치 가이드</p>
                 </StSpeechGuide>
@@ -86,7 +89,7 @@ export default NewsList;
 
 const StNewsList = styled.section<{ type: string }>`
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, 38.4rem);
   grid-row-gap: 8rem;
   grid-column-gap: 2rem;
 
@@ -96,24 +99,30 @@ const StNewsList = styled.section<{ type: string }>`
       grid-column-gap: 3rem;
     `}
 
-  @media (max-width: 1280px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
+  ${({ type }) =>
+    type !== 'similar' &&
+    css`
+      grid-template-columns: repeat(4, 1fr);
 
-  @media (max-width: 960px) {
-    grid-template-columns: repeat(2, 1fr);
-    grid-row-gap: 5.6rem;
-  }
+      @media (max-width: 1280px) {
+        grid-template-columns: repeat(3, 1fr);
+      }
 
-  @media (max-width: 500px) {
-    grid-template-columns: repeat(1, 1fr);
-    grid-row-gap: 2.4rem;
+      @media (max-width: 960px) {
+        grid-template-columns: repeat(2, 1fr);
+        grid-row-gap: 5.6rem;
+      }
 
-    zoom: 150%;
-  }
+      @media (max-width: 500px) {
+        grid-template-columns: repeat(1, 1fr);
+        grid-row-gap: 2.4rem;
+
+        zoom: 150%;
+      }
+    `};
 `;
 
-const StNewsWrapper = styled.article`
+const StNewsWrapper = styled.article<{ type: string }>`
   display: flex;
   flex-direction: column;
   position: relative;
@@ -122,9 +131,13 @@ const StNewsWrapper = styled.article`
   width: 100%;
   height: 100%;
 
-  @media (max-width: 500px) {
-    flex-direction: row;
-  }
+  ${({ type }) =>
+    type !== 'similar' &&
+    css`
+      @media (max-width: 500px) {
+        flex-direction: row;
+      }
+    `};
 `;
 
 const StThumbnail = styled.div<{ type: string }>`
@@ -172,14 +185,18 @@ const StThumbnail = styled.div<{ type: string }>`
     }
   }
 
-  @media (max-width: 500px) {
-    margin-bottom: 0;
+  ${({ type }) =>
+    type !== 'similar' &&
+    css`
+      @media (max-width: 500px) {
+        margin-bottom: 0;
 
-    & > div {
-      min-width: 21.9rem;
-      min-height: 12.2rem;
-    }
-  }
+        & > div {
+          min-width: 21.9rem;
+          min-height: 12.2rem;
+        }
+      }
+    `};
 `;
 
 const StGuideTitle = styled.div`
@@ -198,51 +215,66 @@ const StGuideTitle = styled.div`
   z-index: 1;
 `;
 
-const StInfo = styled.div`
+const StInfo = styled.div<{ type: string }>`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 
-  @media (max-width: 500px) {
-    ${FONT_STYLES.M_15_CAPTION};
-  }
+  ${({ type }) =>
+    type !== 'similar' &&
+    css`
+      @media (max-width: 500px) {
+        ${FONT_STYLES.M_15_CAPTION};
+      }
+    `};
 `;
 
-const StTitle = styled.p<{ haveGuide: boolean }>`
+const StTitle = styled.p<{ haveGuide: boolean; type: string }>`
   height: 5.8rem;
   ${FONT_STYLES.SB_24_HEADLINE};
   color: ${COLOR.BLACK};
   cursor: pointer;
 
-  @media (max-width: 500px) {
-    width: 21.7rem;
-    ${FONT_STYLES.SB_18_CAPTION};
+  ${({ type }) =>
+    type !== 'similar' &&
+    css`
+      @media (max-width: 500px) {
+        width: 21.7rem;
+        ${FONT_STYLES.SB_18_CAPTION};
+      }
+    `};
 
-    ${({ haveGuide }) =>
-      haveGuide &&
-      css`
+  ${({ type, haveGuide }) =>
+    type !== 'similar' &&
+    haveGuide &&
+    css`
+      @media (max-width: 500px) {
         height: 5.6rem;
         word-wrap: break-word;
         overflow: hidden;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
-      `}
-  }
+      }
+    `};
 `;
 
-const StCaption = styled.div`
+const StCaption = styled.div<{ type: string }>`
   margin-top: 1.6rem;
   ${FONT_STYLES.M_18_CAPTION};
   color: ${COLOR.GRAY_30};
 
-  @media (max-width: 500px) {
-    margin-top: 0;
-    ${FONT_STYLES.M_15_CAPTION};
-  }
+  ${({ type }) =>
+    type !== 'similar' &&
+    css`
+      @media (max-width: 500px) {
+        margin-top: 0;
+        ${FONT_STYLES.M_15_CAPTION};
+      }
+    `};
 `;
 
-const StSpeechGuide = styled.div`
+const StSpeechGuide = styled.div<{ type: string }>`
   display: flex;
   margin-top: 1.2rem;
   padding: 0.5rem 0.8rem 0.6rem 0.4rem;
@@ -259,15 +291,19 @@ const StSpeechGuide = styled.div`
     align-items: center;
   }
 
-  @media (max-width: 500px) {
-    margin-top: 0.8rem;
-    width: 9.3rem;
-    height: 2.6rem;
-    ${FONT_STYLES.SB_12_CAPTION};
+  ${({ type }) =>
+    type !== 'similar' &&
+    css`
+      @media (max-width: 500px) {
+        margin-top: 0.8rem;
+        width: 9.3rem;
+        height: 2.6rem;
+        ${FONT_STYLES.SB_12_CAPTION};
 
-    & > .guide-logo {
-      width: 1.6rem;
-      height: 1.6rem;
-    }
-  }
+        & > .guide-logo {
+          width: 1.6rem;
+          height: 1.6rem;
+        }
+      }
+    `};
 `;
