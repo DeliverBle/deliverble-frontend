@@ -33,6 +33,7 @@ export const FONT_STYLES = {
   SB_44_HEADLINE: FONT({ size: 44, weight: 'SB', position: 'Headline', height: 130 }),
   SB_36_HEADLINE: FONT({ size: 36, weight: 'SB', position: 'Headline', height: 140 }),
   SB_32_HEADLINE: FONT({ size: 32, weight: 'SB', position: 'Headline', height: 150 }),
+  B_32_HEADLINE: FONT({ size: 32, weight: 'B', position: 'Headline', height: 140 }),
   SB_28_HEADLINE: FONT({ size: 28, weight: 'SB', position: 'Headline', height: 140 }),
   M_28_HEADLINE: FONT({ size: 28, weight: 'M', position: 'Headline', height: 140 }),
   SB_24_HEADLINE: FONT({ size: 24, weight: 'SB', position: 'Headline', height: 140 }),
