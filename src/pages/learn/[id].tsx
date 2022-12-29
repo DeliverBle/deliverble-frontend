@@ -238,12 +238,11 @@ function LearnDetail() {
     }
   };
 
-  //이부분 혜준언니가 이어서 진행해줄 것 같습니다...
   const isHighlightInMemo = (contextHTML: HTMLElement) => {
     const highlightId = contextHTML.id;
-    if (highlightId in MemoList) {
-      //delete
-    }
+    const deleteMemoId = memoList.find((memo) => memo.highlightId === highlightId)?.id;
+    deleteMemoId && setMemoState((prev: MemoState) => ({ ...prev, deleteMemoId }));
+    setClickedDeleteMemo(true);
   };
 
   const deleteElement = (contextHTML: HTMLElement) => {
