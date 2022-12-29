@@ -55,7 +55,7 @@ const StLeft = styled.div`
     margin-top: 1.2rem;
     margin-bottom: 2rem;
     color: ${COLOR.BLACK};
-    ${FONT_STYLES.SB_32_HEADLINE};
+    ${FONT_STYLES.B_32_HEADLINE};
     word-break: keep-all;
   }
 `;
