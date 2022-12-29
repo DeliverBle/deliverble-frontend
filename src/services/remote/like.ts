@@ -4,7 +4,7 @@ import { privateAPI } from './base';
 export function likeDataRemote(): LikeService {
   const postLikeData = async (newsId: number) => {
     const response = await privateAPI.post({ url: `/user/favorite/${newsId}` });
-    if (response.status === 200) {
+    if (response.statusCode === 200) {
       return {
         id: response.data.newsId,
         isFavorite: response.data.isFavorite,
