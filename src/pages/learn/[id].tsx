@@ -152,13 +152,12 @@ function LearnDetail() {
   const createMarkStyles = (script: string, scriptOrder: number) => {
     let styles = ``;
     const highlightIndexList: number[] = [];
-    const searchValue = '<mark>';
-    script = script.replaceAll(/<span>\/<\/span>|<\/mark>/g, '');
+    const searchValue = '<mark';
 
     let index = script.indexOf(searchValue, 0);
     while (index !== -1) {
       highlightIndexList.push(index);
-      script = script.replace('<mark>', '');
+      script = script.replace('<mark', '');
       index = script.indexOf(searchValue, index + 1);
     }
 
@@ -422,19 +421,19 @@ function LearnDetail() {
     })();
   }, [isLoggedIn, detailId, isEditing, isGuide, clickedScriptTitleIndex]);
 
-  useEffect(() => {
-    (async () => {
-      if (isLoggedIn && !isGuide) {
-        const data = await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedScriptTitleIndex);
-        setVideoData(data);
-        const { memos, names } = data;
-        if (memos && names) {
-          setMemoList(memos);
-          setScriptTitleList(names);
-        }
-      }
-    })();
-  }, [clickedScriptTitleIndex, detailId, isLoggedIn, isGuide]);
+  // useEffect(() => {
+  //   (async () => {
+  //     if (isLoggedIn && !isGuide) {
+  //       const data = await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedScriptTitleIndex);
+  //       setVideoData(data);
+  //       const { memos, names } = data;
+  //       if (memos && names) {
+  //         setMemoList(memos);
+  //         setScriptTitleList(names);
+  //       }
+  //     }
+  //   })();
+  // }, [clickedScriptTitleIndex, detailId, isLoggedIn, isGuide]);
 
   useEffect(() => {
     if (!player) return;
