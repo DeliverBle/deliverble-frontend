@@ -1,50 +1,80 @@
 import { useEffect, useRef, useState } from 'react';
-import { Script } from '@src/services/api/types/learn-detail';
 import HighlightModal from './HighlightModal';
 import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { api } from '@src/services/api';
+import ContextMenu from '@src/components/learnDetail/ContextMenu';
+import { VideoData } from '@src/services/api/types/learn-detail';
+import { CONTEXT_MENU_WIDTH, ABSOLUTE_RIGHT_LIMIT } from '@src/utils/constant';
+import { useRouter } from 'next/router';
+
 interface ScriptEditProps {
-  scriptsId: number;
-  scripts: Script[];
+  isEditing: boolean;
   isHighlight: boolean;
   isSpacing: boolean;
   clickedScriptTitleIndex: number;
 }
 
 function ScriptEdit(props: ScriptEditProps) {
-  const { scriptsId, scripts, isHighlight, isSpacing, clickedScriptTitleIndex } = props;
+  const router = useRouter();
+  const { id: detailId } = router.query;
+  const { isEditing, isHighlight, isSpacing, clickedScriptTitleIndex } = props;
   const [highlightAlert, setHighlightAlert] = useState<boolean>(false);
-  const [firstLineId, setFirstLineId] = useState<number>();
   const [order, setOrder] = useState<number>();
   const [text, setText] = useState<string>();
+  const [videoData, setVideoData] = useState<VideoData>();
   const learnRef = useRef<HTMLDivElement>(null);
+  const [isContextMenuOpen, setIsContextMenuOpen] = useState<boolean>(false);
+  const contextMenuRef = useRef<HTMLDivElement>(null);
+  const [contextMenuPoint, setContextMenuPoint] = useState({ x: 0, y: 0 });
+  const [contextElementType, setContextElementType] = useState<string>('');
+  const [deletedType, setDeletedType] = useState<string>('');
+  const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState<boolean>(false);
+  const [contextHTML, setContextHTML] = useState<HTMLElement>();
+  const [contextElementId, setContextElementId] = useState<string>('');
+
+  const handleContextMenuPoint = (target: HTMLElement) => {
+    let x = 0;
+    let y = 0;
+
+    const article = target.parentElement?.closest('article');
+    if (article) {
+      const articleAbsoluteTop = article.getBoundingClientRect().top;
+      const articleAbsoluteLeft = article.getBoundingClientRect().left;
+
+      const targetRect = target.getBoundingClientRect();
+      const absoluteTop = targetRect.top + 20;
+      const absoluteLeft = targetRect.left - 22;
+      const absoluteRight = targetRect.right - 22;
+
+      const highlightWidth = targetRect.right - targetRect.left;
+      if (highlightWidth > CONTEXT_MENU_WIDTH || absoluteRight > ABSOLUTE_RIGHT_LIMIT - (scrollX + scrollX / 2)) {
+        x = absoluteRight - articleAbsoluteLeft - CONTEXT_MENU_WIDTH;
+      } else {
+        x = absoluteLeft - articleAbsoluteLeft;
+      }
+      y = absoluteTop - articleAbsoluteTop;
+    }
+
+    return { x, y };
+  };
 
   useEffect(() => {
     (async () => {
-      if (order && text && scriptsId) {
+      if (order !== -1 && text !== '' && order && text && videoData?.names) {
+        const id = videoData?.names[clickedScriptTitleIndex].id;
         await api.learnDetailService.postSentenceData(
           {
             order,
             text,
           },
-          scriptsId,
+          id,
           clickedScriptTitleIndex,
         );
       }
     })();
-  }, [order, text, scriptsId, clickedScriptTitleIndex]);
-
-  useEffect(() => {
-    setFirstLineId(scripts[0].id);
-  }, [firstLineId, scripts]);
-
-  const findLineOrder = (currentLineId: number) => {
-    if (currentLineId && firstLineId) {
-      const order = currentLineId - firstLineId + 1;
-      setOrder(order);
-    }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [order, text]);
 
   useEffect(() => {
     if (highlightAlert) {
@@ -59,21 +89,68 @@ function ScriptEdit(props: ScriptEditProps) {
     }
   }, [highlightAlert]);
 
-  const handleClick = () => {
+  const deleteElement = (contextHTML: HTMLElement) => {
+    const parentElement = contextHTML?.parentElement;
+    const removeElement = document.getElementById(contextElementId);
+    const fragment = document.createDocumentFragment();
+    const div = document.createElement('div');
+    const blank = document.createTextNode(' ');
+
+    switch (deletedType) {
+      case 'MARK':
+        if (removeElement?.innerHTML) {
+          div.innerHTML = removeElement?.innerHTML;
+        }
+        while (div.firstChild) {
+          fragment.appendChild(div.firstChild);
+        }
+        removeElement?.replaceWith(fragment);
+        nodeToText(parentElement);
+        break;
+      case 'SPAN':
+        if (removeElement) {
+          removeElement.replaceWith(blank);
+        }
+        nodeToText(parentElement);
+        break;
+    }
+  };
+
+  useEffect(() => {
+    setIsDeleteBtnClicked(false);
+    if (isDeleteBtnClicked && contextHTML) {
+      deleteElement(contextHTML);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contextElementId, contextHTML?.parentElement, isDeleteBtnClicked]);
+
+  const handleRightClick = (e: React.MouseEvent) => {
+    const contextTarget = e.target as HTMLElement;
+    if (contextTarget.closest('mark') || contextTarget.closest('span')) {
+      setIsContextMenuOpen(true);
+      setContextElementId(contextTarget.id);
+      setContextHTML(contextTarget);
+      setContextElementType(contextTarget.nodeName);
+    }
+    setContextMenuPoint(handleContextMenuPoint(contextTarget));
+  };
+
+  const handleClick = (e: React.MouseEvent) => {
     const selection = window.getSelection();
     const range = selection?.getRangeAt(0);
     const startIndex = range?.startOffset;
 
-    const selectedDiv = range?.startContainer as Node;
+    const selectedDiv = range?.startContainer as HTMLElement;
     const serializer = new XMLSerializer();
-    const selectedLine = serializer.serializeToString(selectedDiv);
+    let selectedLine = serializer.serializeToString(selectedDiv);
 
     const isLeftBlank = startIndex && selectedLine[startIndex - 1] === ' ';
     const isRightBlank = startIndex && selectedLine[startIndex] === ' ';
     const isValidate = isLeftBlank || isRightBlank;
 
     let isOverlap = false;
-    if (selection?.type === 'Range') {
+    if (selection?.type === 'Range' && isHighlight) {
       const markList = document.getElementsByTagName('mark');
       for (let i = 0; i < markList.length; i++) {
         if (selection?.containsNode(markList[i], true) === true) {
@@ -87,11 +164,20 @@ function ScriptEdit(props: ScriptEditProps) {
     if (selection?.type === 'Caret' && isValidate && isSpacing) {
       const fragment = document.createDocumentFragment();
       const div = document.createElement('div');
-      isLeftBlank ? (div.innerHTML = '<span class=left >/</span>') : (div.innerHTML = '<span class=right >/</span>');
+      const uniqueId = e.clientX + '.' + e.clientY + '.' + selection.anchorOffset;
+      const blankIndex = isLeftBlank ? startIndex - 1 : startIndex;
 
+      selectedLine =
+        selectedLine.substring(0, blankIndex) +
+        `<span id=${uniqueId}>/</span>` +
+        selectedLine.substring(blankIndex + 1);
+
+      div.innerHTML = selectedLine;
       while (div.firstChild) {
         fragment.appendChild(div.firstChild);
       }
+      range.selectNode(range?.startContainer);
+      range?.deleteContents();
       range?.insertNode(fragment);
     } else if (!isOverlap && selection?.type === 'Range' && isHighlight) {
       let text = selection.toString();
@@ -101,13 +187,30 @@ function ScriptEdit(props: ScriptEditProps) {
         return;
       }
 
+      // 끊어읽기 위에 하이라이팅이 될 때
       if (text.includes('/')) {
-        text = text.split('/').join('<span>/</span>');
+        const spanIdList = [];
+        let textList = [];
+        let htmlText = '';
+        textList = text.split('/');
+        if (range?.commonAncestorContainer) {
+          for (let i = 0; i < range?.commonAncestorContainer?.childNodes?.length; i++) {
+            const childNodeItem = range?.commonAncestorContainer.childNodes[i];
+            if (childNodeItem.nodeName == 'SPAN') {
+              spanIdList.push(`<span id=${childNodeItem.firstChild?.parentElement?.id}>/</span>`);
+            }
+          }
+        }
+        for (let i = 0; i < textList.length - 1; i++) {
+          htmlText += textList[i] + spanIdList[i];
+        }
+        htmlText += textList[textList.length - 1];
+        text = htmlText;
       }
-
       const fragment = document.createDocumentFragment();
       const div = document.createElement('div');
-      div.innerHTML = '<mark>' + text + '</mark>';
+      const uniqueId = e.clientX + '.' + e.clientY + '.' + selection.anchorOffset; // id에 넣을 값
+      div.innerHTML = `<mark id=${uniqueId}>${text}</mark>`;
       while (div.firstChild) {
         fragment.appendChild(div.firstChild);
       }
@@ -119,38 +222,31 @@ function ScriptEdit(props: ScriptEditProps) {
     nodeToText(selection?.anchorNode);
   };
 
-  let isHighlightOverSpacing = false;
   const nodeToText = (anchorNode: Node | null | undefined) => {
     let textValue = '';
     if (anchorNode?.nodeName === 'MARK') {
       nodeToText(anchorNode.parentNode);
-      isHighlightOverSpacing = true;
       return;
     }
 
-    isHighlightOverSpacing = false;
-    if (!isHighlightOverSpacing && anchorNode?.childNodes) {
+    if (anchorNode?.childNodes) {
       for (let i = 0; i < anchorNode?.childNodes.length; i++) {
         const childNodeItem = anchorNode?.childNodes[i];
+        const elementId = childNodeItem.firstChild?.parentElement?.id;
         switch (childNodeItem.nodeName) {
           case '#text':
             textValue += childNodeItem.nodeValue;
             break;
-
           case 'MARK':
             if (childNodeItem.textContent?.includes('/')) {
-              let text = childNodeItem.textContent;
-              if (text) {
-                text = text.split('/').join('<span>/</span>');
-              }
-              textValue += `<mark>${text}</mark>`;
+              const markInnerHTML = childNodeItem.firstChild?.parentElement?.innerHTML;
+              textValue += `<mark id=${elementId}>${markInnerHTML}</mark>`;
             } else {
-              textValue += `<mark>${childNodeItem.textContent}</mark>`;
+              textValue += `<mark id=${elementId}>${childNodeItem.textContent}</mark>`;
             }
             break;
-
           case 'SPAN':
-            textValue += '<span>/</span>';
+            textValue += `<span id=${elementId}>/</span>`;
             break;
         }
       }
@@ -158,11 +254,50 @@ function ScriptEdit(props: ScriptEditProps) {
     }
   };
 
+  useEffect(() => {
+    (async () => {
+      const id = Number(detailId);
+      const data = await api.learnDetailService.getPrivateVideoData(id);
+      setVideoData(data);
+    })();
+  }, [detailId]);
+
+  useEffect(() => {
+    (async () => {
+      const data = await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedScriptTitleIndex);
+      setVideoData(data);
+    })();
+  }, [clickedScriptTitleIndex, detailId]);
+
+  useEffect(() => {
+    const handleClickOutside = (e: Event) => {
+      const eventTarget = e.target as HTMLElement;
+
+      if (
+        isContextMenuOpen &&
+        !contextMenuRef?.current?.contains(eventTarget) &&
+        eventTarget.tagName !== 'MARK' &&
+        eventTarget.tagName !== 'SPAN'
+      ) {
+        setIsContextMenuOpen(false);
+      }
+    };
+
+    if (isContextMenuOpen) {
+      window.addEventListener('click', handleClickOutside);
+      window.addEventListener('contextmenu', handleClickOutside);
+    }
+    return () => {
+      window.removeEventListener('click', handleClickOutside);
+      window.removeEventListener('contextmenu', handleClickOutside);
+    };
+  }, [isContextMenuOpen]);
+
   return (
     <>
       <StWrapper
         contentEditable="true"
-        onClick={handleClick}
+        onClick={(e) => handleClick(e)}
         suppressContentEditableWarning={true}
         spellCheck="false"
         onCut={(e) => e.preventDefault()}
@@ -170,12 +305,28 @@ function ScriptEdit(props: ScriptEditProps) {
         onPaste={(e) => e.preventDefault()}
         onKeyDown={(e) => e.preventDefault()}
         ref={learnRef}>
-        {scripts.map(({ id, text }) => (
+        {videoData?.scripts.map(({ id, text }, i) => (
           <StScriptText
+            ref={contextMenuRef}
+            onContextMenu={(e) => {
+              e.preventDefault();
+              handleRightClick(e);
+              setOrder(i + 1);
+            }}
             key={id}
-            onClick={() => findLineOrder(id)}
+            onClick={() => setOrder(i + 1)}
             dangerouslySetInnerHTML={{ __html: text }}></StScriptText>
         ))}
+        {isContextMenuOpen && (
+          <ContextMenu
+            contextMenuPoint={contextMenuPoint}
+            contextElementType={contextElementType}
+            isEditing={isEditing}
+            setIsContextMenuOpen={setIsContextMenuOpen}
+            setDeletedType={setDeletedType}
+            setIsDeleteBtnClicked={setIsDeleteBtnClicked}
+          />
+        )}
       </StWrapper>
       {highlightAlert && <HighlightModal closeModal={() => setHighlightAlert(false)} />}
     </>
@@ -207,14 +358,8 @@ const StScriptText = styled.div`
   & > span {
     font-size: 3.2rem;
     font-weight: 600;
-    color: #4e8aff;
-  }
-
-  & > .left {
+    color: ${COLOR.MAIN_BLUE};
     margin-right: 0.4rem;
-  }
-
-  & > .right {
     margin-left: 0.4rem;
   }
 
@@ -225,13 +370,7 @@ const StScriptText = styled.div`
       font-size: 3.2rem;
       font-weight: 600;
       color: ${COLOR.MAIN_BLUE};
-    }
-
-    & > .left {
       margin-right: 0.4rem;
-    }
-
-    & > .right {
       margin-left: 0.4rem;
     }
   }

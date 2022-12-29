@@ -13,5 +13,3 @@ export { default as imgMobileBgFirst } from './img_mobile_bg.png';
 export { default as imgMobileEar } from './img_mobile_ear.svg';
 export { default as imgMobileFist } from './img_mobile_fist.svg';
 export { default as imgMobileMic } from './img_mobile_mic.svg';
-export { default as imgHighlightTooltip } from './img_highlight_tooltip.svg';
-export { default as imgSpacingTooltip } from './img_spacing_tooltip.svg';
