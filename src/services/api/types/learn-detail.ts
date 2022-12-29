@@ -41,6 +41,7 @@ export type MemoData = {
   startIndex: number;
   keyword: string;
   content: string;
+  highlightId: string;
 };
 
 export type GroupedObjectKey = {

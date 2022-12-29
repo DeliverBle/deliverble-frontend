@@ -59,6 +59,7 @@ export interface MemoInfo {
   order: number;
   startIndex: number;
   keyword: string;
+  highlightId: string;
 }
 
 function LearnDetail() {
@@ -287,6 +288,7 @@ function LearnDetail() {
         order,
         startIndex,
         keyword: markTag.innerText.replaceAll('/', ' '),
+        highlightId: markTag.id,
       });
       setClickedMemo(memoList.find((memo) => memo.startIndex === startIndex && memo.order === order));
     }
