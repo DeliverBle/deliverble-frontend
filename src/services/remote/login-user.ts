@@ -4,7 +4,7 @@ import { LoginUserService } from '../api/login-user';
 export function loginUserRemote(): LoginUserService {
   const requestLogin = async (code: string) => {
     try {
-      const response = await axios.post(`https://deliverble.online/auth/authentication/kakao?code=${code}`);
+      const response = await axios.post(`http://13.209.32.166:8081/auth/authentication/kakao?code=${code}`);
       return response.data.data.accessToken;
     } catch {
       throw '로그인 에러 발생';

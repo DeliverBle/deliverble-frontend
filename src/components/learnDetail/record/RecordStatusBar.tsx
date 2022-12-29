@@ -153,6 +153,7 @@ function RecordStatusBar(props: RecordStatusBarProps) {
 export default RecordStatusBar;
 
 const StRecordStatusBar = styled.div`
+  flex: 1;
   width: 14.1rem;
   height: 4.8rem;
   margin-right: 54.9rem;
