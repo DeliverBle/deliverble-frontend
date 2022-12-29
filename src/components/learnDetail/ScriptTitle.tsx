@@ -91,7 +91,7 @@ export default ScriptTitle;
 
 const StScriptTitle = styled.div<{ isClicked: boolean; isEditing: boolean }>`
   opacity: ${({ isClicked }) => (isClicked ? 1 : 0.6)};
-  &:hover > div {
+  &:hover {
     opacity: 0.8;
   }
 
