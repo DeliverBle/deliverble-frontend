@@ -1128,7 +1128,7 @@ const StStudyLogTabContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 1.6rem;
-  margin-bottom: 2.4rem;
+  margin-bottom: 2rem;
 
   .divider {
     width: 0.2rem;
