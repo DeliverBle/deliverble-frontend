@@ -187,7 +187,7 @@ function LearnDetail() {
           mark:nth-of-type(${i + 1}) {
             border-bottom: 0.7rem solid #4E8AFF;
             border-image: linear-gradient(white 94%, #4E8AFF 90%);
-            border-image-slice: 5;
+            border-image-slice: 4;
           }
         `;
       }
@@ -439,20 +439,6 @@ function LearnDetail() {
       }
     })();
   }, [isLoggedIn, detailId, isEditing, isGuide, clickedScriptTitleIndex]);
-
-  // useEffect(() => {
-  //   (async () => {
-  //     if (isLoggedIn && !isGuide) {
-  //       const data = await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedScriptTitleIndex);
-  //       setVideoData(data);
-  //       const { memos, names } = data;
-  //       if (memos && names) {
-  //         setMemoList(memos);
-  //         setScriptTitleList(names);
-  //       }
-  //     }
-  //   })();
-  // }, [clickedScriptTitleIndex, detailId, isLoggedIn, isGuide]);
 
   useEffect(() => {
     if (!player) return;
