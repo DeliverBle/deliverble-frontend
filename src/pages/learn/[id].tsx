@@ -1083,7 +1083,7 @@ const StButton = styled.button`
   height: 4.8rem;
 
   &:hover .default img {
-    transition: opacity 1s;
+    transition: opacity 0.3s;
     opacity: 0;
   }
 
