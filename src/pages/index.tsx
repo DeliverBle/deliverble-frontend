@@ -78,6 +78,10 @@ const StMoblie = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+  @media (max-width: 768px) {
+    zoom: 150%;
+  }
 `;
 
 const StNav = styled.nav<{ isFirstScrolled: boolean }>`
