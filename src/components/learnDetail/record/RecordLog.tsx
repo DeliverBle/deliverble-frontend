@@ -32,6 +32,7 @@ function RecordLog(props: RecordStatusBarProps) {
   const [currentTime, setCurrentTime] = useState(0);
   const [isDataChanged, setIsDataChanged] = useState(false);
   const [isNameChanging, setIsNameChanging] = useState(false);
+  const [nameChanged, setNameChanged] = useState('');
   const [recordLinkChanging, setRecordLinkChanging] = useState('');
   const [isTextLengthExceeded, setIsTextLengthExceeded] = useState(false);
   const progressRef = useRef<HTMLDivElement>(null);
@@ -62,7 +63,7 @@ function RecordLog(props: RecordStatusBarProps) {
       api.learnDetailService.changeRecordNameData({
         link: recordLinkChanging,
         scriptId: scriptId,
-        newName: nameInputRef.current ? nameInputRef.current.value : '',
+        newName: nameChanged,
       }),
     {
       onSuccess: () => {
@@ -148,8 +149,10 @@ function RecordLog(props: RecordStatusBarProps) {
   };
 
   const onChange = () => {
-    nameInputRef.current &&
-      (nameInputRef.current?.value.length > 99 ? setIsTextLengthExceeded(true) : setIsTextLengthExceeded(false));
+    if (nameInputRef.current) {
+      setNameChanged(nameInputRef.current.value);
+      nameInputRef.current?.value.length > 99 ? setIsTextLengthExceeded(true) : setIsTextLengthExceeded(false);
+    }
   };
 
   return (
