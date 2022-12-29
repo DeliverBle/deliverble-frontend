@@ -665,22 +665,22 @@ function LearnDetail() {
                             </>
                           )}
                         </StButton>
+                        <StTooltipContainer hoveredChild={hoveredChild}>
+                          <p>
+                            드래그해서 하이라이트를
+                            <br />
+                            표시해보세요.
+                          </p>
+                          <p>
+                            클릭해서 끊어읽기를
+                            <br />
+                            표시해보세요.
+                          </p>
+                        </StTooltipContainer>
                       </StButtonContainer>
                     )}
                   </div>
                 </article>
-                <StTooltipContanier hoveredChild={hoveredChild}>
-                  <p>
-                    드래그해서 하이라이트를
-                    <br />
-                    표시해보세요.
-                  </p>
-                  <p>
-                    클릭해서 끊어읽기를
-                    <br />
-                    표시해보세요.
-                  </p>
-                </StTooltipContanier>
               </StLearnSection>
               <aside>
                 <StVideoWrapper>
@@ -761,7 +761,7 @@ function LearnDetail() {
         )}
         <StNews>
           <h3>비슷한 주제의 영상으로 계속 연습해보세요.</h3>
-          <NewsList onClickLike={handleClickLike} newsList={similarNewsList} type="similar" />
+          <NewsList onClickLike={handleClickLike} newsList={similarNewsList} type="normal" />
         </StNews>
         {isModalOpen && <GuideModal closeModal={() => setIsModalOpen(false)} />}
         {isConfirmOpen && (
@@ -788,7 +788,6 @@ const StPageWrapper = styled.div`
 `;
 
 const StNews = styled.div`
-  width: 172rem;
   margin: 0 auto;
   padding-top: 16rem;
 
@@ -819,7 +818,6 @@ const StLearnDetail = styled.div`
 
 const StScriptTitleContainer = styled.div`
   margin: 0 auto;
-  width: 172rem;
   height: 4.8rem;
   padding-left: 5.6rem;
   display: flex;
@@ -877,7 +875,6 @@ const StLearnBox = styled.div<{ isGuide: boolean }>`
   position: relative;
 
   margin: 0 auto;
-  width: 172rem;
   height: 123.6rem;
   padding: 8rem 8rem 0 8rem;
   border-radius: 3rem;
@@ -953,13 +950,13 @@ const StLearnSection = styled.section<{ isGuide: boolean }>`
   display: flex;
   flex-direction: column;
   padding-bottom: 8rem;
+  width: 100%;
 
   article {
     display: flex;
     flex-direction: column;
-    width: 84.2rem;
     height: 87.7rem;
-    padding: 1.8rem 1.2rem 1.8rem 2rem;
+    padding: 1.8rem 2rem 1.8rem 2rem;
     border: 0.2rem solid ${COLOR.GRAY_10};
     border-radius: 2.4rem;
     color: ${COLOR.BLACK};
@@ -1038,10 +1035,11 @@ const StButtonContainer = styled.div`
   gap: 0.8rem;
   position: relative;
   padding-right: 0.8rem;
+  width: 100%;
 `;
 
-const StTooltipContanier = styled.div<{ hoveredChild: number }>`
-  position: fixed;
+const StTooltipContainer = styled.div<{ hoveredChild: number }>`
+  position: relative;
   z-index: 2;
 
   & > p {
@@ -1054,9 +1052,9 @@ const StTooltipContanier = styled.div<{ hoveredChild: number }>`
       & > p:nth-child(${hoveredChild}) {
         display: block;
         position: absolute;
-        top: 4.6rem;
+        top: 6.2rem;
+        right: ${hoveredChild === 1 ? '5.6rem' : '-8.8rem'};
         width: ${hoveredChild === 1 ? '16.5rem' : '13.9rem'};
-        margin: 82.3rem 0 0 ${hoveredChild === 1 ? '60.5rem' : '77.8rem'};
         padding: 1rem;
         border-radius: 0.6rem;
         background: rgba(22, 15, 53, 0.7);
