@@ -22,7 +22,7 @@ function VideoContainer(props: VideoContainerProps) {
 
   return (
     <>
-      {tab === 'isFavorite' && totalCount > 0 && (
+      {totalCount > 0 && (
         <StCountVideo>
           전체
           <span> {totalCount}개 </span>
@@ -30,21 +30,17 @@ function VideoContainer(props: VideoContainerProps) {
         </StCountVideo>
       )}
       <StVideoWrapper>
-        {tab === 'isFavorite' ? (
-          videoList.length ? (
-            <StNewsList>
-              <NewsList newsList={videoList} onClickLike={onClickLike} type="normal" />
-              <Pagination
-                listSize={LIST_SIZE}
-                blockSize={BLOCK_SIZE}
-                currentPage={currentPage}
-                lastPage={lastPage}
-                onPageChange={onPageChange}
-              />
-            </StNewsList>
-          ) : (
-            <Empty tab={tab} />
-          )
+        {videoList.length ? (
+          <StNewsList>
+            <NewsList newsList={videoList} onClickLike={onClickLike} type="normal" />
+            <Pagination
+              listSize={LIST_SIZE}
+              blockSize={BLOCK_SIZE}
+              currentPage={currentPage}
+              lastPage={lastPage}
+              onPageChange={onPageChange}
+            />
+          </StNewsList>
         ) : (
           <Empty tab={tab} />
         )}
