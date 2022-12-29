@@ -77,4 +77,5 @@ export const INITIAL_MEMO = {
   order: INITIAL_NUMBER,
   startIndex: INITIAL_NUMBER,
   keyword: '',
+  highlightId: '',
 };

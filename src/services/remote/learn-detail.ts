@@ -36,6 +36,7 @@ export function learnDetailDataRemote(): LearnDetailService {
           order: memo.order,
           startIndex: memo.startIndex,
           content: memo.content,
+          highlightId: memo.highlightId,
         })),
         names: response.data2.map((name: Name) => ({
           id: name.id,
@@ -107,6 +108,7 @@ export function learnDetailDataRemote(): LearnDetailService {
           order: memo.order,
           startIndex: memo.startIndex,
           content: memo.content,
+          highlightId: memo.highlightId,
         })),
       };
     } else throw '서버 통신 실패';
@@ -144,6 +146,7 @@ export function learnDetailDataRemote(): LearnDetailService {
           order: memo.order,
           startIndex: memo.startIndex,
           content: memo.content,
+          highlightId: memo.highlightId,
         })),
       };
     } else throw '서버 통신 실패';
@@ -176,6 +179,7 @@ export function learnDetailDataRemote(): LearnDetailService {
         order: memo.order,
         startIndex: memo.startIndex,
         content: memo.content,
+        highlightId: memo.highlightId,
       }));
     } else throw '서버 통신 실패';
   };
@@ -192,6 +196,7 @@ export function learnDetailDataRemote(): LearnDetailService {
         order: memo.order,
         startIndex: memo.startIndex,
         content: memo.content,
+        highlightId: memo.highlightId,
       }));
     } else throw '서버 통신 실패';
   };
@@ -207,6 +212,7 @@ export function learnDetailDataRemote(): LearnDetailService {
         order: memo.order,
         startIndex: memo.startIndex,
         content: memo.content,
+        highlightId: memo.highlightId,
       }));
     } else throw '서버 통신 실패';
   };
