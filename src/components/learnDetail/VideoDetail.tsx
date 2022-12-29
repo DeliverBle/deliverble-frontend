@@ -55,7 +55,7 @@ const StLeft = styled.div`
     margin-top: 1.2rem;
     margin-bottom: 2rem;
     color: ${COLOR.BLACK};
-    ${FONT_STYLES.SB_32_HEADLINE};
+    ${FONT_STYLES.B_32_HEADLINE};
     word-break: keep-all;
   }
 `;
@@ -76,6 +76,7 @@ const StTagContainer = styled.div`
 
 const StRight = styled.div`
   padding-top: 0.4rem;
+  min-width: fit-content;
 
   & > button {
     padding: 0;
