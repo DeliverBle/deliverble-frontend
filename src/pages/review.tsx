@@ -148,5 +148,5 @@ const StTab = styled.ul`
 const StButton = styled.li<{ isActive: boolean }>`
   cursor: pointer;
   color: ${({ isActive }) => (isActive ? COLOR.BLACK : COLOR.GRAY_30)};
-  ${FONT_STYLES.SB_28_HEADLINE}
+  ${({ isActive }) => (isActive ? FONT_STYLES.SB_28_HEADLINE : FONT_STYLES.M_28_HEADLINE)};
 `;
