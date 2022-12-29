@@ -106,6 +106,7 @@ function LearnDetail() {
   const [order, setOrder] = useState<number>();
   const [text, setText] = useState<string>();
   const [similarNewsList, setSimilarNewsList] = useState<simpleVideoData[]>([]);
+  const [currentScriptId, setCurrentScriptId] = useState(0);
 
   useEffect(() => {
     isRecordSaved &&
@@ -113,6 +114,10 @@ function LearnDetail() {
         setStudyLogTab('record');
       }, 1000);
   }, [isRecordSaved]);
+
+  useEffect(() => {
+    videoData?.scriptsId && setCurrentScriptId(videoData?.scriptsId);
+  }, [videoData, currentScriptId]);
 
   const handleContextMenuPoint = (target: HTMLElement) => {
     let x = 0;
@@ -530,6 +535,8 @@ function LearnDetail() {
                 scriptTitleInputIndex={scriptTitleInputIndex}
                 setIsScriptTitleInputVisible={setIsScriptTitleInputVisible}
                 setClickedScriptTitleIndex={setClickedScriptTitleIndex}
+                scriptId={videoData.scriptsId}
+                setCurrentScriptId={setCurrentScriptId}
                 onScriptDelete={handleScriptDeleteModal}
                 onScriptTitleInputChange={(index: number) => handleScriptTitleInputChange(index)}
                 onScriptRename={mutateRenameScript}
@@ -738,7 +745,7 @@ function LearnDetail() {
                       )}
                     </StMemoWrapper>
                   ) : (
-                    <RecordLog scriptId={videoData.scriptsId} isRecordSaved={isRecordSaved} />
+                    <RecordLog scriptId={currentScriptId} isRecordSaved={isRecordSaved} />
                   )}
                 </StStudyLogContainer>
               </aside>

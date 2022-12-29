@@ -41,7 +41,7 @@ function RecordLog(props: RecordStatusBarProps) {
   const isGuide = useRecoilValue(isGuideAtom);
 
   const { data } = useQuery(
-    ['recordData', isRecordSaved, isDataChanged],
+    ['recordData', isRecordSaved, isDataChanged, scriptId],
     () => api.learnDetailService.getRecordData(scriptId),
     {
       onSuccess: () => {
