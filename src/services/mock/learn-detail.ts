@@ -68,6 +68,16 @@ export function learnDetailDataMock(): LearnDetailService {
     return LEARN_DETAIL_DATA.RECORD_DATA_LIST;
   };
 
+  const deleteRecordData = async () => {
+    await wait(500);
+    return LEARN_DETAIL_DATA.RECORD_DELETE_RESPONSE;
+  };
+
+  const changeRecordNameData = async () => {
+    await wait(500);
+    return LEARN_DETAIL_DATA.RECORD_NAME_CHANGE_DATA;
+  };
+
   const getSimilarVideoData = async () => {
     await wait(500);
     return HOME_DATA;
@@ -87,6 +97,8 @@ export function learnDetailDataMock(): LearnDetailService {
     getPublicSpeechGuideData,
     uploadRecordData,
     getRecordData,
+    deleteRecordData,
+    changeRecordNameData,
     getSimilarVideoData,
   };
 }
