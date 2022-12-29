@@ -29,9 +29,7 @@ function RecordDropdown(props: RecordDropdownProps) {
     <>
       <StRecordDropdown>
         <button>
-          <a href={link} download="녹음 파일.mp3">
-            다운로드
-          </a>
+          <a href={link}>다운로드</a>
         </button>
         <button
           type="button"

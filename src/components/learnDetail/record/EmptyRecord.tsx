@@ -8,8 +8,8 @@ function EmptyRecord() {
   return (
     <StEmptyRecord>
       <ImageDiv src={icRecordEmpty} className="icRecordEmpty" layout="fill" />
-      <p>저장된 메모가 없습니다.</p>
-      <p>메모를 추가해보세요!</p>
+      <p>저장된 녹음이 없습니다.</p>
+      <p>녹음을 추가해보세요!</p>
     </StEmptyRecord>
   );
 }
