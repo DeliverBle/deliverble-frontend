@@ -14,17 +14,12 @@ export type Paging = {
   totalCount: number;
 };
 
-export type PostReviewRequestBody = {
+export type PostFavoriteRequestBody = {
   currentPage: number;
   listSize: number;
 };
 
 export type PostFavoriteResponse = {
   favoriteList: VideoData[];
-  favoritePaging: Paging;
-};
-
-export type PostHistoryResponse = {
-  historyList: VideoData[];
-  historyPaging: Paging;
+  paging: Paging;
 };

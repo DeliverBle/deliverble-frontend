@@ -7,12 +7,7 @@ export function reviewDataMock(): ReviewService {
     return REVIEW_DATA.FAVORITE_LIST_DATA;
   };
 
-  const postHistoryVideoList = async () => {
-    await wait(500);
-    return REVIEW_DATA.HISTORY_LIST_DATA;
-  };
-
-  return { postFavoriteVideoList, postHistoryVideoList };
+  return { postFavoriteVideoList };
 }
 
 const wait = (milliSeconds: number) => new Promise((resolve) => setTimeout(resolve, milliSeconds));

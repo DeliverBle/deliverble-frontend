@@ -18,63 +18,50 @@ function Review() {
   const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
   const [tab, setTab] = useState('isFavorite');
   const [favoriteList, setFavoriteList] = useState<VideoData[]>([]);
-  const [historyList, setHistoryList] = useState<VideoData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
   const [lastPage, setLastPage] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const isLoggedIn = useRecoilValue(loginState);
 
-  const getNewsList = async () => {
+  const getFavoriteNewsList = async () => {
     setIsLoading(true);
 
-    const { favoritePaging, favoriteList } = await api.reviewService.postFavoriteVideoList({
-      currentPage: 1,
-      listSize: LIST_SIZE,
-    });
-
-    const { historyPaging, historyList } = await api.reviewService.postHistoryVideoList({
+    const { paging, favoriteList } = await api.reviewService.postFavoriteVideoList({
       currentPage: 1,
       listSize: LIST_SIZE,
     });
 
     setCurrentPage(1);
-    tab === 'isFavorite'
-      ? (setTotalCount(favoritePaging.totalCount), setLastPage(favoritePaging.lastPage), setFavoriteList(favoriteList))
-      : (setTotalCount(historyPaging.totalCount), setLastPage(historyPaging.lastPage), setHistoryList(historyList));
+    setTotalCount(paging.totalCount);
+    setLastPage(paging.lastPage);
+    setFavoriteList(favoriteList);
     setIsLoading(false);
   };
 
   const handlePageChange = async (page: number) => {
     setIsLoading(true);
 
-    const { favoritePaging, favoriteList } = await api.reviewService.postFavoriteVideoList({
-      currentPage: page,
-      listSize: LIST_SIZE,
-    });
-
-    const { historyPaging, historyList } = await api.reviewService.postHistoryVideoList({
+    const { paging, favoriteList } = await api.reviewService.postFavoriteVideoList({
       currentPage: page,
       listSize: LIST_SIZE,
     });
 
     setCurrentPage(page);
-    setTotalCount(tab === 'isFavorite' ? favoritePaging.totalCount : historyPaging.totalCount);
-    setLastPage(tab === 'isFavorite' ? favoritePaging.lastPage : historyPaging.lastPage);
+    setTotalCount(paging.totalCount);
+    setLastPage(paging.lastPage);
     setFavoriteList(favoriteList);
-    setHistoryList(historyList);
     setIsLoading(false);
   };
 
   const handleClickLike = async (id: number) => {
     await api.likeService.postLikeData(id);
-    getNewsList();
+    getFavoriteNewsList();
   };
 
   useEffect(() => {
-    isLoggedIn && getNewsList();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tab, isLoggedIn]);
+    isLoggedIn && getFavoriteNewsList();
+  }, [isLoggedIn]);
 
   return (
     <StPageWrapper>
@@ -98,7 +85,7 @@ function Review() {
         ) : (
           <VideoContainer
             tab={tab}
-            videoList={tab === 'isFavorite' ? favoriteList : historyList}
+            videoList={favoriteList}
             onClickLike={handleClickLike}
             totalCount={totalCount}
             currentPage={currentPage}
