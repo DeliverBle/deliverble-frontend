@@ -1,5 +1,6 @@
 import { LearnDetailService } from '../api/learn-detail';
 import { Script, SentenceData, Tag, MemoData, Name, UploadRecordData, GetRecordData } from '../api/types/learn-detail';
+import { VideoData } from '../api/types/home';
 import { privateAPI, publicAPI } from './base';
 
 export function learnDetailDataRemote(): LearnDetailService {
@@ -89,7 +90,6 @@ export function learnDetailDataRemote(): LearnDetailService {
         startTime: response.data.startTime,
         endTime: response.data.endTime,
         scriptsId: response.data2[0].id,
-        name: response.data2[0].name,
         tags: response.data.tagsForView.map((tag: Tag) => ({
           id: tag.id,
           name: tag.name,
@@ -127,7 +127,6 @@ export function learnDetailDataRemote(): LearnDetailService {
         startTime: response.data.startTime,
         endTime: response.data.endTime,
         scriptsId: response.data2[0].id,
-        name: response.data2[0].name,
         tags: response.data.tagsForView.map((tag: Tag) => ({
           id: tag.id,
           name: tag.name,
@@ -283,6 +282,28 @@ export function learnDetailDataRemote(): LearnDetailService {
     } else throw '서버 통신 실패';
   };
 
+  const getSimilarVideoData = async (videoId: number) => {
+    const response = await privateAPI.get({
+      url: `/news/similar/${videoId}`,
+    });
+    if (response.axiosStatus === 200) {
+      return {
+        videoList: response.data
+          ? response.data.exploreNewsDtoCollection.map((video: VideoData) => ({
+              id: video.id,
+              title: video.title,
+              category: video.category,
+              channel: video.channel,
+              thumbnail: video.thumbnail,
+              reportDate: video.reportDate,
+              isFavorite: video.isFavorite,
+              haveGuide: video.haveGuide,
+            }))
+          : [],
+      };
+    } else throw '서버 통신 실패';
+  };
+
   return {
     getPrivateVideoData,
     getPublicVideoData,
@@ -297,5 +318,6 @@ export function learnDetailDataRemote(): LearnDetailService {
     getPrivateSpeechGuideData,
     uploadRecordData,
     getRecordData,
+    getSimilarVideoData,
   };
 }
