@@ -93,3 +93,20 @@ export type GetRecordData = {
   date: string;
   scriptId: number;
 };
+
+export type DeleteRecordData = {
+  scriptId: number;
+  link: string;
+};
+
+export type DeleteRecordResponse = {
+  link: string;
+  deleted: boolean;
+  scriptId: string;
+};
+
+export type ChangeRecordNameData = {
+  scriptId: number;
+  link: string;
+  newName: string;
+};

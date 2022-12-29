@@ -11,6 +11,7 @@ import VideoDetail from '@src/components/learnDetail/VideoDetail';
 import LoginModal from '@src/components/login/LoginModal';
 import ScriptTitle from '@src/components/learnDetail/ScriptTitle';
 import RecordStatusBar from '@src/components/learnDetail/record/RecordStatusBar';
+import RecordLog from '@src/components/learnDetail/record/RecordLog';
 import { api } from '@src/services/api';
 import { MemoData, Name, VideoData } from '@src/services/api/types/learn-detail';
 import { loginState } from '@src/stores/loginState';
@@ -33,7 +34,6 @@ import {
   icHighlighterClicked,
   icHighlighterDefault,
   icHighlighterHover,
-  icMemo,
   icSpacingClicked,
   icSpacingDefault,
   icSpacingHover,
@@ -97,6 +97,8 @@ function LearnDetail() {
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const [contextMenuPoint, setContextMenuPoint] = useState({ x: 0, y: 0 });
   const [isContextMenuOpen, setIsContextMenuOpen] = useState<boolean>(false);
+  const [studyLogTab, setStudyLogTab] = useState<string>('memo');
+  const [isRecordSaved, setIsRecordSaved] = useState<boolean>(false);
   const [contextElementId, setContextElementId] = useState<string>('');
   const [contextHTML, setContextHTML] = useState<HTMLElement>();
   const [contextElementType, setContextElementType] = useState<string>('');
@@ -105,6 +107,18 @@ function LearnDetail() {
   const [order, setOrder] = useState<number>();
   const [text, setText] = useState<string>();
   const [similarNewsList, setSimilarNewsList] = useState<simpleVideoData[]>([]);
+  const [currentScriptId, setCurrentScriptId] = useState(0);
+
+  useEffect(() => {
+    isRecordSaved &&
+      setTimeout(() => {
+        setStudyLogTab('record');
+      }, 1000);
+  }, [isRecordSaved]);
+
+  useEffect(() => {
+    videoData?.scriptsId && setCurrentScriptId(videoData?.scriptsId);
+  }, [videoData, currentScriptId]);
 
   const handleContextMenuPoint = (target: HTMLElement) => {
     let x = 0;
@@ -522,6 +536,8 @@ function LearnDetail() {
                 scriptTitleInputIndex={scriptTitleInputIndex}
                 setIsScriptTitleInputVisible={setIsScriptTitleInputVisible}
                 setClickedScriptTitleIndex={setClickedScriptTitleIndex}
+                scriptId={videoData.scriptsId}
+                setCurrentScriptId={setCurrentScriptId}
                 onScriptDelete={handleScriptDeleteModal}
                 onScriptTitleInputChange={(index: number) => handleScriptTitleInputChange(index)}
                 onScriptRename={mutateRenameScript}
@@ -578,7 +594,11 @@ function LearnDetail() {
                   <div>
                     {!isGuide && (
                       <StButtonContainer>
-                        <RecordStatusBar scriptId={videoData.scriptsId} />
+                        <RecordStatusBar
+                          scriptId={videoData.scriptsId}
+                          isRecordSaved={isRecordSaved}
+                          setIsRecordSaved={setIsRecordSaved}
+                        />
                         <StButton
                           onClick={(e) => {
                             e.stopPropagation();
@@ -687,31 +707,48 @@ function LearnDetail() {
                     onEnd={(e) => e.target.seekTo(videoData.startTime)}
                   />
                 </StVideoWrapper>
-                <StMemoContainer>
-                  <StMemoTitle>
-                    <ImageDiv src={icMemo} className="memo" layout="fill" />
-                    <h2>메모</h2>
-                  </StMemoTitle>
-                  <StMemoWrapper>
-                    {memoList.length || memoState.newMemoId !== INITIAL_NUMBER ? (
-                      <>
-                        <MemoList
-                          memoList={memoList}
-                          memoState={memoState}
-                          memoInfo={memoInfo}
-                          setMemoList={setMemoList}
-                          setMemoState={setMemoState}
-                          setIsConfirmOpen={setIsConfirmOpen}
-                          setConfirmModalText={setConfirmModalText}
-                        />
-                        <StMemoGradient />
-                        <StMemoFooter />
-                      </>
-                    ) : (
-                      <EmptyMemo />
-                    )}
-                  </StMemoWrapper>
-                </StMemoContainer>
+                <StStudyLogContainer>
+                  <StStudyLogTabContainer>
+                    <StStudyLogTab
+                      isActive={studyLogTab === 'memo'}
+                      onClick={() => {
+                        setStudyLogTab('memo');
+                      }}>
+                      메모
+                    </StStudyLogTab>
+                    <div className="divider" />
+                    <StStudyLogTab
+                      isActive={studyLogTab === 'record'}
+                      onClick={() => {
+                        setStudyLogTab('record');
+                      }}>
+                      녹음
+                    </StStudyLogTab>
+                  </StStudyLogTabContainer>
+                  {studyLogTab === 'memo' ? (
+                    <StMemoWrapper>
+                      {memoList.length || memoState.newMemoId !== INITIAL_NUMBER ? (
+                        <>
+                          <MemoList
+                            memoList={memoList}
+                            memoState={memoState}
+                            memoInfo={memoInfo}
+                            setMemoList={setMemoList}
+                            setMemoState={setMemoState}
+                            setIsConfirmOpen={setIsConfirmOpen}
+                            setConfirmModalText={setConfirmModalText}
+                          />
+                          <StMemoGradient />
+                          <StMemoFooter />
+                        </>
+                      ) : (
+                        <EmptyMemo />
+                      )}
+                    </StMemoWrapper>
+                  ) : (
+                    <RecordLog scriptId={currentScriptId} isRecordSaved={isRecordSaved} />
+                  )}
+                </StStudyLogContainer>
               </aside>
             </main>
             {isGuideOver && (
@@ -1085,27 +1122,28 @@ const StVideoWrapper = styled.div`
   }
 `;
 
-const StMemoContainer = styled.div`
+const StStudyLogContainer = styled.div`
   display: flex;
   flex-direction: column;
 `;
 
-const StMemoTitle = styled.div`
+const StStudyLogTabContainer = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.8rem;
+  gap: 1.6rem;
   margin-bottom: 2.4rem;
 
-  & > h2 {
-    color: ${COLOR.BLACK};
-    ${FONT_STYLES.SB_24_HEADLINE};
+  .divider {
+    width: 0.2rem;
+    height: 1.6rem;
+    background-color: ${COLOR.GRAY_10};
   }
+`;
 
-  .memo {
-    position: relative;
-    width: 3.2rem;
-    height: 3.2rem;
-  }
+const StStudyLogTab = styled.h2<{ isActive: boolean }>`
+  color: ${({ isActive }) => (isActive ? COLOR.BLACK : COLOR.GRAY_30)};
+  ${FONT_STYLES.SB_24_HEADLINE};
+  cursor: pointer;
 `;
 
 const StMemoWrapper = styled.div`

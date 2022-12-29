@@ -106,4 +106,16 @@ export const LEARN_DETAIL_DATA = {
       scriptId: 63,
     },
   ],
+
+  RECORD_DELETE_RESPONSE: {
+    link: 'https://deliverable-recording.s3.ap-northeast-2.amazonaws.com/1671845378.mp3',
+    deleted: true,
+    scriptId: '215',
+  },
+
+  RECORD_NAME_CHANGE_DATA: {
+    link: 'https://deliverable-recording.s3.ap-northeast-2.amazonaws.com/1671845183.mp3',
+    newName: '새로운 녹음 73',
+    scriptId: 215,
+  },
 };
