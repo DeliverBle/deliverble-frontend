@@ -46,6 +46,8 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import styled, { css } from 'styled-components';
 import { useMutation } from 'react-query';
 import { isGuideAtom } from '@src/stores/newsState';
+import NewsList from '@src/components/common/NewsList';
+import { VideoData as simpleVideoData } from '@src/services/api/types/home';
 
 export interface MemoState {
   newMemoId: number;
@@ -101,6 +103,7 @@ function LearnDetail() {
   const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState<boolean>(false);
   const [order, setOrder] = useState<number>();
   const [text, setText] = useState<string>();
+  const [similarNewsList, setSimilarNewsList] = useState<simpleVideoData[]>([]);
 
   const handleContextMenuPoint = (target: HTMLElement) => {
     let x = 0;
@@ -349,12 +352,8 @@ function LearnDetail() {
 
   const handleClickLike = async (id: number) => {
     const { id: likeId, isFavorite } = await api.likeService.postLikeData(id);
-    if (videoData && videoData.id === likeId) {
-      setVideoData({
-        ...videoData,
-        isFavorite,
-      });
-    }
+    setVideoData((prev) => prev && (prev.id === likeId ? { ...prev, isFavorite } : prev));
+    setSimilarNewsList((prev) => prev.map((news) => (news.id === likeId ? { ...news, isFavorite } : news)));
   };
 
   useEffect(() => {
@@ -405,7 +404,7 @@ function LearnDetail() {
           : await api.learnDetailService.getPublicSpeechGuideData(id);
       } else {
         data = isLoggedIn
-          ? await api.learnDetailService.getPrivateVideoData(id, clickedScriptTitleIndex) // 흐앙 이거였어ㅠㅠ
+          ? await api.learnDetailService.getPrivateVideoData(id, clickedScriptTitleIndex)
           : await api.learnDetailService.getPublicVideoData(id);
       }
       setVideoData(data);
@@ -484,8 +483,15 @@ function LearnDetail() {
     }
   }, []);
 
+  useEffect(() => {
+    (async () => {
+      const { videoList } = await api.learnDetailService.getSimilarVideoData(Number(detailId));
+      setSimilarNewsList(videoList);
+    })();
+  }, [detailId]);
+
   return (
-    <>
+    <StPageWrapper>
       <SEO title="학습하기 | Deliverble" />
       <NavigationBar />
       <StLearnDetail>
@@ -716,6 +722,10 @@ function LearnDetail() {
             {isGuide && <StLearnButton onClick={() => setIsGuide((prev) => !prev)}>학습하러 가기</StLearnButton>}
           </StLearnBox>
         )}
+        <StNews>
+          <h3>비슷한 주제의 영상으로 계속 연습해보세요.</h3>
+          <NewsList onClickLike={handleClickLike} newsList={similarNewsList} type="similar" />
+        </StNews>
         {isModalOpen && <GuideModal closeModal={() => setIsModalOpen(false)} />}
         {isConfirmOpen && (
           <ConfirmModal
@@ -728,15 +738,35 @@ function LearnDetail() {
         )}
         {isLoginModalOpen && <LoginModal closeModal={() => setIsLoginModalOpen(false)} />}
       </StLearnDetail>
-    </>
+    </StPageWrapper>
   );
 }
 
 export default LearnDetail;
 
+const StPageWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
+
+const StNews = styled.div`
+  width: 172rem;
+  margin: 0 auto;
+  padding-top: 16rem;
+
+  & > h3 {
+    min-width: 53rem;
+    margin-bottom: 2.8rem;
+
+    ${FONT_STYLES.SB_32_HEADLINE}
+    color: ${COLOR.BLACK};
+  }
+`;
+
 const StLearnDetail = styled.div`
-  padding: 10.2rem 10rem 15rem 10rem;
-  min-height: 100vh;
+  flex: 1;
+  padding: 10.2rem 10rem 16rem 10rem;
   background: rgba(229, 238, 255, 0.85);
   backdrop-filter: blur(2.8rem);
 
