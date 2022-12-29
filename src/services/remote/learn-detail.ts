@@ -155,29 +155,12 @@ export function learnDetailDataRemote(): LearnDetailService {
       data: SentenceData,
     });
     if (response.status === 200) {
-      return {
-        id: response.data.id,
-        title: response.data.title,
-        category: response.data.category,
-        channel: response.data.channel,
-        link: response.data.link,
-        reportDate: response.data.reportDate,
-        isFavorite: response.data.isFavorite,
-        haveGuide: response.data.haveGuide,
-        startTime: response.data.startTime,
-        endTime: response.data.endTime,
-        scriptsId: response.data2[scriptIndex]?.id,
-        tags: response.data.tagsForView.map((tag: Tag) => ({
-          id: tag.id,
-          name: tag.name,
-        })),
-        scripts: response.data2[scriptIndex]?.sentences.map((sentence: Script) => ({
-          id: sentence.id,
-          text: sentence.text,
-          startTime: sentence.startTime,
-          endTime: sentence.endTime,
-        })),
-      };
+      return response.data2[scriptIndex]?.sentences.map((sentence: Script) => ({
+        id: sentence.id,
+        text: sentence.text,
+        startTime: sentence.startTime,
+        endTime: sentence.endTime,
+      }));
     } else throw '서버 통신 실패';
   };
 

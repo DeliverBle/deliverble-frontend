@@ -10,32 +10,58 @@ interface ContextMenuProps {
     y: number;
   };
   clickedMemoId?: number;
-  setMemoState: Dispatch<SetStateAction<MemoState>>;
+  contextElementType: string;
+  isEditing: boolean;
+  setMemoState?: Dispatch<SetStateAction<MemoState>>;
   setIsContextMenuOpen: (open: boolean) => void;
+  setDeletedType: (type: string) => void;
+  setIsDeleteBtnClicked: (isDelete: boolean) => void;
 }
 
 function ContextMenu(props: ContextMenuProps) {
-  const { contextMenuPoint, clickedMemoId, setMemoState, setIsContextMenuOpen } = props;
+  const {
+    contextMenuPoint,
+    clickedMemoId,
+    contextElementType,
+    isEditing,
+    setMemoState,
+    setIsContextMenuOpen,
+    setDeletedType,
+    setIsDeleteBtnClicked,
+  } = props;
   const { x, y } = contextMenuPoint;
 
   const handleMemoState = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setMemoState((prev: MemoState) =>
-      clickedMemoId ? { ...prev, editMemoId: clickedMemoId } : { ...prev, newMemoId: 0 },
-    );
+    if (setMemoState) {
+      setMemoState((prev: MemoState) =>
+        clickedMemoId ? { ...prev, editMemoId: clickedMemoId } : { ...prev, newMemoId: 0 },
+      );
+    }
+    setIsContextMenuOpen(false);
+  };
+
+  const handleContextMenu = (e: React.MouseEvent, type: string) => {
+    e.stopPropagation();
+    setIsDeleteBtnClicked(true);
+    setDeletedType(type);
     setIsContextMenuOpen(false);
   };
 
   return (
-    <StContextMenu top={y} left={x}>
+    <StContextMenu top={y} left={x} contextElementType={contextElementType} isEditing={isEditing}>
       <ul>
+        {contextElementType === 'MARK' && !isEditing && (
+          <li>
+            <button type="button" onClick={(e) => handleMemoState(e)}>
+              {clickedMemoId ? '메모 수정' : '메모 추가'}
+            </button>
+          </li>
+        )}
         <li>
-          <button type="button" onClick={(e) => handleMemoState(e)}>
-            {clickedMemoId ? '메모 수정' : '메모 추가'}
+          <button type="button" onClick={(e) => handleContextMenu(e, contextElementType)}>
+            {contextElementType === 'MARK' ? '하이라이트' : '끊어읽기'} 삭제
           </button>
-        </li>
-        <li>
-          <button type="button">하이라이트 삭제</button>
         </li>
       </ul>
     </StContextMenu>
@@ -44,15 +70,25 @@ function ContextMenu(props: ContextMenuProps) {
 
 export default ContextMenu;
 
-const StContextMenu = styled.div<{ top: number; left: number }>`
+const StContextMenu = styled.div<{ top: number; left: number; contextElementType: string; isEditing: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 
   position: absolute;
-  width: 14.4rem;
-  height: 8rem;
+
+  ${({ contextElementType, isEditing }) =>
+    contextElementType === 'MARK' && !isEditing
+      ? css`
+          width: 14.4rem;
+          height: 8rem;
+        `
+      : css`
+          width: 13rem;
+          height: 4.4rem;
+        `}
+
   z-index: 1;
 
   border-radius: 1.2rem;
@@ -70,10 +106,19 @@ const StContextMenu = styled.div<{ top: number; left: number }>`
     justify-content: center;
 
     border-radius: 0.8rem;
-    & > button {
-      width: 13.2rem;
-      height: 3.2rem;
-      padding: 0.5rem 1.6rem;
+    ${({ contextElementType, isEditing }) =>
+      contextElementType === 'MARK' && !isEditing
+        ? css`
+      & > button {
+        width: 13.2rem;
+        height: 3.2rem;
+        padding: 0.5rem 1.6rem;
+        `
+        : css`
+        & > button {
+          width: 11.8rem;
+          height: 3.2rem;
+          `}
 
       ${FONT_STYLES.SB_16_CAPTION}
       color: ${COLOR.BLACK};
