@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { Dispatch, SetStateAction, useState } from 'react';
@@ -33,7 +33,7 @@ function Memo(props: MemoProps) {
     if (content && content.length > MEMO_CONTENT_MAX) {
       return (
         <>
-          {foldButton ? content : content.slice(0, 26)}
+          <StText fold={foldButton}>{content}</StText>
           <StFoldbutton className="fold-button" onClick={() => setFoldButton((prev) => !prev)} fold={foldButton}>
             {foldButton ? (
               <>
@@ -112,6 +112,17 @@ const StContent = styled.div`
   color: ${COLOR.GRAY_80};
   ${FONT_STYLES.R_23_MEMO};
   word-break: break-all;
+`;
+
+const StText = styled.p<{ fold: boolean }>`
+  ${({ fold }) =>
+    !fold &&
+    css`
+      width: calc(100% - 7.6rem);
+      height: 3.7rem;
+      overflow: hidden;
+      word-break: break-all;
+    `};
 `;
 
 const StFoldbutton = styled.div<{ fold: boolean }>`
