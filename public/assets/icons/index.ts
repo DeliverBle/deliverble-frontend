@@ -55,3 +55,5 @@ export { default as icRecordPlayUnactivated } from './ic_record_play_unactivated
 export { default as icRecordPauseDefault } from './ic_record_pause_default.svg';
 export { default as icRecordPauseActive } from './ic_record_pause_active.svg';
 export { default as icRecordEmpty } from './ic_record_empty.svg';
+export { default as icMobileLogo } from './ic_mobile_logo.svg';
+export { default as icMobileLogoWhite } from './ic_mobile_logo_white.svg';

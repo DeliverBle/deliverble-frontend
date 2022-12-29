@@ -196,7 +196,7 @@ const StThumbnail = styled.div<{ type: string }>`
           min-height: 12.2rem;
         }
       }
-    `};
+    `}
 `;
 
 const StGuideTitle = styled.div`
@@ -226,7 +226,7 @@ const StInfo = styled.div<{ type: string }>`
       @media (max-width: 500px) {
         ${FONT_STYLES.M_15_CAPTION};
       }
-    `};
+    `}
 `;
 
 const StTitle = styled.p<{ haveGuide: boolean; type: string }>`

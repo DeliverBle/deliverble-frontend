@@ -42,9 +42,8 @@ import {
 } from 'public/assets/icons';
 import React, { useEffect, useRef, useState } from 'react';
 import YouTube from 'react-youtube';
-import { useRecoilValue, useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import styled, { css } from 'styled-components';
-import { imgHighlightTooltip, imgSpacingTooltip } from 'public/assets/images';
 import { useMutation } from 'react-query';
 import { isGuideAtom } from '@src/stores/newsState';
 import NewsList from '@src/components/common/NewsList';
@@ -82,8 +81,7 @@ function LearnDetail() {
   const getLoginStatus = () => localStorage.getItem('token') ?? '';
   const [prevLink, setPrevLink] = useState('');
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [isHighlightOver, setIsHighlightOver] = useState<boolean>(false);
-  const [isSpacingOver, setIsSpacingOver] = useState<boolean>(false);
+  const [hoveredChild, setHoveredChild] = useState<number>(0);
   const [isGuideOver, setIsGuideOver] = useState<boolean>(false);
   const [highlightIndex, setHighlightIndex] = useState<number>(INITIAL_NUMBER);
   const [scriptTitleList, setScriptTitleList] = useState<Name[]>([]);
@@ -98,6 +96,7 @@ function LearnDetail() {
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const [contextMenuPoint, setContextMenuPoint] = useState({ x: 0, y: 0 });
   const [isContextMenuOpen, setIsContextMenuOpen] = useState<boolean>(false);
+<<<<<<< HEAD
   const [studyLogTab, setStudyLogTab] = useState<string>('memo');
   const [isRecordSaved, setIsRecordSaved] = useState<boolean>(false);
   const [similarNewsList, setSimilarNewsList] = useState<simpleVideoData[]>([]);
@@ -110,6 +109,18 @@ function LearnDetail() {
   }, [isRecordSaved]);
 
   const handleContextMenuPoint = (target: HTMLDivElement) => {
+=======
+  const [contextElementId, setContextElementId] = useState<string>('');
+  const [contextHTML, setContextHTML] = useState<HTMLElement>();
+  const [contextElementType, setContextElementType] = useState<string>('');
+  const [deletedType, setDeletedType] = useState<string>('');
+  const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState<boolean>(false);
+  const [order, setOrder] = useState<number>();
+  const [text, setText] = useState<string>();
+  const [similarNewsList, setSimilarNewsList] = useState<simpleVideoData[]>([]);
+
+  const handleContextMenuPoint = (target: HTMLElement) => {
+>>>>>>> 34b826f7f5bed079b5ec89f681b3976bf15c762d
     let x = 0;
     let y = 0;
 
@@ -135,17 +146,18 @@ function LearnDetail() {
     return { x, y };
   };
 
-  const getHighlightIndex = (parentNode: ParentNode | null, givenString: string) => {
+  const getHighlightIndex = (parentNode: ParentNode | null, targetId: string) => {
     const childNodes = parentNode?.childNodes;
     if (childNodes && childNodes.length !== 1) {
       let stringLength = 0;
       for (let i = 0; i < childNodes.length; i++) {
-        if (childNodes[i].textContent === givenString) {
+        const childElement = childNodes[i] as HTMLElement;
+        if (childElement.id === targetId) {
           setHighlightIndex(stringLength);
           return stringLength;
         }
         if (childNodes[i].textContent !== '/') {
-          stringLength += childNodes[i]?.textContent?.replaceAll('/', '').length ?? 0;
+          stringLength += childNodes[i]?.textContent?.replaceAll('/', ' ').length ?? 0;
         }
       }
     }
@@ -178,9 +190,110 @@ function LearnDetail() {
     return styles;
   };
 
+  useEffect(() => {
+    (async () => {
+      if (order !== -1 && text !== '' && order && text && videoData?.names) {
+        const id = videoData?.names[clickedScriptTitleIndex].id;
+        await api.learnDetailService.postSentenceData(
+          {
+            order,
+            text,
+          },
+          id,
+          clickedScriptTitleIndex,
+        );
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [order, text]);
+
+  const nodeToText = (anchorNode: Node | null | undefined) => {
+    let textValue = '';
+    if (anchorNode?.nodeName === 'MARK') {
+      nodeToText(anchorNode.parentNode);
+      return;
+    }
+
+    if (anchorNode?.childNodes) {
+      for (let i = 0; i < anchorNode?.childNodes.length; i++) {
+        const childNodeItem = anchorNode?.childNodes[i];
+        const elementId = childNodeItem.firstChild?.parentElement?.id;
+        switch (childNodeItem.nodeName) {
+          case '#text':
+            textValue += childNodeItem.nodeValue;
+            break;
+          case 'MARK':
+            if (childNodeItem.textContent?.includes('/')) {
+              const markInnerHTML = childNodeItem.firstChild?.parentElement?.innerHTML;
+              textValue += `<mark id=${elementId}>${markInnerHTML}</mark>`;
+            } else {
+              textValue += `<mark id=${elementId}>${childNodeItem.textContent}</mark>`;
+            }
+            break;
+          case 'SPAN':
+            textValue += `<span id=${elementId}>/</span>`;
+            break;
+        }
+      }
+      setText(textValue);
+    }
+  };
+
+  //이부분 혜준언니가 이어서 진행해줄 것 같습니다...
+  const isHighlightInMemo = (contextHTML: HTMLElement) => {
+    const highlightId = contextHTML.id;
+    if (highlightId in MemoList) {
+      //delete
+    }
+  };
+
+  const deleteElement = (contextHTML: HTMLElement) => {
+    const parentElement = contextHTML?.parentElement;
+    const removeElement = document.getElementById(contextElementId);
+    const fragment = document.createDocumentFragment();
+    const div = document.createElement('div');
+    const blank = document.createTextNode(' ');
+
+    switch (deletedType) {
+      case 'MARK':
+        if (removeElement?.innerHTML) {
+          div.innerHTML = removeElement?.innerHTML;
+        }
+        while (div.firstChild) {
+          fragment.appendChild(div.firstChild);
+        }
+        removeElement?.replaceWith(fragment);
+        nodeToText(parentElement);
+        isHighlightInMemo(contextHTML);
+        break;
+      case 'SPAN':
+        if (removeElement) {
+          removeElement.replaceWith(blank);
+        }
+        nodeToText(parentElement);
+        break;
+    }
+  };
+
+  useEffect(() => {
+    setIsDeleteBtnClicked(false);
+    if (isDeleteBtnClicked && contextHTML) {
+      deleteElement(contextHTML);
+      setIsContextMenuOpen(false);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contextElementId, contextHTML?.parentElement, isDeleteBtnClicked]);
+
   const handleRightClick = (e: React.MouseEvent, scriptId: number, order: number) => {
-    const contextTarget = e.target as HTMLDivElement;
-    const startIndex = getHighlightIndex(contextTarget?.parentNode, contextTarget.innerText);
+    const contextTarget = e.target as HTMLElement;
+    if (contextTarget.closest('mark') || contextTarget.closest('span')) {
+      setContextElementId(contextTarget.id);
+      setContextHTML(contextTarget);
+      setContextElementType(contextTarget.nodeName);
+    }
+
+    const startIndex = getHighlightIndex(contextTarget?.parentNode, contextTarget.id);
     const markTag = contextTarget.closest('mark');
 
     if (startIndex !== undefined && markTag) {
@@ -188,7 +301,7 @@ function LearnDetail() {
         scriptId,
         order,
         startIndex,
-        keyword: markTag.innerText.replaceAll('/', ''),
+        keyword: markTag.innerText.replaceAll('/', ' '),
       });
       setClickedMemo(memoList.find((memo) => memo.startIndex === startIndex && memo.order === order));
     }
@@ -292,6 +405,7 @@ function LearnDetail() {
       setIsEditing(true);
     } else {
       setIsEditing(false);
+      setIsDeleteBtnClicked(false);
     }
   }, [isEditing, isHighlight, isSpacing]);
 
@@ -305,7 +419,7 @@ function LearnDetail() {
           : await api.learnDetailService.getPublicSpeechGuideData(id);
       } else {
         data = isLoggedIn
-          ? await api.learnDetailService.getPrivateVideoData(id)
+          ? await api.learnDetailService.getPrivateVideoData(id, clickedScriptTitleIndex)
           : await api.learnDetailService.getPublicVideoData(id);
       }
       setVideoData(data);
@@ -319,7 +433,7 @@ function LearnDetail() {
         setScriptTitleList(names);
       }
     })();
-  }, [isLoggedIn, detailId, isEditing, isGuide]);
+  }, [isLoggedIn, detailId, isEditing, isGuide, clickedScriptTitleIndex]);
 
   useEffect(() => {
     (async () => {
@@ -353,7 +467,13 @@ function LearnDetail() {
   useEffect(() => {
     const handleClickOutside = (e: Event) => {
       const eventTarget = e.target as HTMLElement;
-      if (isContextMenuOpen && !contextMenuRef?.current?.contains(eventTarget) && eventTarget.tagName !== 'MARK') {
+
+      if (
+        isContextMenuOpen &&
+        !contextMenuRef?.current?.contains(eventTarget) &&
+        eventTarget.tagName !== 'MARK' &&
+        eventTarget.tagName !== 'SPAN'
+      ) {
         setIsContextMenuOpen(false);
         setHighlightIndex(INITIAL_NUMBER);
       }
@@ -433,11 +553,12 @@ function LearnDetail() {
                 <article>
                   <div ref={learnRef}>
                     {!isEditing &&
-                      videoData.scripts.map(({ id, order, text, startTime, endTime }) => (
+                      videoData.scripts.map(({ id, order, text, startTime, endTime }, i) => (
                         <StScriptText
                           ref={contextMenuRef}
                           onContextMenu={(e) => {
                             e.preventDefault();
+                            setOrder(i + 1);
                             !isGuide && handleRightClick(e, videoData.scriptsId, order);
                           }}
                           key={id}
@@ -451,14 +572,17 @@ function LearnDetail() {
                       <ContextMenu
                         contextMenuPoint={contextMenuPoint}
                         clickedMemoId={clickedMemo?.id}
+                        contextElementType={contextElementType}
+                        isEditing={isEditing}
                         setMemoState={setMemoState}
                         setIsContextMenuOpen={setIsContextMenuOpen}
+                        setDeletedType={setDeletedType}
+                        setIsDeleteBtnClicked={setIsDeleteBtnClicked}
                       />
                     )}
                     {isEditing && (
                       <ScriptEdit
-                        scriptsId={videoData.names ? videoData.names[clickedScriptTitleIndex].id : videoData.scriptsId}
-                        scripts={videoData.scripts}
+                        isEditing={isEditing}
                         isHighlight={isHighlight}
                         isSpacing={isSpacing}
                         clickedScriptTitleIndex={clickedScriptTitleIndex}
@@ -481,7 +605,7 @@ function LearnDetail() {
                             } else {
                               isHighlight ? setIsHighlight(false) : setIsHighlight(true);
                               setIsSpacing(false);
-                              setIsHighlightOver(false);
+                              setHoveredChild(0);
                             }
                           }}>
                           {isHighlight ? (
@@ -494,11 +618,11 @@ function LearnDetail() {
                                 src={icHighlighterDefault}
                                 alt="하이라이트"
                                 onMouseOver={() => {
-                                  setIsHighlightOver(true);
+                                  setHoveredChild(1);
                                 }}
                                 onMouseOut={(e) => {
                                   e.stopPropagation();
-                                  setIsHighlightOver(false);
+                                  setHoveredChild(0);
                                 }}
                               />
                             </>
@@ -512,7 +636,7 @@ function LearnDetail() {
                             } else {
                               isSpacing ? setIsSpacing(false) : setIsSpacing(true);
                               setIsHighlight(false);
-                              setIsSpacingOver(false);
+                              setHoveredChild(0);
                             }
                           }}>
                           {isSpacing ? (
@@ -530,11 +654,11 @@ function LearnDetail() {
                                 alt="끊어 읽기"
                                 onMouseOver={(e) => {
                                   e.stopPropagation();
-                                  setIsSpacingOver(true);
+                                  setHoveredChild(2);
                                 }}
                                 onMouseOut={(e) => {
                                   e.stopPropagation();
-                                  setIsSpacingOver(false);
+                                  setHoveredChild(0);
                                 }}
                               />
                             </>
@@ -544,18 +668,18 @@ function LearnDetail() {
                     )}
                   </div>
                 </article>
-                <StTooltipContainer isHighlightOver={isHighlightOver} isSpacingOver={isSpacingOver}>
-                  <ImageDiv
-                    className="highlight-tooltip"
-                    src={imgHighlightTooltip}
-                    alt="드래그해서 하이라이트를 표시해보세요."
-                  />
-                  <ImageDiv
-                    className="spacing-tooltip"
-                    src={imgSpacingTooltip}
-                    alt="클릭해서 끊어읽기를 표시해보세요."
-                  />
-                </StTooltipContainer>
+                <StTooltipContanier hoveredChild={hoveredChild}>
+                  <p>
+                    드래그해서 하이라이트를
+                    <br />
+                    표시해보세요.
+                  </p>
+                  <p>
+                    클릭해서 끊어읽기를
+                    <br />
+                    표시해보세요.
+                  </p>
+                </StTooltipContanier>
               </StLearnSection>
               <aside>
                 <StVideoWrapper>
@@ -891,7 +1015,7 @@ const StScriptText = styled.div<{ isActive: boolean; markStyles: string }>`
     font-size: 3.2rem;
     font-weight: 600;
     color: ${COLOR.MAIN_BLUE};
-    margin: 0 0.02rem 0 0.02rem;
+    margin: 0 0.4rem 0 0.4rem;
   }
 
   mark {
@@ -915,19 +1039,44 @@ const StButtonContainer = styled.div`
   padding-right: 0.8rem;
 `;
 
-const StTooltipContainer = styled.div<{ isHighlightOver: boolean; isSpacingOver: boolean }>`
-  display: flex;
-  gap: 1.2rem;
+const StTooltipContanier = styled.div<{ hoveredChild: number }>`
   position: fixed;
-  margin: 86.3rem 0 0 60.1rem;
-  z-index: 1;
+  z-index: 2;
 
-  .highlight-tooltip {
-    visibility: ${({ isHighlightOver }) => (isHighlightOver ? 'visible' : 'hidden')};
+  & > p {
+    display: none;
   }
-  .spacing-tooltip {
-    visibility: ${({ isSpacingOver }) => (isSpacingOver ? 'visible' : 'hidden')};
-  }
+
+  ${({ hoveredChild }) =>
+    hoveredChild &&
+    css`
+      & > p:nth-child(${hoveredChild}) {
+        display: block;
+        position: absolute;
+        top: 4.6rem;
+        width: ${hoveredChild === 1 ? '16.5rem' : '13.9rem'};
+        margin: 82.3rem 0 0 ${hoveredChild === 1 ? '60.5rem' : '77.8rem'};
+        padding: 1rem;
+        border-radius: 0.6rem;
+        background: rgba(22, 15, 53, 0.7);
+        ${FONT_STYLES.SB_15_CAPTION}
+        color: ${COLOR.WHITE};
+        cursor: default;
+      }
+
+      & > p:nth-child(${hoveredChild})::after {
+        position: absolute;
+        bottom: 100%;
+        right: ${hoveredChild === 1 ? '1.6rem' : '10.7rem'};
+        width: 0;
+        height: 0;
+        border: solid transparent;
+        border-width: 0.8rem;
+        border-bottom-color: rgba(22, 15, 53, 0.7);
+        pointer-events: none;
+        content: '';
+      }
+    `}
 `;
 
 const StButton = styled.button`

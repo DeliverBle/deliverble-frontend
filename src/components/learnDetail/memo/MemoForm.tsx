@@ -36,11 +36,16 @@ function MemoForm(props: MemoFormProps) {
   const handleChange = () => {
     const textarea = textareaRef.current;
     if (textarea) {
-      const length = [...new Intl.Segmenter().segment(textarea.value)].length;
+      const text = [...new Intl.Segmenter().segment(textarea.value)];
+      let length = text.length;
       if (length > MEMO_CONTENT_MAX_LENGTH) {
-        textarea.value = textarea.value.slice(0, MEMO_CONTENT_MAX_LENGTH);
+        textarea.value = text
+          .slice(0, MEMO_CONTENT_MAX_LENGTH)
+          .map((el) => el.segment)
+          .join('');
+        length = MEMO_CONTENT_MAX_LENGTH;
       }
-      setTextLength(textarea.value.length);
+      setTextLength(length);
 
       textarea.style.height = '0.1rem';
       textarea.style.height = (12 + textarea.scrollHeight) / 10 + 'rem';

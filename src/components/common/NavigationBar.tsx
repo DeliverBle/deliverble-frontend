@@ -156,7 +156,7 @@ const StTab = styled.li<{ isActive: boolean }>`
   ${({ isActive }) =>
     isActive &&
     css`
-      border-bottom: 0.3rem solid transparent;
+      border-bottom: 0.45rem solid transparent;
       border-image: linear-gradient(45deg, ${COLOR.SUB_PURPLE}, ${COLOR.MAIN_BLUE});
       border-image-slice: 1;
       & > a {
