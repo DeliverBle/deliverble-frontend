@@ -1,3 +1,4 @@
+import { HOME_DATA } from './home.data';
 import { LearnDetailService } from '../api/learn-detail';
 import { LEARN_DETAIL_DATA } from './learn-detail.data';
 
@@ -77,6 +78,11 @@ export function learnDetailDataMock(): LearnDetailService {
     return LEARN_DETAIL_DATA.RECORD_NAME_CHANGE_DATA;
   };
 
+  const getSimilarVideoData = async () => {
+    await wait(500);
+    return HOME_DATA;
+  };
+
   return {
     getPrivateVideoData,
     getPublicVideoData,
@@ -93,6 +99,7 @@ export function learnDetailDataMock(): LearnDetailService {
     getRecordData,
     deleteRecordData,
     changeRecordNameData,
+    getSimilarVideoData,
   };
 }
 

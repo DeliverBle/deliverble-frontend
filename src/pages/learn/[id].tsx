@@ -47,6 +47,8 @@ import styled, { css } from 'styled-components';
 import { imgHighlightTooltip, imgSpacingTooltip } from 'public/assets/images';
 import { useMutation } from 'react-query';
 import { isGuideAtom } from '@src/stores/newsState';
+import NewsList from '@src/components/common/NewsList';
+import { VideoData as simpleVideoData } from '@src/services/api/types/home';
 
 export interface MemoState {
   newMemoId: number;
@@ -98,6 +100,7 @@ function LearnDetail() {
   const [isContextMenuOpen, setIsContextMenuOpen] = useState<boolean>(false);
   const [studyLogTab, setStudyLogTab] = useState<string>('memo');
   const [isRecordSaved, setIsRecordSaved] = useState<boolean>(false);
+  const [similarNewsList, setSimilarNewsList] = useState<simpleVideoData[]>([]);
 
   useEffect(() => {
     isRecordSaved &&
@@ -251,12 +254,8 @@ function LearnDetail() {
 
   const handleClickLike = async (id: number) => {
     const { id: likeId, isFavorite } = await api.likeService.postLikeData(id);
-    if (videoData && videoData.id === likeId) {
-      setVideoData({
-        ...videoData,
-        isFavorite,
-      });
-    }
+    setVideoData((prev) => prev && (prev.id === likeId ? { ...prev, isFavorite } : prev));
+    setSimilarNewsList((prev) => prev.map((news) => (news.id === likeId ? { ...news, isFavorite } : news)));
   };
 
   useEffect(() => {
@@ -379,8 +378,15 @@ function LearnDetail() {
     }
   }, []);
 
+  useEffect(() => {
+    (async () => {
+      const { videoList } = await api.learnDetailService.getSimilarVideoData(Number(detailId));
+      setSimilarNewsList(videoList);
+    })();
+  }, [detailId]);
+
   return (
-    <>
+    <StPageWrapper>
       <SEO title="학습하기 | Deliverble" />
       <NavigationBar />
       <StLearnDetail>
@@ -628,6 +634,10 @@ function LearnDetail() {
             {isGuide && <StLearnButton onClick={() => setIsGuide((prev) => !prev)}>학습하러 가기</StLearnButton>}
           </StLearnBox>
         )}
+        <StNews>
+          <h3>비슷한 주제의 영상으로 계속 연습해보세요.</h3>
+          <NewsList onClickLike={handleClickLike} newsList={similarNewsList} type="similar" />
+        </StNews>
         {isModalOpen && <GuideModal closeModal={() => setIsModalOpen(false)} />}
         {isConfirmOpen && (
           <ConfirmModal
@@ -640,15 +650,35 @@ function LearnDetail() {
         )}
         {isLoginModalOpen && <LoginModal closeModal={() => setIsLoginModalOpen(false)} />}
       </StLearnDetail>
-    </>
+    </StPageWrapper>
   );
 }
 
 export default LearnDetail;
 
+const StPageWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
+
+const StNews = styled.div`
+  width: 172rem;
+  margin: 0 auto;
+  padding-top: 16rem;
+
+  & > h3 {
+    min-width: 53rem;
+    margin-bottom: 2.8rem;
+
+    ${FONT_STYLES.SB_32_HEADLINE}
+    color: ${COLOR.BLACK};
+  }
+`;
+
 const StLearnDetail = styled.div`
-  padding: 10.2rem 10rem 15rem 10rem;
-  min-height: 100vh;
+  flex: 1;
+  padding: 10.2rem 10rem 16rem 10rem;
   background: rgba(229, 238, 255, 0.85);
   backdrop-filter: blur(2.8rem);
 
