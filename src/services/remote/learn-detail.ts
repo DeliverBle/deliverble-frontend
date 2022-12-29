@@ -1,5 +1,15 @@
 import { LearnDetailService } from '../api/learn-detail';
-import { Script, SentenceData, Tag, MemoData, Name, UploadRecordData, GetRecordData } from '../api/types/learn-detail';
+import {
+  Script,
+  SentenceData,
+  Tag,
+  MemoData,
+  Name,
+  UploadRecordData,
+  GetRecordData,
+  DeleteRecordData,
+  ChangeRecordNameData,
+} from '../api/types/learn-detail';
 import { VideoData } from '../api/types/home';
 import { privateAPI, publicAPI } from './base';
 
@@ -237,8 +247,6 @@ export function learnDetailDataRemote(): LearnDetailService {
       data: body,
       type: 'multipart',
     });
-    console.log(response);
-    //성공 처리
     if (response.status === 200) {
       return {
         link: response.data.link,
@@ -250,10 +258,10 @@ export function learnDetailDataRemote(): LearnDetailService {
   };
 
   const getRecordData = async (scriptId: number) => {
-    const response = await privateAPI.get({
-      url: `/script/recording/find?scriptId=${scriptId}`,
-    });
-    if (response.axiosStatus === 200) {
+    try {
+      const response = await privateAPI.get({
+        url: `/script/recording/find?scriptId=${scriptId}`,
+      });
       return response.data[0].map((record: GetRecordData) => ({
         name: record.name,
         link: record.link,
@@ -262,6 +270,36 @@ export function learnDetailDataRemote(): LearnDetailService {
         date: record.date,
         scriptId: record.scriptId,
       }));
+    } catch {
+      return undefined;
+    }
+  };
+
+  const deleteRecordData = async (body: DeleteRecordData) => {
+    const response = await privateAPI.post({
+      url: '/script/recording/delete',
+      data: body,
+    });
+    if (response.status === 200) {
+      return {
+        link: response.data.link,
+        deleted: response.data.deleted,
+        scriptId: response.data.scriptId,
+      };
+    } else throw '서버 통신 실패';
+  };
+
+  const changeRecordNameData = async (body: ChangeRecordNameData) => {
+    const response = await privateAPI.post({
+      url: '/script/recording/change-name',
+      data: body,
+    });
+    if (response.status === 200) {
+      return {
+        link: response.data.link,
+        newName: response.data.newName,
+        scriptId: response.data.scriptId,
+      };
     } else throw '서버 통신 실패';
   };
 
@@ -301,6 +339,8 @@ export function learnDetailDataRemote(): LearnDetailService {
     getPrivateSpeechGuideData,
     uploadRecordData,
     getRecordData,
+    deleteRecordData,
+    changeRecordNameData,
     getSimilarVideoData,
   };
 }

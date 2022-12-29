@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { icRecordMicDefault, icRecordMicActive, icRecordStart, icRecordStop } from 'public/assets/icons';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { api } from '@src/services/api';
 import { loginState } from '@src/stores/loginState';
 import { useRecoilValue } from 'recoil';
@@ -11,25 +11,25 @@ import LoginModal from '@src/components/login/LoginModal';
 
 interface RecordStatusBarProps {
   scriptId: number;
+  isRecordSaved: boolean;
+  setIsRecordSaved: Dispatch<SetStateAction<boolean>>;
 }
 
 function RecordStatusBar(props: RecordStatusBarProps) {
-  const { scriptId } = props;
+  const { scriptId, isRecordSaved, setIsRecordSaved } = props;
   const [stream, setStream] = useState<MediaStream>();
   const [media, setMedia] = useState<MediaRecorder>();
   const [isRecording, setIsRecording] = useState(false);
   const [source, setSource] = useState<MediaStreamAudioSourceNode>();
-  const [recordFormData, setRecordFormData] = useState<FormData>();
   const [minutes, setMinutes] = useState<number>(0);
   const [seconds, setSeconds] = useState<number>(0);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
-  const [isSaved, setIsSaved] = useState(false);
   const isLoggedIn = useRecoilValue(loginState);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
-  useEffect(() => {
-    recordFormData && api.learnDetailService.uploadRecordData(recordFormData);
-  }, [recordFormData]);
+  const uploadRecordData = async (formData: FormData) => {
+    await api.learnDetailService.uploadRecordData(formData);
+  };
 
   const startRecord = () => {
     const audioCtx = new window.AudioContext();
@@ -71,10 +71,10 @@ function RecordStatusBar(props: RecordStatusBarProps) {
 
     setMinutes(0);
     setSeconds(0);
-    setIsSaved(true);
+    setIsRecordSaved(true);
     setTimeout(() => {
-      setIsSaved(false);
-    }, 2000);
+      setIsRecordSaved(false);
+    }, 1000);
   };
 
   const submitAudioFile = (audioUrl: BlobPart) => {
@@ -85,7 +85,7 @@ function RecordStatusBar(props: RecordStatusBarProps) {
     formData.append('scriptId', scriptId.toString());
     formData.append('endtime', duration.toString());
     formData.append('date', getDate());
-    setRecordFormData(formData);
+    uploadRecordData(formData);
   };
 
   const getDate = () => {
@@ -139,7 +139,7 @@ function RecordStatusBar(props: RecordStatusBarProps) {
             />
           )}
         </StRecordStatus>
-        {isSaved && (
+        {isRecordSaved && (
           <StGuideTooltip>
             <p>저장되었습니다.</p>
           </StGuideTooltip>
