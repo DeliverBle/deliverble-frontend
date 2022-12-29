@@ -140,7 +140,7 @@ const StInfoTitle = styled.div`
 `;
 
 const StUnderlineText = styled.p`
-  ${FONT_STYLES.SB_20_FOOTER};
+  ${FONT_STYLES.SB_24_FOOTER};
   text-decoration-line: underline;
   text-underline-position: under;
 `;
@@ -157,5 +157,5 @@ const StFeedback = styled.div`
 
 const StContact = styled.div`
   min-width: fit-content;
-  ${FONT_STYLES.M_20_FOOTER};
+  ${FONT_STYLES.M_24_FOOTER};
 `;
