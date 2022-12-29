@@ -96,20 +96,8 @@ function LearnDetail() {
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const [contextMenuPoint, setContextMenuPoint] = useState({ x: 0, y: 0 });
   const [isContextMenuOpen, setIsContextMenuOpen] = useState<boolean>(false);
-<<<<<<< HEAD
   const [studyLogTab, setStudyLogTab] = useState<string>('memo');
   const [isRecordSaved, setIsRecordSaved] = useState<boolean>(false);
-  const [similarNewsList, setSimilarNewsList] = useState<simpleVideoData[]>([]);
-
-  useEffect(() => {
-    isRecordSaved &&
-      setTimeout(() => {
-        setStudyLogTab('record');
-      }, 1000);
-  }, [isRecordSaved]);
-
-  const handleContextMenuPoint = (target: HTMLDivElement) => {
-=======
   const [contextElementId, setContextElementId] = useState<string>('');
   const [contextHTML, setContextHTML] = useState<HTMLElement>();
   const [contextElementType, setContextElementType] = useState<string>('');
@@ -119,8 +107,14 @@ function LearnDetail() {
   const [text, setText] = useState<string>();
   const [similarNewsList, setSimilarNewsList] = useState<simpleVideoData[]>([]);
 
+  useEffect(() => {
+    isRecordSaved &&
+      setTimeout(() => {
+        setStudyLogTab('record');
+      }, 1000);
+  }, [isRecordSaved]);
+
   const handleContextMenuPoint = (target: HTMLElement) => {
->>>>>>> 34b826f7f5bed079b5ec89f681b3976bf15c762d
     let x = 0;
     let y = 0;
 
