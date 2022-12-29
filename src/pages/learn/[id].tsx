@@ -759,10 +759,12 @@ function LearnDetail() {
             {isGuide && <StLearnButton onClick={() => setIsGuide((prev) => !prev)}>학습하러 가기</StLearnButton>}
           </StLearnBox>
         )}
-        <StNews>
-          <h3>비슷한 주제의 영상으로 계속 연습해보세요.</h3>
-          <NewsList onClickLike={handleClickLike} newsList={similarNewsList} type="normal" />
-        </StNews>
+        {!isGuide && (
+          <StNews>
+            <h3>비슷한 주제의 영상으로 계속 연습해보세요.</h3>
+            <NewsList onClickLike={handleClickLike} newsList={similarNewsList} type="normal" />
+          </StNews>
+        )}
         {isModalOpen && <GuideModal closeModal={() => setIsModalOpen(false)} />}
         {isConfirmOpen && (
           <ConfirmModal
