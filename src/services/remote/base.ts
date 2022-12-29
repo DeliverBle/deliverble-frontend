@@ -104,12 +104,13 @@ export const privateAPI = {
       isPrivate: true,
       type: type ?? 'json',
     }),
-  patch: ({ url, data, headers }: Omit<RequestWithData, 'isPrivate' | 'method'>) =>
+  patch: ({ url, data, headers, type }: Omit<RequestWithData, 'isPrivate' | 'method'>) =>
     sendRequestForData({
       url,
       data,
       method: 'patch',
       headers,
+      type: type ?? 'json',
       isPrivate: true,
     }),
   delete: ({ url, data, headers }: Omit<RequestWithData, 'isPrivate' | 'method'>) =>
