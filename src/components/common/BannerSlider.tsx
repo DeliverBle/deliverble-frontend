@@ -32,6 +32,7 @@ function BannerSlider() {
           }
           swiper.navigation.update();
         },
+        loop: true,
         pagination: {
           el: pageRef.current,
           type: 'fraction' as 'bullets' | 'fraction',
