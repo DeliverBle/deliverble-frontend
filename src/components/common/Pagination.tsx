@@ -39,16 +39,18 @@ function Pagination(props: PaginationProps) {
 
   return (
     <StPagination>
-      {lastPage > blockSize && <StDoubleLeftArrowButton onClick={() => currentPage !== 1 && onPageChange(1)} />}
-      <StLeftArrowButton onClick={() => currentPage !== 1 && onPageChange(currentPage - 1)} />
+      {lastPage > blockSize && (
+        <StArrowButton onClick={() => currentPage !== 1 && onPageChange(1)}>{'<<'}</StArrowButton>
+      )}
+      <StArrowButton onClick={() => currentPage !== 1 && onPageChange(currentPage - 1)}>{'<'}</StArrowButton>
       {pageGroupList.map((page) => (
         <StNumberButton onClick={() => onPageChange(page)} isActive={page === currentPage} key={page}>
           {page}
         </StNumberButton>
       ))}
-      <StRightArrowButton onClick={() => currentPage !== lastPage && onPageChange(currentPage + 1)} />
+      <StArrowButton onClick={() => currentPage !== lastPage && onPageChange(currentPage + 1)}>{'>'}</StArrowButton>
       {lastPage > blockSize && (
-        <StDoubleRightArrowButton onClick={() => currentPage !== lastPage && onPageChange(lastPage)} />
+        <StArrowButton onClick={() => currentPage !== lastPage && onPageChange(lastPage)}>{'>>'}</StArrowButton>
       )}
     </StPagination>
   );
@@ -71,48 +73,16 @@ const StPagination = styled.div`
 `;
 
 const StArrowButton = styled.button`
-  width: 2.8rem;
-  height: 2.8rem;
   padding: 0;
-`;
+  ${FONT_STYLES.SB_20_BODY};
+  color: ${COLOR.GRAY_30};
 
-const StLeftArrowButton = styled(StArrowButton)`
-  background-image: url('/assets/icons/ic_left_arrow.svg');
   &:hover {
-    background-image: url('/assets/icons/ic_left_arrow_hover.svg');
+    color: ${COLOR.GRAY_45};
   }
-  &:active {
-    background-image: url('/assets/icons/ic_left_arrow_clicked.svg');
-  }
-`;
 
-const StRightArrowButton = styled(StArrowButton)`
-  background-image: url('/assets/icons/ic_right_arrow.svg');
-  &:hover {
-    background-image: url('/assets/icons/ic_right_arrow_hover.svg');
-  }
   &:active {
-    background-image: url('/assets/icons/ic_right_arrow_clicked.svg');
-  }
-`;
-
-const StDoubleLeftArrowButton = styled(StArrowButton)`
-  background-image: url('/assets/icons/ic_double_left_arrow.svg');
-  &:hover {
-    background-image: url('/assets/icons/ic_double_left_arrow_hover.svg');
-  }
-  &:active {
-    background-image: url('/assets/icons/ic_double_left_arrow_clicked.svg');
-  }
-`;
-
-const StDoubleRightArrowButton = styled(StArrowButton)`
-  background-image: url('/assets/icons/ic_double_right_arrow.svg');
-  &:hover {
-    background-image: url('/assets/icons/ic_double_right_arrow_hover.svg');
-  }
-  &:active {
-    background-image: url('/assets/icons/ic_double_right_arrow_clicked.svg');
+    color: ${COLOR.BLACK};
   }
 `;
 
