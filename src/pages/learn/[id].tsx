@@ -221,6 +221,14 @@ function LearnDetail() {
     }
   };
 
+  //이부분 혜준언니가 이어서 진행해줄 것 같습니다...
+  const isHighlightInMemo = (contextHTML: HTMLElement) => {
+    const highlightId = contextHTML.id;
+    if (highlightId in MemoList) {
+      //delete
+    }
+  };
+
   const deleteElement = (contextHTML: HTMLElement) => {
     const parentElement = contextHTML?.parentElement;
     const removeElement = document.getElementById(contextElementId);
@@ -238,6 +246,7 @@ function LearnDetail() {
         }
         removeElement?.replaceWith(fragment);
         nodeToText(parentElement);
+        isHighlightInMemo(contextHTML);
         break;
       case 'SPAN':
         if (removeElement) {
