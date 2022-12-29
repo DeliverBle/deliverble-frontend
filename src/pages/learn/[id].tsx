@@ -163,25 +163,31 @@ function LearnDetail() {
     }
   };
 
-  const createMarkStyles = (script: string, scriptOrder: number) => {
+  const createMarkStyles = (script: string) => {
     let styles = ``;
-    const highlightIndexList: number[] = [];
-    const searchValue = '<mark';
-
-    let index = script.indexOf(searchValue, 0);
-    while (index !== -1) {
-      highlightIndexList.push(index);
-      script = script.replace('<mark', '');
-      index = script.indexOf(searchValue, index + 1);
+    const markIdList = [];
+    let startIndex = script.indexOf('<mark id=');
+    let endIndex = script.indexOf('>', startIndex + 9);
+    let markId = '';
+    if (startIndex !== -1 && endIndex !== -1) {
+      markId = script.substring(startIndex + 9, endIndex);
     }
 
-    highlightIndexList.forEach((index, i) => {
-      if (memoList.find(({ startIndex, order, content }) => startIndex === index && order === scriptOrder && content)) {
+    while (markId) {
+      markIdList.push(markId);
+      startIndex = script.indexOf('<mark id=', endIndex);
+      endIndex = script.indexOf('>', startIndex + 9);
+      if (startIndex === -1 || endIndex === -1) break;
+      markId = script.substring(startIndex + 9, endIndex);
+    }
+
+    markIdList.forEach((id, i) => {
+      if (memoList.find(({ highlightId, content }) => highlightId === id && content)) {
         styles += `
           mark:nth-of-type(${i + 1}) {
-            text-decoration: underline 3px ${COLOR.MAIN_BLUE};
-            text-underline-position: under;
-            text-underline-offset: 3px;
+            border-bottom: 0.7rem solid #4E8AFF;
+            border-image: linear-gradient(white 94%, #4E8AFF 90%);
+            border-image-slice: 5;
           }
         `;
       }
@@ -564,7 +570,7 @@ function LearnDetail() {
                           }}
                           key={id}
                           onClick={() => player?.seekTo(startTime, true)}
-                          markStyles={createMarkStyles(text, order)}
+                          markStyles={createMarkStyles(text)}
                           isActive={startTime <= currentTime && currentTime < endTime ? true : false}>
                           <div id={id.toString()} dangerouslySetInnerHTML={{ __html: text }}></div>
                         </StScriptText>
