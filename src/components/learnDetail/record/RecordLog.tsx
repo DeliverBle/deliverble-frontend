@@ -155,13 +155,13 @@ function RecordLog(props: RecordStatusBarProps) {
     }
   };
 
-  const setIcRecordPlay = (link: string) => {
+  const setIcRecordPlay = (link: string, hovering: boolean) => {
     if (checkRecordClicked(link) && isPlaying) {
-      return icRecordPauseDefault;
+      return hovering ? icRecordPauseActive : icRecordPauseDefault;
     } else if (isNameChanging && link === recordLinkChanging) {
       return icRecordPlayUnactivated;
     } else {
-      return icRecordPlayDefault;
+      return hovering ? icRecordPlayActive : icRecordPlayDefault;
     }
   };
 
@@ -181,13 +181,13 @@ function RecordLog(props: RecordStatusBarProps) {
                   isNameChanging && setIsNameChanging(false);
                 }}>
                 <ImageDiv
-                  src={setIcRecordPlay(link)}
+                  src={setIcRecordPlay(link, false)}
                   className="icRecordPlay"
                   alt={checkRecordClicked(link) && isPlaying ? '녹음 중지' : '녹음 재생'}
                   layout="fill"
                 />
                 <ImageDiv
-                  src={setIcRecordPlay(link)}
+                  src={setIcRecordPlay(link, true)}
                   className="icRecordPlay hover"
                   alt={checkRecordClicked(link) && isPlaying ? '녹음 중지' : '녹음 재생'}
                   layout="fill"
