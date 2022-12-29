@@ -440,20 +440,6 @@ function LearnDetail() {
     })();
   }, [isLoggedIn, detailId, isEditing, isGuide, clickedScriptTitleIndex]);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     if (isLoggedIn && !isGuide) {
-  //       const data = await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedScriptTitleIndex);
-  //       setVideoData(data);
-  //       const { memos, names } = data;
-  //       if (memos && names) {
-  //         setMemoList(memos);
-  //         setScriptTitleList(names);
-  //       }
-  //     }
-  //   })();
-  // }, [clickedScriptTitleIndex, detailId, isLoggedIn, isGuide]);
-
   useEffect(() => {
     if (!player) return;
 
