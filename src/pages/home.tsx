@@ -5,17 +5,19 @@ import SEO from '@src/components/common/SEO';
 import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
 import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/home';
-import { loginState } from '@src/stores/loginState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
-import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
+import { loginState } from '@src/stores/loginState';
+import { useRecoilState } from 'recoil';
+import { useRouter } from 'next/router';
 
 function Home() {
-  const isLoggedIn = useRecoilValue(loginState);
+  const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useRecoilState(loginState);
   const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
   const [newsList, setNewsList] = useState<VideoData[]>([]);
   const [speechGuideList, setSpeechGuideList] = useState<VideoData[]>([]);
@@ -33,16 +35,32 @@ function Home() {
     setIsLoading(true);
     (async () => {
       const { videoList } = isLoggedIn
-        ? await api.homeService.getPrivateVideoData()
+        ? await api.homeService
+            .getPrivateVideoData()
+            .catch(() => {
+              localStorage.removeItem('token');
+              setIsLoggedIn(false);
+              router.reload();
+              return { videoList: [] };
+            })
+            .then((videoList) => videoList)
         : await api.homeService.getPublicVideoData();
       const { videoList: guideList } = isLoggedIn
-        ? await api.homeService.getPrivateSpeechGuideData()
+        ? await api.homeService
+            .getPrivateSpeechGuideData()
+            .catch(() => {
+              localStorage.removeItem('token');
+              setIsLoggedIn(false);
+              router.reload();
+              return { videoList: [] };
+            })
+            .then((videoList) => videoList)
         : await api.homeService.getPublicSpeechGuideData();
       setNewsList(videoList);
       setSpeechGuideList(guideList);
     })();
     setIsLoading(false);
-  }, [isLoggedIn]);
+  }, [isLoggedIn, router, setIsLoggedIn]);
 
   const handleClickLike = async (id: number) => {
     const { id: likeId, isFavorite } = await api.likeService.postLikeData(id);

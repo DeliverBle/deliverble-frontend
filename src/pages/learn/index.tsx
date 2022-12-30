@@ -15,12 +15,14 @@ import dynamic from 'next/dynamic';
 import { icSearch } from 'public/assets/icons';
 import { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
+import { useRouter } from 'next/router';
 
 function Learn() {
   const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
-  const isLoggedIn = useRecoilValue(loginState);
+  const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useRecoilState(loginState);
   const [selectedChannelList, setSelectedChannelList] = useState<string[]>([]);
   const [selectedCategoryList, setSelectedCategoryList] = useState<string[]>([]);
   const [selectedSpeakerList, setSelectedSpeakerList] = useState<string[]>([]);
@@ -30,6 +32,7 @@ function Learn() {
   const [resultList, setResultList] = useState<VideoData[]>([]);
 
   const { mutate, isLoading } = useMutation(
+    ['searchCondition'],
     async (requestBody: PostSearchConditionRequestBody) => {
       return isLoggedIn
         ? await api.learnService.postSearchConditionWithToken(requestBody)
@@ -41,6 +44,12 @@ function Learn() {
         setTotalCount(paging.totalCount);
         setLastPage(paging.lastPage);
         setResultList(videoList);
+      },
+      onError: () => {
+        localStorage.removeItem('token');
+        setIsLoggedIn(false);
+        router.reload();
+        return;
       },
     },
   );
