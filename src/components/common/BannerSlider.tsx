@@ -32,6 +32,7 @@ function BannerSlider() {
           }
           swiper.navigation.update();
         },
+        loop: true,
         pagination: {
           el: pageRef.current,
           type: 'fraction' as 'bullets' | 'fraction',
@@ -183,7 +184,7 @@ const StBannerText = styled.div<{ ver: number }>`
 
   & > p {
     padding-top: 3.2rem;
-    ${FONT_STYLES.M_24_HEADLINE}
+    ${FONT_STYLES.L_24_HEADLINE}
   }
 
   @media (max-width: 960px) {
