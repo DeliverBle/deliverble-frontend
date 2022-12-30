@@ -30,7 +30,7 @@ function Home() {
   }, []);
 
   const { isLoading } = useQuery(
-    ['HomeNewsList'],
+    ['getNewsList'],
     async () => {
       return {
         recommend: isLoggedIn

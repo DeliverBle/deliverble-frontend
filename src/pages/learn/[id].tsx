@@ -495,7 +495,7 @@ function LearnDetail() {
   }, []);
 
   const { isLoading } = useQuery(
-    ['SimilarNewsList'],
+    ['getSimilarNewsList'],
     async () => await api.learnDetailService.getSimilarVideoData(Number(detailId)),
     {
       onSuccess: (data) => setSimilarNewsList(data.videoList),
