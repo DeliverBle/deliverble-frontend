@@ -70,8 +70,6 @@ function ScriptTitle(props: ScriptTitleProps) {
       onClick={() => {
         setClickedScriptTitleIndex(currentScriptTitleIndex);
         setCurrentScriptId(scriptId);
-        console.log(scriptId);
-        console.log('hi');
       }}
       onDoubleClick={() => onScriptTitleInputChange(currentScriptTitleIndex)}
       onContextMenu={(e) => {
