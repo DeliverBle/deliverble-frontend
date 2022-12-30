@@ -10,6 +10,7 @@ import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
+import { useMutation } from 'react-query';
 import { useMediaQuery } from 'react-responsive';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
@@ -19,7 +20,6 @@ function Home() {
   const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
   const [newsList, setNewsList] = useState<VideoData[]>([]);
   const [speechGuideList, setSpeechGuideList] = useState<VideoData[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
   const smallBanner = useMediaQuery({
     query: '(max-width: 500px)',
@@ -29,20 +29,29 @@ function Home() {
     setMounted(true);
   }, []);
 
+  const { mutate, isLoading } = useMutation(
+    async () => {
+      return {
+        recommend: isLoggedIn
+          ? await api.homeService.getPrivateVideoData()
+          : await api.homeService.getPublicVideoData(),
+        speechGuide: isLoggedIn
+          ? await api.homeService.getPrivateSpeechGuideData()
+          : await api.homeService.getPublicSpeechGuideData(),
+      };
+    },
+    {
+      onSuccess: (data) => {
+        const { recommend, speechGuide } = data;
+        setNewsList(recommend.videoList);
+        setSpeechGuideList(speechGuide.videoList);
+      },
+    },
+  );
+
   useEffect(() => {
-    setIsLoading(true);
-    (async () => {
-      const { videoList } = isLoggedIn
-        ? await api.homeService.getPrivateVideoData()
-        : await api.homeService.getPublicVideoData();
-      const { videoList: guideList } = isLoggedIn
-        ? await api.homeService.getPrivateSpeechGuideData()
-        : await api.homeService.getPublicSpeechGuideData();
-      setNewsList(videoList);
-      setSpeechGuideList(guideList);
-    })();
-    setIsLoading(false);
-  }, [isLoggedIn]);
+    mutate();
+  }, [mutate]);
 
   const handleClickLike = async (id: number) => {
     const { id: likeId, isFavorite } = await api.likeService.postLikeData(id);
