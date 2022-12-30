@@ -37,24 +37,24 @@ function Home() {
       const { videoList } = isLoggedIn
         ? await api.homeService
             .getPrivateVideoData()
+            .then((videoList) => videoList)
             .catch(() => {
               localStorage.removeItem('token');
               setIsLoggedIn(false);
               router.reload();
               return { videoList: [] };
             })
-            .then((videoList) => videoList)
         : await api.homeService.getPublicVideoData();
       const { videoList: guideList } = isLoggedIn
         ? await api.homeService
             .getPrivateSpeechGuideData()
+            .then((videoList) => videoList)
             .catch(() => {
               localStorage.removeItem('token');
               setIsLoggedIn(false);
               router.reload();
               return { videoList: [] };
             })
-            .then((videoList) => videoList)
         : await api.homeService.getPublicSpeechGuideData();
       setNewsList(videoList);
       setSpeechGuideList(guideList);
