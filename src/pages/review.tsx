@@ -94,7 +94,7 @@ function Review() {
           </StTab>
         </nav>
         {isLoading ? (
-          <VideoListSkeleton itemNumber={12} learn={true} />
+          <VideoListSkeleton itemNumber={12} haveCountSection={true} />
         ) : (
           <VideoContainer
             tab={tab}
