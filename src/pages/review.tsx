@@ -9,12 +9,15 @@ import { loginState } from '@src/stores/loginState';
 import { LIST_SIZE } from '@src/utils/constant';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
 import { COLOR } from 'src/styles/color';
 import { FONT_STYLES } from 'src/styles/fontStyle';
 import styled from 'styled-components';
+import { useRecoilState } from 'recoil';
+import { useRouter } from 'next/router';
 
 function Review() {
+  const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useRecoilState(loginState);
   const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
   const [tab, setTab] = useState('isFavorite');
   const [favoriteList, setFavoriteList] = useState<VideoData[]>([]);
@@ -23,15 +26,21 @@ function Review() {
   const [totalCount, setTotalCount] = useState(0);
   const [lastPage, setLastPage] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const isLoggedIn = useRecoilValue(loginState);
 
   const getNewsList = async () => {
     setIsLoading(true);
 
-    const { favoritePaging, favoriteList } = await api.reviewService.postFavoriteVideoList({
-      currentPage: 1,
-      listSize: LIST_SIZE,
-    });
+    const { favoritePaging, favoriteList } = await api.reviewService
+      .postFavoriteVideoList({
+        currentPage: 1,
+        listSize: LIST_SIZE,
+      })
+      .catch(() => {
+        localStorage.removeItem('token');
+        setIsLoggedIn(false);
+        router.reload();
+        return { favoritePaging: 0, favoriteList: [] };
+      });
 
     const { historyPaging, historyList } = await api.reviewService.postHistoryVideoList({
       currentPage: 1,
