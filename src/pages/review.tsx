@@ -39,7 +39,13 @@ function Review() {
         localStorage.removeItem('token');
         setIsLoggedIn(false);
         router.reload();
-        return { favoritePaging: 0, favoriteList: [] };
+        return {
+          favoritePaging: {
+            totalCount: 0,
+            lastPage: 0,
+          },
+          favoriteList: [],
+        };
       });
 
     const { historyPaging, historyList } = await api.reviewService
@@ -51,7 +57,13 @@ function Review() {
         localStorage.removeItem('token');
         setIsLoggedIn(false);
         router.reload();
-        return { historyPaging: 0, historyList: [] };
+        return {
+          historyPaging: {
+            totalCount: 0,
+            lastPage: 0,
+          },
+          historyList: [],
+        };
       });
 
     setCurrentPage(1);
