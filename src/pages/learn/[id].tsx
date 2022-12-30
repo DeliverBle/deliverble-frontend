@@ -59,6 +59,7 @@ export interface MemoInfo {
   order: number;
   startIndex: number;
   keyword: string;
+  highlightId: string;
 }
 
 function LearnDetail() {
@@ -147,7 +148,7 @@ function LearnDetail() {
 
   const getHighlightIndex = (parentNode: ParentNode | null, targetId: string) => {
     const childNodes = parentNode?.childNodes;
-    if (childNodes && childNodes.length !== 1) {
+    if (childNodes) {
       let stringLength = 0;
       for (let i = 0; i < childNodes.length; i++) {
         const childElement = childNodes[i] as HTMLElement;
@@ -162,26 +163,31 @@ function LearnDetail() {
     }
   };
 
-  const createMarkStyles = (script: string, scriptOrder: number) => {
+  const createMarkStyles = (script: string) => {
     let styles = ``;
-    const highlightIndexList: number[] = [];
-    const searchValue = '<mark>';
-    script = script.replaceAll(/<span>\/<\/span>|<\/mark>/g, '');
-
-    let index = script.indexOf(searchValue, 0);
-    while (index !== -1) {
-      highlightIndexList.push(index);
-      script = script.replace('<mark>', '');
-      index = script.indexOf(searchValue, index + 1);
+    const markIdList = [];
+    let startIndex = script.indexOf('<mark id=');
+    let endIndex = script.indexOf('>', startIndex + 9);
+    let markId = '';
+    if (startIndex !== -1 && endIndex !== -1) {
+      markId = script.substring(startIndex + 9, endIndex);
     }
 
-    highlightIndexList.forEach((index, i) => {
-      if (memoList.find(({ startIndex, order, content }) => startIndex === index && order === scriptOrder && content)) {
+    while (markId) {
+      markIdList.push(markId);
+      startIndex = script.indexOf('<mark id=', endIndex);
+      endIndex = script.indexOf('>', startIndex + 9);
+      if (startIndex === -1 || endIndex === -1) break;
+      markId = script.substring(startIndex + 9, endIndex);
+    }
+
+    markIdList.forEach((id, i) => {
+      if (memoList.find(({ highlightId, content }) => highlightId === id && content)) {
         styles += `
           mark:nth-of-type(${i + 1}) {
-            text-decoration: underline 3px ${COLOR.MAIN_BLUE};
-            text-underline-position: under;
-            text-underline-offset: 3px;
+            border-bottom: 0.7rem solid #4E8AFF;
+            border-image: linear-gradient(white 94%, #4E8AFF 90%);
+            border-image-slice: 4;
           }
         `;
       }
@@ -201,6 +207,8 @@ function LearnDetail() {
           id,
           clickedScriptTitleIndex,
         );
+        const data = await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedScriptTitleIndex);
+        setVideoData(data);
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -238,12 +246,11 @@ function LearnDetail() {
     }
   };
 
-  //이부분 혜준언니가 이어서 진행해줄 것 같습니다...
   const isHighlightInMemo = (contextHTML: HTMLElement) => {
     const highlightId = contextHTML.id;
-    if (highlightId in MemoList) {
-      //delete
-    }
+    const deleteMemoId = memoList.find((memo) => memo.highlightId === highlightId)?.id;
+    deleteMemoId && setMemoState((prev: MemoState) => ({ ...prev, deleteMemoId }));
+    setClickedDeleteMemo(true);
   };
 
   const deleteElement = (contextHTML: HTMLElement) => {
@@ -301,6 +308,7 @@ function LearnDetail() {
         order,
         startIndex,
         keyword: markTag.innerText.replaceAll('/', ' '),
+        highlightId: markTag.id,
       });
       setClickedMemo(memoList.find((memo) => memo.startIndex === startIndex && memo.order === order));
     }
@@ -435,20 +443,6 @@ function LearnDetail() {
   }, [isLoggedIn, detailId, isEditing, isGuide, clickedScriptTitleIndex]);
 
   useEffect(() => {
-    (async () => {
-      if (isLoggedIn && !isGuide) {
-        const data = await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedScriptTitleIndex);
-        setVideoData(data);
-        const { memos, names } = data;
-        if (memos && names) {
-          setMemoList(memos);
-          setScriptTitleList(names);
-        }
-      }
-    })();
-  }, [clickedScriptTitleIndex, detailId, isLoggedIn, isGuide]);
-
-  useEffect(() => {
     if (!player) return;
 
     const interval =
@@ -564,7 +558,7 @@ function LearnDetail() {
                           }}
                           key={id}
                           onClick={() => player?.seekTo(startTime, true)}
-                          markStyles={createMarkStyles(text, order)}
+                          markStyles={createMarkStyles(text)}
                           isActive={startTime <= currentTime && currentTime < endTime ? true : false}>
                           <div id={id.toString()} dangerouslySetInnerHTML={{ __html: text }}></div>
                         </StScriptText>
