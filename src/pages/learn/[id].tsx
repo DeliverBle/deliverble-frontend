@@ -48,6 +48,7 @@ import { useMutation } from 'react-query';
 import { isGuideAtom } from '@src/stores/newsState';
 import NewsList from '@src/components/common/NewsList';
 import { VideoData as simpleVideoData } from '@src/services/api/types/home';
+import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
 
 export interface MemoState {
   newMemoId: number;
@@ -493,12 +494,18 @@ function LearnDetail() {
     }
   }, []);
 
+  const { mutate, isLoading } = useMutation(
+    async () => await api.learnDetailService.getSimilarVideoData(Number(detailId)),
+    {
+      onSuccess: (data) => {
+        setSimilarNewsList(data.videoList);
+      },
+    },
+  );
+
   useEffect(() => {
-    (async () => {
-      const { videoList } = await api.learnDetailService.getSimilarVideoData(Number(detailId));
-      setSimilarNewsList(videoList);
-    })();
-  }, [detailId]);
+    mutate();
+  }, [mutate, detailId]);
 
   return (
     <StPageWrapper>
@@ -751,10 +758,14 @@ function LearnDetail() {
             {isGuide && <StLearnButton onClick={() => setIsGuide((prev) => !prev)}>학습하러 가기</StLearnButton>}
           </StLearnBox>
         )}
-        {!isGuide && (
+        {!isGuide && videoData && (
           <StNews>
             <h3>비슷한 주제의 영상으로 계속 연습해보세요.</h3>
-            <NewsList onClickLike={handleClickLike} newsList={similarNewsList} type="normal" />
+            {isLoading ? (
+              <VideoListSkeleton itemNumber={4} />
+            ) : (
+              <NewsList onClickLike={handleClickLike} newsList={similarNewsList} type="normal" />
+            )}
           </StNews>
         )}
         {isModalOpen && <GuideModal closeModal={() => setIsModalOpen(false)} />}

@@ -69,23 +69,23 @@ function Home() {
         <BannerSlider />
         <StNews type="guide">
           <h3>스스로 학습하기 전, {mounted && smallBanner && <br />}스피치 가이드를 살펴보세요.</h3>
-          <div>
-            {isLoading ? (
-              <VideoListSkeleton itemNumber={4} />
-            ) : (
+          {isLoading ? (
+            <VideoListSkeleton itemNumber={4} />
+          ) : (
+            <div>
               <NewsList onClickLike={handleClickLike} newsList={speechGuideList} type="guide" />
-            )}
-          </div>
+            </div>
+          )}
         </StNews>
         <StNews type="normal">
           <h3>딜리버블의 추천 뉴스를 만나보세요.</h3>
-          <div>
-            {isLoading ? (
-              <VideoListSkeleton itemNumber={8} />
-            ) : (
+          {isLoading ? (
+            <VideoListSkeleton itemNumber={8} />
+          ) : (
+            <div>
               <NewsList onClickLike={handleClickLike} newsList={newsList} type="normal" />
-            )}
-          </div>
+            </div>
+          )}
         </StNews>
       </StHome>
       <Footer />
