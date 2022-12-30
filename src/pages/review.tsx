@@ -42,10 +42,17 @@ function Review() {
         return { favoritePaging: 0, favoriteList: [] };
       });
 
-    const { historyPaging, historyList } = await api.reviewService.postHistoryVideoList({
-      currentPage: 1,
-      listSize: LIST_SIZE,
-    });
+    const { historyPaging, historyList } = await api.reviewService
+      .postHistoryVideoList({
+        currentPage: 1,
+        listSize: LIST_SIZE,
+      })
+      .catch(() => {
+        localStorage.removeItem('token');
+        setIsLoggedIn(false);
+        router.reload();
+        return { historyPaging: 0, historyList: [] };
+      });
 
     setCurrentPage(1);
     tab === 'isFavorite'
