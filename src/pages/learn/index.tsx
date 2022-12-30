@@ -32,7 +32,6 @@ function Learn() {
   const [resultList, setResultList] = useState<VideoData[]>([]);
 
   const { mutate, isLoading } = useMutation(
-    ['searchCondition'],
     async (requestBody: PostSearchConditionRequestBody) => {
       return isLoggedIn
         ? await api.learnService.postSearchConditionWithToken(requestBody)
