@@ -23,7 +23,7 @@ function MemoList(props: MemoListProps) {
   useEffect(() => {
     setMemoList((prev: MemoData[]) => prev.filter((memo) => memo.content !== ''));
     if (memoState.newMemoId !== INITIAL_NUMBER) {
-      const { order, startIndex, keyword } = memoInfo;
+      const { order, startIndex, keyword, highlightId } = memoInfo;
       setMemoList((prev: MemoData[]) =>
         [
           ...prev,
@@ -33,6 +33,7 @@ function MemoList(props: MemoListProps) {
             startIndex,
             keyword,
             content: '',
+            highlightId,
           },
         ].sort((a, b) => {
           if (a.order > b.order) return 1;
@@ -54,6 +55,7 @@ function MemoList(props: MemoListProps) {
           startIndex: memoInfo.startIndex,
           keyword: memo.keyword,
           content: memo.content,
+          highlightId: memo.highlightId,
         };
 
         return (
@@ -80,7 +82,7 @@ const StMemoList = styled.div`
   flex-direction: column;
   gap: 1.2rem;
 
-  height: 47.5rem;
+  height: 40.7rem;
   overflow-x: hidden;
   overflow-y: auto;
 

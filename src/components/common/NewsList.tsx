@@ -239,6 +239,7 @@ const StTitle = styled.p<{ haveGuide: boolean }>`
 const StCaption = styled.div<{ type: string }>`
   margin-top: 1.6rem;
   ${FONT_STYLES.M_18_CAPTION};
+  font-size: 2rem;
   color: ${COLOR.GRAY_30};
 
   @media (max-width: 500px) {
@@ -251,13 +252,14 @@ const StSpeechGuide = styled.div`
   display: flex;
   margin-top: 1.2rem;
   padding: 0.5rem 0.8rem 0.6rem 0.4rem;
-  width: 12.2rem;
+  width: 12.8rem;
   height: 3.3rem;
   border-radius: 0.6rem;
 
   background-color: ${COLOR.MAIN_BLUE};
   color: ${COLOR.WHITE};
   ${FONT_STYLES.SB_16_CAPTION}
+  font-size: 1.7rem;
 
   & > .guide-logo {
     display: flex;

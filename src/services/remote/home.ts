@@ -5,7 +5,7 @@ import { privateAPI, publicAPI } from './base';
 export function homeDataRemote(): HomeService {
   const getPrivateVideoData = async () => {
     const response = await privateAPI.get({ url: `/news/recommend` });
-    if (response.status === 200) {
+    if (response.statusCode === 200) {
       return {
         videoList: response.data
           ? response.data.exploreNewsDtoCollection.map((video: VideoData) => ({
@@ -25,7 +25,7 @@ export function homeDataRemote(): HomeService {
 
   const getPublicVideoData = async () => {
     const response = await publicAPI.get({ url: `/news/recommend` });
-    if (response.status === 200) {
+    if (response.statusCode === 200) {
       return {
         videoList: response.data
           ? response.data.exploreNewsDtoCollection.map((video: VideoData) => ({
@@ -44,7 +44,7 @@ export function homeDataRemote(): HomeService {
 
   const getPrivateSpeechGuideData = async () => {
     const response = await privateAPI.get({ url: `/news/guide` });
-    if (response.status === 200) {
+    if (response.statusCode === 200) {
       return {
         videoList: response.data
           ? response.data.exploreNewsDtoCollection.map((video: VideoData) => ({
@@ -64,7 +64,7 @@ export function homeDataRemote(): HomeService {
 
   const getPublicSpeechGuideData = async () => {
     const response = await publicAPI.get({ url: `/news/guide` });
-    if (response.status === 200) {
+    if (response.statusCode === 200) {
       return {
         videoList: response.data
           ? response.data.exploreNewsDtoCollection.map((video: VideoData) => ({

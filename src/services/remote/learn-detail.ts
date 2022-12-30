@@ -16,7 +16,7 @@ import { privateAPI, publicAPI } from './base';
 export function learnDetailDataRemote(): LearnDetailService {
   const getPrivateVideoData = async (videoId: number, index?: number) => {
     const response = await privateAPI.get({ url: `/news/detail/${videoId}` });
-    if (response.status === 200) {
+    if (response.statusCode === 200) {
       return {
         id: response.data.id,
         title: response.data.title,
@@ -46,6 +46,7 @@ export function learnDetailDataRemote(): LearnDetailService {
           order: memo.order,
           startIndex: memo.startIndex,
           content: memo.content,
+          highlightId: memo.highlightId,
         })),
         names: response.data2.map((name: Name) => ({
           id: name.id,
@@ -57,7 +58,7 @@ export function learnDetailDataRemote(): LearnDetailService {
 
   const getPublicVideoData = async (videoId: number) => {
     const response = await publicAPI.get({ url: `/news/detail/not-authentication/${videoId}` });
-    if (response.status === 200) {
+    if (response.statusCode === 200) {
       return {
         id: response.data.id,
         title: response.data.title,
@@ -87,7 +88,7 @@ export function learnDetailDataRemote(): LearnDetailService {
 
   const getPublicSpeechGuideData = async (videoId: number) => {
     const response = await publicAPI.get({ url: `/news/guide/detail/${videoId}` });
-    if (response.status === 200) {
+    if (response.statusCode === 200) {
       return {
         id: response.data.id,
         title: response.data.title,
@@ -117,6 +118,7 @@ export function learnDetailDataRemote(): LearnDetailService {
           order: memo.order,
           startIndex: memo.startIndex,
           content: memo.content,
+          highlightId: memo.highlightId,
         })),
       };
     } else throw '서버 통신 실패';
@@ -124,7 +126,7 @@ export function learnDetailDataRemote(): LearnDetailService {
 
   const getPrivateSpeechGuideData = async (videoId: number) => {
     const response = await privateAPI.get({ url: `/news/guide/detail/${videoId}` });
-    if (response.status === 200) {
+    if (response.statusCode === 200) {
       return {
         id: response.data.id,
         title: response.data.title,
@@ -154,6 +156,7 @@ export function learnDetailDataRemote(): LearnDetailService {
           order: memo.order,
           startIndex: memo.startIndex,
           content: memo.content,
+          highlightId: memo.highlightId,
         })),
       };
     } else throw '서버 통신 실패';
@@ -164,7 +167,7 @@ export function learnDetailDataRemote(): LearnDetailService {
       url: `/script/sentence/update/${scriptsId}`,
       data: SentenceData,
     });
-    if (response.status === 200) {
+    if (response.statusCode === 200) {
       return response.data2[scriptIndex]?.sentences.map((sentence: Script) => ({
         id: sentence.id,
         text: sentence.text,
@@ -179,13 +182,14 @@ export function learnDetailDataRemote(): LearnDetailService {
       url: `/script/memo/create/${scriptId}`,
       data: memo,
     });
-    if (response.status === 200) {
+    if (response.statusCode === 200) {
       return response.data2?.memos.map((memo: MemoData) => ({
         id: memo.id,
         keyword: memo.keyword,
         order: memo.order,
         startIndex: memo.startIndex,
         content: memo.content,
+        highlightId: memo.highlightId,
       }));
     } else throw '서버 통신 실패';
   };
@@ -195,13 +199,14 @@ export function learnDetailDataRemote(): LearnDetailService {
       url: `/script/memo/update/${memoId}`,
       data: { content },
     });
-    if (response.status === 200) {
+    if (response.statusCode === 200) {
       return response.data2?.memos.map((memo: MemoData) => ({
         id: memo.id,
         keyword: memo.keyword,
         order: memo.order,
         startIndex: memo.startIndex,
         content: memo.content,
+        highlightId: memo.highlightId,
       }));
     } else throw '서버 통신 실패';
   };
@@ -210,30 +215,31 @@ export function learnDetailDataRemote(): LearnDetailService {
     const response = await privateAPI.delete({
       url: `/script/memo/delete/${memoId}`,
     });
-    if (response.status === 200) {
+    if (response.statusCode === 200) {
       return response.data2?.memos.map((memo: MemoData) => ({
         id: memo.id,
         keyword: memo.keyword,
         order: memo.order,
         startIndex: memo.startIndex,
         content: memo.content,
+        highlightId: memo.highlightId,
       }));
     } else throw '서버 통신 실패';
   };
 
   const postNewScriptData = async (videoId: number) => {
     const response = await privateAPI.post({ url: `/script/create/${videoId}` });
-    return { isSuccess: response.status === 200 };
+    return { isSuccess: response.statusCode === 200 };
   };
 
   const deleteScriptData = async (scriptId: number) => {
     const response = await privateAPI.delete({ url: `/script/delete/${scriptId}` });
-    return { isSuccess: response.status === 200 };
+    return { isSuccess: response.statusCode === 200 };
   };
 
   const updateScriptNameData = async (scriptId: number, name: string) => {
     const response = await privateAPI.patch({ url: `/script/name/${scriptId}`, data: { name } });
-    if (response.status === 200) {
+    if (response.statusCode === 200) {
       return {
         id: response.data2.id,
         name: response.data2.name,
@@ -247,7 +253,7 @@ export function learnDetailDataRemote(): LearnDetailService {
       data: body,
       type: 'multipart',
     });
-    if (response.status === 200) {
+    if (response.statusCode === 200) {
       return {
         link: response.data.link,
         name: response.data.name,
@@ -280,7 +286,7 @@ export function learnDetailDataRemote(): LearnDetailService {
       url: '/script/recording/delete',
       data: body,
     });
-    if (response.status === 200) {
+    if (response.statusCode === 200) {
       return {
         link: response.data.link,
         deleted: response.data.deleted,
@@ -294,7 +300,7 @@ export function learnDetailDataRemote(): LearnDetailService {
       url: '/script/recording/change-name',
       data: body,
     });
-    if (response.status === 200) {
+    if (response.statusCode === 200) {
       return {
         link: response.data.link,
         newName: response.data.newName,
@@ -307,7 +313,7 @@ export function learnDetailDataRemote(): LearnDetailService {
     const response = await privateAPI.get({
       url: `/news/similar/${videoId}`,
     });
-    if (response.axiosStatus === 200) {
+    if (response.statusCode === 200) {
       return {
         videoList: response.data
           ? response.data.exploreNewsDtoCollection.map((video: VideoData) => ({
