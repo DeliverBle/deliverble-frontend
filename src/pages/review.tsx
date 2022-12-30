@@ -16,9 +16,9 @@ import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 
 function Review() {
+  const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(loginState);
-  const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
   const [tab, setTab] = useState('isFavorite');
   const [favoriteList, setFavoriteList] = useState<VideoData[]>([]);
   const [historyList, setHistoryList] = useState<VideoData[]>([]);
