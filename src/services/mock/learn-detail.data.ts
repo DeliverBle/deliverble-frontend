@@ -64,6 +64,7 @@ export const LEARN_DETAIL_DATA = {
       startIndex: 4,
       keyword: '호우로',
       content: '숨을 2배 크게 들이마시고',
+      highlightId: '89sh9dh23oifssdf',
     },
     {
       id: 5,
@@ -71,6 +72,7 @@ export const LEARN_DETAIL_DATA = {
       startIndex: 4,
       keyword: '호우로',
       content: '숨을 2배 크게 들이마시고',
+      highlightId: '89sh9dh23oifssdf',
     },
   ],
 
