@@ -208,6 +208,7 @@ function LearnDetail() {
           clickedScriptTitleIndex,
         );
       }
+      videoData && setVideoData({ ...videoData });
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order, text]);
