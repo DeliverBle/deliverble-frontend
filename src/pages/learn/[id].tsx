@@ -44,7 +44,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import YouTube from 'react-youtube';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import styled, { css } from 'styled-components';
-import { useMutation } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { isGuideAtom } from '@src/stores/newsState';
 import NewsList from '@src/components/common/NewsList';
 import { VideoData as simpleVideoData } from '@src/services/api/types/home';
@@ -494,18 +494,13 @@ function LearnDetail() {
     }
   }, []);
 
-  const { mutate, isLoading } = useMutation(
+  const { isLoading } = useQuery(
+    ['SimilarNewsList'],
     async () => await api.learnDetailService.getSimilarVideoData(Number(detailId)),
     {
-      onSuccess: (data) => {
-        setSimilarNewsList(data.videoList);
-      },
+      onSuccess: (data) => setSimilarNewsList(data.videoList),
     },
   );
-
-  useEffect(() => {
-    mutate();
-  }, [mutate, detailId]);
 
   return (
     <StPageWrapper>

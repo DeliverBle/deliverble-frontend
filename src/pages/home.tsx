@@ -10,7 +10,7 @@ import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
-import { useMutation } from 'react-query';
+import { useQuery } from 'react-query';
 import { useMediaQuery } from 'react-responsive';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
@@ -29,7 +29,8 @@ function Home() {
     setMounted(true);
   }, []);
 
-  const { mutate, isLoading } = useMutation(
+  const { isLoading } = useQuery(
+    ['HomeNewsList'],
     async () => {
       return {
         recommend: isLoggedIn
@@ -48,10 +49,6 @@ function Home() {
       },
     },
   );
-
-  useEffect(() => {
-    mutate();
-  }, [mutate]);
 
   const handleClickLike = async (id: number) => {
     const { id: likeId, isFavorite } = await api.likeService.postLikeData(id);
