@@ -9,6 +9,7 @@ import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
 import { useMediaQuery } from 'react-responsive';
 import styled from 'styled-components';
 import { loginState } from '@src/stores/loginState';
@@ -21,7 +22,6 @@ function Home() {
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(loginState);
   const [newsList, setNewsList] = useState<VideoData[]>([]);
   const [speechGuideList, setSpeechGuideList] = useState<VideoData[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
   const smallBanner = useMediaQuery({
     query: '(max-width: 500px)',
@@ -31,36 +31,33 @@ function Home() {
     setMounted(true);
   }, []);
 
-  useEffect(() => {
-    setIsLoading(true);
-    (async () => {
-      const { videoList } = isLoggedIn
-        ? await api.homeService
-            .getPrivateVideoData()
-            .then((videoList) => videoList)
-            .catch(() => {
-              localStorage.removeItem('token');
-              setIsLoggedIn(false);
-              router.reload();
-              return { videoList: [] };
-            })
-        : await api.homeService.getPublicVideoData();
-      const { videoList: guideList } = isLoggedIn
-        ? await api.homeService
-            .getPrivateSpeechGuideData()
-            .then((videoList) => videoList)
-            .catch(() => {
-              localStorage.removeItem('token');
-              setIsLoggedIn(false);
-              router.reload();
-              return { videoList: [] };
-            })
-        : await api.homeService.getPublicSpeechGuideData();
-      setNewsList(videoList);
-      setSpeechGuideList(guideList);
-    })();
-    setIsLoading(false);
-  }, [isLoggedIn, router, setIsLoggedIn]);
+  const { isLoading } = useQuery(
+    ['getNewsList'],
+    async () => {
+      return {
+        recommend: isLoggedIn
+          ? await api.homeService.getPrivateVideoData()
+          : await api.homeService.getPublicVideoData(),
+        speechGuide: isLoggedIn
+          ? await api.homeService.getPrivateSpeechGuideData()
+          : await api.homeService.getPublicSpeechGuideData(),
+      };
+    },
+    {
+      onSuccess: (data) => {
+        const { recommend, speechGuide } = data;
+        setNewsList(recommend.videoList);
+        setSpeechGuideList(speechGuide.videoList);
+      },
+      onError: () => {
+        localStorage.removeItem('token');
+        setIsLoggedIn(false);
+        router.reload();
+        return;
+      },
+      retry: 1,
+    },
+  );
 
   const handleClickLike = async (id: number) => {
     const { id: likeId, isFavorite } = await api.likeService.postLikeData(id);
@@ -78,23 +75,23 @@ function Home() {
         <BannerSlider />
         <StNews type="guide">
           <h3>스스로 학습하기 전, {mounted && smallBanner && <br />}스피치 가이드를 살펴보세요.</h3>
-          <div>
-            {isLoading ? (
-              <VideoListSkeleton itemNumber={4} />
-            ) : (
+          {isLoading ? (
+            <VideoListSkeleton itemNumber={4} />
+          ) : (
+            <div>
               <NewsList onClickLike={handleClickLike} newsList={speechGuideList} type="guide" />
-            )}
-          </div>
+            </div>
+          )}
         </StNews>
         <StNews type="normal">
           <h3>딜리버블의 추천 뉴스를 만나보세요.</h3>
-          <div>
-            {isLoading ? (
-              <VideoListSkeleton itemNumber={8} />
-            ) : (
+          {isLoading ? (
+            <VideoListSkeleton itemNumber={8} />
+          ) : (
+            <div>
               <NewsList onClickLike={handleClickLike} newsList={newsList} type="normal" />
-            )}
-          </div>
+            </div>
+          )}
         </StNews>
       </StHome>
       <Footer />

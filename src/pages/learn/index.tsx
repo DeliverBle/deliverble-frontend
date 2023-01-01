@@ -108,7 +108,7 @@ function Learn() {
           </StSelectBoxContainer>
         </StSearch>
         {isLoading ? (
-          <VideoListSkeleton itemNumber={12} />
+          <VideoListSkeleton itemNumber={12} haveCountSection={true} />
         ) : (
           <StResult>
             <h2>
