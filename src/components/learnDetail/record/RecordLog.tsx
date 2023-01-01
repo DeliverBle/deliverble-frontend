@@ -155,6 +155,14 @@ function RecordLog(props: RecordStatusBarProps) {
     }
   };
 
+  const handleKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      if (isTextLengthExceeded) return;
+      setIsDataChanged(true);
+      mutate();
+    }
+  };
+
   const setIcRecordPlay = (link: string, hovering: boolean) => {
     if (checkRecordClicked(link) && isPlaying) {
       return hovering ? icRecordPauseActive : icRecordPauseDefault;
@@ -200,6 +208,7 @@ function RecordLog(props: RecordStatusBarProps) {
                       ref={nameInputRef}
                       defaultValue={isNameChanging && link === recordLinkChanging ? name : ''}
                       onChange={onChange}
+                      onKeyUp={handleKeyUp}
                       maxLength={100}
                       isTextLengthExceeded={isTextLengthExceeded}></StNameChanging>
                     {isTextLengthExceeded && (
