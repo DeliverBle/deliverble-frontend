@@ -813,6 +813,10 @@ const StLearnDetail = styled.div`
     width: 4.8rem;
     height: 4.8rem;
     cursor: pointer;
+
+    @media (max-width: 1280px) {
+      display: none;
+    }
   }
 `;
 
