@@ -808,7 +808,7 @@ const StLearnDetail = styled.div`
 
   .close {
     position: fixed;
-    top: 7rem;
+    top: 16rem;
     right: 11.2rem;
     width: 4.8rem;
     height: 4.8rem;
