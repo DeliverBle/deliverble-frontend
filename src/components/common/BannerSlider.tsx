@@ -76,7 +76,7 @@ function BannerSlider() {
           ))}
         </Swiper>
       )}
-      <StSlideButton>
+      <StSlideButton swiperSet={swiperSetting}>
         <button ref={prevRef}>
           <ImageDiv className="arrow" src={icLeftArrowWhite} alt="이전" layout="fill" />
         </button>
@@ -209,8 +209,8 @@ const StBannerText = styled.div<{ ver: number }>`
   }
 `;
 
-const StSlideButton = styled.div`
-  display: flex;
+const StSlideButton = styled.div<{ swiperSet: SwiperProps | null }>`
+  display: ${({ swiperSet }) => (swiperSet ? 'flex' : 'none')};
   justify-content: space-between;
   align-items: center;
   position: absolute;

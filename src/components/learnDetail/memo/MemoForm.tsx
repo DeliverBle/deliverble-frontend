@@ -28,7 +28,7 @@ interface MemoFormProps {
 
 function MemoForm(props: MemoFormProps) {
   const { scriptId, memoData, memoState, setMemoList, setMemoState, setIsConfirmOpen, setConfirmModalText } = props;
-  const { id, keyword, content, order, startIndex } = memoData;
+  const { id, keyword, content, order, startIndex, highlightId } = memoData;
   const { newMemoId, editMemoId } = memoState;
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [textLength, setTextLength] = useState(0);
@@ -66,6 +66,7 @@ function MemoForm(props: MemoFormProps) {
         order,
         startIndex,
         content: newContent,
+        highlightId,
       },
       scriptId,
     );

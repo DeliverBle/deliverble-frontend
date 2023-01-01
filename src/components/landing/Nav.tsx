@@ -5,6 +5,8 @@ import LoginModal from '../login/LoginModal';
 import { COLOR } from 'src/styles/color';
 import { FONT_STYLES } from 'src/styles/fontStyle';
 import ImageDiv from '../common/ImageDiv';
+import { loginState } from '@src/stores/loginState';
+import { useRecoilValue } from 'recoil';
 
 interface NavProps {
   isFirstScrolled?: boolean;
@@ -14,6 +16,7 @@ interface NavProps {
 function Nav(props: NavProps) {
   const { isFirstScrolled = false, isSecondScrolled = false } = props;
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const isLoggedIn = useRecoilValue(loginState);
 
   return (
     <>
@@ -24,10 +27,11 @@ function Nav(props: NavProps) {
           layout="fill"
           alt="딜리버블"
         />
-
-        <StLogin isFirstScrolled={isFirstScrolled} onClick={() => setIsModalOpen(true)}>
-          로그인
-        </StLogin>
+        {!isLoggedIn && (
+          <StLogin isFirstScrolled={isFirstScrolled} onClick={() => setIsModalOpen(true)}>
+            로그인
+          </StLogin>
+        )}
       </StNav>
       {isModalOpen && <LoginModal closeModal={() => setIsModalOpen(false)} />}
     </>

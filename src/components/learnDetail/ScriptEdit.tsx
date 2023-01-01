@@ -256,14 +256,6 @@ function ScriptEdit(props: ScriptEditProps) {
 
   useEffect(() => {
     (async () => {
-      const id = Number(detailId);
-      const data = await api.learnDetailService.getPrivateVideoData(id);
-      setVideoData(data);
-    })();
-  }, [detailId]);
-
-  useEffect(() => {
-    (async () => {
       const data = await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedScriptTitleIndex);
       setVideoData(data);
     })();
