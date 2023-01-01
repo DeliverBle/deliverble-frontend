@@ -55,7 +55,7 @@ function Home() {
         router.reload();
         return;
       },
-      retry: 1,
+      retry: 0,
     },
   );
 
