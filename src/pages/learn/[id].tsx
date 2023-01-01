@@ -802,7 +802,7 @@ const StNews = styled.div`
 
 const StLearnDetail = styled.div`
   flex: 1;
-  padding: 10.2rem 10rem 16rem 10rem;
+  padding: 19rem 10rem 16rem 10rem;
   background: rgba(229, 238, 255, 0.85);
   backdrop-filter: blur(2.8rem);
 
