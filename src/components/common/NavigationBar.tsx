@@ -94,7 +94,7 @@ export default NavigationBar;
 const StNavigationBar = styled.div`
   display: flex;
   align-items: center;
-  position: sticky;
+  position: fixed;
   top: 0;
   z-index: 2;
 

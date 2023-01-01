@@ -5,19 +5,21 @@ import SEO from '@src/components/common/SEO';
 import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
 import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/home';
-import { loginState } from '@src/stores/loginState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { useMediaQuery } from 'react-responsive';
-import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
+import { loginState } from '@src/stores/loginState';
+import { useRecoilState } from 'recoil';
+import { useRouter } from 'next/router';
 
 function Home() {
-  const isLoggedIn = useRecoilValue(loginState);
   const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
+  const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useRecoilState(loginState);
   const [newsList, setNewsList] = useState<VideoData[]>([]);
   const [speechGuideList, setSpeechGuideList] = useState<VideoData[]>([]);
   const [mounted, setMounted] = useState(false);
@@ -47,6 +49,13 @@ function Home() {
         setNewsList(recommend.videoList);
         setSpeechGuideList(speechGuide.videoList);
       },
+      onError: () => {
+        localStorage.removeItem('token');
+        setIsLoggedIn(false);
+        router.reload();
+        return;
+      },
+      retry: 0,
     },
   );
 
