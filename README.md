@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://user-images.githubusercontent.com/58380158/177714037-73dd20d0-b4f8-410c-bef8-507778783698.png" width="300px" />
+  <img src="https://user-images.githubusercontent.com/58380158/210252147-d3d30385-82fb-4503-8ae7-718efc2fbe72.png" />
 </div>
 
 ## 🔉 프로젝트 소개 
@@ -12,25 +12,27 @@
 ## 💡 서비스 페이지 및 기능 소개
 ### 1️⃣ 랜딩 페이지
 ![랜딩](https://user-images.githubusercontent.com/58380158/180923336-824e137e-876b-482c-a7bf-1bd3e4fb015f.png)
-- 일러스트와 로티 애니메이션을 통해 서비스 이용 방법 안내 및 이용 유도
+- 일러스트와 로티 애니메이션을 통해 서비스 이용 방법을 안내합니다.
 ### 2️⃣ 홈
-![홈](https://user-images.githubusercontent.com/58380158/180923399-739205e9-da67-4e69-a58e-7f2c832a0c90.png)
-- 딜리버블의 추천 뉴스
+![홈](https://user-images.githubusercontent.com/58380158/210252215-842d817d-e6f0-4b45-ba2e-cb0f6fdd4ebe.png)
+- 스피치 가이드와 딜리버블 추천 뉴스를 확인할 수 있습니다.
 ### 3️⃣ 학습하기
-![학습하기](https://user-images.githubusercontent.com/58380158/180923689-4f0ea8aa-d04a-4fb0-8936-34b8c9ef5e66.png)
-- 셀렉트 박스에서 방송사, 분야, 발화자를 선택해 원하는 영상 검색 가능
+![학습하기](https://user-images.githubusercontent.com/58380158/210252363-ed7f1fac-fe34-41c3-88e3-096e3bc1c0a8.png)
+- 셀렉트 박스에서 방송사, 분야, 발화자를 선택해 원하는 영상을 검색할 수 있습니다.
 ### 4️⃣ 학습 상세
-![학습 상세](https://user-images.githubusercontent.com/58380158/180923443-fda1d6c8-5a29-4486-af65-2a109735a35a.png)
-- 아나운서 쉐도잉을 할 수 있는 페이지
-- 뉴스 영상을 통해 아나운서의 모습을 확인
-- 아나운서가 읽고 있는 문장을 스크립트에 바로 표시
-- 스크립트를 클릭해서 영상 시점 이동
-- 스크립트를 드래그해 하이라이트
-- 하이라이트한 단어에 메모 추가
-- 단어 사이의 공백을 클릭해 끊어 읽기 표시
+![학습 상세](https://user-images.githubusercontent.com/58380158/210252515-b0ad9a17-6b10-4861-8005-4a4a44770bfb.png)
+- 우측 상단 뉴스 화면을 통해 아나운서의 모습을 확인하고 영상을 재생할 수 있습니다.
+- 아나운서가 읽고 있는 문장은 파란색 글씨로 좌측 스크립트에 바로 표시됩니다.
+- 스크립트의 문장을 클릭해 영상 시점을 이동할 수 있습니다.
+- 스크립트를 추가하고 새롭게 기록을 남기며 여러 번 학습할 수 있습니다.
+- 스크립트의 단어를 드래그해 하이라이트를 남길 수 있습니다.
+- 하이라이트한 단어에 메모를 남길 수 있습니다.
+- 단어 사이의 공백을 클릭해 끊어 읽기 표시를 남기며 학습할 수 있습니다.
+- 리딩 연습을 녹음하고 들어보며 점검할 수 있습니다.
+- 스크립트 추가, 하이라이트, 끊어 읽기, 메모, 녹음은 로그인이 필요한 기능입니다. 
 ### 5️⃣ 복습하기
-![복습하기](https://user-images.githubusercontent.com/58380158/180923562-204e9361-58a8-417a-ae9e-940276e39fb7.png)
-- 즐겨찾기한 영상 모아보기
+![복습하기](https://user-images.githubusercontent.com/58380158/210252991-f0e8d09c-9b49-4c6b-ab47-43196468011b.png)
+- 즐겨찾기한 영상과 학습한 영상을 모아볼 수 있습니다.
 ### 6️⃣ 기타
 - 404 페이지
 - 카카오 로그인
@@ -72,6 +74,7 @@
 ┃ ┣ 📂pages
 ┃ ┣ 📂services
 ┃ ┣ 📂stores
-┃ ┗ 📂styles
+┃ ┣ 📂styles
+┃ ┗ 📂utils
 ┗ 📜etc (setting files)
 ```
