@@ -1,3 +1,4 @@
+import { useBodyScrollLock } from '@src/hooks/useBodyScrollLock';
 import { loginState } from '@src/stores/loginState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
@@ -19,6 +20,7 @@ function NavigationBar() {
   const profileModalRef = useRef<HTMLDivElement>(null);
   const profileImageRef = useRef<HTMLButtonElement>(null);
   const login = useRecoilValue(loginState);
+  const { lockScroll, unlockScroll } = useBodyScrollLock();
 
   useEffect(() => {
     const handleClickOutside = (e: Event) => {
@@ -77,7 +79,13 @@ function NavigationBar() {
             />
           </StLoginButton>
         ) : (
-          <StLoginButton onClick={() => setIsModalOpen(true)}>로그인</StLoginButton>
+          <StLoginButton
+            onClick={() => {
+              lockScroll();
+              setIsModalOpen(true);
+            }}>
+            로그인
+          </StLoginButton>
         )}
         {isProfileModalOpen && (
           <div ref={profileModalRef}>
@@ -85,7 +93,14 @@ function NavigationBar() {
           </div>
         )}
       </StNavigationBar>
-      {isModalOpen && <LoginModal closeModal={() => setIsModalOpen(false)} />}
+      {isModalOpen && (
+        <LoginModal
+          closeModal={() => {
+            unlockScroll();
+            setIsModalOpen(false);
+          }}
+        />
+      )}
     </>
   );
 }
