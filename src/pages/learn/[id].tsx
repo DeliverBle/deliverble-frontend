@@ -72,7 +72,7 @@ function LearnDetail() {
   const [isGuide, setIsGuide] = useRecoilState(isGuideAtom);
   const isLoggedIn = useRecoilValue(loginState);
   const [videoData, setVideoData] = useState<VideoData>();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
   const { unlockScroll } = useBodyScrollLock();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [confirmModalText, setConfirmModalText] = useState<ConfirmModalText>(NEW_MEMO_CONFIRM_MODAL_TEXT);
@@ -544,7 +544,7 @@ function LearnDetail() {
         </StScriptTitleContainer>
         {videoData && (
           <StLearnBox isGuide={isGuide}>
-            <VideoDetail {...videoData} setIsModalOpen={setIsModalOpen} />
+            <VideoDetail {...videoData} setIsGuideModalOpen={setIsGuideModalOpen} />
             <main>
               <StLearnSection isGuide={isGuide}>
                 <article>
@@ -761,12 +761,12 @@ function LearnDetail() {
             )}
           </StNews>
         )}
-        {isModalOpen && (
+        {isGuideModalOpen && (
           <Portal selector="#portal">
             <GuideModal
               closeModal={() => {
                 unlockScroll();
-                setIsModalOpen(false);
+                setIsGuideModalOpen(false);
               }}
             />
           </Portal>
