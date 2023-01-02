@@ -2,6 +2,7 @@ import { Tag } from '@src/services/api/types/learn-detail';
 import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
+import { useBodyScrollLock } from '@src/hooks/useBodyScrollLock';
 
 interface VideoDetailProps {
   channel: string;
@@ -14,6 +15,7 @@ interface VideoDetailProps {
 
 function VideoDetail(props: VideoDetailProps) {
   const { channel, category, reportDate, title, tags, setIsModalOpen } = props;
+  const { lockScroll } = useBodyScrollLock();
 
   return (
     <StVideoDetail>
@@ -29,7 +31,13 @@ function VideoDetail(props: VideoDetailProps) {
         </StTagContainer>
       </StLeft>
       <StRight>
-        <button onClick={() => setIsModalOpen(true)}>어떻게 학습하나요?</button>
+        <button
+          onClick={() => {
+            lockScroll();
+            setIsModalOpen(true);
+          }}>
+          어떻게 학습하나요?
+        </button>
       </StRight>
     </StVideoDetail>
   );

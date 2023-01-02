@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { useMutation, useQuery } from 'react-query';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
 import YouTube from 'react-youtube';
 import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
 import Portal from '@src/components/common/Portal';
@@ -38,8 +40,7 @@ import {
   CONTEXT_MENU_WIDTH,
   ABSOLUTE_RIGHT_LIMIT,
 } from '@src/utils/constant';
-import dynamic from 'next/dynamic';
-import { useRouter } from 'next/router';
+import { useBodyScrollLock } from '@src/hooks/useBodyScrollLock';
 import {
   icHighlighterClicked,
   icHighlighterDefault,
@@ -72,6 +73,7 @@ function LearnDetail() {
   const isLoggedIn = useRecoilValue(loginState);
   const [videoData, setVideoData] = useState<VideoData>();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { unlockScroll } = useBodyScrollLock();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [confirmModalText, setConfirmModalText] = useState<ConfirmModalText>(NEW_MEMO_CONFIRM_MODAL_TEXT);
   const [isHighlight, setIsHighlight] = useState(false);
@@ -761,7 +763,12 @@ function LearnDetail() {
         )}
         {isModalOpen && (
           <Portal selector="#portal">
-            <GuideModal closeModal={() => setIsModalOpen(false)} />
+            <GuideModal
+              closeModal={() => {
+                unlockScroll();
+                setIsModalOpen(false);
+              }}
+            />
           </Portal>
         )}
         {isConfirmOpen && (
