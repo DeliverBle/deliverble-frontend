@@ -434,12 +434,8 @@ function LearnDetail() {
       }
       setVideoData(data);
       const { memos, names } = data;
-      if (isGuide && memos) {
-        setMemoList(memos);
-        return;
-      }
-      if (isLoggedIn && memos && names) {
-        setMemoList(memos);
+      memos ? setMemoList(memos) : setMemoList([]);
+      if (isLoggedIn && names) {
         setScriptTitleList(names);
       }
     })();
