@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { icRecordMicDefault, icRecordMicActive, icRecordStart, icRecordStop } from 'public/assets/icons';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { api } from '@src/services/api';
 import { loginState } from '@src/stores/loginState';
 import { useRecoilValue } from 'recoil';
@@ -26,6 +26,11 @@ function RecordStatusBar(props: RecordStatusBarProps) {
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
   const isLoggedIn = useRecoilValue(loginState);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [date, setDate] = useState('');
+
+  useEffect(() => {
+    setDate(getDate());
+  }, [isRecording]);
 
   const uploadRecordData = async (formData: FormData) => {
     await api.learnDetailService.uploadRecordData(formData);
@@ -84,7 +89,7 @@ function RecordStatusBar(props: RecordStatusBarProps) {
     soundFile && formData.append('file', soundFile);
     formData.append('scriptId', scriptId.toString());
     formData.append('endtime', duration.toString());
-    formData.append('date', getDate());
+    formData.append('date', date);
     uploadRecordData(formData);
   };
 

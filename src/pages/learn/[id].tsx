@@ -2,11 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { useMutation, useQuery } from 'react-query';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import YouTube from 'react-youtube';
 import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
 import Portal from '@src/components/common/Portal';
+import NavigationBar from '@src/components/common/NavigationBar';
 import ImageDiv from '@src/components/common/ImageDiv';
 import Like from '@src/components/common/Like';
 import SEO from '@src/components/common/SEO';
@@ -66,7 +66,6 @@ export interface MemoInfo {
 }
 
 function LearnDetail() {
-  const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
   const router = useRouter();
   const { id: detailId } = router.query;
   const [isGuide, setIsGuide] = useRecoilState(isGuideAtom);
