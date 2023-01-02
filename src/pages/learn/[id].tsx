@@ -1,3 +1,4 @@
+import NavigationBar from '@src/components/common/NavigationBar';
 import ImageDiv from '@src/components/common/ImageDiv';
 import Like from '@src/components/common/Like';
 import SEO from '@src/components/common/SEO';
@@ -28,7 +29,6 @@ import {
   CONTEXT_MENU_WIDTH,
   ABSOLUTE_RIGHT_LIMIT,
 } from '@src/utils/constant';
-import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import {
   icHighlighterClicked,
@@ -64,7 +64,6 @@ export interface MemoInfo {
 }
 
 function LearnDetail() {
-  const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
   const router = useRouter();
   const { id: detailId } = router.query;
   const [isGuide, setIsGuide] = useRecoilState(isGuideAtom);

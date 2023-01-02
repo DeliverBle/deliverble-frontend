@@ -1,3 +1,4 @@
+import NavigationBar from '@src/components/common/NavigationBar';
 import Footer from '@src/components/common/Footer';
 import ImageDiv from '@src/components/common/ImageDiv';
 import NewsList from '@src/components/common/NewsList';
@@ -11,7 +12,6 @@ import { loginState } from '@src/stores/loginState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { BLOCK_SIZE, categoryList, channelList, LIST_SIZE, speakerList } from '@src/utils/constant';
-import dynamic from 'next/dynamic';
 import { icSearch } from 'public/assets/icons';
 import { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
@@ -20,7 +20,6 @@ import styled from 'styled-components';
 import { useRouter } from 'next/router';
 
 function Learn() {
-  const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(loginState);
   const [selectedChannelList, setSelectedChannelList] = useState<string[]>([]);

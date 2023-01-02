@@ -1,3 +1,4 @@
+import NavigationBar from '@src/components/common/NavigationBar';
 import BannerSlider from '@src/components/common/BannerSlider';
 import Footer from '@src/components/common/Footer';
 import NewsList from '@src/components/common/NewsList';
@@ -7,7 +8,6 @@ import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/home';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { useMediaQuery } from 'react-responsive';
@@ -17,7 +17,6 @@ import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 
 function Home() {
-  const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(loginState);
   const [newsList, setNewsList] = useState<VideoData[]>([]);
