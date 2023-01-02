@@ -1,7 +1,16 @@
+import React, { useEffect, useRef, useState } from 'react';
+import styled, { css } from 'styled-components';
+import { useMutation, useQuery } from 'react-query';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRouter } from 'next/router';
+import YouTube from 'react-youtube';
+import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
+import Portal from '@src/components/common/Portal';
 import NavigationBar from '@src/components/common/NavigationBar';
 import ImageDiv from '@src/components/common/ImageDiv';
 import Like from '@src/components/common/Like';
 import SEO from '@src/components/common/SEO';
+import NewsList from '@src/components/common/NewsList';
 import ConfirmModal, { ConfirmModalText } from '@src/components/learnDetail/ConfirmModal';
 import ContextMenu from '@src/components/learnDetail/ContextMenu';
 import GuideModal from '@src/components/learnDetail/GuideModal';
@@ -15,7 +24,9 @@ import RecordStatusBar from '@src/components/learnDetail/record/RecordStatusBar'
 import RecordLog from '@src/components/learnDetail/record/RecordLog';
 import { api } from '@src/services/api';
 import { MemoData, Name, VideoData } from '@src/services/api/types/learn-detail';
+import { VideoData as simpleVideoData } from '@src/services/api/types/home';
 import { loginState } from '@src/stores/loginState';
+import { isGuideAtom } from '@src/stores/newsState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import {
@@ -29,7 +40,7 @@ import {
   CONTEXT_MENU_WIDTH,
   ABSOLUTE_RIGHT_LIMIT,
 } from '@src/utils/constant';
-import { useRouter } from 'next/router';
+import { useBodyScrollLock } from '@src/hooks/useBodyScrollLock';
 import {
   icHighlighterClicked,
   icHighlighterDefault,
@@ -40,15 +51,6 @@ import {
   icSpeechGuideInfo,
   icXButton,
 } from 'public/assets/icons';
-import React, { useEffect, useRef, useState } from 'react';
-import YouTube from 'react-youtube';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import styled, { css } from 'styled-components';
-import { useMutation, useQuery } from 'react-query';
-import { isGuideAtom } from '@src/stores/newsState';
-import NewsList from '@src/components/common/NewsList';
-import { VideoData as simpleVideoData } from '@src/services/api/types/home';
-import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
 
 export interface MemoState {
   newMemoId: number;
@@ -69,7 +71,8 @@ function LearnDetail() {
   const [isGuide, setIsGuide] = useRecoilState(isGuideAtom);
   const isLoggedIn = useRecoilValue(loginState);
   const [videoData, setVideoData] = useState<VideoData>();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
+  const { unlockScroll } = useBodyScrollLock();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [confirmModalText, setConfirmModalText] = useState<ConfirmModalText>(NEW_MEMO_CONFIRM_MODAL_TEXT);
   const [isHighlight, setIsHighlight] = useState(false);
@@ -540,7 +543,7 @@ function LearnDetail() {
         </StScriptTitleContainer>
         {videoData && (
           <StLearnBox isGuide={isGuide}>
-            <VideoDetail {...videoData} setIsModalOpen={setIsModalOpen} />
+            <VideoDetail {...videoData} setIsGuideModalOpen={setIsGuideModalOpen} />
             <main>
               <StLearnSection isGuide={isGuide}>
                 <article>
@@ -757,7 +760,16 @@ function LearnDetail() {
             )}
           </StNews>
         )}
-        {isModalOpen && <GuideModal closeModal={() => setIsModalOpen(false)} />}
+        {isGuideModalOpen && (
+          <Portal selector="#portal">
+            <GuideModal
+              closeModal={() => {
+                unlockScroll();
+                setIsGuideModalOpen(false);
+              }}
+            />
+          </Portal>
+        )}
         {isConfirmOpen && (
           <ConfirmModal
             confirmModalText={confirmModalText}
@@ -807,6 +819,10 @@ const StLearnDetail = styled.div`
     width: 4.8rem;
     height: 4.8rem;
     cursor: pointer;
+
+    @media (max-width: 1280px) {
+      display: none;
+    }
   }
 `;
 
