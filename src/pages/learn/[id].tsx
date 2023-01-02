@@ -933,8 +933,9 @@ const StGuideTooltip = styled.div`
 
 const StLearnButton = styled.button`
   position: absolute;
-  top: 98.2rem;
-  left: 75.6rem;
+  top: 80%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 
   width: 20.9rem;
   height: 8.2rem;
