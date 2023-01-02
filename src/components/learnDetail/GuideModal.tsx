@@ -101,7 +101,7 @@ const StGuideModalBackground = styled.div`
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.78);
-  z-index: 1;
+  z-index: 2;
 `;
 
 const StGuideModalContent = styled.div`
@@ -113,10 +113,10 @@ const StGuideModalContent = styled.div`
   box-shadow: 0.4rem 0.4rem 2rem rgba(22, 15, 53, 0.15);
 
   position: fixed;
-  top: 42.1rem;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
+  transform: translate(-50%, -50%);
+  z-index: 3;
 
   & > div {
     & > p {
