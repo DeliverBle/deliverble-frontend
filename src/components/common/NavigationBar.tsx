@@ -1,6 +1,7 @@
 import { loginState } from '@src/stores/loginState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { icDeliverbleNav, icMypageButton } from 'public/assets/icons';
@@ -89,7 +90,7 @@ function NavigationBar() {
   );
 }
 
-export default NavigationBar;
+export default dynamic(() => Promise.resolve(NavigationBar), { ssr: false });
 
 const StNavigationBar = styled.div`
   display: flex;

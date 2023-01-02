@@ -1,13 +1,12 @@
+import NavigationBar from '@src/components/common/NavigationBar';
 import Footer from '@src/components/common/Footer';
 import SEO from '@src/components/common/SEO';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import styled from 'styled-components';
 
 function Custom404() {
-  const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
   return (
     <StPageWrapper>
       <SEO title="Deilverble" />
