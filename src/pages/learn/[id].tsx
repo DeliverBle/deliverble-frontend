@@ -880,6 +880,10 @@ const StLearnBox = styled.div<{ isGuide: boolean }>`
   & > main {
     display: flex;
     gap: 4.8rem;
+
+    & > aside {
+      min-width: 68.8rem;
+    }
   }
 
   ${({ isGuide }) => {
