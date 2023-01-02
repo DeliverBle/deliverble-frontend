@@ -302,10 +302,9 @@ function LearnDetail() {
       setContextElementType(contextTarget.nodeName);
     }
 
-    const startIndex = getHighlightIndex(contextTarget?.parentNode, contextTarget.id);
     const markTag = contextTarget.closest('mark');
-
-    if (startIndex !== undefined && markTag) {
+    const startIndex = markTag && getHighlightIndex(contextTarget?.parentNode, contextTarget.id);
+    if (startIndex && markTag) {
       setMemoInfo({
         scriptId,
         order,
