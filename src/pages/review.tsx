@@ -149,7 +149,7 @@ const StPageWrapper = styled.div`
 
 const StReview = styled.div`
   flex: 1;
-  padding: 16rem 16rem 13.6rem 16rem;
+  padding: 24.8rem 16rem 13.6rem 16rem;
 
   @media (max-width: 960px) {
     padding: 16rem 8.6rem;

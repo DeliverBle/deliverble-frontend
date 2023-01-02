@@ -71,6 +71,10 @@ function ScriptEdit(props: ScriptEditProps) {
           id,
           clickedScriptTitleIndex,
         );
+        const data = await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedScriptTitleIndex);
+        setVideoData(data);
+        setText('');
+        setOrder(-1);
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps

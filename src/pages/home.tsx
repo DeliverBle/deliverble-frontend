@@ -109,6 +109,7 @@ const StPageWrapper = styled.div`
 const StHome = styled.div`
   position: relative;
   flex: 1;
+  padding-top: 8.8rem;
 `;
 
 const StNews = styled.div<{ type: string }>`

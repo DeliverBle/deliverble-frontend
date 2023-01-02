@@ -154,7 +154,7 @@ const StTitle = styled.div`
   display: flex;
   align-items: center;
   gap: 1.2rem;
-  margin-top: 16rem;
+  margin-top: 24.8rem;
   margin-bottom: 4.8rem;
 
   .search {

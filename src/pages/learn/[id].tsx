@@ -301,10 +301,9 @@ function LearnDetail() {
       setContextElementType(contextTarget.nodeName);
     }
 
-    const startIndex = getHighlightIndex(contextTarget?.parentNode, contextTarget.id);
     const markTag = contextTarget.closest('mark');
-
-    if (startIndex !== undefined && markTag) {
+    const startIndex = markTag && getHighlightIndex(contextTarget?.parentNode, contextTarget.id);
+    if (startIndex && markTag) {
       setMemoInfo({
         scriptId,
         order,
@@ -433,12 +432,8 @@ function LearnDetail() {
       }
       setVideoData(data);
       const { memos, names } = data;
-      if (isGuide && memos) {
-        setMemoList(memos);
-        return;
-      }
-      if (isLoggedIn && memos && names) {
-        setMemoList(memos);
+      memos ? setMemoList(memos) : setMemoList([]);
+      if (isLoggedIn && names) {
         setScriptTitleList(names);
       }
     })();
@@ -801,13 +796,13 @@ const StNews = styled.div`
 
 const StLearnDetail = styled.div`
   flex: 1;
-  padding: 10.2rem 10rem 16rem 10rem;
+  padding: 19rem 10rem 16rem 10rem;
   background: rgba(229, 238, 255, 0.85);
   backdrop-filter: blur(2.8rem);
 
   .close {
     position: fixed;
-    top: 7rem;
+    top: 16rem;
     right: 11.2rem;
     width: 4.8rem;
     height: 4.8rem;
@@ -883,6 +878,10 @@ const StLearnBox = styled.div<{ isGuide: boolean }>`
   & > main {
     display: flex;
     gap: 4.8rem;
+
+    & > aside {
+      min-width: 68.8rem;
+    }
   }
 
   ${({ isGuide }) => {
@@ -932,8 +931,9 @@ const StGuideTooltip = styled.div`
 
 const StLearnButton = styled.button`
   position: absolute;
-  top: 98.2rem;
-  left: 75.6rem;
+  top: 80%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 
   width: 20.9rem;
   height: 8.2rem;
