@@ -17,7 +17,7 @@
 ![홈](https://user-images.githubusercontent.com/58380158/210252215-842d817d-e6f0-4b45-ba2e-cb0f6fdd4ebe.png)
 - 스피치 가이드와 딜리버블 추천 뉴스를 확인할 수 있습니다.
 ### 3️⃣ 학습하기
-![학습하기](https://user-images.githubusercontent.com/58380158/210252363-ed7f1fac-fe34-41c3-88e3-096e3bc1c0a8.png)
+![학습하기](https://user-images.githubusercontent.com/58380158/210257642-4c8e4eed-4515-401a-b561-393d5b6dca99.png)
 - 셀렉트 박스에서 방송사, 분야, 발화자를 선택해 원하는 영상을 검색할 수 있습니다.
 ### 4️⃣ 학습 상세
 ![학습 상세](https://user-images.githubusercontent.com/58380158/210252515-b0ad9a17-6b10-4861-8005-4a4a44770bfb.png)
