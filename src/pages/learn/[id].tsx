@@ -72,7 +72,7 @@ function LearnDetail() {
   const isLoggedIn = useRecoilValue(loginState);
   const [videoData, setVideoData] = useState<VideoData>();
   const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
-  const { unlockScroll } = useBodyScrollLock();
+  const { lockScroll, unlockScroll } = useBodyScrollLock();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [confirmModalText, setConfirmModalText] = useState<ConfirmModalText>(NEW_MEMO_CONFIRM_MODAL_TEXT);
   const [isHighlight, setIsHighlight] = useState(false);
@@ -382,6 +382,11 @@ function LearnDetail() {
     setSimilarNewsList((prev) => prev.map((news) => (news.id === likeId ? { ...news, isFavorite } : news)));
   };
 
+  const handleLoginModalOpen = () => {
+    lockScroll();
+    setIsLoginModalOpen(true);
+  };
+
   useEffect(() => {
     (async () => {
       const { deleteMemoId } = memoState;
@@ -596,7 +601,7 @@ function LearnDetail() {
                         onClick={(e) => {
                           e.stopPropagation();
                           if (getLoginStatus() === '') {
-                            setIsLoginModalOpen(true);
+                            handleLoginModalOpen();
                           } else {
                             isHighlight ? setIsHighlight(false) : setIsHighlight(true);
                             setIsSpacing(false);
@@ -627,7 +632,7 @@ function LearnDetail() {
                         onClick={(e) => {
                           e.stopPropagation();
                           if (getLoginStatus() === '') {
-                            setIsLoginModalOpen(true);
+                            handleLoginModalOpen();
                           } else {
                             isSpacing ? setIsSpacing(false) : setIsSpacing(true);
                             setIsHighlight(false);
@@ -680,7 +685,7 @@ function LearnDetail() {
                   <Like
                     isFromList={false}
                     isFavorite={videoData.isFavorite}
-                    toggleLike={() => (getLoginStatus() ? handleClickLike(videoData.id) : setIsLoginModalOpen(true))}
+                    toggleLike={() => (getLoginStatus() ? handleClickLike(videoData.id) : handleLoginModalOpen())}
                   />
                   <YouTube
                     videoId={videoData.link}
@@ -779,7 +784,16 @@ function LearnDetail() {
             onScriptDelete={handleScriptDelete}
           />
         )}
-        {isLoginModalOpen && <LoginModal closeModal={() => setIsLoginModalOpen(false)} />}
+        {isLoginModalOpen && (
+          <Portal selector="#portal">
+            <LoginModal
+              closeModal={() => {
+                unlockScroll();
+                setIsLoginModalOpen(false);
+              }}
+            />
+          </Portal>
+        )}
       </StLearnDetail>
     </StPageWrapper>
   );
