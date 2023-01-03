@@ -1,24 +1,29 @@
-import { useEffect, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import HighlightModal from './HighlightModal';
 import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { api } from '@src/services/api';
 import ContextMenu from '@src/components/learnDetail/ContextMenu';
-import { VideoData } from '@src/services/api/types/learn-detail';
+import { MemoData, VideoData } from '@src/services/api/types/learn-detail';
 import { CONTEXT_MENU_WIDTH, ABSOLUTE_RIGHT_LIMIT } from '@src/utils/constant';
 import { useRouter } from 'next/router';
+import { MemoState } from '@src/pages/learn/[id]';
 
 interface ScriptEditProps {
   isEditing: boolean;
   isHighlight: boolean;
   isSpacing: boolean;
   clickedScriptTitleIndex: number;
+  memoList: MemoData[];
+  setMemoState: Dispatch<SetStateAction<MemoState>>;
+  setClickedDeleteMemo: (isDelete: boolean) => void;
 }
 
 function ScriptEdit(props: ScriptEditProps) {
   const router = useRouter();
   const { id: detailId } = router.query;
-  const { isEditing, isHighlight, isSpacing, clickedScriptTitleIndex } = props;
+  const { isEditing, isHighlight, isSpacing, clickedScriptTitleIndex, memoList, setMemoState, setClickedDeleteMemo } =
+    props;
   const [highlightAlert, setHighlightAlert] = useState<boolean>(false);
   const [order, setOrder] = useState<number>();
   const [text, setText] = useState<string>();
@@ -93,6 +98,13 @@ function ScriptEdit(props: ScriptEditProps) {
     }
   }, [highlightAlert]);
 
+  const isHighlightInMemo = (contextHTML: HTMLElement) => {
+    const highlightId = contextHTML.id;
+    const deleteMemoId = memoList.find((memo) => memo.highlightId === highlightId)?.id;
+    deleteMemoId && setMemoState((prev: MemoState) => ({ ...prev, deleteMemoId }));
+    setClickedDeleteMemo(true);
+  };
+
   const deleteElement = (contextHTML: HTMLElement) => {
     const parentElement = contextHTML?.parentElement;
     const removeElement = document.getElementById(contextElementId);
@@ -110,6 +122,7 @@ function ScriptEdit(props: ScriptEditProps) {
         }
         removeElement?.replaceWith(fragment);
         nodeToText(parentElement);
+        isHighlightInMemo(contextHTML);
         break;
       case 'SPAN':
         if (removeElement) {

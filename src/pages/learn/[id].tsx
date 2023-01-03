@@ -591,6 +591,9 @@ function LearnDetail() {
                         isHighlight={isHighlight}
                         isSpacing={isSpacing}
                         clickedScriptTitleIndex={clickedScriptTitleIndex}
+                        memoList={memoList}
+                        setMemoState={setMemoState}
+                        setClickedDeleteMemo={setClickedDeleteMemo}
                       />
                     )}
                   </div>
