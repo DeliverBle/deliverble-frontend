@@ -789,13 +789,15 @@ function LearnDetail() {
           </Portal>
         )}
         {isConfirmOpen && (
-          <ConfirmModal
-            confirmModalText={confirmModalText}
-            setMemoState={setMemoState}
-            setIsConfirmOpen={setIsConfirmOpen}
-            setClickedDeleteMemo={setClickedDeleteMemo}
-            onScriptDelete={handleScriptDelete}
-          />
+          <Portal selector="#portal">
+            <ConfirmModal
+              confirmModalText={confirmModalText}
+              setMemoState={setMemoState}
+              setIsConfirmOpen={setIsConfirmOpen}
+              setClickedDeleteMemo={setClickedDeleteMemo}
+              onScriptDelete={handleScriptDelete}
+            />
+          </Portal>
         )}
         {isLoginModalOpen && (
           <Portal selector="#portal">
