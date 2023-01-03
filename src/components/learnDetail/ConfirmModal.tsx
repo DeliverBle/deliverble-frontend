@@ -80,7 +80,8 @@ export default ConfirmModal;
 
 const StConfirmModal = styled.div`
   position: absolute;
-  top: 1.6rem;
+  z-index: 3;
+  top: 2.4rem;
   left: 50%;
   transform: translate(-50%, 0);
   width: 67rem;
