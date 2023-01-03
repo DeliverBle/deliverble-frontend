@@ -204,7 +204,6 @@ function ScriptEdit(props: ScriptEditProps) {
         return;
       }
 
-      // 끊어읽기 위에 하이라이팅이 될 때
       if (text.includes('/')) {
         const spanIdList = [];
         let textList = [];
@@ -239,7 +238,7 @@ function ScriptEdit(props: ScriptEditProps) {
       }
       const fragment = document.createDocumentFragment();
       const div = document.createElement('div');
-      const uniqueId = e.clientX + '.' + e.clientY + '.' + selection.anchorOffset; // id에 넣을 값
+      const uniqueId = e.clientX + '.' + e.clientY + '.' + selection.anchorOffset;
       div.innerHTML = `<mark id=${uniqueId}>${text}</mark>`;
       while (div.firstChild) {
         fragment.appendChild(div.firstChild);
