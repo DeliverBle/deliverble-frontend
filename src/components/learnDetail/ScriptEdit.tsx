@@ -248,15 +248,15 @@ function ScriptEdit(props: ScriptEditProps) {
 
     if (anchorNode?.childNodes) {
       for (let i = 0; i < anchorNode?.childNodes.length; i++) {
-        const childNodeItem = anchorNode?.childNodes[i];
-        const elementId = childNodeItem.firstChild?.parentElement?.id;
+        const childNodeItem = anchorNode?.childNodes[i] as HTMLElement;
+        const elementId = childNodeItem?.id;
         switch (childNodeItem.nodeName) {
           case '#text':
             textValue += childNodeItem.nodeValue;
             break;
           case 'MARK':
             if (childNodeItem.textContent?.includes('/')) {
-              const markInnerHTML = childNodeItem.firstChild?.parentElement?.innerHTML;
+              const markInnerHTML = childNodeItem.innerHTML;
               textValue += `<mark id=${elementId}>${markInnerHTML}</mark>`;
             } else {
               textValue += `<mark id=${elementId}>${childNodeItem.textContent}</mark>`;
