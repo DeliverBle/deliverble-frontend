@@ -214,7 +214,7 @@ const StSlideButton = styled.div<{ swiperSet: SwiperProps | null }>`
   justify-content: space-between;
   align-items: center;
   position: absolute;
-  top: 59.6rem;
+  top: 68.4rem;
   left: 16rem;
   z-index: 1;
 
