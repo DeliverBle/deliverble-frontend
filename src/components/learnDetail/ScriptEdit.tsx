@@ -209,7 +209,7 @@ function ScriptEdit(props: ScriptEditProps) {
         const spanIdList = [];
         let textList = [];
         let htmlText = '';
-        textList = text.split('/');
+        textList = text.split('/').filter((text) => text != '');
         if (range?.commonAncestorContainer) {
           for (let i = 0; i < range?.commonAncestorContainer?.childNodes?.length; i++) {
             const childNodeItem = range?.commonAncestorContainer.childNodes[i];
