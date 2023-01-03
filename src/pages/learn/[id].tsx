@@ -426,6 +426,9 @@ function LearnDetail() {
     } else {
       setIsEditing(false);
       setIsDeleteBtnClicked(false);
+      setIsContextMenuOpen(false);
+      setOrder(-1);
+      setText('');
     }
   }, [isEditing, isHighlight, isSpacing]);
 
