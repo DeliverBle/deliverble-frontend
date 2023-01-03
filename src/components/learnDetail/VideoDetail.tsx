@@ -2,6 +2,7 @@ import { Tag } from '@src/services/api/types/learn-detail';
 import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
+import { useBodyScrollLock } from '@src/hooks/useBodyScrollLock';
 
 interface VideoDetailProps {
   channel: string;
@@ -9,11 +10,17 @@ interface VideoDetailProps {
   reportDate: string;
   title: string;
   tags: Tag[];
-  setIsModalOpen: (isOpen: boolean) => void;
+  setIsGuideModalOpen: (isOpen: boolean) => void;
 }
 
 function VideoDetail(props: VideoDetailProps) {
-  const { channel, category, reportDate, title, tags, setIsModalOpen } = props;
+  const { channel, category, reportDate, title, tags, setIsGuideModalOpen } = props;
+  const { lockScroll } = useBodyScrollLock();
+
+  const handleGuideModalOpen = () => {
+    lockScroll();
+    setIsGuideModalOpen(true);
+  };
 
   return (
     <StVideoDetail>
@@ -29,7 +36,7 @@ function VideoDetail(props: VideoDetailProps) {
         </StTagContainer>
       </StLeft>
       <StRight>
-        <button onClick={() => setIsModalOpen(true)}>어떻게 학습하나요?</button>
+        <button onClick={handleGuideModalOpen}>어떻게 학습하나요?</button>
       </StRight>
     </StVideoDetail>
   );

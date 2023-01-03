@@ -1,3 +1,4 @@
+import NavigationBar from '@src/components/common/NavigationBar';
 import Footer from '@src/components/common/Footer';
 import SEO from '@src/components/common/SEO';
 import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
@@ -7,7 +8,6 @@ import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/review';
 import { loginState } from '@src/stores/loginState';
 import { LIST_SIZE } from '@src/utils/constant';
-import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import { COLOR } from 'src/styles/color';
 import { FONT_STYLES } from 'src/styles/fontStyle';
@@ -16,7 +16,6 @@ import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 
 function Review() {
-  const NavigationBar = dynamic(() => import('@src/components/common/NavigationBar'), { ssr: false });
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(loginState);
   const [tab, setTab] = useState('isFavorite');
