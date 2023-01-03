@@ -161,6 +161,8 @@ function LearnDetail() {
         }
         if (childNodes[i].textContent !== '/') {
           stringLength += childNodes[i]?.textContent?.replaceAll('/', ' ').length ?? 0;
+        } else {
+          stringLength += 1;
         }
       }
     }
@@ -318,7 +320,7 @@ function LearnDetail() {
         keyword: markTag.innerText.replaceAll('/', ' '),
         highlightId: markTag.id,
       });
-      setClickedMemo(memoList.find((memo) => memo.startIndex === startIndex && memo.order === order));
+      setClickedMemo(memoList.find((memo) => memo.highlightId === markTag.id));
     }
     setContextMenuPoint(handleContextMenuPoint(contextTarget));
   };
