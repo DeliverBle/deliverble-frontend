@@ -426,6 +426,9 @@ function LearnDetail() {
     } else {
       setIsEditing(false);
       setIsDeleteBtnClicked(false);
+      setIsContextMenuOpen(false);
+      setOrder(-1);
+      setText('');
     }
   }, [isEditing, isHighlight, isSpacing]);
 
@@ -505,6 +508,7 @@ function LearnDetail() {
     async () => await api.learnDetailService.getSimilarVideoData(Number(detailId)),
     {
       onSuccess: (data) => setSimilarNewsList(data.videoList),
+      enabled: !!detailId,
     },
   );
 
@@ -591,6 +595,9 @@ function LearnDetail() {
                         isHighlight={isHighlight}
                         isSpacing={isSpacing}
                         clickedScriptTitleIndex={clickedScriptTitleIndex}
+                        memoList={memoList}
+                        setMemoState={setMemoState}
+                        setClickedDeleteMemo={setClickedDeleteMemo}
                       />
                     )}
                   </div>
