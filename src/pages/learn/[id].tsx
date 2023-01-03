@@ -298,15 +298,19 @@ function LearnDetail() {
 
   const handleRightClick = (e: React.MouseEvent, scriptId: number, order: number) => {
     const contextTarget = e.target as HTMLElement;
-    if (contextTarget.closest('mark') || contextTarget.closest('span')) {
+    if (contextTarget.closest('span')) {
       setContextElementId(contextTarget.id);
       setContextHTML(contextTarget);
       setContextElementType(contextTarget.nodeName);
+      setIsContextMenuOpen(true);
     }
 
     const markTag = contextTarget.closest('mark');
     const startIndex = markTag && getHighlightIndex(contextTarget?.parentNode, contextTarget.id);
     if (startIndex && markTag) {
+      setContextElementId(contextTarget.id);
+      setContextHTML(contextTarget);
+      setContextElementType(contextTarget.nodeName);
       setMemoInfo({
         scriptId,
         order,
