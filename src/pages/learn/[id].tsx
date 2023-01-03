@@ -494,6 +494,7 @@ function LearnDetail() {
     async () => await api.learnDetailService.getSimilarVideoData(Number(detailId)),
     {
       onSuccess: (data) => setSimilarNewsList(data.videoList),
+      enabled: !!detailId,
     },
   );
 
