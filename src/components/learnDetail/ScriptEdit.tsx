@@ -210,11 +210,24 @@ function ScriptEdit(props: ScriptEditProps) {
         let textList = [];
         let htmlText = '';
         textList = text.split('/').filter((text) => text != '');
+
+        const startContainer = range?.startContainer.nextSibling as HTMLElement;
+        let startSpacingId = 0;
         if (range?.commonAncestorContainer) {
           for (let i = 0; i < range?.commonAncestorContainer?.childNodes?.length; i++) {
-            const childNodeItem = range?.commonAncestorContainer.childNodes[i];
+            const childNodeItem = range?.commonAncestorContainer.childNodes[i] as HTMLElement;
+            if (childNodeItem?.id === startContainer.id) {
+              startSpacingId = i;
+              break;
+            }
+          }
+        }
+
+        if (range?.commonAncestorContainer) {
+          for (let i = startSpacingId; i < range?.commonAncestorContainer?.childNodes?.length; i++) {
+            const childNodeItem = range?.commonAncestorContainer.childNodes[i] as HTMLElement;
             if (childNodeItem.nodeName == 'SPAN') {
-              spanIdList.push(`<span id=${childNodeItem.firstChild?.parentElement?.id}>/</span>`);
+              spanIdList.push(`<span id=${childNodeItem.id}>/</span>`);
             }
           }
         }
