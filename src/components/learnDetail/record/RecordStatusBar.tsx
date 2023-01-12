@@ -7,16 +7,16 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { api } from '@src/services/api';
 import { loginState } from '@src/stores/loginState';
 import { useRecoilValue } from 'recoil';
-import LoginModal from '@src/components/login/LoginModal';
 
 interface RecordStatusBarProps {
   scriptId: number;
   isRecordSaved: boolean;
   setIsRecordSaved: Dispatch<SetStateAction<boolean>>;
+  onLoginModalOpen: () => void;
 }
 
 function RecordStatusBar(props: RecordStatusBarProps) {
-  const { scriptId, isRecordSaved, setIsRecordSaved } = props;
+  const { scriptId, isRecordSaved, setIsRecordSaved, onLoginModalOpen } = props;
   const [stream, setStream] = useState<MediaStream>();
   const [media, setMedia] = useState<MediaRecorder>();
   const [isRecording, setIsRecording] = useState(false);
@@ -25,7 +25,6 @@ function RecordStatusBar(props: RecordStatusBarProps) {
   const [seconds, setSeconds] = useState<number>(0);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
   const isLoggedIn = useRecoilValue(loginState);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [date, setDate] = useState('');
 
   useEffect(() => {
@@ -118,7 +117,7 @@ function RecordStatusBar(props: RecordStatusBarProps) {
       <StRecordStatusBar
         onClick={(e) => {
           e.stopPropagation();
-          !isLoggedIn && setIsLoginModalOpen(true);
+          !isLoggedIn && onLoginModalOpen();
         }}>
         <StRecordStatus isRecording={isRecording}>
           <ImageDiv
@@ -150,7 +149,6 @@ function RecordStatusBar(props: RecordStatusBarProps) {
           </StGuideTooltip>
         )}
       </StRecordStatusBar>
-      {isLoginModalOpen && <LoginModal closeModal={() => setIsLoginModalOpen(false)} />}
     </>
   );
 }
