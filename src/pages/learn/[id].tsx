@@ -393,6 +393,11 @@ function LearnDetail() {
     setIsLoginModalOpen(true);
   };
 
+  const handleLoginModalClose = () => {
+    unlockScroll();
+    setIsLoginModalOpen(false);
+  };
+
   useEffect(() => {
     (async () => {
       const { deleteMemoId } = memoState;
@@ -609,6 +614,7 @@ function LearnDetail() {
                         scriptId={videoData.scriptsId}
                         isRecordSaved={isRecordSaved}
                         setIsRecordSaved={setIsRecordSaved}
+                        onLoginModalOpen={handleLoginModalOpen}
                       />
                       <StButton
                         onClick={(e) => {
@@ -719,19 +725,11 @@ function LearnDetail() {
                 </StVideoWrapper>
                 <StStudyLogContainer>
                   <StStudyLogTabContainer>
-                    <StStudyLogTab
-                      isActive={studyLogTab === 'memo'}
-                      onClick={() => {
-                        setStudyLogTab('memo');
-                      }}>
+                    <StStudyLogTab isActive={studyLogTab === 'memo'} onClick={() => setStudyLogTab('memo')}>
                       메모
                     </StStudyLogTab>
                     <div className="divider" />
-                    <StStudyLogTab
-                      isActive={studyLogTab === 'record'}
-                      onClick={() => {
-                        setStudyLogTab('record');
-                      }}>
+                    <StStudyLogTab isActive={studyLogTab === 'record'} onClick={() => setStudyLogTab('record')}>
                       녹음
                     </StStudyLogTab>
                   </StStudyLogTabContainer>
@@ -801,12 +799,7 @@ function LearnDetail() {
         )}
         {isLoginModalOpen && (
           <Portal selector="#portal">
-            <LoginModal
-              closeModal={() => {
-                unlockScroll();
-                setIsLoginModalOpen(false);
-              }}
-            />
+            <LoginModal closeModal={handleLoginModalClose} />
           </Portal>
         )}
       </StLearnDetail>
