@@ -4,15 +4,15 @@ import { COLOR } from '@src/styles/color';
 
 interface VideoListSkeleton {
   itemNumber: number;
-  haveCountSection?: boolean;
+  hasCountSection?: boolean;
 }
 
 function VideoListSkeleton(props: VideoListSkeleton) {
-  const { itemNumber, haveCountSection } = props;
+  const { itemNumber, hasCountSection } = props;
 
   return (
     <StVideoListSkeleton>
-      {haveCountSection && <StHeader />}
+      {hasCountSection && <StCountSection />}
       <div>
         {new Array(itemNumber).fill('').map((_, i) => (
           <VideoItemSkeleton key={i} />
@@ -51,7 +51,7 @@ const StVideoListSkeleton = styled.div`
   }
 `;
 
-const StHeader = styled.div`
+const StCountSection = styled.div`
   margin-bottom: 2.4rem;
   width: 13rem;
   height: 2rem;
