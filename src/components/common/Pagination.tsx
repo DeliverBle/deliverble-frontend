@@ -29,28 +29,31 @@ function Pagination(props: PaginationProps) {
     const totalPageList = Array.from({ length: lastPage }, (_, i) => i + 1);
     const totalGroupList = sliceIntoChunks(totalPageList, blockSize);
     const index = Math.floor(currentPage / blockSize);
-
-    if (currentPage % blockSize !== 0) {
-      setPageGroupList(totalGroupList[index]);
-    } else {
-      setPageGroupList(totalGroupList[currentPage / blockSize - 1]);
-    }
+    setPageGroupList(totalGroupList[currentPage % blockSize ? index : index - 1]);
   }, [currentPage, blockSize, lastPage]);
 
   return (
     <StPagination>
       {lastPage > blockSize && (
-        <StArrowButton onClick={() => currentPage !== 1 && onPageChange(1)}>{'<<'}</StArrowButton>
+        <StArrowButton disabled={currentPage === 1} onClick={() => onPageChange(1)}>
+          {'<<'}
+        </StArrowButton>
       )}
-      <StArrowButton onClick={() => currentPage !== 1 && onPageChange(currentPage - 1)}>{'<'}</StArrowButton>
+      <StArrowButton disabled={currentPage === 1} onClick={() => onPageChange(currentPage - 1)}>
+        {'<'}
+      </StArrowButton>
       {pageGroupList.map((page) => (
         <StNumberButton onClick={() => onPageChange(page)} isActive={page === currentPage} key={page}>
           {page}
         </StNumberButton>
       ))}
-      <StArrowButton onClick={() => currentPage !== lastPage && onPageChange(currentPage + 1)}>{'>'}</StArrowButton>
+      <StArrowButton disabled={currentPage === lastPage} onClick={() => onPageChange(currentPage + 1)}>
+        {'>'}
+      </StArrowButton>
       {lastPage > blockSize && (
-        <StArrowButton onClick={() => currentPage !== lastPage && onPageChange(lastPage)}>{'>>'}</StArrowButton>
+        <StArrowButton disabled={currentPage === lastPage} onClick={() => onPageChange(lastPage)}>
+          {'>>'}
+        </StArrowButton>
       )}
     </StPagination>
   );
@@ -76,6 +79,10 @@ const StArrowButton = styled.button`
   padding: 0;
   ${FONT_STYLES.SB_20_BODY};
   color: ${COLOR.GRAY_30};
+
+  &:disabled {
+    cursor: not-allowed;
+  }
 
   &:hover {
     color: ${COLOR.GRAY_45};
