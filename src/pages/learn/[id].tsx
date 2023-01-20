@@ -5,7 +5,6 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { useRouter } from 'next/router';
 import YouTube from 'react-youtube';
 import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
-import Portal from '@src/components/common/Portal';
 import NavigationBar from '@src/components/common/NavigationBar';
 import ImageDiv from '@src/components/common/ImageDiv';
 import Like from '@src/components/common/Like';
@@ -777,31 +776,23 @@ function LearnDetail() {
           </StNews>
         )}
         {isGuideModalOpen && (
-          <Portal selector="#portal">
-            <GuideModal
-              closeModal={() => {
-                unlockScroll();
-                setIsGuideModalOpen(false);
-              }}
-            />
-          </Portal>
+          <GuideModal
+            closeModal={() => {
+              unlockScroll();
+              setIsGuideModalOpen(false);
+            }}
+          />
         )}
         {isConfirmOpen && (
-          <Portal selector="#portal">
-            <ConfirmModal
-              confirmModalText={confirmModalText}
-              setMemoState={setMemoState}
-              setIsConfirmOpen={setIsConfirmOpen}
-              setClickedDeleteMemo={setClickedDeleteMemo}
-              onScriptDelete={handleScriptDelete}
-            />
-          </Portal>
+          <ConfirmModal
+            confirmModalText={confirmModalText}
+            setMemoState={setMemoState}
+            setIsConfirmOpen={setIsConfirmOpen}
+            setClickedDeleteMemo={setClickedDeleteMemo}
+            onScriptDelete={handleScriptDelete}
+          />
         )}
-        {isLoginModalOpen && (
-          <Portal selector="#portal">
-            <LoginModal closeModal={handleLoginModalClose} />
-          </Portal>
-        )}
+        {isLoginModalOpen && <LoginModal closeModal={handleLoginModalClose} />}
       </StLearnDetail>
     </StPageWrapper>
   );

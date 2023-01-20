@@ -3,6 +3,7 @@ import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { Dispatch, SetStateAction, useEffect } from 'react';
 import { MemoState } from '@src/pages/learn/[id]';
+import Portal from '../common/Portal';
 import {
   DELETE_MEMO_CONFIRM_MODAL_TEXT,
   DELETE_SCRIPT_CONFIRM_MODAL_TEXT,
@@ -50,29 +51,31 @@ function ConfirmModal(props: ConfirmModalProps) {
   };
 
   return (
-    <StConfirmModal>
-      <StDescription>
-        <h2>{mainText}</h2>
-        <p>{subText}</p>
-      </StDescription>
-      <StButtonContainer>
-        <button
-          className="modal-button"
-          onClick={() => {
-            setIsConfirmOpen(false);
-          }}>
-          {leftButtonText}
-        </button>
-        <button
-          className="modal-button"
-          onClick={() => {
-            setIsConfirmOpen(false);
-            handleButtonClick();
-          }}>
-          {rightButtonText}
-        </button>
-      </StButtonContainer>
-    </StConfirmModal>
+    <Portal selector="#portal">
+      <StConfirmModal>
+        <StDescription>
+          <h2>{mainText}</h2>
+          <p>{subText}</p>
+        </StDescription>
+        <StButtonContainer>
+          <button
+            className="modal-button"
+            onClick={() => {
+              setIsConfirmOpen(false);
+            }}>
+            {leftButtonText}
+          </button>
+          <button
+            className="modal-button"
+            onClick={() => {
+              setIsConfirmOpen(false);
+              handleButtonClick();
+            }}>
+            {rightButtonText}
+          </button>
+        </StButtonContainer>
+      </StConfirmModal>
+    </Portal>
   );
 }
 

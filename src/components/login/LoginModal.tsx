@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import ImageDiv from '../common/ImageDiv';
+import Portal from '../common/Portal';
 import Link from 'next/link';
 import { icXButton, icKakao, icMicrophone } from 'public/assets/icons';
 import { icDeliverbleBlue } from 'public/assets/icons';
@@ -14,21 +15,23 @@ interface LoginModalProps {
 function LoginModal(props: LoginModalProps) {
   const { closeModal } = props;
   return (
-    <StLoginModal>
-      <StLoginModalBackground />
-      <StLoginModalContent>
-        <ImageDiv onClick={closeModal} src={icXButton} className="x-button" layout="fill" alt="x" />
-        <ImageDiv src={icDeliverbleBlue} className="logo" layout="fill" alt="딜리버블" />
-        <p>로그인하고 더 다양한 기능을 누려보세요.</p>
-        <ImageDiv src={icMicrophone} className="microphone" layout="fill" alt="마이크" />
-        <Link href={KAKAO_AUTH_URL}>
-          <StLoginButton>
-            <ImageDiv src={icKakao} className="kakao-icon" layout="fill" alt="" />
-            <a>카카오로 3초만에 시작하기</a>
-          </StLoginButton>
-        </Link>
-      </StLoginModalContent>
-    </StLoginModal>
+    <Portal selector="#portal">
+      <StLoginModal>
+        <StLoginModalBackground />
+        <StLoginModalContent>
+          <ImageDiv onClick={closeModal} src={icXButton} className="x-button" layout="fill" alt="x" />
+          <ImageDiv src={icDeliverbleBlue} className="logo" layout="fill" alt="딜리버블" />
+          <p>로그인하고 더 다양한 기능을 누려보세요.</p>
+          <ImageDiv src={icMicrophone} className="microphone" layout="fill" alt="마이크" />
+          <Link href={KAKAO_AUTH_URL}>
+            <StLoginButton>
+              <ImageDiv src={icKakao} className="kakao-icon" layout="fill" alt="" />
+              <a>카카오로 3초만에 시작하기</a>
+            </StLoginButton>
+          </Link>
+        </StLoginModalContent>
+      </StLoginModal>
+    </Portal>
   );
 }
 
