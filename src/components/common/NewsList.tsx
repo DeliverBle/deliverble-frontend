@@ -1,3 +1,4 @@
+import { useBodyScrollLock } from '@src/hooks/useBodyScrollLock';
 import { VideoData } from '@src/services/api/types/home';
 import { loginState } from '@src/stores/loginState';
 import { isGuideAtom } from '@src/stores/newsState';
@@ -23,6 +24,7 @@ function NewsList(props: NewsListProps) {
   const { type, newsList, onClickLike } = props;
   const router = useRouter();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const { lockScroll, unlockScroll } = useBodyScrollLock();
   const login = useRecoilValue(loginState);
 
   return (
@@ -56,6 +58,7 @@ function NewsList(props: NewsListProps) {
                 isFavorite={isFavorite}
                 toggleLike={() => {
                   if (!login) {
+                    lockScroll();
                     setIsLoginModalOpen(true);
                   } else {
                     onClickLike && onClickLike(id);
@@ -78,7 +81,14 @@ function NewsList(props: NewsListProps) {
           </StNewsWrapper>
         );
       })}
-      {isLoginModalOpen && <LoginModal closeModal={() => setIsLoginModalOpen(false)} />}
+      {isLoginModalOpen && (
+        <LoginModal
+          closeModal={() => {
+            unlockScroll();
+            setIsLoginModalOpen(false);
+          }}
+        />
+      )}
     </StNewsList>
   );
 }
