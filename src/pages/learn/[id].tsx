@@ -579,7 +579,7 @@ function LearnDetail() {
                           key={id}
                           onClick={() => player?.seekTo(startTime, true)}
                           markStyles={createMarkStyles(text)}
-                          isActive={startTime <= currentTime && currentTime < endTime ? true : false}>
+                          isActive={startTime <= currentTime && currentTime < endTime}>
                           <div id={id.toString()} dangerouslySetInnerHTML={{ __html: text }}></div>
                         </StScriptText>
                       ))}
