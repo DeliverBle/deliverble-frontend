@@ -96,7 +96,7 @@ function RecordLog(props: RecordStatusBarProps) {
   };
 
   const checkRecordClicked = (link: string) => {
-    return link === audioRef.current?.src ? true : false;
+    return link === audioRef.current?.src;
   };
 
   const handlePlayRecord = (link: string, endTime: number) => {

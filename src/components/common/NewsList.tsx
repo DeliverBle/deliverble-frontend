@@ -35,7 +35,7 @@ function NewsList(props: NewsListProps) {
             key={id}
             type={type}
             onClick={() => {
-              setIsGuide(type === 'guide' ? true : false);
+              setIsGuide(type === 'guide');
               router.push(`/learn/${id}`);
             }}>
             {type === 'guide' && (
