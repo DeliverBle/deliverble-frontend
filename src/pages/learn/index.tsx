@@ -53,6 +53,7 @@ function Learn() {
   );
 
   const handlePageChange = (page: number) => {
+    window.scrollTo(0, 0);
     mutate({
       channel: selectedChannelList,
       category: selectedCategoryList,

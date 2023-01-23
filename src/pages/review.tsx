@@ -73,6 +73,7 @@ function Review() {
   };
 
   const handlePageChange = async (page: number) => {
+    window.scrollTo(0, 0);
     setIsLoading(true);
 
     const { favoritePaging, favoriteList } = await api.reviewService.postFavoriteVideoList({
