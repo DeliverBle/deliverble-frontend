@@ -15,13 +15,13 @@ import { BLOCK_SIZE, categoryList, channelList, LIST_SIZE, speakerList } from '@
 import { icSearch } from 'public/assets/icons';
 import { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
-import { useRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 
 function Learn() {
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useRecoilState(loginState);
+  const setIsLoggedIn = useSetRecoilState(loginState);
   const [selectedChannelList, setSelectedChannelList] = useState<string[]>([]);
   const [selectedCategoryList, setSelectedCategoryList] = useState<string[]>([]);
   const [selectedSpeakerList, setSelectedSpeakerList] = useState<string[]>([]);
@@ -32,9 +32,7 @@ function Learn() {
 
   const { mutate, isLoading } = useMutation(
     async (requestBody: PostSearchConditionRequestBody) => {
-      return isLoggedIn
-        ? await api.learnService.postSearchConditionWithToken(requestBody)
-        : await api.learnService.postSearchConditionWithoutToken(requestBody);
+      return await api.learnService.postSearchCondition(requestBody);
     },
     {
       onSuccess: (data) => {
