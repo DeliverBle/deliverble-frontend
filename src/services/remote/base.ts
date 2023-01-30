@@ -3,7 +3,7 @@ import axios from 'axios';
 const BASEURL = 'https://deliverble.online';
 const getAccessToken = () => localStorage.getItem('token') ?? '';
 
-const getBasePrivateHeaders = () => {
+const getBaseHeaders = () => {
   const accessToken = getAccessToken();
   const headers = {
     Accept: `*/*`,
@@ -19,22 +19,11 @@ const getBasePrivateHeaders = () => {
   return headers;
 };
 
-const getBasePrivateMultipartHeaders = () => {
-  const accessToken = getAccessToken();
-  const headers = {
-    Accept: `*/*`,
-    'Content-Type': `multipart/form-data`,
-  };
-
-  if (accessToken) {
-    return {
-      ...headers,
-      Authorization: `Bearer ${accessToken}`,
-    };
-  }
-
-  return headers;
-};
+const getBasePrivateMultipartHeaders = () => ({
+  Accept: `*/*`,
+  'Content-Type': `multipart/form-data`,
+  Authorization: `Bearer ${getAccessToken()}`,
+});
 
 interface Request {
   url: string;
@@ -52,7 +41,7 @@ interface RequestWithData extends Request {
 }
 
 const sendRequest = ({ url, params, method, headers }: RequestWithParams) => {
-  const baseHeaders = getBasePrivateHeaders();
+  const baseHeaders = getBaseHeaders();
   return axios[method](BASEURL + url, {
     headers: { ...baseHeaders, ...headers },
     params,
@@ -62,7 +51,7 @@ const sendRequest = ({ url, params, method, headers }: RequestWithParams) => {
 };
 
 const sendRequestForData = ({ url, data, method, headers, type }: RequestWithData) => {
-  const baseHeaders = type === 'json' ? getBasePrivateHeaders() : getBasePrivateMultipartHeaders();
+  const baseHeaders = type === 'json' ? getBaseHeaders() : getBasePrivateMultipartHeaders();
   return axios[method](BASEURL + url, data, {
     headers: { ...baseHeaders, ...headers },
   }).then((response) => {
@@ -71,7 +60,7 @@ const sendRequestForData = ({ url, data, method, headers, type }: RequestWithDat
 };
 
 const sendRequestForDelete = ({ url, data, headers }: Omit<RequestWithData, 'method'>) => {
-  const baseHeaders = getBasePrivateHeaders();
+  const baseHeaders = getBaseHeaders();
   return axios
     .delete(BASEURL + url, {
       headers: { ...baseHeaders, ...headers },
