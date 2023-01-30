@@ -17,6 +17,7 @@ export function learnDetailDataRemote(): LearnDetailService {
   const getPrivateVideoData = async (videoId: number, index: number) => {
     const response = await API.get({ url: `/news/detail/${videoId}` });
     if (response.statusCode === 200) {
+      const scriptIndex = response.data2[index] ? index : 0;
       return {
         id: response.data.id,
         title: response.data.title,
@@ -28,19 +29,19 @@ export function learnDetailDataRemote(): LearnDetailService {
         haveGuide: response.data.haveGuide,
         startTime: response.data.startTime,
         endTime: response.data.endTime,
-        scriptsId: response.data2[index ?? 0].id,
+        scriptsId: response.data2[scriptIndex].id,
         tags: response.data.tagsForView.map((tag: Tag) => ({
           id: tag.id,
           name: tag.name,
         })),
-        scripts: response.data2[index ?? 0].sentences.map((sentence: Script) => ({
+        scripts: response.data2[scriptIndex].sentences.map((sentence: Script) => ({
           id: sentence.id,
           order: sentence.order,
           text: sentence.text,
           startTime: sentence.startTime,
           endTime: sentence.endTime,
         })),
-        memos: response.data2[index ?? 0].memos.map((memo: MemoData) => ({
+        memos: response.data2[scriptIndex].memos.map((memo: MemoData) => ({
           id: memo.id,
           keyword: memo.keyword,
           order: memo.order,

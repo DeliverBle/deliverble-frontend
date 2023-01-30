@@ -459,6 +459,10 @@ function LearnDetail() {
   }, [isLoggedIn, detailId, isEditing, isGuide, clickedScriptTitleIndex]);
 
   useEffect(() => {
+    setClickedScriptTitleIndex(0);
+  }, [detailId]);
+
+  useEffect(() => {
     if (!player) return;
 
     const interval =
