@@ -92,7 +92,7 @@ const sendRequestForDelete = ({ url, data, headers, isPrivate }: Omit<RequestWit
     });
 };
 
-export const privateAPI = {
+export const API = {
   get: ({ url, params, headers }: Omit<RequestWithParams, 'isPrivate' | 'method'>) =>
     sendRequest({ url, params, method: 'get', headers, isPrivate: true }),
   post: ({ url, data, headers, type }: Omit<RequestWithData, 'isPrivate' | 'method'>) =>
@@ -119,33 +119,5 @@ export const privateAPI = {
       data,
       headers,
       isPrivate: true,
-    }),
-};
-
-export const publicAPI = {
-  get: ({ url, params, headers }: Omit<RequestWithParams, 'isPrivate' | 'method'>) =>
-    sendRequest({ url, params, method: 'get', headers, isPrivate: false }),
-  post: ({ url, data, headers }: Omit<RequestWithData, 'isPrivate' | 'method'>) =>
-    sendRequestForData({
-      url,
-      data,
-      method: 'post',
-      headers,
-      isPrivate: false,
-    }),
-  patch: ({ url, data, headers }: Omit<RequestWithData, 'isPrivate' | 'method'>) =>
-    sendRequestForData({
-      url,
-      data,
-      method: 'patch',
-      headers,
-      isPrivate: false,
-    }),
-  delete: ({ url, data, headers }: Omit<RequestWithData, 'isPrivate' | 'method'>) =>
-    sendRequestForDelete({
-      url,
-      data,
-      headers,
-      isPrivate: false,
     }),
 };

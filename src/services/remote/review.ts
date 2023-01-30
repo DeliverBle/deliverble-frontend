@@ -1,10 +1,10 @@
 import { ReviewService } from '../api/review';
 import { PostReviewRequestBody, VideoData } from '../api/types/review';
-import { privateAPI } from './base';
+import { API } from './base';
 
 export function reviewDataRemote(): ReviewService {
   const postFavoriteVideoList = async (body: PostReviewRequestBody) => {
-    const response = await privateAPI.post({ url: `/news/favorite`, data: body });
+    const response = await API.post({ url: `/news/favorite`, data: body });
     if (response.statusCode === 200) {
       return {
         favoriteList: response.data
@@ -28,7 +28,7 @@ export function reviewDataRemote(): ReviewService {
   };
 
   const postHistoryVideoList = async (body: PostReviewRequestBody) => {
-    const response = await privateAPI.post({ url: `/news/history`, data: body });
+    const response = await API.post({ url: `/news/history`, data: body });
     if (response.statusCode === 200) {
       return {
         historyList: response.data
