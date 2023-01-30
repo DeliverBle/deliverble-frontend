@@ -443,9 +443,7 @@ function LearnDetail() {
       const id = Number(detailId);
       let data;
       if (isGuide) {
-        data = isLoggedIn
-          ? await api.learnDetailService.getPrivateSpeechGuideData(id)
-          : await api.learnDetailService.getPublicSpeechGuideData(id);
+        data = await api.learnDetailService.getSpeechGuideData(id);
       } else {
         data = isLoggedIn
           ? await api.learnDetailService.getPrivateVideoData(id, clickedScriptTitleIndex)
