@@ -14,7 +14,7 @@ import { VideoData } from '../api/types/home';
 import { API } from './base';
 
 export function learnDetailDataRemote(): LearnDetailService {
-  const getPrivateVideoData = async (videoId: number, index?: number) => {
+  const getPrivateVideoData = async (videoId: number, index: number) => {
     const response = await API.get({ url: `/news/detail/${videoId}` });
     if (response.statusCode === 200) {
       return {
