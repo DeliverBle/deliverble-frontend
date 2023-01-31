@@ -13,12 +13,12 @@ import { useQuery } from 'react-query';
 import { useMediaQuery } from 'react-responsive';
 import styled from 'styled-components';
 import { loginState } from '@src/stores/loginState';
-import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
+import { useSetRecoilState } from 'recoil';
 
 function Home() {
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useRecoilState(loginState);
+  const setIsLoggedIn = useSetRecoilState(loginState);
   const [newsList, setNewsList] = useState<VideoData[]>([]);
   const [speechGuideList, setSpeechGuideList] = useState<VideoData[]>([]);
   const [mounted, setMounted] = useState(false);
@@ -34,12 +34,8 @@ function Home() {
     ['getNewsList'],
     async () => {
       return {
-        recommend: isLoggedIn
-          ? await api.homeService.getPrivateVideoData()
-          : await api.homeService.getPublicVideoData(),
-        speechGuide: isLoggedIn
-          ? await api.homeService.getPrivateSpeechGuideData()
-          : await api.homeService.getPublicSpeechGuideData(),
+        recommend: await api.homeService.getVideoData(),
+        speechGuide: await api.homeService.getSpeechGuideData(),
       };
     },
     {
