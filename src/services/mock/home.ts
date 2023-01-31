@@ -2,24 +2,16 @@ import { HomeService } from '../api/home';
 import { HOME_DATA } from './home.data';
 
 export function homeDataMock(): HomeService {
-  const getPrivateVideoData = async () => {
+  const getVideoData = async () => {
     await wait(500);
     return HOME_DATA;
   };
-  const getPublicVideoData = async () => {
-    await wait(500);
-    return HOME_DATA;
-  };
-  const getPublicSpeechGuideData = async () => {
-    await wait(500);
-    return HOME_DATA;
-  };
-  const getPrivateSpeechGuideData = async () => {
+  const getSpeechGuideData = async () => {
     await wait(500);
     return HOME_DATA;
   };
 
-  return { getPrivateVideoData, getPublicVideoData, getPublicSpeechGuideData, getPrivateSpeechGuideData };
+  return { getVideoData, getSpeechGuideData };
 }
 
 const wait = (milliSeconds: number) => new Promise((resolve) => setTimeout(resolve, milliSeconds));

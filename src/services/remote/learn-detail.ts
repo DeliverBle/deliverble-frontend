@@ -11,12 +11,13 @@ import {
   ChangeRecordNameData,
 } from '../api/types/learn-detail';
 import { VideoData } from '../api/types/home';
-import { privateAPI, publicAPI } from './base';
+import { API } from './base';
 
 export function learnDetailDataRemote(): LearnDetailService {
-  const getPrivateVideoData = async (videoId: number, index?: number) => {
-    const response = await privateAPI.get({ url: `/news/detail/${videoId}` });
+  const getPrivateVideoData = async (videoId: number, index: number) => {
+    const response = await API.get({ url: `/news/detail/${videoId}` });
     if (response.statusCode === 200) {
+      const scriptIndex = response.data2[index] ? index : 0;
       return {
         id: response.data.id,
         title: response.data.title,
@@ -28,19 +29,19 @@ export function learnDetailDataRemote(): LearnDetailService {
         haveGuide: response.data.haveGuide,
         startTime: response.data.startTime,
         endTime: response.data.endTime,
-        scriptsId: response.data2[index ?? 0].id,
+        scriptsId: response.data2[scriptIndex].id,
         tags: response.data.tagsForView.map((tag: Tag) => ({
           id: tag.id,
           name: tag.name,
         })),
-        scripts: response.data2[index ?? 0].sentences.map((sentence: Script) => ({
+        scripts: response.data2[scriptIndex].sentences.map((sentence: Script) => ({
           id: sentence.id,
           order: sentence.order,
           text: sentence.text,
           startTime: sentence.startTime,
           endTime: sentence.endTime,
         })),
-        memos: response.data2[index ?? 0].memos.map((memo: MemoData) => ({
+        memos: response.data2[scriptIndex].memos.map((memo: MemoData) => ({
           id: memo.id,
           keyword: memo.keyword,
           order: memo.order,
@@ -57,7 +58,7 @@ export function learnDetailDataRemote(): LearnDetailService {
   };
 
   const getPublicVideoData = async (videoId: number) => {
-    const response = await publicAPI.get({ url: `/news/detail/not-authentication/${videoId}` });
+    const response = await API.get({ url: `/news/detail/not-authentication/${videoId}` });
     if (response.statusCode === 200) {
       return {
         id: response.data.id,
@@ -86,46 +87,8 @@ export function learnDetailDataRemote(): LearnDetailService {
     } else throw '서버 통신 실패';
   };
 
-  const getPublicSpeechGuideData = async (videoId: number) => {
-    const response = await publicAPI.get({ url: `/news/guide/detail/${videoId}` });
-    if (response.statusCode === 200) {
-      return {
-        id: response.data.id,
-        title: response.data.title,
-        category: response.data.category,
-        channel: response.data.channel,
-        link: response.data.link,
-        reportDate: response.data.reportDate,
-        isFavorite: response.data.isFavorite,
-        haveGuide: response.data.haveGuide,
-        startTime: response.data.startTime,
-        endTime: response.data.endTime,
-        scriptsId: response.data2[0].id,
-        tags: response.data.tagsForView.map((tag: Tag) => ({
-          id: tag.id,
-          name: tag.name,
-        })),
-        scripts: response.data2[0].sentences.map((sentence: Script) => ({
-          id: sentence.id,
-          text: sentence.text,
-          order: sentence.order,
-          startTime: sentence.startTime,
-          endTime: sentence.endTime,
-        })),
-        memos: response.data2[0].memoGuides.map((memo: MemoData) => ({
-          id: memo.id,
-          keyword: memo.keyword,
-          order: memo.order,
-          startIndex: memo.startIndex,
-          content: memo.content,
-          highlightId: memo.highlightId,
-        })),
-      };
-    } else throw '서버 통신 실패';
-  };
-
-  const getPrivateSpeechGuideData = async (videoId: number) => {
-    const response = await privateAPI.get({ url: `/news/guide/detail/${videoId}` });
+  const getSpeechGuideData = async (videoId: number) => {
+    const response = await API.get({ url: `/news/guide/detail/${videoId}` });
     if (response.statusCode === 200) {
       return {
         id: response.data.id,
@@ -163,7 +126,7 @@ export function learnDetailDataRemote(): LearnDetailService {
   };
 
   const postSentenceData = async (SentenceData: SentenceData, scriptsId: number, scriptIndex: number) => {
-    const response = await privateAPI.post({
+    const response = await API.post({
       url: `/script/sentence/update/${scriptsId}`,
       data: SentenceData,
     });
@@ -178,7 +141,7 @@ export function learnDetailDataRemote(): LearnDetailService {
   };
 
   const postMemoData = async (memo: MemoData, scriptId: number) => {
-    const response = await privateAPI.post({
+    const response = await API.post({
       url: `/script/memo/create/${scriptId}`,
       data: memo,
     });
@@ -195,7 +158,7 @@ export function learnDetailDataRemote(): LearnDetailService {
   };
 
   const updateMemoData = async (memoId: number, content: string) => {
-    const response = await privateAPI.patch({
+    const response = await API.patch({
       url: `/script/memo/update/${memoId}`,
       data: { content },
     });
@@ -212,7 +175,7 @@ export function learnDetailDataRemote(): LearnDetailService {
   };
 
   const deleteMemoData = async (memoId: number) => {
-    const response = await privateAPI.delete({
+    const response = await API.delete({
       url: `/script/memo/delete/${memoId}`,
     });
     if (response.statusCode === 200) {
@@ -228,17 +191,17 @@ export function learnDetailDataRemote(): LearnDetailService {
   };
 
   const postNewScriptData = async (videoId: number) => {
-    const response = await privateAPI.post({ url: `/script/create/${videoId}` });
+    const response = await API.post({ url: `/script/create/${videoId}` });
     return { isSuccess: response.statusCode === 200 };
   };
 
   const deleteScriptData = async (scriptId: number) => {
-    const response = await privateAPI.delete({ url: `/script/delete/${scriptId}` });
+    const response = await API.delete({ url: `/script/delete/${scriptId}` });
     return { isSuccess: response.statusCode === 200 };
   };
 
   const updateScriptNameData = async (scriptId: number, name: string) => {
-    const response = await privateAPI.patch({ url: `/script/name/${scriptId}`, data: { name } });
+    const response = await API.patch({ url: `/script/name/${scriptId}`, data: { name } });
     if (response.statusCode === 200) {
       return {
         id: response.data2.id,
@@ -248,7 +211,7 @@ export function learnDetailDataRemote(): LearnDetailService {
   };
 
   const uploadRecordData = async (body: UploadRecordData) => {
-    const response = await privateAPI.post({
+    const response = await API.post({
       url: '/script/recording/upload',
       data: body,
       type: 'multipart',
@@ -265,7 +228,7 @@ export function learnDetailDataRemote(): LearnDetailService {
 
   const getRecordData = async (scriptId: number) => {
     try {
-      const response = await privateAPI.get({
+      const response = await API.get({
         url: `/script/recording/find?scriptId=${scriptId}`,
       });
       return response.data[0].map((record: GetRecordData) => ({
@@ -282,7 +245,7 @@ export function learnDetailDataRemote(): LearnDetailService {
   };
 
   const deleteRecordData = async (body: DeleteRecordData) => {
-    const response = await privateAPI.post({
+    const response = await API.post({
       url: '/script/recording/delete',
       data: body,
     });
@@ -296,7 +259,7 @@ export function learnDetailDataRemote(): LearnDetailService {
   };
 
   const changeRecordNameData = async (body: ChangeRecordNameData) => {
-    const response = await privateAPI.post({
+    const response = await API.post({
       url: '/script/recording/change-name',
       data: body,
     });
@@ -310,7 +273,7 @@ export function learnDetailDataRemote(): LearnDetailService {
   };
 
   const getSimilarVideoData = async (videoId: number) => {
-    const response = await privateAPI.get({
+    const response = await API.get({
       url: `/news/similar/${videoId}`,
     });
     if (response.statusCode === 200) {
@@ -341,8 +304,7 @@ export function learnDetailDataRemote(): LearnDetailService {
     postNewScriptData,
     deleteScriptData,
     updateScriptNameData,
-    getPublicSpeechGuideData,
-    getPrivateSpeechGuideData,
+    getSpeechGuideData,
     uploadRecordData,
     getRecordData,
     deleteRecordData,
