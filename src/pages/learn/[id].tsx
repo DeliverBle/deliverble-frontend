@@ -525,12 +525,19 @@ function LearnDetail() {
       <SEO title="학습하기 | Deliverble" />
       <NavigationBar />
       <StLearnDetail>
-        <ImageDiv onClick={() => router.push(prevLink)} src={icXButton} className="close" layout="fill" alt="x" />
+        <ImageDiv
+          onClick={() => router.push(prevLink)}
+          src={icXButton}
+          className="close"
+          layout="fill"
+          alt="이전 페이지로 돌아가기"
+        />
         <StScriptTitleContainer>
           {videoData?.haveGuide && (
             <StGuideTitle isGuide={isGuide} onClick={() => !isGuide && setIsGuide((prev) => !prev)}>
               <p>스피치 가이드</p>
               <ImageDiv
+                role="tooltip"
                 className="guide-info"
                 src={icSpeechGuideInfo}
                 alt="스피치 가이드 설명"

@@ -19,10 +19,10 @@ function LoginModal(props: LoginModalProps) {
       <StLoginModal>
         <StLoginModalBackground />
         <StLoginModalContent>
-          <ImageDiv onClick={closeModal} src={icXButton} className="x-button" layout="fill" alt="x" />
+          <ImageDiv onClick={closeModal} src={icXButton} className="x-button" layout="fill" alt="닫기" />
           <ImageDiv src={icDeliverbleBlue} className="logo" layout="fill" alt="딜리버블" />
           <p>로그인하고 더 다양한 기능을 누려보세요.</p>
-          <ImageDiv src={icMicrophone} className="microphone" layout="fill" alt="마이크" />
+          <ImageDiv src={icMicrophone} className="microphone" layout="fill" alt="" />
           <Link href={KAKAO_AUTH_URL}>
             <StLoginButton>
               <ImageDiv src={icKakao} className="kakao-icon" layout="fill" alt="" />

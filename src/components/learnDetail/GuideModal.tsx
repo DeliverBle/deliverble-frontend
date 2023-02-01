@@ -24,7 +24,7 @@ function GuideModal(props: GuideModalProps) {
       <StGuideModal>
         <StGuideModalBackground />
         <StGuideModalContent>
-          <ImageDiv onClick={closeModal} src={icXButton} className="x-button" layout="fill" alt="x" />
+          <ImageDiv onClick={closeModal} src={icXButton} className="x-button" layout="fill" alt="닫기" />
           <div>
             <StModalTitle>어떻게 학습하나요?</StModalTitle>
             <p>
