@@ -110,17 +110,15 @@ function Review() {
       <NavigationBar />
       <StReview>
         <HeadlineContainer />
-        <nav>
-          <StTab>
-            <StButton isActive={tab === 'isFavorite'} onClick={() => setTab('isFavorite')}>
-              내 즐겨찾기 기록
-            </StButton>
-            <span> | </span>
-            <StButton isActive={tab === 'isLearned'} onClick={() => setTab('isLearned')}>
-              내 학습 기록
-            </StButton>
-          </StTab>
-        </nav>
+        <StTab>
+          <StButton isActive={tab === 'isFavorite'} onClick={() => setTab('isFavorite')}>
+            내 즐겨찾기 기록
+          </StButton>
+          <span> | </span>
+          <StButton isActive={tab === 'isLearned'} onClick={() => setTab('isLearned')}>
+            내 학습 기록
+          </StButton>
+        </StTab>
         {isLoading ? (
           <VideoListSkeleton itemNumber={12} hasCountSection={true} />
         ) : (
@@ -161,7 +159,7 @@ const StReview = styled.div`
   }
 `;
 
-const StTab = styled.ul`
+const StTab = styled.div`
   display: flex;
   gap: 2.4rem;
   ${FONT_STYLES.SB_28_HEADLINE};
@@ -173,7 +171,8 @@ const StTab = styled.ul`
   }
 `;
 
-const StButton = styled.li<{ isActive: boolean }>`
+const StButton = styled.button<{ isActive: boolean }>`
+  padding: 0;
   cursor: pointer;
   color: ${({ isActive }) => (isActive ? COLOR.BLACK : COLOR.GRAY_30)};
   ${({ isActive }) => (isActive ? FONT_STYLES.SB_28_HEADLINE : FONT_STYLES.M_28_HEADLINE)};
