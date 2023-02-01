@@ -45,7 +45,7 @@ function Footer() {
 
 export default Footer;
 
-const StFooter = styled.div`
+const StFooter = styled.footer`
   display: flex;
   justify-content: space-between;
   gap: 15rem;
