@@ -27,7 +27,7 @@ export default class MyDocument extends Document {
 
   render() {
     return (
-      <Html>
+      <Html lang="ko">
         <Head>
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <meta name="google-site-verification" content="Lui9ZQbOb6H4vVu7GyiNFL4USqYJM0C1r7IPk0krIWQ" />
