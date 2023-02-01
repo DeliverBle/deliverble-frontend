@@ -37,8 +37,8 @@ function RecordDotButton(props: RecordDotButtonProps) {
   return (
     <StRecordDotButton ref={recordDropdownRef} onClick={() => setIsDropdownOpen((prev) => !prev)}>
       <StRecordDotImage isDropdownOpen={isDropdownOpen}>
-        <ImageDiv className="dot" src={icDotHover} alt="..." layout="fill" />
-        <ImageDiv className="dot default" src={icDotDefault} alt="..." layout="fill" />
+        <ImageDiv className="dot" src={icDotHover} alt="추가 작업" layout="fill" />
+        <ImageDiv className="dot default" src={icDotDefault} alt="추가 작업" layout="fill" />
       </StRecordDotImage>
       {isDropdownOpen && (
         <RecordDropdown

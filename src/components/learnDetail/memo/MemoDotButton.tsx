@@ -39,8 +39,8 @@ function MemoDotButton(props: MemoDotButtonProps) {
   return (
     <StMemoDotButton ref={memoDropdownRef} onClick={() => setIsDropdownOpen((prev) => !prev)}>
       <StMemoDotImage isDropdownOpen={isDropdownOpen}>
-        <ImageDiv className="dot" src={icDotHover} alt="..." layout="fill" />
-        <ImageDiv className="dot default" src={icDotDefault} alt="..." layout="fill" />
+        <ImageDiv className="dot" src={icDotHover} alt="추가 작업" layout="fill" />
+        <ImageDiv className="dot default" src={icDotDefault} alt="추가 작업" layout="fill" />
       </StMemoDotImage>
       {isDropdownOpen && (
         <MemoDropdown
