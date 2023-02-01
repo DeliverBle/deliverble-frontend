@@ -769,7 +769,7 @@ function LearnDetail() {
         )}
         {!isGuide && videoData && (
           <StNews>
-            <h3>비슷한 주제의 영상으로 계속 연습해보세요.</h3>
+            <h2>비슷한 주제의 영상으로 계속 연습해보세요.</h2>
             {isLoading ? (
               <VideoListSkeleton itemNumber={4} />
             ) : (
@@ -812,7 +812,7 @@ const StNews = styled.div`
   margin: 0 auto;
   padding-top: 16rem;
 
-  & > h3 {
+  & > h2 {
     min-width: 53rem;
     margin-bottom: 2.8rem;
 
