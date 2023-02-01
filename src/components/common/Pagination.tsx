@@ -35,11 +35,14 @@ function Pagination(props: PaginationProps) {
   return (
     <StPagination>
       {lastPage > blockSize && (
-        <StArrowButton disabled={currentPage === 1} onClick={() => onPageChange(1)}>
+        <StArrowButton aria-label="처음 페이지로 이동" disabled={currentPage === 1} onClick={() => onPageChange(1)}>
           {'<<'}
         </StArrowButton>
       )}
-      <StArrowButton disabled={currentPage === 1} onClick={() => onPageChange(currentPage - 1)}>
+      <StArrowButton
+        aria-label="이전 페이지로 이동"
+        disabled={currentPage === 1}
+        onClick={() => onPageChange(currentPage - 1)}>
         {'<'}
       </StArrowButton>
       {pageGroupList.map((page) => (
@@ -47,11 +50,17 @@ function Pagination(props: PaginationProps) {
           {page}
         </StNumberButton>
       ))}
-      <StArrowButton disabled={currentPage === lastPage} onClick={() => onPageChange(currentPage + 1)}>
+      <StArrowButton
+        aria-label="다음 페이지로 이동"
+        disabled={currentPage === lastPage}
+        onClick={() => onPageChange(currentPage + 1)}>
         {'>'}
       </StArrowButton>
       {lastPage > blockSize && (
-        <StArrowButton disabled={currentPage === lastPage} onClick={() => onPageChange(lastPage)}>
+        <StArrowButton
+          aria-label="마지막 페이지로 이동"
+          disabled={currentPage === lastPage}
+          onClick={() => onPageChange(lastPage)}>
           {'>>'}
         </StArrowButton>
       )}
