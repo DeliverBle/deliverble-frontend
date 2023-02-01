@@ -20,11 +20,25 @@ function Like(props: LikeProps) {
       }}>
       <StLikeImage isFromList={isFromList}>
         {isFavorite ? (
-          <ImageDiv className="like" src={icLikeClicked} alt="즐겨찾기" layout="fill" />
+          <ImageDiv
+            role="checkbox"
+            aria-checked="false"
+            className="like"
+            src={icLikeClicked}
+            alt="즐겨찾기"
+            layout="fill"
+          />
         ) : (
           <>
             <ImageDiv className="like" src={icLikeHover} alt="즐겨찾기" layout="fill" />
-            <ImageDiv className="like default" src={icLikeDefault} alt="즐겨찾기" layout="fill" />
+            <ImageDiv
+              role="checkbox"
+              aria-checked="true"
+              className="like default"
+              src={icLikeDefault}
+              alt="즐겨찾기"
+              layout="fill"
+            />
           </>
         )}
       </StLikeImage>
