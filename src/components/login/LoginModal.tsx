@@ -26,7 +26,7 @@ function LoginModal(props: LoginModalProps) {
           <Link href={KAKAO_AUTH_URL}>
             <StLoginButton>
               <ImageDiv src={icKakao} className="kakao-icon" layout="fill" alt="" />
-              <a>카카오로 3초만에 시작하기</a>
+              <a role="link">카카오로 3초만에 시작하기</a>
             </StLoginButton>
           </Link>
         </StLoginModalContent>
