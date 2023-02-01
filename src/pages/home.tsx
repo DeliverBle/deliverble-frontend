@@ -69,7 +69,7 @@ function Home() {
       <StHome>
         <BannerSlider />
         <StNews type="guide">
-          <h3>스스로 학습하기 전, {mounted && smallBanner && <br />}스피치 가이드를 살펴보세요.</h3>
+          <h2>스스로 학습하기 전, {mounted && smallBanner && <br />}스피치 가이드를 살펴보세요.</h2>
           {isLoading ? (
             <VideoListSkeleton itemNumber={4} />
           ) : (
@@ -79,7 +79,7 @@ function Home() {
           )}
         </StNews>
         <StNews type="normal">
-          <h3>딜리버블의 추천 뉴스를 만나보세요.</h3>
+          <h2>딜리버블의 추천 뉴스를 만나보세요.</h2>
           {isLoading ? (
             <VideoListSkeleton itemNumber={8} />
           ) : (
@@ -117,7 +117,7 @@ const StNews = styled.div<{ type: string }>`
     padding-right: 16rem;
   }
 
-  & > h3 {
+  & > h2 {
     min-width: 4.8rem;
     margin-bottom: 5.6rem;
 
@@ -140,7 +140,7 @@ const StNews = styled.div<{ type: string }>`
       padding-right: 2.4rem;
     }
 
-    & > h3 {
+    & > h2 {
       margin-bottom: 3.2rem;
       ${FONT_STYLES.SB_21_BODY};
       zoom: 150%;
