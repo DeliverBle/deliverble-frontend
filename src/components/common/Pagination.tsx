@@ -33,7 +33,7 @@ function Pagination(props: PaginationProps) {
   }, [currentPage, blockSize, lastPage]);
 
   return (
-    <StPagination>
+    <StPagination role="navigation" aria-label="페이지네이션">
       {lastPage > blockSize && (
         <StArrowButton aria-label="처음 페이지로 이동" disabled={currentPage === 1} onClick={() => onPageChange(1)}>
           {'<<'}
