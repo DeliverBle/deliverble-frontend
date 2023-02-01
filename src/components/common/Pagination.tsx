@@ -35,7 +35,7 @@ function Pagination(props: PaginationProps) {
   return (
     <StPagination role="navigation" aria-label="페이지네이션">
       {lastPage > blockSize && (
-        <StArrowButton aria-label="처음 페이지로 이동" disabled={currentPage === 1} onClick={() => onPageChange(1)}>
+        <StArrowButton aria-label="첫 페이지로 이동" disabled={currentPage === 1} onClick={() => onPageChange(1)}>
           {'<<'}
         </StArrowButton>
       )}
@@ -46,8 +46,12 @@ function Pagination(props: PaginationProps) {
         {'<'}
       </StArrowButton>
       {pageGroupList.map((page) => (
-        <StNumberButton onClick={() => onPageChange(page)} isActive={page === currentPage} key={page}>
-          {page}
+        <StNumberButton
+          aria-current={page === currentPage}
+          isActive={page === currentPage}
+          onClick={() => onPageChange(page)}
+          key={page}>
+          {page} <span>페이지</span>
         </StNumberButton>
       ))}
       <StArrowButton
@@ -106,6 +110,10 @@ const StNumberButton = styled.button<{ isActive: boolean }>`
   padding: 0;
   color: ${({ isActive }) => (isActive ? COLOR.BLACK : COLOR.GRAY_30)};
   ${FONT_STYLES.SB_20_BODY};
+
+  & > span {
+    display: none;
+  }
 
   &:hover {
     color: ${COLOR.GRAY_45};
