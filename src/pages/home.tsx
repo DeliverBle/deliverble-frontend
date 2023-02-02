@@ -68,26 +68,28 @@ function Home() {
       <NavigationBar />
       <StHome>
         <BannerSlider />
-        <StNews type="guide">
-          <h2>스스로 학습하기 전, {mounted && smallBanner && <br />}스피치 가이드를 살펴보세요.</h2>
-          {isLoading ? (
-            <VideoListSkeleton itemNumber={4} />
-          ) : (
-            <div>
-              <NewsList onClickLike={handleClickLike} newsList={speechGuideList} type="guide" />
-            </div>
-          )}
-        </StNews>
-        <StNews type="normal">
-          <h2>딜리버블의 추천 뉴스를 만나보세요.</h2>
-          {isLoading ? (
-            <VideoListSkeleton itemNumber={8} />
-          ) : (
-            <div>
-              <NewsList onClickLike={handleClickLike} newsList={newsList} type="normal" />
-            </div>
-          )}
-        </StNews>
+        <main>
+          <StNews type="guide">
+            <h2>스스로 학습하기 전, {mounted && smallBanner && <br />}스피치 가이드를 살펴보세요.</h2>
+            {isLoading ? (
+              <VideoListSkeleton itemNumber={4} />
+            ) : (
+              <div>
+                <NewsList onClickLike={handleClickLike} newsList={speechGuideList} type="guide" />
+              </div>
+            )}
+          </StNews>
+          <StNews type="normal">
+            <h2>딜리버블의 추천 뉴스를 만나보세요.</h2>
+            {isLoading ? (
+              <VideoListSkeleton itemNumber={8} />
+            ) : (
+              <div>
+                <NewsList onClickLike={handleClickLike} newsList={newsList} type="normal" />
+              </div>
+            )}
+          </StNews>
+        </main>
       </StHome>
       <Footer />
     </StPageWrapper>
