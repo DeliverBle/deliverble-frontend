@@ -535,7 +535,7 @@ function LearnDetail() {
             <StGuideTitle isGuide={isGuide} onClick={() => !isGuide && setIsGuide((prev) => !prev)}>
               <p>스피치 가이드</p>
               <ImageDiv
-                role="tooltip"
+                aria-describedby="guide-tooltip"
                 className="guide-info"
                 src={icSpeechGuideInfo}
                 alt="스피치 가이드 설명"
@@ -623,6 +623,7 @@ function LearnDetail() {
                         onLoginModalOpen={handleLoginModalOpen}
                       />
                       <StButton
+                        aria-describedby="highlight-tooltip"
                         onClick={(e) => {
                           e.stopPropagation();
                           if (getLoginStatus() === '') {
@@ -654,6 +655,7 @@ function LearnDetail() {
                         )}
                       </StButton>
                       <StButton
+                        aria-describedby="spacing-tooltip"
                         onClick={(e) => {
                           e.stopPropagation();
                           if (getLoginStatus() === '') {
@@ -690,12 +692,12 @@ function LearnDetail() {
                         )}
                       </StButton>
                       <StTooltipContainer hoveredChild={hoveredChild}>
-                        <p>
+                        <p id="highlight-tooltip" role="tooltip">
                           드래그해서 하이라이트를
                           <br />
                           표시해보세요.
                         </p>
-                        <p>
+                        <p id="spacing-tooltip" role="tooltip">
                           클릭해서 끊어읽기를
                           <br />
                           표시해보세요.
@@ -771,7 +773,7 @@ function LearnDetail() {
               </aside>
             </main>
             {isGuideOver && (
-              <StGuideTooltip>
+              <StGuideTooltip id="guide-tooltip" role="tooltip">
                 <p>{SPEECH_GUIDE_TOOLTIP_TEXT.title}</p>
                 <p>{SPEECH_GUIDE_TOOLTIP_TEXT.description}</p>
               </StGuideTooltip>
