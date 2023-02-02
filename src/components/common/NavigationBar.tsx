@@ -69,7 +69,7 @@ function NavigationBar() {
           </StTabList>
         </nav>
         {login ? (
-          <StLoginButton ref={profileImageRef}>
+          <StLoginButton aria-label="프로필" ref={profileImageRef}>
             <ImageDiv
               onClick={() => setIsProfileModalOpen((prev) => !prev)}
               className="profile"
@@ -107,7 +107,7 @@ function NavigationBar() {
 
 export default dynamic(() => Promise.resolve(NavigationBar), { ssr: false });
 
-const StNavigationBar = styled.div`
+const StNavigationBar = styled.header`
   display: flex;
   align-items: center;
   position: fixed;

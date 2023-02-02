@@ -38,6 +38,8 @@ import {
   SPEECH_GUIDE_TOOLTIP_TEXT,
   CONTEXT_MENU_WIDTH,
   ABSOLUTE_RIGHT_LIMIT,
+  VIDEO_STATE_CUED,
+  VIDEO_STATE_PAUSED,
 } from '@src/utils/constant';
 import { useBodyScrollLock } from '@src/hooks/useBodyScrollLock';
 import {
@@ -441,20 +443,16 @@ function LearnDetail() {
   useEffect(() => {
     (async () => {
       const id = Number(detailId);
-      let data;
-      if (isGuide) {
-        data = await api.learnDetailService.getSpeechGuideData(id);
-      } else {
-        data = isLoggedIn
-          ? await api.learnDetailService.getPrivateVideoData(id, clickedScriptTitleIndex)
-          : await api.learnDetailService.getPublicVideoData(id);
-      }
+      if (!id) return;
+      const data = isGuide
+        ? await api.learnDetailService.getSpeechGuideData(id)
+        : isLoggedIn
+        ? await api.learnDetailService.getPrivateVideoData(id, clickedScriptTitleIndex)
+        : await api.learnDetailService.getPublicVideoData(id);
       setVideoData(data);
       const { memos, names } = data;
-      memos ? setMemoList(memos) : setMemoList([]);
-      if (isLoggedIn && names) {
-        setScriptTitleList(names);
-      }
+      setMemoList(memos ?? []);
+      setScriptTitleList(names ?? []);
     })();
   }, [isLoggedIn, detailId, isEditing, isGuide, clickedScriptTitleIndex]);
 
@@ -471,7 +469,7 @@ function LearnDetail() {
         setCurrentTime(player.getCurrentTime());
       }, 100);
 
-    if (videoState === 2 || videoState === 5) {
+    if (videoState === VIDEO_STATE_PAUSED || videoState === VIDEO_STATE_CUED) {
       interval && clearInterval(interval);
     }
     return () => interval && clearInterval(interval);
@@ -525,12 +523,19 @@ function LearnDetail() {
       <SEO title="학습하기 | Deliverble" />
       <NavigationBar />
       <StLearnDetail>
-        <ImageDiv onClick={() => router.push(prevLink)} src={icXButton} className="close" layout="fill" alt="x" />
+        <ImageDiv
+          onClick={() => router.push(prevLink)}
+          src={icXButton}
+          className="close"
+          layout="fill"
+          alt="이전 페이지로 돌아가기"
+        />
         <StScriptTitleContainer>
           {videoData?.haveGuide && (
             <StGuideTitle isGuide={isGuide} onClick={() => !isGuide && setIsGuide((prev) => !prev)}>
               <p>스피치 가이드</p>
               <ImageDiv
+                aria-describedby="guide-tooltip"
                 className="guide-info"
                 src={icSpeechGuideInfo}
                 alt="스피치 가이드 설명"
@@ -559,7 +564,7 @@ function LearnDetail() {
               />
             ))}
           {videoData?.names && scriptTitleList.length > 0 && scriptTitleList.length !== SCRIPT_MAX_COUNT && (
-            <StScriptAddButton onClick={handleScriptAdd} />
+            <StScriptAddButton aria-label="스크립트 추가" onClick={handleScriptAdd} />
           )}
         </StScriptTitleContainer>
         {videoData && (
@@ -618,6 +623,7 @@ function LearnDetail() {
                         onLoginModalOpen={handleLoginModalOpen}
                       />
                       <StButton
+                        aria-describedby="highlight-tooltip"
                         onClick={(e) => {
                           e.stopPropagation();
                           if (getLoginStatus() === '') {
@@ -649,6 +655,7 @@ function LearnDetail() {
                         )}
                       </StButton>
                       <StButton
+                        aria-describedby="spacing-tooltip"
                         onClick={(e) => {
                           e.stopPropagation();
                           if (getLoginStatus() === '') {
@@ -685,12 +692,12 @@ function LearnDetail() {
                         )}
                       </StButton>
                       <StTooltipContainer hoveredChild={hoveredChild}>
-                        <p>
+                        <p id="highlight-tooltip" role="tooltip">
                           드래그해서 하이라이트를
                           <br />
                           표시해보세요.
                         </p>
-                        <p>
+                        <p id="spacing-tooltip" role="tooltip">
                           클릭해서 끊어읽기를
                           <br />
                           표시해보세요.
@@ -725,15 +732,22 @@ function LearnDetail() {
                   />
                 </StVideoWrapper>
                 <StStudyLogContainer>
-                  <StStudyLogTabContainer>
-                    <StStudyLogTab isActive={studyLogTab === 'memo'} onClick={() => setStudyLogTab('memo')}>
+                  <StStudyLogTabList role="tablist">
+                    <StStudyLogTab
+                      role="tab"
+                      aria-selected={studyLogTab === 'memo'}
+                      isActive={studyLogTab === 'memo'}
+                      onClick={() => setStudyLogTab('memo')}>
                       메모
                     </StStudyLogTab>
-                    <div className="divider" />
-                    <StStudyLogTab isActive={studyLogTab === 'record'} onClick={() => setStudyLogTab('record')}>
+                    <StStudyLogTab
+                      role="tab"
+                      aria-selected={studyLogTab === 'record'}
+                      isActive={studyLogTab === 'record'}
+                      onClick={() => setStudyLogTab('record')}>
                       녹음
                     </StStudyLogTab>
-                  </StStudyLogTabContainer>
+                  </StStudyLogTabList>
                   {studyLogTab === 'memo' ? (
                     <StMemoWrapper>
                       {memoList.length || memoState.newMemoId !== INITIAL_NUMBER ? (
@@ -759,7 +773,7 @@ function LearnDetail() {
               </aside>
             </main>
             {isGuideOver && (
-              <StGuideTooltip>
+              <StGuideTooltip id="guide-tooltip" role="tooltip">
                 <p>{SPEECH_GUIDE_TOOLTIP_TEXT.title}</p>
                 <p>{SPEECH_GUIDE_TOOLTIP_TEXT.description}</p>
               </StGuideTooltip>
@@ -769,7 +783,7 @@ function LearnDetail() {
         )}
         {!isGuide && videoData && (
           <StNews>
-            <h3>비슷한 주제의 영상으로 계속 연습해보세요.</h3>
+            <h2>비슷한 주제의 영상으로 계속 연습해보세요.</h2>
             {isLoading ? (
               <VideoListSkeleton itemNumber={4} />
             ) : (
@@ -812,7 +826,7 @@ const StNews = styled.div`
   margin: 0 auto;
   padding-top: 16rem;
 
-  & > h3 {
+  & > h2 {
     min-width: 53rem;
     margin-bottom: 2.8rem;
 
@@ -1155,23 +1169,23 @@ const StStudyLogContainer = styled.div`
   flex-direction: column;
 `;
 
-const StStudyLogTabContainer = styled.div`
+const StStudyLogTabList = styled.ul`
   display: flex;
   align-items: center;
-  gap: 1.6rem;
   margin-bottom: 2rem;
-
-  .divider {
-    width: 0.2rem;
-    height: 1.6rem;
-    background-color: ${COLOR.GRAY_10};
-  }
 `;
 
-const StStudyLogTab = styled.h2<{ isActive: boolean }>`
+const StStudyLogTab = styled.li<{ isActive: boolean }>`
   color: ${({ isActive }) => (isActive ? COLOR.BLACK : COLOR.GRAY_30)};
   ${FONT_STYLES.SB_24_HEADLINE};
   cursor: pointer;
+
+  &:not(:last-child):after {
+    content: '|';
+    margin: 0 1.6rem;
+    color: ${COLOR.GRAY_30};
+    font-weight: 400;
+  }
 `;
 
 const StMemoWrapper = styled.div`

@@ -9,11 +9,11 @@ function Footer() {
     <StFooter>
       <StLogo>
         <ImageDiv className="logo" src={icDeliverbleBlue} alt="딜리버블" layout="fill" />
-        <h4>
+        <p>
           언제 어디서나 당당할 당신의 말하기를
           <br />
           딜리버블이 응원합니다.
-        </h4>
+        </p>
         <a target="_blank" href="https://www.instagram.com/deliverble_official/" rel="noreferrer noopener">
           <ImageDiv className="social-link" src={icSocial} alt="인스타그램 링크" />
         </a>
@@ -45,7 +45,7 @@ function Footer() {
 
 export default Footer;
 
-const StFooter = styled.div`
+const StFooter = styled.footer`
   display: flex;
   justify-content: space-between;
   gap: 15rem;
@@ -91,7 +91,7 @@ const StLogo = styled.div`
     height: 4.6rem;
   }
 
-  & > h4 {
+  & > p {
     margin: 1.6rem 0 5.6rem 0;
     min-width: 35.1rem;
     color: ${COLOR.MAIN_BLUE};

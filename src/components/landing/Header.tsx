@@ -7,20 +7,22 @@ import { FONT_STYLES } from 'src/styles/fontStyle';
 import ImageDiv from '../common/ImageDiv';
 import { loginState } from '@src/stores/loginState';
 import { useRecoilValue } from 'recoil';
+import { useBodyScrollLock } from '@src/hooks/useBodyScrollLock';
 
-interface NavProps {
+interface HeaderProps {
   isFirstScrolled?: boolean;
   isSecondScrolled?: boolean;
 }
 
-function Nav(props: NavProps) {
+function Header(props: HeaderProps) {
   const { isFirstScrolled = false, isSecondScrolled = false } = props;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const isLoggedIn = useRecoilValue(loginState);
+  const { lockScroll, unlockScroll } = useBodyScrollLock();
 
   return (
     <>
-      <StNav isSecondScrolled={isSecondScrolled}>
+      <StHeader isSecondScrolled={isSecondScrolled}>
         <ImageDiv
           src={isFirstScrolled ? icDeliverbleBlue : icDeliverbleWhite}
           className="logo"
@@ -28,19 +30,31 @@ function Nav(props: NavProps) {
           alt="딜리버블"
         />
         {!isLoggedIn && (
-          <StLogin isFirstScrolled={isFirstScrolled} onClick={() => setIsModalOpen(true)}>
+          <StLogin
+            isFirstScrolled={isFirstScrolled}
+            onClick={() => {
+              lockScroll();
+              setIsModalOpen(true);
+            }}>
             로그인
           </StLogin>
         )}
-      </StNav>
-      {isModalOpen && <LoginModal closeModal={() => setIsModalOpen(false)} />}
+      </StHeader>
+      {isModalOpen && (
+        <LoginModal
+          closeModal={() => {
+            unlockScroll();
+            setIsModalOpen(false);
+          }}
+        />
+      )}
     </>
   );
 }
 
-export default Nav;
+export default Header;
 
-const StNav = styled.nav<{ isSecondScrolled: boolean }>`
+const StHeader = styled.header<{ isSecondScrolled: boolean }>`
   display: flex;
   gap: 160rem;
   position: fixed;

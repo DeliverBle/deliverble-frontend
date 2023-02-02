@@ -33,25 +33,38 @@ function Pagination(props: PaginationProps) {
   }, [currentPage, blockSize, lastPage]);
 
   return (
-    <StPagination>
+    <StPagination role="navigation" aria-label="페이지 탐색">
       {lastPage > blockSize && (
-        <StArrowButton disabled={currentPage === 1} onClick={() => onPageChange(1)}>
+        <StArrowButton aria-label="첫 페이지로 이동" disabled={currentPage === 1} onClick={() => onPageChange(1)}>
           {'<<'}
         </StArrowButton>
       )}
-      <StArrowButton disabled={currentPage === 1} onClick={() => onPageChange(currentPage - 1)}>
+      <StArrowButton
+        aria-label="이전 페이지로 이동"
+        disabled={currentPage === 1}
+        onClick={() => onPageChange(currentPage - 1)}>
         {'<'}
       </StArrowButton>
       {pageGroupList.map((page) => (
-        <StNumberButton onClick={() => onPageChange(page)} isActive={page === currentPage} key={page}>
-          {page}
+        <StNumberButton
+          aria-current={page === currentPage && 'page'}
+          isActive={page === currentPage}
+          onClick={() => onPageChange(page)}
+          key={page}>
+          {page} <span>페이지</span>
         </StNumberButton>
       ))}
-      <StArrowButton disabled={currentPage === lastPage} onClick={() => onPageChange(currentPage + 1)}>
+      <StArrowButton
+        aria-label="다음 페이지로 이동"
+        disabled={currentPage === lastPage}
+        onClick={() => onPageChange(currentPage + 1)}>
         {'>'}
       </StArrowButton>
       {lastPage > blockSize && (
-        <StArrowButton disabled={currentPage === lastPage} onClick={() => onPageChange(lastPage)}>
+        <StArrowButton
+          aria-label="마지막 페이지로 이동"
+          disabled={currentPage === lastPage}
+          onClick={() => onPageChange(lastPage)}>
           {'>>'}
         </StArrowButton>
       )}
@@ -97,6 +110,10 @@ const StNumberButton = styled.button<{ isActive: boolean }>`
   padding: 0;
   color: ${({ isActive }) => (isActive ? COLOR.BLACK : COLOR.GRAY_30)};
   ${FONT_STYLES.SB_20_BODY};
+
+  & > span {
+    display: none;
+  }
 
   &:hover {
     color: ${COLOR.GRAY_45};

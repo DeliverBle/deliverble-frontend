@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import SEO from '@src/components/common/SEO';
-import Nav from '@src/components/landing/Nav';
+import Header from '@src/components/landing/Header';
 import ScrollControl from '@src/components/landing/ScrollControl';
 import SliderContainer from '@src/components/landing/SliderContainer';
 import { icMobileLogoWhite, icMobileLogo } from 'public/assets/icons';
@@ -41,17 +41,17 @@ function Landing() {
     <div>
       <SEO title="Deliverble" />
       {deviceType === 'mobile' && (
-        <StMoblie>
-          <StNav isFirstScrolled={isScrolled}>
+        <StMobile>
+          <StHeader isFirstScrolled={isScrolled}>
             <ImageDiv src={isScrolled ? icMobileLogo : icMobileLogoWhite} className="logo" layout="fill" alt="" />
-          </StNav>
+          </StHeader>
           <MobileContainer />
-        </StMoblie>
+        </StMobile>
       )}
       {deviceType === 'desktop' && (
         <StLanding>
           <ScrollControl slideNumber={slideNumber} setSlideNumber={setSlideNumber} setStopObserve={setStopObserve} />
-          <Nav isFirstScrolled={isFirstScrolled} isSecondScrolled={isSecondScrolled} />
+          <Header isFirstScrolled={isFirstScrolled} isSecondScrolled={isSecondScrolled} />
           <SliderContainer
             slideNumber={slideNumber}
             setSlideNumber={setSlideNumber}
@@ -74,7 +74,7 @@ const StLanding = styled.div`
   }
 `;
 
-const StMoblie = styled.div`
+const StMobile = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -84,7 +84,7 @@ const StMoblie = styled.div`
   }
 `;
 
-const StNav = styled.nav<{ isFirstScrolled: boolean }>`
+const StHeader = styled.header<{ isFirstScrolled: boolean }>`
   display: flex;
   position: fixed;
   align-items: center;

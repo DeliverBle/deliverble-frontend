@@ -8,7 +8,7 @@ import { imgMobileBgFirst, imgMobileBgLast, imgMobileFist, imgMobileEar, imgMobi
 
 function MobileContainer() {
   return (
-    <StMoblieContainer>
+    <StMobileContainer>
       <StFirstSlide>
         <p>
           아나운서 쉐도잉으로 키우는
@@ -126,11 +126,11 @@ function MobileContainer() {
         <p>Contact Us</p>
         <p>deliverble.team@gmail.com</p>
       </StFifthSlide>
-    </StMoblieContainer>
+    </StMobileContainer>
   );
 }
 
-const StMoblieContainer = styled.div`
+const StMobileContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;

@@ -8,18 +8,18 @@ function HeadlineContainer() {
   return (
     <StHeadlineContainer>
       <ImageDiv src={icScript} className="script" layout="fill" alt="" />
-      <StHeadLineWrapper>
+      <h1>
         한 번으로 끝내지 마세요!
         <br />
         복습으로 매력적인 목소리를 만들어요.
-      </StHeadLineWrapper>
+      </h1>
     </StHeadlineContainer>
   );
 }
 
 export default HeadlineContainer;
 
-const StHeadlineContainer = styled.section`
+const StHeadlineContainer = styled.div`
   display: flex;
   gap: 1.2rem;
   margin-bottom: 14.8rem;
@@ -29,11 +29,11 @@ const StHeadlineContainer = styled.section`
     width: 4.8rem;
     height: 4.8rem;
   }
-`;
 
-const StHeadLineWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  color: ${COLOR.BLACK};
-  ${FONT_STYLES.SB_32_HEADLINE};
+  & > h1 {
+    display: flex;
+    flex-direction: column;
+    color: ${COLOR.BLACK};
+    ${FONT_STYLES.SB_32_HEADLINE};
+  }
 `;
