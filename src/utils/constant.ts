@@ -52,6 +52,8 @@ export const BANNER_TEXT_LIST = [
 
 export const HJID = 3283852;
 export const HJSV = 6;
+export const VIDEO_STATE_PAUSED = 2;
+export const VIDEO_STATE_CUED = 5;
 export const MEMO_CONTENT_MAX = 30;
 export const SCRIPT_MAX_COUNT = 3;
 export const SCRIPT_TITLE_MAX_LENGTH = 100;

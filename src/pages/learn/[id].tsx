@@ -38,6 +38,8 @@ import {
   SPEECH_GUIDE_TOOLTIP_TEXT,
   CONTEXT_MENU_WIDTH,
   ABSOLUTE_RIGHT_LIMIT,
+  VIDEO_STATE_CUED,
+  VIDEO_STATE_PAUSED,
 } from '@src/utils/constant';
 import { useBodyScrollLock } from '@src/hooks/useBodyScrollLock';
 import {
@@ -471,7 +473,7 @@ function LearnDetail() {
         setCurrentTime(player.getCurrentTime());
       }, 100);
 
-    if (videoState === 2 || videoState === 5) {
+    if (videoState === VIDEO_STATE_PAUSED || videoState === VIDEO_STATE_CUED) {
       interval && clearInterval(interval);
     }
     return () => interval && clearInterval(interval);
