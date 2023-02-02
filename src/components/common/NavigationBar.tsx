@@ -69,7 +69,7 @@ function NavigationBar() {
           </StTabList>
         </nav>
         {login ? (
-          <StLoginButton aria-label="로그인" ref={profileImageRef}>
+          <StLoginButton aria-label="프로필" ref={profileImageRef}>
             <ImageDiv
               onClick={() => setIsProfileModalOpen((prev) => !prev)}
               className="profile"
