@@ -9,11 +9,11 @@ interface ScriptTitleProps {
   isOne: boolean;
   isClicked: boolean;
   isEditing: boolean;
-  onScriptTitleClick: () => void;
-  onScriptDelete: () => void;
-  onScriptTitleChange: () => void;
-  onScriptTitleInputChange: () => void;
-  onScriptRename: (name: string) => void;
+  onTitleClick: () => void;
+  onTitleDelete: () => void;
+  onTitleChange: () => void;
+  onTitleInputChange: () => void;
+  onTitleRename: (name: string) => void;
 }
 
 function ScriptTitle(props: ScriptTitleProps) {
@@ -22,11 +22,11 @@ function ScriptTitle(props: ScriptTitleProps) {
     isOne,
     isClicked,
     isEditing,
-    onScriptTitleClick,
-    onScriptDelete,
-    onScriptTitleChange,
-    onScriptTitleInputChange,
-    onScriptRename,
+    onTitleClick,
+    onTitleDelete,
+    onTitleChange,
+    onTitleInputChange,
+    onTitleRename,
   } = props;
   const [text, setText] = useState(name);
   const scriptTitleInputRef = useRef<HTMLInputElement>(null);
@@ -42,12 +42,12 @@ function ScriptTitle(props: ScriptTitleProps) {
   const changeName = () => {
     const length = text.length;
     if (length && length <= SCRIPT_TITLE_MAX_LENGTH) {
-      onScriptRename(text);
-      onScriptTitleInputChange();
+      onTitleRename(text);
+      onTitleInputChange();
       return;
     }
     setText(name);
-    onScriptTitleInputChange();
+    onTitleInputChange();
   };
 
   const handleKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -60,9 +60,9 @@ function ScriptTitle(props: ScriptTitleProps) {
     <StScriptTitle
       isClicked={isClicked}
       isEditing={isEditing}
-      onClick={onScriptTitleClick}
-      onDoubleClick={onScriptTitleChange}
-      onContextMenu={onScriptTitleChange}>
+      onClick={onTitleClick}
+      onDoubleClick={onTitleChange}
+      onContextMenu={onTitleChange}>
       {isEditing ? (
         <input
           ref={scriptTitleInputRef}
@@ -74,7 +74,7 @@ function ScriptTitle(props: ScriptTitleProps) {
       ) : (
         <div>{name}</div>
       )}
-      {!isOne && <StScriptDeleteButton aria-label="스크립트 삭제" onClick={onScriptDelete} isEditing={isEditing} />}
+      {!isOne && <StScriptDeleteButton aria-label="스크립트 삭제" onClick={onTitleDelete} isEditing={isEditing} />}
     </StScriptTitle>
   );
 }

@@ -22,11 +22,11 @@ interface ConfirmModalProps {
   setMemoState: Dispatch<SetStateAction<MemoState>>;
   setIsConfirmOpen: (close: boolean) => void;
   setClickedDeleteMemo: (clicked: boolean) => void;
-  onScriptDelete: () => void;
+  onTitleDelete: () => void;
 }
 
 function ConfirmModal(props: ConfirmModalProps) {
-  const { confirmModalText, setMemoState, setIsConfirmOpen, setClickedDeleteMemo, onScriptDelete } = props;
+  const { confirmModalText, setMemoState, setIsConfirmOpen, setClickedDeleteMemo, onTitleDelete } = props;
   const { mainText, subText, leftButtonText, rightButtonText } = confirmModalText;
 
   useEffect(() => {
@@ -38,7 +38,7 @@ function ConfirmModal(props: ConfirmModalProps) {
 
   const handleButtonClick = () => {
     if (mainText === DELETE_SCRIPT_CONFIRM_MODAL_TEXT.mainText) {
-      onScriptDelete();
+      onTitleDelete();
       return;
     }
 
