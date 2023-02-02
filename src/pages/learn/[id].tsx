@@ -441,10 +441,9 @@ function LearnDetail() {
   }, [isEditing, isHighlight, isSpacing]);
 
   useEffect(() => {
-    if (!router.isReady) return;
-
     (async () => {
       const id = Number(detailId);
+      if (!id) return;
       const data = isGuide
         ? await api.learnDetailService.getSpeechGuideData(id)
         : isLoggedIn
@@ -455,7 +454,7 @@ function LearnDetail() {
       setMemoList(memos ?? []);
       setScriptTitleList(names ?? []);
     })();
-  }, [router.isReady, isLoggedIn, detailId, isEditing, isGuide, clickedScriptTitleIndex]);
+  }, [isLoggedIn, detailId, isEditing, isGuide, clickedScriptTitleIndex]);
 
   useEffect(() => {
     setClickedScriptTitleIndex(0);
