@@ -52,9 +52,9 @@ function ConfirmModal(props: ConfirmModalProps) {
 
   return (
     <Portal selector="#portal">
-      <StConfirmModal>
+      <StConfirmModal role="dialog" aria-modal="true" aria-labelledby="title">
         <StDescription>
-          <h2>{mainText}</h2>
+          <h2 id="title">{mainText}</h2>
           <p>{subText}</p>
         </StDescription>
         <StButtonContainer>

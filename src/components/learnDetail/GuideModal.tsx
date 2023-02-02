@@ -23,10 +23,10 @@ function GuideModal(props: GuideModalProps) {
     <Portal selector="#portal">
       <StGuideModal>
         <StGuideModalBackground />
-        <StGuideModalContent>
-          <ImageDiv onClick={closeModal} src={icXButton} className="x-button" layout="fill" alt="x" />
+        <StGuideModalContent role="dialog" aria-modal="true" aria-labelledby="title">
+          <ImageDiv role="button" onClick={closeModal} src={icXButton} className="x-button" layout="fill" alt="닫기" />
           <div>
-            <StModalTitle>어떻게 학습하나요?</StModalTitle>
+            <StModalTitle id="title">어떻게 학습하나요?</StModalTitle>
             <p>
               1. 재생 버튼을 클릭해 아나운서의 뉴스 리딩을 <span>들어보세요</span>
               <br />

@@ -89,7 +89,7 @@ function ScriptTitle(props: ScriptTitleProps) {
       ) : (
         <div>{name}</div>
       )}
-      {!isOne && <StScriptDeleteButton onClick={onScriptDelete} isEditing={isEditing} />}
+      {!isOne && <StScriptDeleteButton aria-label="스크립트 삭제" onClick={onScriptDelete} isEditing={isEditing} />}
     </StScriptTitle>
   );
 }

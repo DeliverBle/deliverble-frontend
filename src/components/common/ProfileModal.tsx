@@ -27,7 +27,7 @@ function ProfileModal() {
   };
 
   return (
-    <StProfileModal>
+    <StProfileModal role="dialog" aria-modal="true">
       <StProfileInfo>
         <ImageDiv className="profile-image" src={icMypageButton} layout="fill" alt="" />
         <p>{nickname}</p>

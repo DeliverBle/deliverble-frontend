@@ -18,9 +18,9 @@ function HighlightModal(props: HighlightModalProps) {
 
   return (
     <StHighlightModal>
-      <StHighlightModalContent>
+      <StHighlightModalContent role="dialog" aria-modal="true" aria-labelledby="title">
         <ImageDiv src={icAlert} className="alert" layout="fill" alt="" />
-        <p>같은 단어를 하이라이트할 수 없어요!</p>
+        <p id="title">같은 단어를 하이라이트할 수 없어요!</p>
         <StTimeClosedSet
           onClick={() => {
             closeModal();
