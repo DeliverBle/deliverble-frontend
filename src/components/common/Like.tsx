@@ -13,32 +13,20 @@ function Like(props: LikeProps) {
 
   return (
     <StLike
-      type="button"
+      role="toggle"
+      aria-label="즐겨찾기"
+      aria-checked={!isFavorite}
       onClick={(e) => {
         e.stopPropagation();
         toggleLike && toggleLike();
       }}>
       <StLikeImage isFromList={isFromList}>
         {isFavorite ? (
-          <ImageDiv
-            role="checkbox"
-            aria-checked="false"
-            className="like"
-            src={icLikeClicked}
-            alt="즐겨찾기"
-            layout="fill"
-          />
+          <ImageDiv className="like" src={icLikeClicked} alt="" layout="fill" />
         ) : (
           <>
-            <ImageDiv className="like" src={icLikeHover} alt="즐겨찾기" layout="fill" />
-            <ImageDiv
-              role="checkbox"
-              aria-checked="true"
-              className="like default"
-              src={icLikeDefault}
-              alt="즐겨찾기"
-              layout="fill"
-            />
+            <ImageDiv className="like" src={icLikeHover} alt="" layout="fill" />
+            <ImageDiv className="like default" src={icLikeDefault} alt="" layout="fill" />
           </>
         )}
       </StLikeImage>
