@@ -47,7 +47,7 @@ function Pagination(props: PaginationProps) {
       </StArrowButton>
       {pageGroupList.map((page) => (
         <StNumberButton
-          aria-current={page === currentPage}
+          aria-current={page === currentPage && 'page'}
           isActive={page === currentPage}
           onClick={() => onPageChange(page)}
           key={page}>
