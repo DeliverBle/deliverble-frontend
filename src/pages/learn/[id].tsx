@@ -377,7 +377,7 @@ function LearnDetail() {
     },
   });
 
-  const handleScriptTitleInputChange = (index: number) => {
+  const handleScriptTitleChange = (index: number) => {
     setClickedScriptTitleIndex(index);
     setTitleInputIndex(index);
     setIsScriptTitleInputVisible(true);
@@ -550,14 +550,12 @@ function LearnDetail() {
                 key={id}
                 name={name}
                 isOne={scriptTitleList.length === 1}
-                isScriptTitleInputVisible={isScriptTitleInputVisible}
-                currentScriptTitleIndex={i}
-                clickedScriptTitleIndex={clickedScriptTitleIndex}
-                scriptTitleInputIndex={scriptTitleInputIndex}
-                setIsScriptTitleInputVisible={setIsScriptTitleInputVisible}
-                setClickedScriptTitleIndex={setClickedScriptTitleIndex}
+                isClicked={i === clickedScriptTitleIndex}
+                isEditing={isScriptTitleInputVisible && i === scriptTitleInputIndex}
+                onScriptTitleClick={() => setClickedScriptTitleIndex(i)}
                 onScriptDelete={handleScriptDeleteModal}
-                onScriptTitleInputChange={(index: number) => handleScriptTitleInputChange(index)}
+                onScriptTitleChange={() => handleScriptTitleChange(i)}
+                onScriptTitleInputChange={() => setIsScriptTitleInputVisible(false)}
                 onScriptRename={mutateRenameScript}
               />
             ))}

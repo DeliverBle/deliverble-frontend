@@ -7,14 +7,12 @@ import { SCRIPT_TITLE_MAX_LENGTH } from '@src/utils/constant';
 interface ScriptTitleProps {
   name: string;
   isOne: boolean;
-  isScriptTitleInputVisible: boolean;
-  currentScriptTitleIndex: number;
-  clickedScriptTitleIndex: number;
-  scriptTitleInputIndex: number;
-  setIsScriptTitleInputVisible: (isScriptTitleInputVisible: boolean) => void;
-  setClickedScriptTitleIndex: (index: number) => void;
+  isClicked: boolean;
+  isEditing: boolean;
+  onScriptTitleClick: () => void;
   onScriptDelete: () => void;
-  onScriptTitleInputChange: (index: number) => void;
+  onScriptTitleChange: () => void;
+  onScriptTitleInputChange: () => void;
   onScriptRename: (name: string) => void;
 }
 
@@ -22,19 +20,16 @@ function ScriptTitle(props: ScriptTitleProps) {
   const {
     name,
     isOne,
-    isScriptTitleInputVisible,
-    setIsScriptTitleInputVisible,
-    currentScriptTitleIndex,
-    clickedScriptTitleIndex,
-    scriptTitleInputIndex,
-    setClickedScriptTitleIndex,
+    isClicked,
+    isEditing,
+    onScriptTitleClick,
     onScriptDelete,
+    onScriptTitleChange,
     onScriptTitleInputChange,
     onScriptRename,
   } = props;
   const [text, setText] = useState(name);
   const scriptTitleInputRef = useRef<HTMLInputElement>(null);
-  const isEditing = isScriptTitleInputVisible && scriptTitleInputIndex === currentScriptTitleIndex;
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
@@ -48,11 +43,11 @@ function ScriptTitle(props: ScriptTitleProps) {
     const length = text.length;
     if (length && length <= SCRIPT_TITLE_MAX_LENGTH) {
       onScriptRename(text);
-      setIsScriptTitleInputVisible(false);
+      onScriptTitleInputChange();
       return;
     }
     setText(name);
-    setIsScriptTitleInputVisible(false);
+    onScriptTitleInputChange();
   };
 
   const handleKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -63,14 +58,11 @@ function ScriptTitle(props: ScriptTitleProps) {
 
   return (
     <StScriptTitle
-      onClick={() => setClickedScriptTitleIndex(currentScriptTitleIndex)}
-      onDoubleClick={() => onScriptTitleInputChange(currentScriptTitleIndex)}
-      onContextMenu={(e) => {
-        e.preventDefault();
-        onScriptTitleInputChange(currentScriptTitleIndex);
-      }}
-      isClicked={currentScriptTitleIndex === clickedScriptTitleIndex}
-      isEditing={isEditing}>
+      isClicked={isClicked}
+      isEditing={isEditing}
+      onClick={onScriptTitleClick}
+      onDoubleClick={onScriptTitleChange}
+      onContextMenu={onScriptTitleChange}>
       {isEditing ? (
         <input
           ref={scriptTitleInputRef}
