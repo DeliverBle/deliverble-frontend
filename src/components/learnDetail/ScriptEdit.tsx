@@ -13,7 +13,7 @@ interface ScriptEditProps {
   isEditing: boolean;
   isHighlight: boolean;
   isSpacing: boolean;
-  clickedScriptTitleIndex: number;
+  clickedTitleIndex: number;
   memoList: MemoData[];
   setMemoState: Dispatch<SetStateAction<MemoState>>;
   setClickedDeleteMemo: (isDelete: boolean) => void;
@@ -22,8 +22,7 @@ interface ScriptEditProps {
 function ScriptEdit(props: ScriptEditProps) {
   const router = useRouter();
   const { id: detailId } = router.query;
-  const { isEditing, isHighlight, isSpacing, clickedScriptTitleIndex, memoList, setMemoState, setClickedDeleteMemo } =
-    props;
+  const { isEditing, isHighlight, isSpacing, clickedTitleIndex, memoList, setMemoState, setClickedDeleteMemo } = props;
   const [highlightAlert, setHighlightAlert] = useState<boolean>(false);
   const [order, setOrder] = useState<number>();
   const [text, setText] = useState<string>();
@@ -67,16 +66,16 @@ function ScriptEdit(props: ScriptEditProps) {
   useEffect(() => {
     (async () => {
       if (order !== -1 && text !== '' && order && text && videoData?.names) {
-        const id = videoData?.names[clickedScriptTitleIndex].id;
+        const id = videoData?.names[clickedTitleIndex].id;
         await api.learnDetailService.postSentenceData(
           {
             order,
             text,
           },
           id,
-          clickedScriptTitleIndex,
+          clickedTitleIndex,
         );
-        const data = await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedScriptTitleIndex);
+        const data = await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedTitleIndex);
         setVideoData(data);
         setText('');
         setOrder(-1);
@@ -285,10 +284,10 @@ function ScriptEdit(props: ScriptEditProps) {
 
   useEffect(() => {
     (async () => {
-      const data = await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedScriptTitleIndex);
+      const data = await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedTitleIndex);
       setVideoData(data);
     })();
-  }, [clickedScriptTitleIndex, detailId]);
+  }, [clickedTitleIndex, detailId]);
 
   useEffect(() => {
     const handleClickOutside = (e: Event) => {

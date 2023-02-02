@@ -89,10 +89,10 @@ function LearnDetail() {
   const [hoveredChild, setHoveredChild] = useState<number>(0);
   const [isGuideOver, setIsGuideOver] = useState<boolean>(false);
   const [highlightIndex, setHighlightIndex] = useState<number>(INITIAL_NUMBER);
-  const [scriptTitleList, setScriptTitleList] = useState<Name[]>([]);
-  const [clickedScriptTitleIndex, setClickedScriptTitleIndex] = useState(0);
-  const [isScriptTitleInputVisible, setIsScriptTitleInputVisible] = useState(false);
-  const [scriptTitleInputIndex, setTitleInputIndex] = useState(-1);
+  const [titleList, setTitleList] = useState<Name[]>([]);
+  const [clickedTitleIndex, setClickedTitleIndex] = useState(0);
+  const [isTitleInputVisible, setIsTitleInputVisible] = useState(false);
+  const [titleInputIndex, setTitleInputIndex] = useState(-1);
   const [memoList, setMemoList] = useState<MemoData[]>([]);
   const [memoState, setMemoState] = useState<MemoState>(INITIAL_MEMO_STATE);
   const [memoInfo, setMemoInfo] = useState<MemoInfo>(INITIAL_MEMO);
@@ -204,16 +204,16 @@ function LearnDetail() {
   useEffect(() => {
     (async () => {
       if (order !== -1 && text !== '' && order && text && videoData?.names) {
-        const id = videoData?.names[clickedScriptTitleIndex].id;
+        const id = videoData?.names[clickedTitleIndex].id;
         await api.learnDetailService.postSentenceData(
           {
             order,
             text,
           },
           id,
-          clickedScriptTitleIndex,
+          clickedTitleIndex,
         );
-        const data = await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedScriptTitleIndex);
+        const data = await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedTitleIndex);
         setVideoData(data);
         setText('');
         setOrder(-1);
@@ -329,8 +329,8 @@ function LearnDetail() {
   const handleScriptAdd = async () => {
     const response = await api.learnDetailService.postNewScriptData(Number(detailId));
     if (response.isSuccess) {
-      const newIndex = scriptTitleList.length;
-      setClickedScriptTitleIndex(newIndex);
+      const newIndex = titleList.length;
+      setClickedTitleIndex(newIndex);
       setTitleInputIndex(newIndex);
     }
   };
@@ -338,23 +338,23 @@ function LearnDetail() {
   const handleScriptDelete = async () => {
     const scriptId = videoData?.scriptsId ?? INITIAL_NUMBER;
     const response = await api.learnDetailService.deleteScriptData(scriptId);
-    if (response.isSuccess && clickedScriptTitleIndex) {
-      setClickedScriptTitleIndex(0);
+    if (response.isSuccess && clickedTitleIndex) {
+      setClickedTitleIndex(0);
       return;
     }
-    if (response.isSuccess && clickedScriptTitleIndex === 0) {
-      const data = await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedScriptTitleIndex);
+    if (response.isSuccess && clickedTitleIndex === 0) {
+      const data = await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedTitleIndex);
       setVideoData(data);
       const { memos, names } = data;
       if (memos && names) {
         setMemoList(memos);
-        setScriptTitleList(names);
+        setTitleList(names);
       }
       return;
     }
   };
 
-  const handleScriptDeleteModal = () => {
+  const handleTitleDeleteModal = () => {
     setConfirmModalText(DELETE_SCRIPT_CONFIRM_MODAL_TEXT);
     setIsConfirmOpen(true);
   };
@@ -368,7 +368,7 @@ function LearnDetail() {
     onSuccess: (data) => {
       if (videoData?.names) {
         const newNameList = videoData.names.slice();
-        newNameList[clickedScriptTitleIndex] = data;
+        newNameList[clickedTitleIndex] = data;
         setVideoData({
           ...videoData,
           names: newNameList,
@@ -377,10 +377,10 @@ function LearnDetail() {
     },
   });
 
-  const handleScriptTitleChange = (index: number) => {
-    setClickedScriptTitleIndex(index);
+  const handleTitleChange = (index: number) => {
+    setClickedTitleIndex(index);
     setTitleInputIndex(index);
-    setIsScriptTitleInputVisible(true);
+    setIsTitleInputVisible(true);
   };
 
   const handleClickLike = async (id: number) => {
@@ -447,17 +447,17 @@ function LearnDetail() {
       const data = isGuide
         ? await api.learnDetailService.getSpeechGuideData(id)
         : isLoggedIn
-        ? await api.learnDetailService.getPrivateVideoData(id, clickedScriptTitleIndex)
+        ? await api.learnDetailService.getPrivateVideoData(id, clickedTitleIndex)
         : await api.learnDetailService.getPublicVideoData(id);
       setVideoData(data);
       const { memos, names } = data;
       setMemoList(memos ?? []);
-      setScriptTitleList(names ?? []);
+      setTitleList(names ?? []);
     })();
-  }, [isLoggedIn, detailId, isEditing, isGuide, clickedScriptTitleIndex]);
+  }, [isLoggedIn, detailId, isEditing, isGuide, clickedTitleIndex]);
 
   useEffect(() => {
-    setClickedScriptTitleIndex(0);
+    setClickedTitleIndex(0);
   }, [detailId]);
 
   useEffect(() => {
@@ -549,17 +549,17 @@ function LearnDetail() {
               <ScriptTitle
                 key={id}
                 name={name}
-                isOne={scriptTitleList.length === 1}
-                isClicked={i === clickedScriptTitleIndex}
-                isEditing={isScriptTitleInputVisible && i === scriptTitleInputIndex}
-                onScriptTitleClick={() => setClickedScriptTitleIndex(i)}
-                onScriptDelete={handleScriptDeleteModal}
-                onScriptTitleChange={() => handleScriptTitleChange(i)}
-                onScriptTitleInputChange={() => setIsScriptTitleInputVisible(false)}
-                onScriptRename={mutateRenameScript}
+                isOne={titleList.length === 1}
+                isClicked={i === clickedTitleIndex}
+                isEditing={isTitleInputVisible && i === titleInputIndex}
+                onTitleClick={() => setClickedTitleIndex(i)}
+                onTitleDelete={handleTitleDeleteModal}
+                onTitleChange={() => handleTitleChange(i)}
+                onTitleInputChange={() => setIsTitleInputVisible(false)}
+                onTitleRename={mutateRenameScript}
               />
             ))}
-          {videoData?.names && scriptTitleList.length > 0 && scriptTitleList.length !== SCRIPT_MAX_COUNT && (
+          {videoData?.names && titleList.length > 0 && titleList.length !== SCRIPT_MAX_COUNT && (
             <StScriptAddButton aria-label="스크립트 추가" onClick={handleScriptAdd} />
           )}
         </StScriptTitleContainer>
@@ -603,7 +603,7 @@ function LearnDetail() {
                         isEditing={isEditing}
                         isHighlight={isHighlight}
                         isSpacing={isSpacing}
-                        clickedScriptTitleIndex={clickedScriptTitleIndex}
+                        clickedTitleIndex={clickedTitleIndex}
                         memoList={memoList}
                         setMemoState={setMemoState}
                         setClickedDeleteMemo={setClickedDeleteMemo}
@@ -801,7 +801,7 @@ function LearnDetail() {
             setMemoState={setMemoState}
             setIsConfirmOpen={setIsConfirmOpen}
             setClickedDeleteMemo={setClickedDeleteMemo}
-            onScriptDelete={handleScriptDelete}
+            onTitleDelete={handleScriptDelete}
           />
         )}
         {isLoginModalOpen && <LoginModal closeModal={handleLoginModalClose} />}
