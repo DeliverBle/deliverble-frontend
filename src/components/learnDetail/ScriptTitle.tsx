@@ -11,8 +11,6 @@ interface ScriptTitleProps {
   currentScriptTitleIndex: number;
   clickedScriptTitleIndex: number;
   scriptTitleInputIndex: number;
-  scriptId: number;
-  setCurrentScriptId: (scriptId: number) => void;
   setIsScriptTitleInputVisible: (isScriptTitleInputVisible: boolean) => void;
   setClickedScriptTitleIndex: (index: number) => void;
   onScriptDelete: () => void;
@@ -29,8 +27,6 @@ function ScriptTitle(props: ScriptTitleProps) {
     currentScriptTitleIndex,
     clickedScriptTitleIndex,
     scriptTitleInputIndex,
-    scriptId,
-    setCurrentScriptId,
     setClickedScriptTitleIndex,
     onScriptDelete,
     onScriptTitleInputChange,
@@ -67,10 +63,7 @@ function ScriptTitle(props: ScriptTitleProps) {
 
   return (
     <StScriptTitle
-      onClick={() => {
-        setClickedScriptTitleIndex(currentScriptTitleIndex);
-        setCurrentScriptId(scriptId);
-      }}
+      onClick={() => setClickedScriptTitleIndex(currentScriptTitleIndex)}
       onDoubleClick={() => onScriptTitleInputChange(currentScriptTitleIndex)}
       onContextMenu={(e) => {
         e.preventDefault();

@@ -556,8 +556,6 @@ function LearnDetail() {
                 scriptTitleInputIndex={scriptTitleInputIndex}
                 setIsScriptTitleInputVisible={setIsScriptTitleInputVisible}
                 setClickedScriptTitleIndex={setClickedScriptTitleIndex}
-                scriptId={videoData.scriptsId}
-                setCurrentScriptId={setCurrentScriptId}
                 onScriptDelete={handleScriptDeleteModal}
                 onScriptTitleInputChange={(index: number) => handleScriptTitleInputChange(index)}
                 onScriptRename={mutateRenameScript}
