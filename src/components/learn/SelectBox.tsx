@@ -57,12 +57,15 @@ function SelectBox(props: SelectBoxProps) {
   return (
     <StSelectBox ref={selectBoxRef} isClicked={isClicked}>
       <span>{optionName}</span>
-      <StCategoryButton aria-pressed={isClicked} onClick={() => setIsClicked((prev) => !prev)}>
+      <StCategoryButton
+        aria-controls="option-list"
+        aria-expanded={isClicked}
+        onClick={() => setIsClicked((prev) => !prev)}>
         <div>{checkedList.join(', ')}</div>
         <ImageDiv src={icArrow} className="arrow" layout="fill" alt="" />
       </StCategoryButton>
       {isClicked && (
-        <ul>
+        <ul id="option-list">
           {optionList.map((checkedItem) => {
             return (
               <li
