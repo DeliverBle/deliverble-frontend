@@ -441,24 +441,21 @@ function LearnDetail() {
   }, [isEditing, isHighlight, isSpacing]);
 
   useEffect(() => {
+    if (!router.isReady) return;
+
     (async () => {
       const id = Number(detailId);
-      let data;
-      if (isGuide) {
-        data = await api.learnDetailService.getSpeechGuideData(id);
-      } else {
-        data = isLoggedIn
-          ? await api.learnDetailService.getPrivateVideoData(id, clickedScriptTitleIndex)
-          : await api.learnDetailService.getPublicVideoData(id);
-      }
+      const data = isGuide
+        ? await api.learnDetailService.getSpeechGuideData(id)
+        : isLoggedIn
+        ? await api.learnDetailService.getPrivateVideoData(id, clickedScriptTitleIndex)
+        : await api.learnDetailService.getPublicVideoData(id);
       setVideoData(data);
       const { memos, names } = data;
-      memos ? setMemoList(memos) : setMemoList([]);
-      if (isLoggedIn && names) {
-        setScriptTitleList(names);
-      }
+      setMemoList(memos ?? []);
+      setScriptTitleList(names ?? []);
     })();
-  }, [isLoggedIn, detailId, isEditing, isGuide, clickedScriptTitleIndex]);
+  }, [router.isReady, isLoggedIn, detailId, isEditing, isGuide, clickedScriptTitleIndex]);
 
   useEffect(() => {
     setClickedScriptTitleIndex(0);
