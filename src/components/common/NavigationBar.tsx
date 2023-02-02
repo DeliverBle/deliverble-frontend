@@ -107,7 +107,7 @@ function NavigationBar() {
 
 export default dynamic(() => Promise.resolve(NavigationBar), { ssr: false });
 
-const StNavigationBar = styled.div`
+const StNavigationBar = styled.header`
   display: flex;
   align-items: center;
   position: fixed;
