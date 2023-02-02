@@ -732,15 +732,22 @@ function LearnDetail() {
                   />
                 </StVideoWrapper>
                 <StStudyLogContainer>
-                  <StStudyLogTabContainer>
-                    <StStudyLogTab isActive={studyLogTab === 'memo'} onClick={() => setStudyLogTab('memo')}>
+                  <StStudyLogTabList role="tablist">
+                    <StStudyLogTab
+                      role="tab"
+                      aria-selected={studyLogTab === 'memo'}
+                      isActive={studyLogTab === 'memo'}
+                      onClick={() => setStudyLogTab('memo')}>
                       메모
                     </StStudyLogTab>
-                    <div className="divider" />
-                    <StStudyLogTab isActive={studyLogTab === 'record'} onClick={() => setStudyLogTab('record')}>
+                    <StStudyLogTab
+                      role="tab"
+                      aria-selected={studyLogTab === 'record'}
+                      isActive={studyLogTab === 'record'}
+                      onClick={() => setStudyLogTab('record')}>
                       녹음
                     </StStudyLogTab>
-                  </StStudyLogTabContainer>
+                  </StStudyLogTabList>
                   {studyLogTab === 'memo' ? (
                     <StMemoWrapper>
                       {memoList.length || memoState.newMemoId !== INITIAL_NUMBER ? (
@@ -1162,23 +1169,23 @@ const StStudyLogContainer = styled.div`
   flex-direction: column;
 `;
 
-const StStudyLogTabContainer = styled.div`
+const StStudyLogTabList = styled.ul`
   display: flex;
   align-items: center;
-  gap: 1.6rem;
   margin-bottom: 2rem;
-
-  .divider {
-    width: 0.2rem;
-    height: 1.6rem;
-    background-color: ${COLOR.GRAY_10};
-  }
 `;
 
-const StStudyLogTab = styled.h2<{ isActive: boolean }>`
+const StStudyLogTab = styled.li<{ isActive: boolean }>`
   color: ${({ isActive }) => (isActive ? COLOR.BLACK : COLOR.GRAY_30)};
   ${FONT_STYLES.SB_24_HEADLINE};
   cursor: pointer;
+
+  &:first-child:after {
+    content: '|';
+    margin: 0 1.6rem;
+    color: ${COLOR.GRAY_30};
+    font-weight: 400;
+  }
 `;
 
 const StMemoWrapper = styled.div`
