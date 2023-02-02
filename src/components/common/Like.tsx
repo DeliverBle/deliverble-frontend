@@ -13,9 +13,8 @@ function Like(props: LikeProps) {
 
   return (
     <StLike
-      role="toggle"
+      type="button"
       aria-label="즐겨찾기"
-      aria-checked={!isFavorite}
       onClick={(e) => {
         e.stopPropagation();
         toggleLike && toggleLike();
