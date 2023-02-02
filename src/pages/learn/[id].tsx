@@ -1178,7 +1178,7 @@ const StStudyLogTab = styled.li<{ isActive: boolean }>`
   ${FONT_STYLES.SB_24_HEADLINE};
   cursor: pointer;
 
-  &:first-child:after {
+  &:not(:last-child):after {
     content: '|';
     margin: 0 1.6rem;
     color: ${COLOR.GRAY_30};

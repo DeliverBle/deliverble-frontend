@@ -179,7 +179,7 @@ const StTab = styled.li<{ isActive: boolean }>`
   color: ${({ isActive }) => (isActive ? COLOR.BLACK : COLOR.GRAY_30)};
   ${({ isActive }) => (isActive ? FONT_STYLES.SB_28_HEADLINE : FONT_STYLES.M_28_HEADLINE)};
 
-  &:first-child:after {
+  &:not(:last-child):after {
     content: '|';
     margin: 0 2.4rem;
     color: ${COLOR.GRAY_30};
