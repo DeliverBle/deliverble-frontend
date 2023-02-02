@@ -566,7 +566,7 @@ function LearnDetail() {
               />
             ))}
           {videoData?.names && scriptTitleList.length > 0 && scriptTitleList.length !== SCRIPT_MAX_COUNT && (
-            <StScriptAddButton onClick={handleScriptAdd} />
+            <StScriptAddButton aria-label="스크립트 추가" onClick={handleScriptAdd} />
           )}
         </StScriptTitleContainer>
         {videoData && (
