@@ -5,7 +5,6 @@ import Lottie from 'lottie-react';
 import { step1Lottie, step2Lottie, step3Lottie } from 'public/assets/lottie';
 import {
   imgLandingBgFirst,
-  imgLandingBgSecond,
   imgLandingBgLast,
   imgLandingEar,
   imgLandingMic,
@@ -302,14 +301,11 @@ const StSecondSlider = styled.section`
 
   width: 100%;
   height: 100%;
-
-  background-image: url(${imgLandingBgSecond.src});
-  background-position: 0px 18.1rem;
-  background-repeat: no-repeat;
-  background-size: contain;
+  background-color: ${COLOR.SUB_BLUE_8};
 
   & > h2 {
-    margin-top: 8.8rem;
+    padding: 8.8rem 0 4.3rem 0;
+    background-color: ${COLOR.WHITE};
     color: ${COLOR.BLACK};
     ${FONT_STYLES.SB_36_HEADLINE};
     text-align: center;
@@ -324,7 +320,7 @@ const StBodyCardWrapper = styled.div`
   width: 100%;
   height: 79rem;
 
-  margin: 4.3rem 0 12.1rem 0;
+  padding: 15rem 0;
   gap: 7rem;
 `;
 
@@ -340,8 +336,6 @@ const StCard = styled.section`
   background: #ffffff;
   box-shadow: 2rem 2rem 5rem rgba(78, 138, 255, 0.15);
   border-radius: 4rem;
-
-  margin-top: 17.9rem;
 
   & > h3 {
     color: ${COLOR.BLACK};
