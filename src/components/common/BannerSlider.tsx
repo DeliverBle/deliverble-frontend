@@ -150,7 +150,9 @@ const StBanner = styled.div<{ ver: number }>`
   ${({ ver }) =>
     ver !== 1 &&
     css`
-      background: url('/assets/images/img_banner_ver${ver}_background.webp') no-repeat center / cover;
+      & {
+        background-color: ${ver === 2 ? COLOR.BACKGROUND_PURPLE : COLOR.BACKGROUND_BLUE};
+      }
 
       &::before {
         ${defaultBefore}
