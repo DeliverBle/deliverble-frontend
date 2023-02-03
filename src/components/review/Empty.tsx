@@ -15,8 +15,8 @@ function Empty(props: EmptyProps) {
   return (
     <StEmpty>
       <ImageDiv src={imgReviewEmpty} className="empty" layout="fill" alt="" />
-      <div>{tab === 'isFavorite' ? '아직 즐겨찾기 한 영상이 없어요!' : '아직 학습한 영상이 없어요!'}</div>
-      <div>지금 바로 쉐도잉하러 가볼까요?</div>
+      <StTitle>{tab === 'isFavorite' ? '아직 즐겨찾기 한 영상이 없어요!' : '아직 학습한 영상이 없어요!'}</StTitle>
+      <StDescription>지금 바로 쉐도잉하러 가볼까요?</StDescription>
       <Link href="/learn" passHref>
         <StLearnButton>학습하러 가기</StLearnButton>
       </Link>
@@ -37,34 +37,27 @@ const StEmpty = styled.div`
     width: 38.8rem;
     height: 28.8rem;
   }
+`;
 
-  & > div:nth-of-type(2) {
-    margin-top: 1.6rem;
-    color: ${COLOR.BLACK};
-    ${FONT_STYLES.SB_32_HEADLINE};
-  }
+const StTitle = styled.p`
+  margin-top: 1.6rem;
+  color: ${COLOR.BLACK};
+  ${FONT_STYLES.SB_32_HEADLINE};
+`;
 
-  & > div:last-of-type {
-    margin-top: 1.2rem;
-    color: ${COLOR.GRAY_30};
-    ${FONT_STYLES.M_24_HEADLINE};
-  }
+const StDescription = styled.p`
+  margin-top: 1.2rem;
+  color: ${COLOR.GRAY_30};
+  ${FONT_STYLES.M_24_HEADLINE};
 `;
 
 const StLearnButton = styled.a`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  width: 26rem;
-  height: 7rem;
   margin: 8rem 0 24.3rem 0;
-
+  padding: 2rem 4rem;
   background-color: ${COLOR.MAIN_BLUE};
   border-radius: 1.4rem;
-
   color: ${COLOR.WHITE};
   ${FONT_STYLES.SB_24_HEADLINE};
-
+  text-align: center;
   cursor: pointer;
 `;
