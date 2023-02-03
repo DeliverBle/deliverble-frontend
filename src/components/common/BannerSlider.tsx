@@ -66,7 +66,7 @@ function BannerSlider() {
                 {!i && (
                   <ImageDiv
                     className="banner_ver1_deco"
-                    src="/assets/images/img_banner_ver1_deco1.png"
+                    src="/assets/images/img_banner_ver1_deco1.webp"
                     alt=""
                     layout="fill"
                   />
@@ -114,7 +114,7 @@ const StBanner = styled.div<{ ver: number }>`
   ${({ ver }) =>
     ver === 1 &&
     css`
-      background: url('/assets/images/img_banner_ver1_background.png') no-repeat left/cover;
+      background: url('/assets/images/img_banner_ver1_background.webp') no-repeat left/cover;
 
       .banner_ver1_deco {
         position: absolute;
@@ -130,7 +130,7 @@ const StBanner = styled.div<{ ver: number }>`
 
         &::before {
           ${defaultBefore}
-          background: url('/assets/images/img_banner_ver1_deco2.png') no-repeat center / 96rem;
+          background: url('/assets/images/img_banner_ver1_deco2.webp') no-repeat center / 96rem;
         }
       }
 
@@ -150,11 +150,11 @@ const StBanner = styled.div<{ ver: number }>`
   ${({ ver }) =>
     ver !== 1 &&
     css`
-      background: url('/assets/images/img_banner_ver${ver}_background.png') no-repeat center / cover;
+      background: url('/assets/images/img_banner_ver${ver}_background.webp') no-repeat center / cover;
 
       &::before {
         ${defaultBefore}
-        background: url('/assets/images/img_banner_ver${ver}_deco.png') no-repeat right / auto;
+        background: url('/assets/images/img_banner_ver${ver}_deco.webp') no-repeat right / auto;
       }
 
       @media (max-width: 960px) {
