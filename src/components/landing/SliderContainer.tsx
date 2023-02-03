@@ -254,24 +254,16 @@ const StFirstSlider = styled.section`
 `;
 
 const StStartButton = styled.a`
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: fit-content;
   padding: 2rem 4rem;
-
   background-color: ${COLOR.MAIN_BLUE};
   color: ${COLOR.WHITE};
   ${FONT_STYLES.SB_24_HEADLINE};
-
   border-radius: 1.4rem;
   cursor: pointer;
 `;
 
 const StSecondSlider = styled.section`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   background-color: ${COLOR.SUB_BLUE_8};
 
   h2 {
@@ -285,6 +277,7 @@ const StSecondSlider = styled.section`
 
 const StCardContainer = styled.div`
   display: flex;
+  justify-content: center;
   gap: 7rem;
   margin: 15rem auto;
 `;
@@ -293,7 +286,7 @@ const StCard = styled.section`
   width: 38.8rem;
   height: 49rem;
   text-align: center;
-  background: #ffffff;
+  background: ${COLOR.WHITE};
   box-shadow: 2rem 2rem 5rem rgba(78, 138, 255, 0.15);
   border-radius: 4rem;
 
@@ -319,8 +312,6 @@ const StCard = styled.section`
 `;
 
 const StThirdSlider = styled.section`
-  display: flex;
-  flex-direction: column;
   padding: 22rem 0;
 
   h2 {
@@ -341,7 +332,7 @@ const StFourthSlider = styled.section`
 
 const StFifthSlider = styled.section`
   display: flex;
-  margin: 34.2rem 0 34.1rem 0;
+  padding: 34.2rem 0 34.1rem 0;
 `;
 
 const StSixthSlider = styled.section`
