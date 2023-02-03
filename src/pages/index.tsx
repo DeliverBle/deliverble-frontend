@@ -67,9 +67,9 @@ function Landing() {
 export default Landing;
 
 const StLanding = styled.div`
-  height: 100%;
   @font-face {
     font-family: 'Dongle';
+    font-display: swap;
     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108_2@1.0/Dongle-Bold.woff') format('woff');
   }
 `;
@@ -85,21 +85,16 @@ const StMobile = styled.div`
 `;
 
 const StHeader = styled.header<{ isFirstScrolled: boolean }>`
-  display: flex;
   position: fixed;
-  align-items: center;
-  justify-content: center;
   top: 0;
   z-index: 2;
-
   width: 100%;
-  height: 5.4rem;
-
   background: ${({ isFirstScrolled }) => isFirstScrolled && COLOR.WHITE};
 
   .logo {
     position: relative;
     width: 9.6rem;
     height: 3rem;
+    margin: 1.2rem auto;
   }
 `;
