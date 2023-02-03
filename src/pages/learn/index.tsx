@@ -162,7 +162,7 @@ const StTitle = styled.div`
     height: 4.8rem;
   }
 
-  & > h1 {
+  h1 {
     ${FONT_STYLES.SB_32_HEADLINE};
     color: ${COLOR.BLACK};
   }
@@ -180,7 +180,7 @@ const StSelectBoxContainer = styled.div`
 `;
 
 const StResult = styled.div`
-  & > h2 {
+  h2 {
     ${FONT_STYLES.M_20_BODY};
     color: ${COLOR.GRAY_30};
     margin-bottom: 2.3rem;

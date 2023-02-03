@@ -87,7 +87,7 @@ function SelectBox(props: SelectBoxProps) {
 export default SelectBox;
 
 const StSelectBox = styled.div<{ isClicked: boolean }>`
-  & > span {
+  span {
     color: ${COLOR.GRAY_30};
     ${FONT_STYLES.SB_16_CAPTION};
     margin-left: 1.2rem;
@@ -163,11 +163,11 @@ const StCategoryButton = styled.button`
   overflow: hidden;
   margin-top: 1rem;
 
-  &:hover {
+  :hover {
     border: 0.2rem solid ${COLOR.MAIN_BLUE};
   }
 
-  & > div {
+  div {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
