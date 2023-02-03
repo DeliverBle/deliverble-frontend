@@ -17,7 +17,7 @@ function Empty(props: EmptyProps) {
       <ImageDiv src={imgReviewEmpty} className="empty" layout="fill" alt="" />
       <div>{tab === 'isFavorite' ? '아직 즐겨찾기 한 영상이 없어요!' : '아직 학습한 영상이 없어요!'}</div>
       <div>지금 바로 쉐도잉하러 가볼까요?</div>
-      <Link href="/learn">
+      <Link href="/learn" passHref>
         <StLearnButton>학습하러 가기</StLearnButton>
       </Link>
     </StEmpty>
