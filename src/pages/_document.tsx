@@ -29,7 +29,6 @@ export default class MyDocument extends Document {
     return (
       <Html lang="ko">
         <Head>
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
           <meta name="google-site-verification" content="Lui9ZQbOb6H4vVu7GyiNFL4USqYJM0C1r7IPk0krIWQ" />
           <link rel="icon" type="image/png" href="/assets/favicon/fav_16.png" sizes="16x16" />
           <link rel="icon" type="image/png" href="/assets/favicon/fav_32.png" sizes="32x32" />
