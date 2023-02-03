@@ -158,7 +158,7 @@ const StTab = styled.li<{ isActive: boolean }>`
     width: 4rem;
   }
 
-  & > a {
+  a {
     display: block;
     text-align: center;
     padding: 2.6rem 0 2.5rem 0;
@@ -175,7 +175,7 @@ const StTab = styled.li<{ isActive: boolean }>`
       border-bottom: 0.45rem solid transparent;
       border-image: linear-gradient(45deg, ${COLOR.SUB_PURPLE}, ${COLOR.MAIN_BLUE});
       border-image-slice: 1;
-      & > a {
+      a {
         color: ${COLOR.BLACK};
         ${FONT_STYLES.SB_24_HEADLINE};
       }

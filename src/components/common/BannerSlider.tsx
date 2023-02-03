@@ -180,11 +180,11 @@ const StBannerText = styled.div<{ ver: number }>`
   white-space: pre-line;
   z-index: 10;
 
-  & > h1 {
+  h1 {
     ${FONT_STYLES.SB_44_HEADLINE}
   }
 
-  & > p {
+  p {
     padding-top: 3.2rem;
     ${FONT_STYLES.L_24_HEADLINE}
   }
@@ -201,11 +201,11 @@ const StBannerText = styled.div<{ ver: number }>`
     width: 100%;
     text-align: center;
 
-    & > h1 {
+    h1 {
       ${FONT_STYLES.SB_28_HEADLINE}
     }
 
-    & > p {
+    p {
       display: none;
     }
   }
