@@ -91,7 +91,7 @@ const StLogo = styled.div`
     height: 4.6rem;
   }
 
-  & > p {
+  p {
     margin: 1.6rem 0 5.6rem 0;
     min-width: 35.1rem;
     color: ${COLOR.MAIN_BLUE};
@@ -99,7 +99,7 @@ const StLogo = styled.div`
     white-space: pre-line;
   }
 
-  & > a {
+  a {
     width: fit-content;
   }
 

@@ -37,7 +37,7 @@ function SEO(props: SEOProps) {
       />
       <meta property="twitter:image" content="/assets/images/img_twitter_thumbnail.png" />
       <meta property="twitter:url" content="https://deliverble.kr/" />
-      <meta name="viewport" content="width=1280" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
     </Head>
   );
 }

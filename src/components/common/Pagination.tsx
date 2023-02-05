@@ -93,15 +93,15 @@ const StArrowButton = styled.button`
   ${FONT_STYLES.SB_20_BODY};
   color: ${COLOR.GRAY_30};
 
-  &:disabled {
+  :disabled {
     cursor: not-allowed;
   }
 
-  &:hover {
+  :hover {
     color: ${COLOR.GRAY_45};
   }
 
-  &:active {
+  :active {
     color: ${COLOR.BLACK};
   }
 `;
@@ -111,11 +111,11 @@ const StNumberButton = styled.button<{ isActive: boolean }>`
   color: ${({ isActive }) => (isActive ? COLOR.BLACK : COLOR.GRAY_30)};
   ${FONT_STYLES.SB_20_BODY};
 
-  & > span {
-    display: none;
+  :hover {
+    color: ${COLOR.GRAY_45};
   }
 
-  &:hover {
-    color: ${COLOR.GRAY_45};
+  span {
+    display: none;
   }
 `;

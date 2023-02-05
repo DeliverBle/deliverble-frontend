@@ -82,11 +82,11 @@ const StProfileModal = styled.div`
 const StProfileInfo = styled.div`
   text-align: center;
 
-  & > p {
+  p {
     ${FONT_STYLES.SB_20_BODY};
   }
 
-  & > div {
+  div {
     height: 2.6rem;
     ${FONT_STYLES.R_17_CAPTION};
     color: ${COLOR.GRAY_45};

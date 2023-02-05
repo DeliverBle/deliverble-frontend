@@ -29,14 +29,14 @@ const StEmptyMemo = styled.div`
     height: 10rem;
   }
 
-  & > p:nth-of-type(1) {
+  p:nth-of-type(1) {
     padding-top: 2.4rem;
 
     color: ${COLOR.GRAY_45};
     ${FONT_STYLES.B_20_BODY};
   }
 
-  & > p:nth-of-type(2) {
+  p:nth-of-type(2) {
     padding-top: 0.8rem;
 
     color: ${COLOR.GRAY_30};
