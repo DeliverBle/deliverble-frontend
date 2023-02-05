@@ -34,7 +34,7 @@ function Memo(props: MemoProps) {
       return (
         <>
           <StText fold={foldButton}>{content}</StText>
-          <StFoldbutton className="fold-button" onClick={() => setFoldButton((prev) => !prev)} fold={foldButton}>
+          <StFoldButton className="fold-button" onClick={() => setFoldButton((prev) => !prev)} fold={foldButton}>
             {foldButton ? (
               <>
                 <ImageDiv src={icArrowUp} className="fold-icon" alt="" />
@@ -43,7 +43,7 @@ function Memo(props: MemoProps) {
             ) : (
               '...더보기'
             )}
-          </StFoldbutton>
+          </StFoldButton>
         </>
       );
     }
@@ -125,7 +125,7 @@ const StText = styled.p<{ fold: boolean }>`
     `};
 `;
 
-const StFoldbutton = styled.div<{ fold: boolean }>`
+const StFoldButton = styled.div<{ fold: boolean }>`
   position: absolute;
   right: 3.2rem;
   bottom: 2.8rem;

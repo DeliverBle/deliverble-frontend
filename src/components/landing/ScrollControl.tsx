@@ -1,4 +1,5 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
+
 interface ScrollContainerProps {
   slideNumber: number;
   setSlideNumber: (slideNumber: number) => void;
@@ -19,7 +20,8 @@ function ScrollContainer(props: ScrollContainerProps) {
             onClick={() => {
               setSlideNumber(number);
               setStopObserve(true);
-            }}></StListItem>
+            }}
+          />
         );
       })}
     </StScrollContainer>
@@ -39,22 +41,9 @@ const StScrollContainer = styled.ul`
 const StListItem = styled.li<{ isActive: boolean }>`
   width: 2.2rem;
   height: 2.2rem;
-
-  margin: 0 0 1.1111111111111112rem;
   margin-bottom: 2rem;
-
   border-radius: 50%;
   cursor: pointer;
-  opacity: 0.5;
-
-  ${({ isActive }) =>
-    isActive
-      ? css`
-          background-color: #160f35;
-          opacity: 0.35;
-        `
-      : css`
-          background-color: #160f35;
-          opacity: 0.05;
-        `}
+  background-color: #160f35;
+  opacity: ${({ isActive }) => (isActive ? 0.35 : 0.05)};
 `;

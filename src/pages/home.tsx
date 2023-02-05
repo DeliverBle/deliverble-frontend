@@ -119,7 +119,7 @@ const StNews = styled.div<{ type: string }>`
     padding-right: 16rem;
   }
 
-  & > h2 {
+  h2 {
     min-width: 4.8rem;
     margin-bottom: 5.6rem;
 
@@ -142,7 +142,7 @@ const StNews = styled.div<{ type: string }>`
       padding-right: 2.4rem;
     }
 
-    & > h2 {
+    h2 {
       margin-bottom: 3.2rem;
       ${FONT_STYLES.SB_21_BODY};
       zoom: 150%;

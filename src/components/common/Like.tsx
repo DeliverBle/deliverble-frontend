@@ -46,14 +46,14 @@ const StLike = styled.button`
 const StLikeImage = styled.div<{ isFromList: boolean }>`
   position: relative;
 
-  ${({ isFromList }) =>
-    isFromList
-      ? css`
-          .like {
-            position: absolute;
-            top: 1.2rem;
-            right: 1.2rem;
+  .like {
+    position: absolute;
+    top: 1.2rem;
+    right: 1.2rem;
 
+    ${({ isFromList }) =>
+      isFromList
+        ? css`
             width: 4rem;
             height: 4rem;
             opacity: 0;
@@ -62,18 +62,12 @@ const StLikeImage = styled.div<{ isFromList: boolean }>`
               width: 2.4rem;
               height: 2.4rem;
             }
-          }
-        `
-      : css`
-          .like {
-            position: absolute;
-            top: 1.2rem;
-            right: 1.2rem;
-
+          `
+        : css`
             width: 5rem;
             height: 5rem;
-          }
-        `}
+          `}
+  }
 
   &:hover .default img {
     transition: opacity 1s;

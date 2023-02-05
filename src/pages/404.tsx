@@ -17,7 +17,7 @@ function Custom404() {
             <p>찾을 수 없는 페이지입니다.</p>
             <p>입력한 주소가 맞는지 확인하신 후, 딜리버블과 다시 함께 해요!</p>
           </StText>
-          <Link href="/home">
+          <Link href="/home" passHref>
             <StHomeButton>홈으로 돌아가기</StHomeButton>
           </Link>
         </StBackground>
@@ -45,7 +45,7 @@ const StBackground = styled.div`
   align-items: center;
 
   min-height: 108rem;
-  background: url('/assets/images/img_404_background.png') no-repeat center;
+  background: url('/assets/images/img_404_background.webp') no-repeat center;
   background-size: cover;
 `;
 

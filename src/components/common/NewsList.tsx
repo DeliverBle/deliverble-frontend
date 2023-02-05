@@ -271,7 +271,7 @@ const StSpeechGuide = styled.div`
   ${FONT_STYLES.SB_16_CAPTION}
   font-size: 1.7rem;
 
-  & > .guide-logo {
+  .guide-logo {
     display: flex;
     align-items: center;
   }
@@ -282,7 +282,7 @@ const StSpeechGuide = styled.div`
     height: 2.6rem;
     ${FONT_STYLES.SB_12_CAPTION};
 
-    & > .guide-logo {
+    .guide-logo {
       width: 1.6rem;
       height: 1.6rem;
     }
