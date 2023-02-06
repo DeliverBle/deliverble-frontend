@@ -5,7 +5,7 @@ import Header from '@src/components/landing/Header';
 import ScrollControl from '@src/components/landing/ScrollControl';
 import SliderContainer from '@src/components/landing/SliderContainer';
 import { icMobileLogoWhite, icMobileLogo } from 'public/assets/icons';
-import MobileContainer from '@src/components/landing/mobileContainer';
+import MobileContainer from '@src/components/landing/MobileContainer';
 import ImageDiv from '@src/components/common/ImageDiv';
 import { COLOR } from '@src/styles/color';
 import { useIsMobile } from '@src/hooks/useIsMobile';
