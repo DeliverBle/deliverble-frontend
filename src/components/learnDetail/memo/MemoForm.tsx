@@ -4,17 +4,15 @@ import { MemoData } from '@src/services/api/types/learn-detail';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import {
-  EDIT_MEMO_CONFIRM_MODAL_TEXT,
   INITIAL_MEMO_STATE,
   INITIAL_NUMBER,
   MEMO_CONTENT_MAX_LENGTH,
-  NEW_MEMO_CONFIRM_MODAL_TEXT,
+  MEMO_CONFIRM_MODAL_TYPE,
 } from '@src/utils/constant';
 import { icCheckButton, icMemoXButton, icInactiveCheckButton } from 'public/assets/icons';
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
 import ImageDiv from '../../common/ImageDiv';
-import { ConfirmModalText } from '../ConfirmModal';
 
 interface MemoFormProps {
   scriptId: number;
@@ -22,12 +20,11 @@ interface MemoFormProps {
   memoState: MemoState;
   setMemoList: (memoList: MemoData[]) => void;
   setMemoState: Dispatch<SetStateAction<MemoState>>;
-  setIsConfirmOpen: (open: boolean) => void;
-  setConfirmModalText: (text: ConfirmModalText) => void;
+  onMemoModal: (type: string) => void;
 }
 
 function MemoForm(props: MemoFormProps) {
-  const { scriptId, memoData, memoState, setMemoList, setMemoState, setIsConfirmOpen, setConfirmModalText } = props;
+  const { scriptId, memoData, memoState, setMemoList, setMemoState, onMemoModal } = props;
   const { id, keyword, content, order, startIndex, highlightId } = memoData;
   const { newMemoId, editMemoId } = memoState;
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -54,9 +51,8 @@ function MemoForm(props: MemoFormProps) {
   };
 
   const handleModalOpen = () => {
-    newMemoId !== INITIAL_NUMBER && setConfirmModalText(NEW_MEMO_CONFIRM_MODAL_TEXT);
-    editMemoId !== INITIAL_NUMBER && setConfirmModalText(EDIT_MEMO_CONFIRM_MODAL_TEXT);
-    setIsConfirmOpen(true);
+    newMemoId !== INITIAL_NUMBER && onMemoModal(MEMO_CONFIRM_MODAL_TYPE.NEW);
+    editMemoId !== INITIAL_NUMBER && onMemoModal(MEMO_CONFIRM_MODAL_TYPE.EDIT);
   };
 
   const createMemo = async (newContent: string) => {

@@ -1,27 +1,24 @@
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import styled from 'styled-components';
-import { DELETE_MEMO_CONFIRM_MODAL_TEXT } from '@src/utils/constant';
-import { ConfirmModalText } from '../ConfirmModal';
 import { Dispatch, SetStateAction } from 'react';
 import { MemoState } from '@src/pages/learn/[id]';
 import { MemoData } from '@src/services/api/types/learn-detail';
+import { MEMO_CONFIRM_MODAL_TYPE } from '@src/utils/constant';
 
 interface MemoDropdownProps {
   memoData: MemoData;
   setMemoState: Dispatch<SetStateAction<MemoState>>;
-  setIsConfirmOpen: (open: boolean) => void;
-  setConfirmModalText: (text: ConfirmModalText) => void;
+  onMemoModal: (type: string) => void;
 }
 
 function MemoDropdown(props: MemoDropdownProps) {
-  const { memoData, setMemoState, setIsConfirmOpen, setConfirmModalText } = props;
+  const { memoData, setMemoState, onMemoModal } = props;
   const { id } = memoData;
 
   const handleClickDelete = () => {
     id && setMemoState((prev: MemoState) => ({ ...prev, deleteMemoId: id }));
-    setIsConfirmOpen(true);
-    setConfirmModalText(DELETE_MEMO_CONFIRM_MODAL_TEXT);
+    onMemoModal(MEMO_CONFIRM_MODAL_TYPE.DELETE);
   };
 
   return (

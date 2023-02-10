@@ -4,7 +4,6 @@ import { FONT_STYLES } from '@src/styles/fontStyle';
 import { Dispatch, SetStateAction, useState } from 'react';
 import MemoForm from './MemoForm';
 import MemoDotButton from './MemoDotButton';
-import { ConfirmModalText } from '../ConfirmModal';
 import { MEMO_CONTENT_MAX } from '@src/utils/constant';
 import { MemoState } from '@src/pages/learn/[id]';
 import ImageDiv from '@src/components/common/ImageDiv';
@@ -19,13 +18,12 @@ interface MemoProps {
   memoState: MemoState;
   setMemoList: (memoList: MemoData[]) => void;
   setMemoState: Dispatch<SetStateAction<MemoState>>;
-  setIsConfirmOpen: (open: boolean) => void;
-  setConfirmModalText: (text: ConfirmModalText) => void;
+  onMemoModal: (type: string) => void;
 }
 
 function MemoItem(props: MemoProps) {
   const isGuide = useRecoilValue(isGuideAtom);
-  const { scriptId, memoData, memoState, setMemoList, setMemoState, setIsConfirmOpen, setConfirmModalText } = props;
+  const { scriptId, memoData, memoState, setMemoList, setMemoState, onMemoModal } = props;
   const { id, keyword, content } = memoData;
   const [foldButton, setFoldButton] = useState(false);
 
@@ -60,20 +58,12 @@ function MemoItem(props: MemoProps) {
           memoState={memoState}
           setMemoList={setMemoList}
           setMemoState={setMemoState}
-          setIsConfirmOpen={setIsConfirmOpen}
-          setConfirmModalText={setConfirmModalText}
+          onMemoModal={onMemoModal}
         />
       ) : (
         <>
           <StContent>{showContent()}</StContent>
-          {!isGuide && (
-            <MemoDotButton
-              memoData={memoData}
-              setMemoState={setMemoState}
-              setIsConfirmOpen={setIsConfirmOpen}
-              setConfirmModalText={setConfirmModalText}
-            />
-          )}
+          {!isGuide && <MemoDotButton memoData={memoData} setMemoState={setMemoState} onMemoModal={onMemoModal} />}
         </>
       )}
     </StMemo>

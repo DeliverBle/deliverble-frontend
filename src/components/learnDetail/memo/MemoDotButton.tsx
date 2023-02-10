@@ -3,19 +3,17 @@ import { icDotDefault, icDotHover } from 'public/assets/icons';
 import { useState, useRef, useEffect, Dispatch, SetStateAction } from 'react';
 import styled from 'styled-components';
 import MemoDropdown from './MemoDropdown';
-import { ConfirmModalText } from '../ConfirmModal';
 import { MemoState } from '@src/pages/learn/[id]';
 import { MemoData } from '@src/services/api/types/learn-detail';
 
 interface MemoDotButtonProps {
   memoData: MemoData;
   setMemoState: Dispatch<SetStateAction<MemoState>>;
-  setIsConfirmOpen: (open: boolean) => void;
-  setConfirmModalText: (text: ConfirmModalText) => void;
+  onMemoModal: (type: string) => void;
 }
 
 function MemoDotButton(props: MemoDotButtonProps) {
-  const { memoData, setMemoState, setIsConfirmOpen, setConfirmModalText } = props;
+  const { memoData, setMemoState, onMemoModal } = props;
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const memoDropdownRef = useRef<HTMLDivElement>(null);
 
@@ -42,14 +40,7 @@ function MemoDotButton(props: MemoDotButtonProps) {
         <ImageDiv className="dot" src={icDotHover} alt="추가 작업" layout="fill" />
         <ImageDiv className="dot default" src={icDotDefault} alt="추가 작업" layout="fill" />
       </StMemoDotImage>
-      {isDropdownOpen && (
-        <MemoDropdown
-          memoData={memoData}
-          setMemoState={setMemoState}
-          setIsConfirmOpen={setIsConfirmOpen}
-          setConfirmModalText={setConfirmModalText}
-        />
-      )}
+      {isDropdownOpen && <MemoDropdown memoData={memoData} setMemoState={setMemoState} onMemoModal={onMemoModal} />}
     </StMemoDotButton>
   );
 }

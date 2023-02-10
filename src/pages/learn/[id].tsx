@@ -29,7 +29,6 @@ import { isGuideAtom } from '@src/stores/newsState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import {
-  NEW_MEMO_CONFIRM_MODAL_TEXT,
   INITIAL_NUMBER,
   INITIAL_MEMO_STATE,
   INITIAL_MEMO,
@@ -40,6 +39,10 @@ import {
   ABSOLUTE_RIGHT_LIMIT,
   VIDEO_STATE_CUED,
   VIDEO_STATE_PAUSED,
+  NEW_MEMO_CONFIRM_MODAL_TEXT,
+  EDIT_MEMO_CONFIRM_MODAL_TEXT,
+  DELETE_MEMO_CONFIRM_MODAL_TEXT,
+  MEMO_CONFIRM_MODAL_TYPE,
 } from '@src/utils/constant';
 import { useBodyScrollLock } from '@src/hooks/useBodyScrollLock';
 import {
@@ -351,6 +354,21 @@ function LearnDetail() {
         setTitleList(names);
       }
       return;
+    }
+  };
+
+  const handleMemoModal = (type: string) => {
+    setIsConfirmOpen(true);
+    switch (type) {
+      case MEMO_CONFIRM_MODAL_TYPE.NEW:
+        setConfirmModalText(NEW_MEMO_CONFIRM_MODAL_TEXT);
+        break;
+      case MEMO_CONFIRM_MODAL_TYPE.EDIT:
+        setConfirmModalText(EDIT_MEMO_CONFIRM_MODAL_TEXT);
+        break;
+      case MEMO_CONFIRM_MODAL_TYPE.DELETE:
+        setConfirmModalText(DELETE_MEMO_CONFIRM_MODAL_TEXT);
+        break;
     }
   };
 
@@ -753,8 +771,7 @@ function LearnDetail() {
                           memoInfo={memoInfo}
                           setMemoList={setMemoList}
                           setMemoState={setMemoState}
-                          setIsConfirmOpen={setIsConfirmOpen}
-                          setConfirmModalText={setConfirmModalText}
+                          onMemoModal={handleMemoModal}
                         />
                       ) : (
                         <EmptyMemo />
