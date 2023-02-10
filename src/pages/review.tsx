@@ -5,7 +5,7 @@ import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
 import HeadlineContainer from '@src/components/review/HeadlineContainer';
 import VideoContainer from '@src/components/review/VideoContainer';
 import { api } from '@src/services/api';
-import { VideoData } from '@src/services/api/types/review';
+import { PostReviewRequestBody, VideoData } from '@src/services/api/types/review';
 import { loginState } from '@src/stores/loginState';
 import { LIST_SIZE } from '@src/utils/constant';
 import { useEffect, useState } from 'react';
@@ -14,6 +14,7 @@ import { FONT_STYLES } from 'src/styles/fontStyle';
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
+import { useMutation } from 'react-query';
 
 function Review() {
   const router = useRouter();
@@ -26,71 +27,60 @@ function Review() {
   const [lastPage, setLastPage] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
 
+  const { mutate: mutatePostFavorite } = useMutation(
+    async (requestBody: PostReviewRequestBody) => {
+      return await api.reviewService.postFavoriteVideoList(requestBody);
+    },
+    {
+      onSuccess: (data) => {
+        const { favoritePaging, favoriteList } = data;
+        setTotalCount(favoritePaging.totalCount);
+        setLastPage(favoritePaging.lastPage);
+        setFavoriteList(favoriteList);
+      },
+      onError: () => {
+        localStorage.removeItem('token');
+        setIsLoggedIn(false);
+        router.reload();
+      },
+    },
+  );
+
+  const { mutate: mutatePostHistory } = useMutation(
+    async (requestBody: PostReviewRequestBody) => {
+      return await api.reviewService.postHistoryVideoList(requestBody);
+    },
+    {
+      onSuccess: (data) => {
+        const { historyPaging, historyList } = data;
+        setTotalCount(historyPaging.totalCount);
+        setLastPage(historyPaging.lastPage);
+        setHistoryList(historyList);
+      },
+      onError: () => {
+        localStorage.removeItem('token');
+        setIsLoggedIn(false);
+        router.reload();
+      },
+    },
+  );
+
   const getNewsList = async () => {
     setIsLoading(true);
-
-    const { favoritePaging, favoriteList } = await api.reviewService
-      .postFavoriteVideoList({
-        currentPage: 1,
-        listSize: LIST_SIZE,
-      })
-      .catch(() => {
-        localStorage.removeItem('token');
-        setIsLoggedIn(false);
-        router.reload();
-        return {
-          favoritePaging: {
-            totalCount: 0,
-            lastPage: 0,
-          },
-          favoriteList: [],
-        };
-      });
-
-    const { historyPaging, historyList } = await api.reviewService
-      .postHistoryVideoList({
-        currentPage: 1,
-        listSize: LIST_SIZE,
-      })
-      .catch(() => {
-        localStorage.removeItem('token');
-        setIsLoggedIn(false);
-        router.reload();
-        return {
-          historyPaging: {
-            totalCount: 0,
-            lastPage: 0,
-          },
-          historyList: [],
-        };
-      });
-
     setCurrentPage(1);
     tab === 'isFavorite'
-      ? (setTotalCount(favoritePaging.totalCount), setLastPage(favoritePaging.lastPage), setFavoriteList(favoriteList))
-      : (setTotalCount(historyPaging.totalCount), setLastPage(historyPaging.lastPage), setHistoryList(historyList));
+      ? mutatePostFavorite({ currentPage: 1, listSize: LIST_SIZE })
+      : mutatePostHistory({ currentPage: 1, listSize: LIST_SIZE });
     setIsLoading(false);
   };
 
   const handlePageChange = async (page: number) => {
     window.scrollTo(0, 0);
     setIsLoading(true);
-
-    const { favoritePaging, favoriteList } = await api.reviewService.postFavoriteVideoList({
-      currentPage: page,
-      listSize: LIST_SIZE,
-    });
-
-    const { historyPaging, historyList } = await api.reviewService.postHistoryVideoList({
-      currentPage: page,
-      listSize: LIST_SIZE,
-    });
-
     setCurrentPage(page);
-    setTotalCount(tab === 'isFavorite' ? favoritePaging.totalCount : historyPaging.totalCount);
-    setLastPage(tab === 'isFavorite' ? favoritePaging.lastPage : historyPaging.lastPage);
-    setFavoriteList(favoriteList);
-    setHistoryList(historyList);
+    tab === 'isFavorite'
+      ? mutatePostFavorite({ currentPage: page, listSize: LIST_SIZE })
+      : mutatePostHistory({ currentPage: page, listSize: LIST_SIZE });
     setIsLoading(false);
   };
 
