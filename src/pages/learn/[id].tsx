@@ -99,15 +99,12 @@ function LearnDetail() {
   const [memoInfo, setMemoInfo] = useState<MemoInfo>(INITIAL_MEMO);
   const [clickedMemo, setClickedMemo] = useState<MemoData>();
   const [clickedDeleteMemo, setClickedDeleteMemo] = useState<boolean>(false);
-
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const [isContextMenuOpen, setIsContextMenuOpen] = useState<boolean>(false);
   const [rightClickedElement, setRightClickedElement] = useState<HTMLElement>();
-
   const [studyLogTab, setStudyLogTab] = useState<string>('memo');
   const [isRecordSaved, setIsRecordSaved] = useState<boolean>(false);
-  const [deletedType, setDeletedType] = useState<string>('');
-  const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState<boolean>(false);
+  const [clickedDeleteType, setClickedDeleteType] = useState<string>('');
   const [order, setOrder] = useState<number>();
   const [text, setText] = useState<string>();
   const [similarNewsList, setSimilarNewsList] = useState<simpleVideoData[]>([]);
@@ -243,7 +240,7 @@ function LearnDetail() {
       const div = document.createElement('div');
       const blank = document.createTextNode(' ');
 
-      switch (deletedType) {
+      switch (clickedDeleteType) {
         case 'MARK':
           if (removeElement?.innerHTML) {
             div.innerHTML = removeElement?.innerHTML;
@@ -266,13 +263,13 @@ function LearnDetail() {
   };
 
   useEffect(() => {
-    setIsDeleteBtnClicked(false);
-    if (isDeleteBtnClicked) {
+    setClickedDeleteType('');
+    if (clickedDeleteType) {
       deleteElement();
       setIsContextMenuOpen(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isDeleteBtnClicked]);
+  }, [clickedDeleteType]);
 
   const handleRightClick = (e: React.MouseEvent, scriptId: number, order: number) => {
     const contextTarget = e.target as HTMLElement;
@@ -418,7 +415,7 @@ function LearnDetail() {
       setIsEditing(true);
     } else {
       setIsEditing(false);
-      setIsDeleteBtnClicked(false);
+      setClickedDeleteType('');
       setIsContextMenuOpen(false);
       setOrder(-1);
       setText('');
@@ -578,8 +575,7 @@ function LearnDetail() {
                         isEditing={isEditing}
                         setMemoState={setMemoState}
                         setIsContextMenuOpen={setIsContextMenuOpen}
-                        setDeletedType={setDeletedType}
-                        setIsDeleteBtnClicked={setIsDeleteBtnClicked}
+                        setClickedDeleteType={setClickedDeleteType}
                       />
                     )}
                     {isEditing && (

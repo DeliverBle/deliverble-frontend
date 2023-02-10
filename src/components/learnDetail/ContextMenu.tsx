@@ -11,20 +11,12 @@ interface ContextMenuProps {
   isEditing: boolean;
   setMemoState?: Dispatch<SetStateAction<MemoState>>;
   setIsContextMenuOpen: (open: boolean) => void;
-  setDeletedType: (type: string) => void;
-  setIsDeleteBtnClicked: (isDelete: boolean) => void;
+  setClickedDeleteType: (type: string) => void;
 }
 
 function ContextMenu(props: ContextMenuProps) {
-  const {
-    clickedMemoId,
-    rightClickedElement,
-    isEditing,
-    setMemoState,
-    setIsContextMenuOpen,
-    setDeletedType,
-    setIsDeleteBtnClicked,
-  } = props;
+  const { clickedMemoId, rightClickedElement, isEditing, setMemoState, setIsContextMenuOpen, setClickedDeleteType } =
+    props;
   const { x, y } = calcContextMenuPoint(rightClickedElement);
   const clickedTag = rightClickedElement.tagName;
 
@@ -40,17 +32,15 @@ function ContextMenu(props: ContextMenuProps) {
 
   const handleContextMenu = (e: React.MouseEvent, type: string) => {
     e.stopPropagation();
-    setIsDeleteBtnClicked(true);
-    setDeletedType(type);
+    setClickedDeleteType(type);
     setIsContextMenuOpen(false);
   };
 
   if (!clickedTag) return null;
-
   return (
     <StContextMenu top={y} left={x} clickedTag={clickedTag} isEditing={isEditing}>
       {clickedTag === 'MARK' && !isEditing && (
-        <button type="button" onClick={(e) => handleMemoState(e)}>
+        <button type="button" onClick={handleMemoState}>
           {clickedMemoId ? '메모 수정' : '메모 추가'}
         </button>
       )}
