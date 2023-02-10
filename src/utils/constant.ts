@@ -1,3 +1,9 @@
+export const MEMO_CONFIRM_MODAL_TYPE = {
+  NEW: 'new',
+  EDIT: 'edit',
+  DELETE: 'delete',
+};
+
 export const NEW_MEMO_CONFIRM_MODAL_TEXT = {
   mainText: '메모 작성을 취소하시겠습니까?',
   subText: '작성 취소 선택시, 작성된 메모는 저장되지 않습니다.',
