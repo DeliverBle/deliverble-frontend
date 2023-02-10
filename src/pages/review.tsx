@@ -27,6 +27,12 @@ function Review() {
   const [lastPage, setLastPage] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
 
+  const handleLoginError = () => {
+    localStorage.removeItem('token');
+    setIsLoggedIn(false);
+    router.reload();
+  };
+
   const { mutate: mutatePostFavorite } = useMutation(
     async (requestBody: PostReviewRequestBody) => {
       return await api.reviewService.postFavoriteVideoList(requestBody);
@@ -39,9 +45,7 @@ function Review() {
         setFavoriteList(favoriteList);
       },
       onError: () => {
-        localStorage.removeItem('token');
-        setIsLoggedIn(false);
-        router.reload();
+        handleLoginError();
       },
     },
   );
@@ -58,9 +62,7 @@ function Review() {
         setHistoryList(historyList);
       },
       onError: () => {
-        localStorage.removeItem('token');
-        setIsLoggedIn(false);
-        router.reload();
+        handleLoginError();
       },
     },
   );
