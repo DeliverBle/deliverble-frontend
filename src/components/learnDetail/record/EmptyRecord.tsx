@@ -2,7 +2,7 @@ import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { icRecordEmpty } from 'public/assets/icons';
 import styled from 'styled-components';
-import ImageDiv from '../../common/ImageDiv';
+import ImageDiv from '@src/components/common/ImageDiv';
 
 function EmptyRecord() {
   return (
