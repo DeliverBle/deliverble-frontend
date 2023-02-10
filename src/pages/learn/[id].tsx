@@ -35,8 +35,6 @@ import {
   DELETE_SCRIPT_CONFIRM_MODAL_TEXT,
   SCRIPT_MAX_COUNT,
   SPEECH_GUIDE_TOOLTIP_TEXT,
-  CONTEXT_MENU_WIDTH,
-  ABSOLUTE_RIGHT_LIMIT,
   VIDEO_STATE_CUED,
   VIDEO_STATE_PAUSED,
   NEW_MEMO_CONFIRM_MODAL_TEXT,
@@ -55,6 +53,7 @@ import {
   icSpeechGuideInfo,
   icXButton,
 } from 'public/assets/icons';
+import { calcContextMenuPoint } from '@src/utils/contextMenu';
 
 export interface MemoState {
   newMemoId: number;
@@ -126,32 +125,6 @@ function LearnDetail() {
   useEffect(() => {
     videoData?.scriptsId && setCurrentScriptId(videoData?.scriptsId);
   }, [videoData, currentScriptId]);
-
-  const handleContextMenuPoint = (target: HTMLElement) => {
-    let x = 0;
-    let y = 0;
-
-    const article = target.parentElement?.closest('article');
-    if (article) {
-      const articleAbsoluteTop = article.getBoundingClientRect().top;
-      const articleAbsoluteLeft = article.getBoundingClientRect().left;
-
-      const targetRect = target.getBoundingClientRect();
-      const absoluteTop = targetRect.top + 20;
-      const absoluteLeft = targetRect.left - 22;
-      const absoluteRight = targetRect.right - 22;
-
-      const highlightWidth = targetRect.right - targetRect.left;
-      if (highlightWidth > CONTEXT_MENU_WIDTH || absoluteRight > ABSOLUTE_RIGHT_LIMIT - (scrollX + scrollX / 2)) {
-        x = absoluteRight - articleAbsoluteLeft - CONTEXT_MENU_WIDTH;
-      } else {
-        x = absoluteLeft - articleAbsoluteLeft;
-      }
-      y = absoluteTop - articleAbsoluteTop;
-    }
-
-    return { x, y };
-  };
 
   const getHighlightIndex = (parentNode: ParentNode | null, targetId: string) => {
     const childNodes = parentNode?.childNodes;
@@ -326,7 +299,7 @@ function LearnDetail() {
       });
       setClickedMemo(memoList.find((memo) => memo.highlightId === markTag.id));
     }
-    setContextMenuPoint(handleContextMenuPoint(contextTarget));
+    setContextMenuPoint(calcContextMenuPoint(contextTarget));
   };
 
   const handleScriptAdd = async () => {
