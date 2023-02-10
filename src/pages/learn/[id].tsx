@@ -747,17 +747,15 @@ function LearnDetail() {
                   {studyLogTab === 'memo' ? (
                     <StMemoWrapper>
                       {memoList.length || memoState.newMemoId !== INITIAL_NUMBER ? (
-                        <>
-                          <MemoList
-                            memoList={memoList}
-                            memoState={memoState}
-                            memoInfo={memoInfo}
-                            setMemoList={setMemoList}
-                            setMemoState={setMemoState}
-                            setIsConfirmOpen={setIsConfirmOpen}
-                            setConfirmModalText={setConfirmModalText}
-                          />
-                        </>
+                        <MemoList
+                          memoList={memoList}
+                          memoState={memoState}
+                          memoInfo={memoInfo}
+                          setMemoList={setMemoList}
+                          setMemoState={setMemoState}
+                          setIsConfirmOpen={setIsConfirmOpen}
+                          setConfirmModalText={setConfirmModalText}
+                        />
                       ) : (
                         <EmptyMemo />
                       )}
