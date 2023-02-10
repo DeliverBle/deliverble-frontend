@@ -14,9 +14,10 @@ import { FONT_STYLES } from 'src/styles/fontStyle';
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 
 function Review() {
+  const queryClient = useQueryClient();
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(loginState);
   const [tab, setTab] = useState('isFavorite');
@@ -37,6 +38,7 @@ function Review() {
       return await api.reviewService.postFavoriteVideoList(requestBody);
     },
     {
+      mutationKey: 'postFavoriteList',
       onSuccess: (data) => {
         const { favoritePaging, favoriteList } = data;
         setTotalCount(favoritePaging.totalCount);
@@ -54,6 +56,7 @@ function Review() {
       return await api.reviewService.postHistoryVideoList(requestBody);
     },
     {
+      mutationKey: 'postHistoryList',
       onSuccess: (data) => {
         const { historyPaging, historyList } = data;
         setTotalCount(historyPaging.totalCount);
@@ -79,10 +82,18 @@ function Review() {
     tab === 'isFavorite' ? mutatePostFavoriteList(requestBody) : mutatePostHistoryList(requestBody);
   };
 
-  const handleClickLike = async (id: number) => {
-    await api.likeService.postLikeData(id);
-    getNewsList();
-  };
+  const { mutate: mutatePostLike } = useMutation(
+    async (id: number) => {
+      return await api.likeService.postLikeData(id);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('postFavoriteList');
+        queryClient.invalidateQueries('postHistoryList');
+        getNewsList();
+      },
+    },
+  );
 
   useEffect(() => {
     isLoggedIn && getNewsList();
@@ -117,7 +128,7 @@ function Review() {
           <VideoContainer
             tab={tab}
             videoList={tab === 'isFavorite' ? favoriteList : historyList}
-            onClickLike={handleClickLike}
+            onClickLike={mutatePostLike}
             totalCount={totalCount}
             currentPage={currentPage}
             lastPage={lastPage}
