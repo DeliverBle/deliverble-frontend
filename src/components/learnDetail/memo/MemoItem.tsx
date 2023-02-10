@@ -49,7 +49,7 @@ function MemoItem(props: MemoProps) {
   };
 
   return (
-    <StMemo className="memo" fold={foldButton}>
+    <StMemoItem className="memo" fold={foldButton}>
       <StKeyword>{keyword}</StKeyword>
       {!content || memoState.editMemoId === id ? (
         <MemoForm
@@ -66,13 +66,13 @@ function MemoItem(props: MemoProps) {
           {!isGuide && <MemoDotButton memoData={memoData} setMemoState={setMemoState} onMemoModal={onMemoModal} />}
         </>
       )}
-    </StMemo>
+    </StMemoItem>
   );
 }
 
 export default MemoItem;
 
-const StMemo = styled.div<{ fold: boolean }>`
+const StMemoItem = styled.div<{ fold: boolean }>`
   position: relative;
 
   margin-right: 0.8rem;
