@@ -10,7 +10,7 @@ interface ContextMenuProps {
     y: number;
   };
   clickedMemoId?: number;
-  contextElementType: string;
+  rightClickedElement?: HTMLElement;
   isEditing: boolean;
   setMemoState?: Dispatch<SetStateAction<MemoState>>;
   setIsContextMenuOpen: (open: boolean) => void;
@@ -22,7 +22,7 @@ function ContextMenu(props: ContextMenuProps) {
   const {
     contextMenuPoint,
     clickedMemoId,
-    contextElementType,
+    rightClickedElement,
     isEditing,
     setMemoState,
     setIsContextMenuOpen,
@@ -30,6 +30,7 @@ function ContextMenu(props: ContextMenuProps) {
     setIsDeleteBtnClicked,
   } = props;
   const { x, y } = contextMenuPoint;
+  const clickedTag = rightClickedElement?.tagName;
 
   const handleMemoState = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -48,10 +49,12 @@ function ContextMenu(props: ContextMenuProps) {
     setIsContextMenuOpen(false);
   };
 
+  if (!clickedTag) return null;
+
   return (
-    <StContextMenu top={y} left={x} contextElementType={contextElementType} isEditing={isEditing}>
+    <StContextMenu top={y} left={x} clickedTag={clickedTag} isEditing={isEditing}>
       <ul>
-        {contextElementType === 'MARK' && !isEditing && (
+        {clickedTag === 'MARK' && !isEditing && (
           <li>
             <button type="button" onClick={(e) => handleMemoState(e)}>
               {clickedMemoId ? '메모 수정' : '메모 추가'}
@@ -59,8 +62,8 @@ function ContextMenu(props: ContextMenuProps) {
           </li>
         )}
         <li>
-          <button type="button" onClick={(e) => handleContextMenu(e, contextElementType)}>
-            {contextElementType === 'MARK' ? '하이라이트' : '끊어읽기'} 삭제
+          <button type="button" onClick={(e) => handleContextMenu(e, clickedTag)}>
+            {clickedTag === 'MARK' ? '하이라이트' : '끊어읽기'} 삭제
           </button>
         </li>
       </ul>
@@ -70,7 +73,7 @@ function ContextMenu(props: ContextMenuProps) {
 
 export default ContextMenu;
 
-const StContextMenu = styled.div<{ top: number; left: number; contextElementType: string; isEditing: boolean }>`
+const StContextMenu = styled.div<{ top: number; left: number; clickedTag: string; isEditing: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -78,8 +81,8 @@ const StContextMenu = styled.div<{ top: number; left: number; contextElementType
 
   position: absolute;
 
-  ${({ contextElementType, isEditing }) =>
-    contextElementType === 'MARK' && !isEditing
+  ${({ clickedTag, isEditing }) =>
+    clickedTag === 'MARK' && !isEditing
       ? css`
           width: 14.4rem;
           height: 8rem;
@@ -106,8 +109,8 @@ const StContextMenu = styled.div<{ top: number; left: number; contextElementType
     justify-content: center;
     border-radius: 0.8rem;
 
-    ${({ contextElementType, isEditing }) =>
-      contextElementType === 'MARK' && !isEditing
+    ${({ clickedTag, isEditing }) =>
+      clickedTag === 'MARK' && !isEditing
         ? css`
             & > button {
               width: 13.2rem;
