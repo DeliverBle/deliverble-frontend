@@ -23,7 +23,7 @@ interface MemoProps {
   setConfirmModalText: (text: ConfirmModalText) => void;
 }
 
-function Memo(props: MemoProps) {
+function MemoItem(props: MemoProps) {
   const isGuide = useRecoilValue(isGuideAtom);
   const { scriptId, memoData, memoState, setMemoList, setMemoState, setIsConfirmOpen, setConfirmModalText } = props;
   const { id, keyword, content } = memoData;
@@ -80,7 +80,7 @@ function Memo(props: MemoProps) {
   );
 }
 
-export default Memo;
+export default MemoItem;
 
 const StMemo = styled.div<{ fold: boolean }>`
   position: relative;

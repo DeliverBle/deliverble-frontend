@@ -1,7 +1,7 @@
 import { MemoData } from '@src/services/api/types/learn-detail';
 import { COLOR } from '@src/styles/color';
 import styled from 'styled-components';
-import Memo from './Memo';
+import MemoItem from './MemoItem';
 import { ConfirmModalText } from '../ConfirmModal';
 import { MemoInfo, MemoState } from '@src/pages/learn/[id]';
 import { Dispatch, SetStateAction, useEffect } from 'react';
@@ -59,7 +59,7 @@ function MemoList(props: MemoListProps) {
         };
 
         return (
-          <Memo
+          <MemoItem
             key={memo.id}
             scriptId={memoInfo.scriptId}
             memoData={tempMemo}
