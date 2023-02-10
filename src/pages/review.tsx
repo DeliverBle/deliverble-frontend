@@ -22,7 +22,6 @@ function Review() {
   const [tab, setTab] = useState('isFavorite');
   const [favoriteList, setFavoriteList] = useState<VideoData[]>([]);
   const [historyList, setHistoryList] = useState<VideoData[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
   const [lastPage, setLastPage] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -33,7 +32,7 @@ function Review() {
     router.reload();
   };
 
-  const { mutate: mutatePostFavorite } = useMutation(
+  const { mutate: mutatePostFavoriteList, isLoading: isFavoriteListLoading } = useMutation(
     async (requestBody: PostReviewRequestBody) => {
       return await api.reviewService.postFavoriteVideoList(requestBody);
     },
@@ -50,7 +49,7 @@ function Review() {
     },
   );
 
-  const { mutate: mutatePostHistory } = useMutation(
+  const { mutate: mutatePostHistoryList, isLoading: isHistoryListLoading } = useMutation(
     async (requestBody: PostReviewRequestBody) => {
       return await api.reviewService.postHistoryVideoList(requestBody);
     },
@@ -68,22 +67,16 @@ function Review() {
   );
 
   const getNewsList = async () => {
-    setIsLoading(true);
+    const requestBody = { currentPage: 1, listSize: LIST_SIZE };
     setCurrentPage(1);
-    tab === 'isFavorite'
-      ? mutatePostFavorite({ currentPage: 1, listSize: LIST_SIZE })
-      : mutatePostHistory({ currentPage: 1, listSize: LIST_SIZE });
-    setIsLoading(false);
+    tab === 'isFavorite' ? mutatePostFavoriteList(requestBody) : mutatePostHistoryList(requestBody);
   };
 
   const handlePageChange = async (page: number) => {
+    const requestBody = { currentPage: page, listSize: LIST_SIZE };
     window.scrollTo(0, 0);
-    setIsLoading(true);
     setCurrentPage(page);
-    tab === 'isFavorite'
-      ? mutatePostFavorite({ currentPage: page, listSize: LIST_SIZE })
-      : mutatePostHistory({ currentPage: page, listSize: LIST_SIZE });
-    setIsLoading(false);
+    tab === 'isFavorite' ? mutatePostFavoriteList(requestBody) : mutatePostHistoryList(requestBody);
   };
 
   const handleClickLike = async (id: number) => {
@@ -118,7 +111,7 @@ function Review() {
             내 학습 기록
           </StTab>
         </StTabList>
-        {isLoading ? (
+        {(tab === 'isFavorite' ? isFavoriteListLoading : isHistoryListLoading) ? (
           <VideoListSkeleton itemNumber={12} hasCountSection={true} />
         ) : (
           <VideoContainer
