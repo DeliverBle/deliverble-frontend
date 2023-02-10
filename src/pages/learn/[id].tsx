@@ -53,7 +53,6 @@ import {
   icSpeechGuideInfo,
   icXButton,
 } from 'public/assets/icons';
-import { calcContextMenuPoint } from '@src/utils/contextMenu';
 
 export interface MemoState {
   newMemoId: number;
@@ -100,9 +99,8 @@ function LearnDetail() {
   const [memoInfo, setMemoInfo] = useState<MemoInfo>(INITIAL_MEMO);
   const [clickedMemo, setClickedMemo] = useState<MemoData>();
   const [clickedDeleteMemo, setClickedDeleteMemo] = useState<boolean>(false);
-  const contextMenuRef = useRef<HTMLDivElement>(null);
 
-  const [contextMenuPoint, setContextMenuPoint] = useState({ x: 0, y: 0 });
+  const contextMenuRef = useRef<HTMLDivElement>(null);
   const [isContextMenuOpen, setIsContextMenuOpen] = useState<boolean>(false);
   const [rightClickedElement, setRightClickedElement] = useState<HTMLElement>();
 
@@ -296,7 +294,6 @@ function LearnDetail() {
       });
       setClickedMemo(memoList.find((memo) => memo.highlightId === markTag.id));
     }
-    setContextMenuPoint(calcContextMenuPoint(contextTarget));
   };
 
   const handleScriptAdd = async () => {
@@ -574,9 +571,8 @@ function LearnDetail() {
                           <div id={id.toString()} dangerouslySetInnerHTML={{ __html: text }}></div>
                         </StScriptText>
                       ))}
-                    {!isEditing && isContextMenuOpen && (
+                    {!isEditing && isContextMenuOpen && rightClickedElement && (
                       <ContextMenu
-                        contextMenuPoint={contextMenuPoint}
                         clickedMemoId={clickedMemo?.id}
                         rightClickedElement={rightClickedElement}
                         isEditing={isEditing}

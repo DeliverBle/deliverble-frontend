@@ -1,16 +1,13 @@
 import { MemoState } from '@src/pages/learn/[id]';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
+import { calcContextMenuPoint } from '@src/utils/contextMenu';
 import React, { Dispatch, SetStateAction } from 'react';
 import styled, { css } from 'styled-components';
 
 interface ContextMenuProps {
-  contextMenuPoint: {
-    x: number;
-    y: number;
-  };
   clickedMemoId?: number;
-  rightClickedElement?: HTMLElement;
+  rightClickedElement: HTMLElement;
   isEditing: boolean;
   setMemoState?: Dispatch<SetStateAction<MemoState>>;
   setIsContextMenuOpen: (open: boolean) => void;
@@ -20,7 +17,6 @@ interface ContextMenuProps {
 
 function ContextMenu(props: ContextMenuProps) {
   const {
-    contextMenuPoint,
     clickedMemoId,
     rightClickedElement,
     isEditing,
@@ -29,8 +25,8 @@ function ContextMenu(props: ContextMenuProps) {
     setDeletedType,
     setIsDeleteBtnClicked,
   } = props;
-  const { x, y } = contextMenuPoint;
-  const clickedTag = rightClickedElement?.tagName;
+  const { x, y } = calcContextMenuPoint(rightClickedElement);
+  const clickedTag = rightClickedElement.tagName;
 
   const handleMemoState = (e: React.MouseEvent) => {
     e.stopPropagation();
