@@ -106,12 +106,14 @@ function Learn() {
           </StSelectBoxContainer>
         </StSearch>
         {isLoading ? (
-          <VideoListSkeleton itemNumber={12} hasCountSection={true} />
+          <VideoListSkeleton itemNumber={12} hasCountSection />
         ) : (
           <StResult>
-            <h2>
-              전체 <span>{totalCount}개 </span> 영상
-            </h2>
+            {totalCount > 0 && (
+              <h2>
+                전체 <span>{totalCount}개 </span> 영상
+              </h2>
+            )}
             <NewsList newsList={resultList} onClickLike={handleClickLike} type="normal" />
             <Pagination
               listSize={LIST_SIZE}
@@ -123,7 +125,7 @@ function Learn() {
           </StResult>
         )}
       </StLearn>
-      <Footer />
+      {resultList.length > 0 && <Footer />}
     </StPageWrapper>
   );
 }
