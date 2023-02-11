@@ -5,7 +5,7 @@ import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
 import HeadlineContainer from '@src/components/review/HeadlineContainer';
 import VideoContainer from '@src/components/review/VideoContainer';
 import { api } from '@src/services/api';
-import { PostReviewRequestBody, VideoData } from '@src/services/api/types/review';
+import { ReviewTab } from '@src/services/api/types/review';
 import { loginState } from '@src/stores/loginState';
 import { LIST_SIZE } from '@src/utils/constant';
 import { useEffect, useState } from 'react';
@@ -14,72 +14,35 @@ import { FONT_STYLES } from 'src/styles/fontStyle';
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 function Review() {
   const queryClient = useQueryClient();
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(loginState);
-  const [tab, setTab] = useState('isFavorite');
-  const [favoriteList, setFavoriteList] = useState<VideoData[]>([]);
-  const [historyList, setHistoryList] = useState<VideoData[]>([]);
-  const [totalCount, setTotalCount] = useState(0);
-  const [lastPage, setLastPage] = useState(0);
+  const [tab, setTab] = useState<ReviewTab>('favorite');
   const [currentPage, setCurrentPage] = useState(1);
 
-  const handleLoginError = () => {
-    localStorage.removeItem('token');
-    setIsLoggedIn(false);
-    router.reload();
-  };
-
-  const { mutate: mutatePostFavoriteList, isLoading: isFavoriteListLoading } = useMutation(
-    async (requestBody: PostReviewRequestBody) => {
-      return await api.reviewService.postFavoriteVideoList(requestBody);
+  const { data: postReviewListData, isLoading } = useQuery(
+    ['postReviewList', currentPage, tab],
+    async () => {
+      return await api.reviewService.postReviewVideoList({ currentPage, listSize: LIST_SIZE }, tab);
     },
     {
-      mutationKey: 'postFavoriteList',
-      onSuccess: (data) => {
-        const { favoritePaging, favoriteList } = data;
-        setTotalCount(favoritePaging.totalCount);
-        setLastPage(favoritePaging.lastPage);
-        setFavoriteList(favoriteList);
-      },
       onError: () => {
-        handleLoginError();
+        localStorage.removeItem('token');
+        setIsLoggedIn(false);
+        router.reload();
       },
     },
   );
 
-  const { mutate: mutatePostHistoryList, isLoading: isHistoryListLoading } = useMutation(
-    async (requestBody: PostReviewRequestBody) => {
-      return await api.reviewService.postHistoryVideoList(requestBody);
-    },
-    {
-      mutationKey: 'postHistoryList',
-      onSuccess: (data) => {
-        const { historyPaging, historyList } = data;
-        setTotalCount(historyPaging.totalCount);
-        setLastPage(historyPaging.lastPage);
-        setHistoryList(historyList);
-      },
-      onError: () => {
-        handleLoginError();
-      },
-    },
-  );
+  const videoList = postReviewListData?.videoList ?? [];
+  const { lastPage, totalCount } = postReviewListData?.paging ?? { lastPage: 1, totalCount: 0 };
 
-  const getNewsList = async () => {
-    const requestBody = { currentPage: 1, listSize: LIST_SIZE };
-    setCurrentPage(1);
-    tab === 'isFavorite' ? mutatePostFavoriteList(requestBody) : mutatePostHistoryList(requestBody);
-  };
-
-  const handlePageChange = async (page: number) => {
-    const requestBody = { currentPage: page, listSize: LIST_SIZE };
+  const handlePageChange = (page: number) => {
     window.scrollTo(0, 0);
     setCurrentPage(page);
-    tab === 'isFavorite' ? mutatePostFavoriteList(requestBody) : mutatePostHistoryList(requestBody);
   };
 
   const { mutate: mutatePostLike } = useMutation(
@@ -88,16 +51,13 @@ function Review() {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries('postFavoriteList');
-        queryClient.invalidateQueries('postHistoryList');
-        getNewsList();
+        queryClient.invalidateQueries('postReviewList');
       },
     },
   );
 
   useEffect(() => {
-    isLoggedIn && getNewsList();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    isLoggedIn && setCurrentPage(1);
   }, [tab, isLoggedIn]);
 
   return (
@@ -109,25 +69,25 @@ function Review() {
         <StTabList role="tablist">
           <StTab
             role="tab"
-            aria-selected={tab === 'isFavorite'}
-            isActive={tab === 'isFavorite'}
-            onClick={() => setTab('isFavorite')}>
+            aria-selected={tab === 'favorite'}
+            isActive={tab === 'favorite'}
+            onClick={() => setTab('favorite')}>
             내 즐겨찾기 기록
           </StTab>
           <StTab
             role="tab"
-            aria-selected={tab === 'isLearned'}
-            isActive={tab === 'isLearned'}
-            onClick={() => setTab('isLearned')}>
+            aria-selected={tab === 'history'}
+            isActive={tab === 'history'}
+            onClick={() => setTab('history')}>
             내 학습 기록
           </StTab>
         </StTabList>
-        {(tab === 'isFavorite' ? isFavoriteListLoading : isHistoryListLoading) ? (
-          <VideoListSkeleton itemNumber={12} hasCountSection={true} />
+        {isLoading ? (
+          <VideoListSkeleton itemNumber={12} hasCountSection />
         ) : (
           <VideoContainer
             tab={tab}
-            videoList={tab === 'isFavorite' ? favoriteList : historyList}
+            videoList={videoList}
             onClickLike={mutatePostLike}
             totalCount={totalCount}
             currentPage={currentPage}
