@@ -26,7 +26,9 @@ function Review() {
   const { data: postReviewListData, isLoading } = useQuery(
     ['postReviewList', currentPage, tab],
     async () => {
-      return await api.reviewService.postReviewVideoList({ currentPage, listSize: LIST_SIZE }, tab);
+      if (isLoggedIn) {
+        return await api.reviewService.postReviewVideoList({ currentPage, listSize: LIST_SIZE }, tab);
+      }
     },
     {
       onError: () => {
