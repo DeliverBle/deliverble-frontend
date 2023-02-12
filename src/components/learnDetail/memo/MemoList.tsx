@@ -5,6 +5,7 @@ import MemoItem from './MemoItem';
 import { MemoInfo, MemoState } from '@src/pages/learn/[id]';
 import { Dispatch, SetStateAction, useEffect } from 'react';
 import { INITIAL_NUMBER } from '@src/utils/constant';
+import { MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
 
 interface MemoListProps {
   memoList: MemoData[];
@@ -12,7 +13,7 @@ interface MemoListProps {
   memoInfo: MemoInfo;
   setMemoList: Dispatch<SetStateAction<MemoData[]>>;
   setMemoState: Dispatch<SetStateAction<MemoState>>;
-  onMemoModal: (type: string) => void;
+  onMemoModal: (type: MemoConfirmModalKey) => void;
 }
 
 function MemoList(props: MemoListProps) {

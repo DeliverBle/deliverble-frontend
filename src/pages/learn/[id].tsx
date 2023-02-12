@@ -10,7 +10,7 @@ import ImageDiv from '@src/components/common/ImageDiv';
 import Like from '@src/components/common/Like';
 import SEO from '@src/components/common/SEO';
 import NewsList from '@src/components/common/NewsList';
-import ConfirmModal, { ConfirmModalText } from '@src/components/learnDetail/ConfirmModal';
+import ConfirmModal, { ConfirmModalText, MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
 import ContextMenu from '@src/components/learnDetail/ContextMenu';
 import GuideModal from '@src/components/learnDetail/GuideModal';
 import EmptyMemo from '@src/components/learnDetail/memo/EmptyMemo';
@@ -38,9 +38,7 @@ import {
   VIDEO_STATE_CUED,
   VIDEO_STATE_PAUSED,
   NEW_MEMO_CONFIRM_MODAL_TEXT,
-  EDIT_MEMO_CONFIRM_MODAL_TEXT,
-  DELETE_MEMO_CONFIRM_MODAL_TEXT,
-  MEMO_CONFIRM_MODAL_TYPE,
+  MemoConfirmModalTextByType,
 } from '@src/utils/constant';
 import { useBodyScrollLock } from '@src/hooks/useBodyScrollLock';
 import {
@@ -321,19 +319,9 @@ function LearnDetail() {
     }
   };
 
-  const handleMemoModal = (type: string) => {
+  const handleMemoModal = (type: MemoConfirmModalKey) => {
     setIsConfirmOpen(true);
-    switch (type) {
-      case MEMO_CONFIRM_MODAL_TYPE.NEW:
-        setConfirmModalText(NEW_MEMO_CONFIRM_MODAL_TEXT);
-        break;
-      case MEMO_CONFIRM_MODAL_TYPE.EDIT:
-        setConfirmModalText(EDIT_MEMO_CONFIRM_MODAL_TEXT);
-        break;
-      case MEMO_CONFIRM_MODAL_TYPE.DELETE:
-        setConfirmModalText(DELETE_MEMO_CONFIRM_MODAL_TEXT);
-        break;
-    }
+    setConfirmModalText(MemoConfirmModalTextByType[type]);
   };
 
   const handleTitleDeleteModal = () => {

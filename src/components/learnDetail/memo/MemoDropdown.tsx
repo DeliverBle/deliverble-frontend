@@ -4,12 +4,12 @@ import styled from 'styled-components';
 import { Dispatch, SetStateAction } from 'react';
 import { MemoState } from '@src/pages/learn/[id]';
 import { MemoData } from '@src/services/api/types/learn-detail';
-import { MEMO_CONFIRM_MODAL_TYPE } from '@src/utils/constant';
+import { MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
 
 interface MemoDropdownProps {
   memoData: MemoData;
   setMemoState: Dispatch<SetStateAction<MemoState>>;
-  onMemoModal: (type: string) => void;
+  onMemoModal: (type: MemoConfirmModalKey) => void;
 }
 
 function MemoDropdown(props: MemoDropdownProps) {
@@ -18,7 +18,7 @@ function MemoDropdown(props: MemoDropdownProps) {
 
   const handleClickDelete = () => {
     id && setMemoState((prev: MemoState) => ({ ...prev, deleteMemoId: id }));
-    onMemoModal(MEMO_CONFIRM_MODAL_TYPE.DELETE);
+    onMemoModal('delete');
   };
 
   return (
