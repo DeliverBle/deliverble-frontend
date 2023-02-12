@@ -1,8 +1,4 @@
-export const MEMO_CONFIRM_MODAL_TYPE = {
-  NEW: 'new',
-  EDIT: 'edit',
-  DELETE: 'delete',
-};
+import { ConfirmModalText, MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
 
 export const NEW_MEMO_CONFIRM_MODAL_TEXT = {
   mainText: '메모 작성을 취소하시겠습니까?',
@@ -22,6 +18,12 @@ export const DELETE_MEMO_CONFIRM_MODAL_TEXT = {
   mainText: '메모를 삭제하시겠습니까?',
   leftButtonText: '취소',
   rightButtonText: '삭제하기',
+};
+
+export const MemoConfirmModalTextByType: Record<MemoConfirmModalKey, ConfirmModalText> = {
+  new: NEW_MEMO_CONFIRM_MODAL_TEXT,
+  edit: EDIT_MEMO_CONFIRM_MODAL_TEXT,
+  delete: DELETE_MEMO_CONFIRM_MODAL_TEXT,
 };
 
 export const DELETE_SCRIPT_CONFIRM_MODAL_TEXT = {
