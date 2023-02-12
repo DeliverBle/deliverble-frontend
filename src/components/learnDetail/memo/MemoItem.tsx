@@ -11,6 +11,7 @@ import { icArrowUp } from 'public/assets/icons';
 import { MemoData } from '@src/services/api/types/learn-detail';
 import { useRecoilValue } from 'recoil';
 import { isGuideAtom } from '@src/stores/newsState';
+import { MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
 
 interface MemoProps {
   scriptId: number;
@@ -18,7 +19,7 @@ interface MemoProps {
   memoState: MemoState;
   setMemoList: (memoList: MemoData[]) => void;
   setMemoState: Dispatch<SetStateAction<MemoState>>;
-  onMemoModal: (type: string) => void;
+  onMemoModal: (type: MemoConfirmModalKey) => void;
 }
 
 function MemoItem(props: MemoProps) {

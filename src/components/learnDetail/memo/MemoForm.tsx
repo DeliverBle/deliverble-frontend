@@ -1,14 +1,10 @@
+import { MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
 import { MemoState } from '@src/pages/learn/[id]';
 import { api } from '@src/services/api';
 import { MemoData } from '@src/services/api/types/learn-detail';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import {
-  INITIAL_MEMO_STATE,
-  INITIAL_NUMBER,
-  MEMO_CONTENT_MAX_LENGTH,
-  MEMO_CONFIRM_MODAL_TYPE,
-} from '@src/utils/constant';
+import { INITIAL_MEMO_STATE, INITIAL_NUMBER, MEMO_CONTENT_MAX_LENGTH } from '@src/utils/constant';
 import { icCheckButton, icMemoXButton, icInactiveCheckButton } from 'public/assets/icons';
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
@@ -20,7 +16,7 @@ interface MemoFormProps {
   memoState: MemoState;
   setMemoList: (memoList: MemoData[]) => void;
   setMemoState: Dispatch<SetStateAction<MemoState>>;
-  onMemoModal: (type: string) => void;
+  onMemoModal: (type: MemoConfirmModalKey) => void;
 }
 
 function MemoForm(props: MemoFormProps) {
@@ -51,8 +47,8 @@ function MemoForm(props: MemoFormProps) {
   };
 
   const handleModalOpen = () => {
-    newMemoId !== INITIAL_NUMBER && onMemoModal(MEMO_CONFIRM_MODAL_TYPE.NEW);
-    editMemoId !== INITIAL_NUMBER && onMemoModal(MEMO_CONFIRM_MODAL_TYPE.EDIT);
+    newMemoId !== INITIAL_NUMBER && onMemoModal('new');
+    editMemoId !== INITIAL_NUMBER && onMemoModal('edit');
   };
 
   const createMemo = async (newContent: string) => {

@@ -5,11 +5,12 @@ import styled from 'styled-components';
 import MemoDropdown from './MemoDropdown';
 import { MemoState } from '@src/pages/learn/[id]';
 import { MemoData } from '@src/services/api/types/learn-detail';
+import { MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
 
 interface MemoDotButtonProps {
   memoData: MemoData;
   setMemoState: Dispatch<SetStateAction<MemoState>>;
-  onMemoModal: (type: string) => void;
+  onMemoModal: (type: MemoConfirmModalKey) => void;
 }
 
 function MemoDotButton(props: MemoDotButtonProps) {
