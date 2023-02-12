@@ -10,7 +10,7 @@ import ImageDiv from '@src/components/common/ImageDiv';
 import Like from '@src/components/common/Like';
 import SEO from '@src/components/common/SEO';
 import NewsList from '@src/components/common/NewsList';
-import ConfirmModal, { ConfirmModalText } from '@src/components/learnDetail/ConfirmModal';
+import ConfirmModal, { ConfirmModalText, MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
 import ContextMenu from '@src/components/learnDetail/ContextMenu';
 import GuideModal from '@src/components/learnDetail/GuideModal';
 import EmptyMemo from '@src/components/learnDetail/memo/EmptyMemo';
@@ -29,7 +29,6 @@ import { isGuideAtom } from '@src/stores/newsState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import {
-  NEW_MEMO_CONFIRM_MODAL_TEXT,
   INITIAL_NUMBER,
   INITIAL_MEMO_STATE,
   INITIAL_MEMO,
@@ -40,6 +39,8 @@ import {
   ABSOLUTE_RIGHT_LIMIT,
   VIDEO_STATE_CUED,
   VIDEO_STATE_PAUSED,
+  NEW_MEMO_CONFIRM_MODAL_TEXT,
+  MemoConfirmModalTextByType,
 } from '@src/utils/constant';
 import { useBodyScrollLock } from '@src/hooks/useBodyScrollLock';
 import {
@@ -352,6 +353,11 @@ function LearnDetail() {
       }
       return;
     }
+  };
+
+  const handleMemoModal = (type: MemoConfirmModalKey) => {
+    setIsConfirmOpen(true);
+    setConfirmModalText(MemoConfirmModalTextByType[type]);
   };
 
   const handleTitleDeleteModal = () => {
@@ -747,17 +753,14 @@ function LearnDetail() {
                   {studyLogTab === 'memo' ? (
                     <StMemoWrapper>
                       {memoList.length || memoState.newMemoId !== INITIAL_NUMBER ? (
-                        <>
-                          <MemoList
-                            memoList={memoList}
-                            memoState={memoState}
-                            memoInfo={memoInfo}
-                            setMemoList={setMemoList}
-                            setMemoState={setMemoState}
-                            setIsConfirmOpen={setIsConfirmOpen}
-                            setConfirmModalText={setConfirmModalText}
-                          />
-                        </>
+                        <MemoList
+                          memoList={memoList}
+                          memoState={memoState}
+                          memoInfo={memoInfo}
+                          setMemoList={setMemoList}
+                          setMemoState={setMemoState}
+                          onMemoModal={handleMemoModal}
+                        />
                       ) : (
                         <EmptyMemo />
                       )}

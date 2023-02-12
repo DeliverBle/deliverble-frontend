@@ -1,20 +1,14 @@
+import { MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
 import { MemoState } from '@src/pages/learn/[id]';
 import { api } from '@src/services/api';
 import { MemoData } from '@src/services/api/types/learn-detail';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import {
-  EDIT_MEMO_CONFIRM_MODAL_TEXT,
-  INITIAL_MEMO_STATE,
-  INITIAL_NUMBER,
-  MEMO_CONTENT_MAX_LENGTH,
-  NEW_MEMO_CONFIRM_MODAL_TEXT,
-} from '@src/utils/constant';
+import { INITIAL_MEMO_STATE, INITIAL_NUMBER, MEMO_CONTENT_MAX_LENGTH } from '@src/utils/constant';
 import { icCheckButton, icMemoXButton, icInactiveCheckButton } from 'public/assets/icons';
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
 import ImageDiv from '../../common/ImageDiv';
-import { ConfirmModalText } from '../ConfirmModal';
 
 interface MemoFormProps {
   scriptId: number;
@@ -22,12 +16,11 @@ interface MemoFormProps {
   memoState: MemoState;
   setMemoList: (memoList: MemoData[]) => void;
   setMemoState: Dispatch<SetStateAction<MemoState>>;
-  setIsConfirmOpen: (open: boolean) => void;
-  setConfirmModalText: (text: ConfirmModalText) => void;
+  onMemoModal: (type: MemoConfirmModalKey) => void;
 }
 
 function MemoForm(props: MemoFormProps) {
-  const { scriptId, memoData, memoState, setMemoList, setMemoState, setIsConfirmOpen, setConfirmModalText } = props;
+  const { scriptId, memoData, memoState, setMemoList, setMemoState, onMemoModal } = props;
   const { id, keyword, content, order, startIndex, highlightId } = memoData;
   const { newMemoId, editMemoId } = memoState;
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -54,9 +47,8 @@ function MemoForm(props: MemoFormProps) {
   };
 
   const handleModalOpen = () => {
-    newMemoId !== INITIAL_NUMBER && setConfirmModalText(NEW_MEMO_CONFIRM_MODAL_TEXT);
-    editMemoId !== INITIAL_NUMBER && setConfirmModalText(EDIT_MEMO_CONFIRM_MODAL_TEXT);
-    setIsConfirmOpen(true);
+    newMemoId !== INITIAL_NUMBER && onMemoModal('new');
+    editMemoId !== INITIAL_NUMBER && onMemoModal('edit');
   };
 
   const createMemo = async (newContent: string) => {
