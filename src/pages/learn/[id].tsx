@@ -35,8 +35,6 @@ import {
   DELETE_SCRIPT_CONFIRM_MODAL_TEXT,
   SCRIPT_MAX_COUNT,
   SPEECH_GUIDE_TOOLTIP_TEXT,
-  CONTEXT_MENU_WIDTH,
-  ABSOLUTE_RIGHT_LIMIT,
   VIDEO_STATE_CUED,
   VIDEO_STATE_PAUSED,
   NEW_MEMO_CONFIRM_MODAL_TEXT,
@@ -100,15 +98,11 @@ function LearnDetail() {
   const [clickedMemo, setClickedMemo] = useState<MemoData>();
   const [clickedDeleteMemo, setClickedDeleteMemo] = useState<boolean>(false);
   const contextMenuRef = useRef<HTMLDivElement>(null);
-  const [contextMenuPoint, setContextMenuPoint] = useState({ x: 0, y: 0 });
   const [isContextMenuOpen, setIsContextMenuOpen] = useState<boolean>(false);
+  const [rightClickedElement, setRightClickedElement] = useState<HTMLElement>();
   const [studyLogTab, setStudyLogTab] = useState<string>('memo');
   const [isRecordSaved, setIsRecordSaved] = useState<boolean>(false);
-  const [contextElementId, setContextElementId] = useState<string>('');
-  const [contextHTML, setContextHTML] = useState<HTMLElement>();
-  const [contextElementType, setContextElementType] = useState<string>('');
-  const [deletedType, setDeletedType] = useState<string>('');
-  const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState<boolean>(false);
+  const [clickedDeleteType, setClickedDeleteType] = useState<string>('');
   const [order, setOrder] = useState<number>();
   const [text, setText] = useState<string>();
   const [similarNewsList, setSimilarNewsList] = useState<simpleVideoData[]>([]);
@@ -124,32 +118,6 @@ function LearnDetail() {
   useEffect(() => {
     videoData?.scriptsId && setCurrentScriptId(videoData?.scriptsId);
   }, [videoData, currentScriptId]);
-
-  const handleContextMenuPoint = (target: HTMLElement) => {
-    let x = 0;
-    let y = 0;
-
-    const article = target.parentElement?.closest('article');
-    if (article) {
-      const articleAbsoluteTop = article.getBoundingClientRect().top;
-      const articleAbsoluteLeft = article.getBoundingClientRect().left;
-
-      const targetRect = target.getBoundingClientRect();
-      const absoluteTop = targetRect.top + 20;
-      const absoluteLeft = targetRect.left - 22;
-      const absoluteRight = targetRect.right - 22;
-
-      const highlightWidth = targetRect.right - targetRect.left;
-      if (highlightWidth > CONTEXT_MENU_WIDTH || absoluteRight > ABSOLUTE_RIGHT_LIMIT - (scrollX + scrollX / 2)) {
-        x = absoluteRight - articleAbsoluteLeft - CONTEXT_MENU_WIDTH;
-      } else {
-        x = absoluteLeft - articleAbsoluteLeft;
-      }
-      y = absoluteTop - articleAbsoluteTop;
-    }
-
-    return { x, y };
-  };
 
   const getHighlightIndex = (parentNode: ParentNode | null, targetId: string) => {
     const childNodes = parentNode?.childNodes;
@@ -255,66 +223,63 @@ function LearnDetail() {
     }
   };
 
-  const isHighlightInMemo = (contextHTML: HTMLElement) => {
-    const highlightId = contextHTML.id;
+  const isHighlightInMemo = () => {
+    const highlightId = rightClickedElement && rightClickedElement.id;
     const deleteMemoId = memoList.find((memo) => memo.highlightId === highlightId)?.id;
     deleteMemoId && setMemoState((prev: MemoState) => ({ ...prev, deleteMemoId }));
     setClickedDeleteMemo(true);
   };
 
-  const deleteElement = (contextHTML: HTMLElement) => {
-    const parentElement = contextHTML?.parentElement;
-    const removeElement = document.getElementById(contextElementId);
-    const fragment = document.createDocumentFragment();
-    const div = document.createElement('div');
-    const blank = document.createTextNode(' ');
+  const deleteElement = () => {
+    if (rightClickedElement) {
+      const parentElement = rightClickedElement.parentElement;
+      const removeElement = document.getElementById(rightClickedElement.id);
+      const fragment = document.createDocumentFragment();
+      const div = document.createElement('div');
+      const blank = document.createTextNode(' ');
 
-    switch (deletedType) {
-      case 'MARK':
-        if (removeElement?.innerHTML) {
-          div.innerHTML = removeElement?.innerHTML;
-        }
-        while (div.firstChild) {
-          fragment.appendChild(div.firstChild);
-        }
-        removeElement?.replaceWith(fragment);
-        nodeToText(parentElement);
-        isHighlightInMemo(contextHTML);
-        break;
-      case 'SPAN':
-        if (removeElement) {
-          removeElement.replaceWith(blank);
-        }
-        nodeToText(parentElement);
-        break;
+      switch (clickedDeleteType) {
+        case 'MARK':
+          if (removeElement?.innerHTML) {
+            div.innerHTML = removeElement?.innerHTML;
+          }
+          while (div.firstChild) {
+            fragment.appendChild(div.firstChild);
+          }
+          removeElement?.replaceWith(fragment);
+          nodeToText(parentElement);
+          isHighlightInMemo();
+          break;
+        case 'SPAN':
+          if (removeElement) {
+            removeElement.replaceWith(blank);
+          }
+          nodeToText(parentElement);
+          break;
+      }
     }
   };
 
   useEffect(() => {
-    setIsDeleteBtnClicked(false);
-    if (isDeleteBtnClicked && contextHTML) {
-      deleteElement(contextHTML);
+    setClickedDeleteType('');
+    if (clickedDeleteType) {
+      deleteElement();
       setIsContextMenuOpen(false);
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contextElementId, contextHTML?.parentElement, isDeleteBtnClicked]);
+  }, [clickedDeleteType]);
 
   const handleRightClick = (e: React.MouseEvent, scriptId: number, order: number) => {
     const contextTarget = e.target as HTMLElement;
+    setRightClickedElement(contextTarget);
+
     if (contextTarget.closest('span')) {
-      setContextElementId(contextTarget.id);
-      setContextHTML(contextTarget);
-      setContextElementType(contextTarget.nodeName);
       setIsContextMenuOpen(true);
     }
 
     const markTag = contextTarget.closest('mark');
     const startIndex = markTag && getHighlightIndex(contextTarget?.parentNode, contextTarget.id);
     if (startIndex && markTag) {
-      setContextElementId(contextTarget.id);
-      setContextHTML(contextTarget);
-      setContextElementType(contextTarget.nodeName);
       setMemoInfo({
         scriptId,
         order,
@@ -324,7 +289,6 @@ function LearnDetail() {
       });
       setClickedMemo(memoList.find((memo) => memo.highlightId === markTag.id));
     }
-    setContextMenuPoint(handleContextMenuPoint(contextTarget));
   };
 
   const handleScriptAdd = async () => {
@@ -439,7 +403,7 @@ function LearnDetail() {
       setIsEditing(true);
     } else {
       setIsEditing(false);
-      setIsDeleteBtnClicked(false);
+      setClickedDeleteType('');
       setIsContextMenuOpen(false);
       setOrder(-1);
       setText('');
@@ -592,16 +556,14 @@ function LearnDetail() {
                           <div id={id.toString()} dangerouslySetInnerHTML={{ __html: text }}></div>
                         </StScriptText>
                       ))}
-                    {!isEditing && isContextMenuOpen && (
+                    {!isEditing && isContextMenuOpen && rightClickedElement && (
                       <ContextMenu
-                        contextMenuPoint={contextMenuPoint}
                         clickedMemoId={clickedMemo?.id}
-                        contextElementType={contextElementType}
+                        rightClickedElement={rightClickedElement}
                         isEditing={isEditing}
                         setMemoState={setMemoState}
                         setIsContextMenuOpen={setIsContextMenuOpen}
-                        setDeletedType={setDeletedType}
-                        setIsDeleteBtnClicked={setIsDeleteBtnClicked}
+                        setClickedDeleteType={setClickedDeleteType}
                       />
                     )}
                     {isEditing && (
