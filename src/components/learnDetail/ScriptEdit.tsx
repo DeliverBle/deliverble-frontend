@@ -5,7 +5,6 @@ import { COLOR } from '@src/styles/color';
 import { api } from '@src/services/api';
 import ContextMenu from '@src/components/learnDetail/ContextMenu';
 import { MemoData, VideoData } from '@src/services/api/types/learn-detail';
-import { CONTEXT_MENU_WIDTH, ABSOLUTE_RIGHT_LIMIT } from '@src/utils/constant';
 import { useRouter } from 'next/router';
 import { MemoState } from '@src/pages/learn/[id]';
 
@@ -29,39 +28,9 @@ function ScriptEdit(props: ScriptEditProps) {
   const [videoData, setVideoData] = useState<VideoData>();
   const learnRef = useRef<HTMLDivElement>(null);
   const [isContextMenuOpen, setIsContextMenuOpen] = useState<boolean>(false);
+  const [rightClickedElement, setRightClickedElement] = useState<HTMLElement>();
   const contextMenuRef = useRef<HTMLDivElement>(null);
-  const [contextMenuPoint, setContextMenuPoint] = useState({ x: 0, y: 0 });
-  const [contextElementType, setContextElementType] = useState<string>('');
-  const [deletedType, setDeletedType] = useState<string>('');
-  const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState<boolean>(false);
-  const [contextHTML, setContextHTML] = useState<HTMLElement>();
-  const [contextElementId, setContextElementId] = useState<string>('');
-
-  const handleContextMenuPoint = (target: HTMLElement) => {
-    let x = 0;
-    let y = 0;
-
-    const article = target.parentElement?.closest('article');
-    if (article) {
-      const articleAbsoluteTop = article.getBoundingClientRect().top;
-      const articleAbsoluteLeft = article.getBoundingClientRect().left;
-
-      const targetRect = target.getBoundingClientRect();
-      const absoluteTop = targetRect.top + 20;
-      const absoluteLeft = targetRect.left - 22;
-      const absoluteRight = targetRect.right - 22;
-
-      const highlightWidth = targetRect.right - targetRect.left;
-      if (highlightWidth > CONTEXT_MENU_WIDTH || absoluteRight > ABSOLUTE_RIGHT_LIMIT - (scrollX + scrollX / 2)) {
-        x = absoluteRight - articleAbsoluteLeft - CONTEXT_MENU_WIDTH;
-      } else {
-        x = absoluteLeft - articleAbsoluteLeft;
-      }
-      y = absoluteTop - articleAbsoluteTop;
-    }
-
-    return { x, y };
-  };
+  const [clickedDeleteType, setClickedDeleteType] = useState<string>('');
 
   useEffect(() => {
     (async () => {
@@ -97,59 +66,57 @@ function ScriptEdit(props: ScriptEditProps) {
     }
   }, [highlightAlert]);
 
-  const isHighlightInMemo = (contextHTML: HTMLElement) => {
-    const highlightId = contextHTML.id;
+  const isHighlightInMemo = () => {
+    const highlightId = rightClickedElement && rightClickedElement.id;
     const deleteMemoId = memoList.find((memo) => memo.highlightId === highlightId)?.id;
     deleteMemoId && setMemoState((prev: MemoState) => ({ ...prev, deleteMemoId }));
     setClickedDeleteMemo(true);
   };
 
-  const deleteElement = (contextHTML: HTMLElement) => {
-    const parentElement = contextHTML?.parentElement;
-    const removeElement = document.getElementById(contextElementId);
-    const fragment = document.createDocumentFragment();
-    const div = document.createElement('div');
-    const blank = document.createTextNode(' ');
+  const deleteElement = () => {
+    if (rightClickedElement) {
+      const parentElement = rightClickedElement.parentElement;
+      const removeElement = document.getElementById(rightClickedElement.id);
+      const fragment = document.createDocumentFragment();
+      const div = document.createElement('div');
+      const blank = document.createTextNode(' ');
 
-    switch (deletedType) {
-      case 'MARK':
-        if (removeElement?.innerHTML) {
-          div.innerHTML = removeElement?.innerHTML;
-        }
-        while (div.firstChild) {
-          fragment.appendChild(div.firstChild);
-        }
-        removeElement?.replaceWith(fragment);
-        nodeToText(parentElement);
-        isHighlightInMemo(contextHTML);
-        break;
-      case 'SPAN':
-        if (removeElement) {
-          removeElement.replaceWith(blank);
-        }
-        nodeToText(parentElement);
-        break;
+      switch (clickedDeleteType) {
+        case 'MARK':
+          if (removeElement?.innerHTML) {
+            div.innerHTML = removeElement?.innerHTML;
+          }
+          while (div.firstChild) {
+            fragment.appendChild(div.firstChild);
+          }
+          removeElement?.replaceWith(fragment);
+          nodeToText(parentElement);
+          isHighlightInMemo();
+          break;
+        case 'SPAN':
+          if (removeElement) {
+            removeElement.replaceWith(blank);
+          }
+          nodeToText(parentElement);
+          break;
+      }
     }
   };
 
   useEffect(() => {
-    setIsDeleteBtnClicked(false);
-    if (isDeleteBtnClicked && contextHTML) {
-      deleteElement(contextHTML);
+    setClickedDeleteType('');
+    if (clickedDeleteType) {
+      deleteElement();
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contextElementId, contextHTML?.parentElement, isDeleteBtnClicked]);
+  }, [clickedDeleteType]);
 
   const handleRightClick = (e: React.MouseEvent) => {
     const contextTarget = e.target as HTMLElement;
     if (contextTarget.closest('mark') || contextTarget.closest('span')) {
       setIsContextMenuOpen(true);
-      setContextElementId(contextTarget.id);
-      setContextHTML(contextTarget);
-      setContextElementType(contextTarget.nodeName);
+      setRightClickedElement(contextTarget);
     }
-    setContextMenuPoint(handleContextMenuPoint(contextTarget));
   };
 
   const handleClick = (e: React.MouseEvent) => {
@@ -337,14 +304,12 @@ function ScriptEdit(props: ScriptEditProps) {
             onClick={() => setOrder(i + 1)}
             dangerouslySetInnerHTML={{ __html: text }}></StScriptText>
         ))}
-        {isContextMenuOpen && (
+        {isContextMenuOpen && rightClickedElement && (
           <ContextMenu
-            contextMenuPoint={contextMenuPoint}
-            contextElementType={contextElementType}
+            rightClickedElement={rightClickedElement}
             isEditing={isEditing}
             setIsContextMenuOpen={setIsContextMenuOpen}
-            setDeletedType={setDeletedType}
-            setIsDeleteBtnClicked={setIsDeleteBtnClicked}
+            setClickedDeleteType={setClickedDeleteType}
           />
         )}
       </StWrapper>

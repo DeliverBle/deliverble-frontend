@@ -1,11 +1,11 @@
 import { MemoData } from '@src/services/api/types/learn-detail';
 import { COLOR } from '@src/styles/color';
 import styled from 'styled-components';
-import Memo from './Memo';
-import { ConfirmModalText } from '../ConfirmModal';
+import MemoItem from './MemoItem';
 import { MemoInfo, MemoState } from '@src/pages/learn/[id]';
 import { Dispatch, SetStateAction, useEffect } from 'react';
 import { INITIAL_NUMBER } from '@src/utils/constant';
+import { MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
 
 interface MemoListProps {
   memoList: MemoData[];
@@ -13,12 +13,11 @@ interface MemoListProps {
   memoInfo: MemoInfo;
   setMemoList: Dispatch<SetStateAction<MemoData[]>>;
   setMemoState: Dispatch<SetStateAction<MemoState>>;
-  setIsConfirmOpen: (open: boolean) => void;
-  setConfirmModalText: (text: ConfirmModalText) => void;
+  onMemoModal: (type: MemoConfirmModalKey) => void;
 }
 
 function MemoList(props: MemoListProps) {
-  const { memoList, memoState, memoInfo, setMemoList, setMemoState, setIsConfirmOpen, setConfirmModalText } = props;
+  const { memoList, memoState, memoInfo, setMemoList, setMemoState, onMemoModal } = props;
 
   useEffect(() => {
     setMemoList((prev: MemoData[]) => prev.filter((memo) => memo.content !== ''));
@@ -59,15 +58,14 @@ function MemoList(props: MemoListProps) {
         };
 
         return (
-          <Memo
+          <MemoItem
             key={memo.id}
             scriptId={memoInfo.scriptId}
             memoData={tempMemo}
             memoState={memoState}
             setMemoList={setMemoList}
             setMemoState={setMemoState}
-            setIsConfirmOpen={setIsConfirmOpen}
-            setConfirmModalText={setConfirmModalText}
+            onMemoModal={onMemoModal}
           />
         );
       })}

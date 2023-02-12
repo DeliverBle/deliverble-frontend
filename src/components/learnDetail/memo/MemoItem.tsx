@@ -4,7 +4,6 @@ import { FONT_STYLES } from '@src/styles/fontStyle';
 import { Dispatch, SetStateAction, useState } from 'react';
 import MemoForm from './MemoForm';
 import MemoDotButton from './MemoDotButton';
-import { ConfirmModalText } from '../ConfirmModal';
 import { MEMO_CONTENT_MAX } from '@src/utils/constant';
 import { MemoState } from '@src/pages/learn/[id]';
 import ImageDiv from '@src/components/common/ImageDiv';
@@ -12,6 +11,7 @@ import { icArrowUp } from 'public/assets/icons';
 import { MemoData } from '@src/services/api/types/learn-detail';
 import { useRecoilValue } from 'recoil';
 import { isGuideAtom } from '@src/stores/newsState';
+import { MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
 
 interface MemoProps {
   scriptId: number;
@@ -19,13 +19,12 @@ interface MemoProps {
   memoState: MemoState;
   setMemoList: (memoList: MemoData[]) => void;
   setMemoState: Dispatch<SetStateAction<MemoState>>;
-  setIsConfirmOpen: (open: boolean) => void;
-  setConfirmModalText: (text: ConfirmModalText) => void;
+  onMemoModal: (type: MemoConfirmModalKey) => void;
 }
 
-function Memo(props: MemoProps) {
+function MemoItem(props: MemoProps) {
   const isGuide = useRecoilValue(isGuideAtom);
-  const { scriptId, memoData, memoState, setMemoList, setMemoState, setIsConfirmOpen, setConfirmModalText } = props;
+  const { scriptId, memoData, memoState, setMemoList, setMemoState, onMemoModal } = props;
   const { id, keyword, content } = memoData;
   const [foldButton, setFoldButton] = useState(false);
 
@@ -51,7 +50,7 @@ function Memo(props: MemoProps) {
   };
 
   return (
-    <StMemo className="memo" fold={foldButton}>
+    <StMemoItem className="memo" fold={foldButton}>
       <StKeyword>{keyword}</StKeyword>
       {!content || memoState.editMemoId === id ? (
         <MemoForm
@@ -60,29 +59,21 @@ function Memo(props: MemoProps) {
           memoState={memoState}
           setMemoList={setMemoList}
           setMemoState={setMemoState}
-          setIsConfirmOpen={setIsConfirmOpen}
-          setConfirmModalText={setConfirmModalText}
+          onMemoModal={onMemoModal}
         />
       ) : (
         <>
           <StContent>{showContent()}</StContent>
-          {!isGuide && (
-            <MemoDotButton
-              memoData={memoData}
-              setMemoState={setMemoState}
-              setIsConfirmOpen={setIsConfirmOpen}
-              setConfirmModalText={setConfirmModalText}
-            />
-          )}
+          {!isGuide && <MemoDotButton memoData={memoData} setMemoState={setMemoState} onMemoModal={onMemoModal} />}
         </>
       )}
-    </StMemo>
+    </StMemoItem>
   );
 }
 
-export default Memo;
+export default MemoItem;
 
-const StMemo = styled.div<{ fold: boolean }>`
+const StMemoItem = styled.div<{ fold: boolean }>`
   position: relative;
 
   margin-right: 0.8rem;

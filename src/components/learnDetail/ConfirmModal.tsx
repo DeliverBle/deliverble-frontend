@@ -10,6 +10,8 @@ import {
   INITIAL_MEMO_STATE,
 } from '@src/utils/constant';
 
+export type MemoConfirmModalKey = 'new' | 'edit' | 'delete';
+
 export interface ConfirmModalText {
   mainText: string;
   subText?: string;

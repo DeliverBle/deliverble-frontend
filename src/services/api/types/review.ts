@@ -19,12 +19,9 @@ export type PostReviewRequestBody = {
   listSize: number;
 };
 
-export type PostFavoriteResponse = {
-  favoriteList: VideoData[];
-  favoritePaging: Paging;
+export type PostReviewResponse = {
+  videoList: VideoData[];
+  paging: Paging;
 };
 
-export type PostHistoryResponse = {
-  historyList: VideoData[];
-  historyPaging: Paging;
-};
+export type ReviewTab = 'favorite' | 'history';
