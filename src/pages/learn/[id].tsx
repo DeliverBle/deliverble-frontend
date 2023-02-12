@@ -41,16 +41,8 @@ import {
   MemoConfirmModalTextByType,
 } from '@src/utils/constant';
 import { useBodyScrollLock } from '@src/hooks/useBodyScrollLock';
-import {
-  icHighlighterClicked,
-  icHighlighterDefault,
-  icHighlighterHover,
-  icSpacingClicked,
-  icSpacingDefault,
-  icSpacingHover,
-  icSpeechGuideInfo,
-  icXButton,
-} from 'public/assets/icons';
+import { icSpeechGuideInfo, icXButton } from 'public/assets/icons';
+import ScriptEditButton from '@src/components/learnDetail/ScriptEditButton';
 
 export interface MemoState {
   newMemoId: number;
@@ -75,8 +67,7 @@ function LearnDetail() {
   const { lockScroll, unlockScroll } = useBodyScrollLock();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [confirmModalText, setConfirmModalText] = useState<ConfirmModalText>(NEW_MEMO_CONFIRM_MODAL_TEXT);
-  const [isHighlight, setIsHighlight] = useState(false);
-  const [isSpacing, setIsSpacing] = useState(false);
+
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [player, setPlayer] = useState<YT.Player | null>();
   const [videoState, setVideoState] = useState(INITIAL_NUMBER);
@@ -85,7 +76,6 @@ function LearnDetail() {
   const getLoginStatus = () => localStorage.getItem('token') ?? '';
   const [prevLink, setPrevLink] = useState('');
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [hoveredChild, setHoveredChild] = useState<number>(0);
   const [isGuideOver, setIsGuideOver] = useState<boolean>(false);
   const [highlightIndex, setHighlightIndex] = useState<number>(INITIAL_NUMBER);
   const [titleList, setTitleList] = useState<Name[]>([]);
@@ -107,6 +97,10 @@ function LearnDetail() {
   const [text, setText] = useState<string>();
   const [similarNewsList, setSimilarNewsList] = useState<simpleVideoData[]>([]);
   const [currentScriptId, setCurrentScriptId] = useState(0);
+
+  const [hoveredChild, setHoveredChild] = useState<number>(0);
+  const [isHighlight, setIsHighlight] = useState(false);
+  const [isSpacing, setIsSpacing] = useState(false);
 
   useEffect(() => {
     isRecordSaved &&
@@ -586,75 +580,20 @@ function LearnDetail() {
                         setIsRecordSaved={setIsRecordSaved}
                         onLoginModalOpen={handleLoginModalOpen}
                       />
-                      <StButton
-                        aria-describedby="highlight-tooltip"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (getLoginStatus() === '') {
-                            handleLoginModalOpen();
-                          } else {
-                            isHighlight ? setIsHighlight(false) : setIsHighlight(true);
-                            setIsSpacing(false);
-                            setHoveredChild(0);
-                          }
-                        }}>
-                        {isHighlight ? (
-                          <ImageDiv className="function-button" src={icHighlighterClicked} alt="하이라이트" />
-                        ) : (
-                          <>
-                            <ImageDiv className="function-button" src={icHighlighterHover} alt="하이라이트" />
-                            <ImageDiv
-                              className="default function-button"
-                              src={icHighlighterDefault}
-                              alt="하이라이트"
-                              onMouseOver={() => {
-                                setHoveredChild(1);
-                              }}
-                              onMouseOut={(e) => {
-                                e.stopPropagation();
-                                setHoveredChild(0);
-                              }}
-                            />
-                          </>
-                        )}
-                      </StButton>
-                      <StButton
-                        aria-describedby="spacing-tooltip"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (getLoginStatus() === '') {
-                            handleLoginModalOpen();
-                          } else {
-                            isSpacing ? setIsSpacing(false) : setIsSpacing(true);
-                            setIsHighlight(false);
-                            setHoveredChild(0);
-                          }
-                        }}>
-                        {isSpacing ? (
-                          <ImageDiv className="spacing function-button" src={icSpacingClicked} alt="끊어 읽기" />
-                        ) : (
-                          <>
-                            <ImageDiv
-                              className="spacing function-button spacing-hover"
-                              src={icSpacingHover}
-                              alt="끊어 읽기"
-                            />
-                            <ImageDiv
-                              className="spacing default function-button"
-                              src={icSpacingDefault}
-                              alt="끊어 읽기"
-                              onMouseOver={(e) => {
-                                e.stopPropagation();
-                                setHoveredChild(2);
-                              }}
-                              onMouseOut={(e) => {
-                                e.stopPropagation();
-                                setHoveredChild(0);
-                              }}
-                            />
-                          </>
-                        )}
-                      </StButton>
+                      <ScriptEditButton
+                        handleLoginModalOpen={handleLoginModalOpen}
+                        isHighlight={isHighlight}
+                        setIsHighlight={setIsHighlight}
+                        setIsSpacing={setIsSpacing}
+                        setHoveredChild={setHoveredChild}
+                      />
+                      <ScriptEditButton
+                        handleLoginModalOpen={handleLoginModalOpen}
+                        isSpacing={isSpacing}
+                        setIsHighlight={setIsHighlight}
+                        setIsSpacing={setIsSpacing}
+                        setHoveredChild={setHoveredChild}
+                      />
                       <StTooltipContainer hoveredChild={hoveredChild}>
                         <p id="highlight-tooltip" role="tooltip">
                           드래그해서 하이라이트를
@@ -1082,22 +1021,6 @@ const StTooltipContainer = styled.div<{ hoveredChild: number }>`
         content: '';
       }
     `}
-`;
-
-const StButton = styled.button`
-  width: 4.8rem;
-  height: 4.8rem;
-
-  &:hover .default img {
-    transition: opacity 0.3s;
-    opacity: 0;
-  }
-
-  .function-button {
-    cursor: pointer;
-    position: absolute;
-    top: 0;
-  }
 `;
 
 const StVideoWrapper = styled.div`
