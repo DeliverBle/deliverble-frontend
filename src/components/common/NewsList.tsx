@@ -143,7 +143,6 @@ const StNewsWrapper = styled.article<{ type: string }>`
 
 const StThumbnail = styled.div<{ type: string }>`
   position: relative;
-  border-radius: 1rem;
   cursor: pointer;
 
   ${({ type }) =>
@@ -179,8 +178,10 @@ const StThumbnail = styled.div<{ type: string }>`
     position: relative;
     z-index: -1;
     padding-top: 56%;
+    background-color: ${COLOR.GRAY_5};
+    border-radius: 1rem;
 
-    & img {
+    img {
       border-radius: 1rem;
       object-fit: cover;
     }
