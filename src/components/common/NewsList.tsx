@@ -20,16 +20,18 @@ interface NewsListProps {
 }
 
 function NewsList(props: NewsListProps) {
-  const setIsGuide = useSetRecoilState(isGuideAtom);
   const { type, newsList, onClickLike } = props;
   const router = useRouter();
+  const [isWebpError, setIsWebpError] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const setIsGuide = useSetRecoilState(isGuideAtom);
   const { lockScroll, unlockScroll } = useBodyScrollLock();
   const login = useRecoilValue(loginState);
 
   return (
     <StNewsList type={type}>
       {newsList.map(({ id, title, category, channel, thumbnail, reportDate, isFavorite, haveGuide }) => {
+        const webpThumbnail = thumbnail.replace('/vi/', '/vi_webp/').replace('.jpg', '.webp');
         return (
           <StNewsWrapper
             key={id}
@@ -47,9 +49,8 @@ function NewsList(props: NewsListProps) {
             <StThumbnail type={type}>
               <ImageDiv
                 className="thumbnail"
-                src={thumbnail}
-                blurDataURL={thumbnail}
-                placeholder="blur"
+                src={isWebpError ? thumbnail : webpThumbnail}
+                onError={() => setIsWebpError(true)}
                 layout="fill"
                 alt=""
               />
