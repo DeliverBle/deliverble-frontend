@@ -1103,8 +1103,8 @@ const StButton = styled.button`
 const StVideoWrapper = styled.div`
   position: relative;
   margin-bottom: 4rem;
-  width: fit-content;
-  height: fit-content;
+  width: 67rem;
+  height: 37.6rem;
   border-radius: 2.4rem;
   overflow: hidden;
 

@@ -50,7 +50,7 @@ function BannerSlider() {
   }, [swiperSetting]);
 
   return (
-    <>
+    <StBannerSlider>
       {swiperSetting && (
         <Swiper {...swiperSetting} ref={swiperRef}>
           {BANNER_TEXT_LIST.map(({ mainText, subText }, i) => (
@@ -85,11 +85,15 @@ function BannerSlider() {
           <ImageDiv className="arrow" src={icRightArrowWhite} alt="다음" layout="fill" />
         </button>
       </StSlideButton>
-    </>
+    </StBannerSlider>
   );
 }
 
 export default BannerSlider;
+
+const StBannerSlider = styled.div`
+  height: 88rem;
+`;
 
 const defaultBefore = css`
   content: '';
