@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import ImageDiv from '@src/components/common/ImageDiv';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { COLOR } from '@src/styles/color';
-import { useState, useRef, KeyboardEvent } from 'react';
+import { useState, useRef, KeyboardEvent, useEffect } from 'react';
 import {
   icRecordPlayDefault,
   icRecordPlayUnactivated,
@@ -18,6 +18,7 @@ import { api } from '@src/services/api';
 import { useMutation, useQuery } from 'react-query';
 import { useRecoilValue } from 'recoil';
 import { isGuideAtom } from '@src/stores/newsState';
+import { useRouter } from 'next/router';
 
 interface RecordStatusBarProps {
   scriptId: number;
@@ -39,6 +40,22 @@ function RecordLog(props: RecordStatusBarProps) {
   const audioRef = useRef(new Audio());
   const nameInputRef = useRef<HTMLInputElement>(null);
   const isGuide = useRecoilValue(isGuideAtom);
+  const router = useRouter();
+
+  const handlePausing = () => {
+    audioRef.current?.pause();
+  };
+
+  useEffect(() => {
+    handlePausing();
+  }, [scriptId]);
+
+  useEffect(() => {
+    router.events.on('routeChangeStart', handlePausing);
+    return () => {
+      router.events.off('routeChangeStart', handlePausing);
+    };
+  }, [router.events]);
 
   const { data } = useQuery(
     ['recordData', isRecordSaved, isDataChanged, scriptId],
