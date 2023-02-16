@@ -1,6 +1,5 @@
-import { PostReviewRequestBody, PostFavoriteResponse, PostHistoryResponse } from './types/review';
+import { PostReviewRequestBody, PostReviewResponse, ReviewTab } from './types/review';
 
 export interface ReviewService {
-  postFavoriteVideoList(body: PostReviewRequestBody): Promise<PostFavoriteResponse>;
-  postHistoryVideoList(body: PostReviewRequestBody): Promise<PostHistoryResponse>;
+  postReviewVideoList(body: PostReviewRequestBody, reviewTab: ReviewTab): Promise<PostReviewResponse>;
 }

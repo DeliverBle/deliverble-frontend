@@ -32,6 +32,8 @@ function Pagination(props: PaginationProps) {
     setPageGroupList(totalGroupList[currentPage % blockSize ? index : index - 1]);
   }, [currentPage, blockSize, lastPage]);
 
+  if (!pageGroupList.length) return <></>;
+
   return (
     <StPagination role="navigation" aria-label="페이지 탐색">
       {lastPage > blockSize && (

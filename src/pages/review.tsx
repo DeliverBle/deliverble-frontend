@@ -5,7 +5,7 @@ import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
 import HeadlineContainer from '@src/components/review/HeadlineContainer';
 import VideoContainer from '@src/components/review/VideoContainer';
 import { api } from '@src/services/api';
-import { VideoData } from '@src/services/api/types/review';
+import { ReviewTab } from '@src/services/api/types/review';
 import { loginState } from '@src/stores/loginState';
 import { LIST_SIZE } from '@src/utils/constant';
 import { useEffect, useState } from 'react';
@@ -14,94 +14,52 @@ import { FONT_STYLES } from 'src/styles/fontStyle';
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 function Review() {
+  const queryClient = useQueryClient();
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(loginState);
-  const [tab, setTab] = useState('isFavorite');
-  const [favoriteList, setFavoriteList] = useState<VideoData[]>([]);
-  const [historyList, setHistoryList] = useState<VideoData[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [totalCount, setTotalCount] = useState(0);
-  const [lastPage, setLastPage] = useState(0);
+  const [tab, setTab] = useState<ReviewTab>('favorite');
   const [currentPage, setCurrentPage] = useState(1);
 
-  const getNewsList = async () => {
-    setIsLoading(true);
-
-    const { favoritePaging, favoriteList } = await api.reviewService
-      .postFavoriteVideoList({
-        currentPage: 1,
-        listSize: LIST_SIZE,
-      })
-      .catch(() => {
+  const { data: postReviewListData, isLoading } = useQuery(
+    ['postReviewList', currentPage, tab],
+    async () => {
+      if (isLoggedIn) {
+        return await api.reviewService.postReviewVideoList({ currentPage, listSize: LIST_SIZE }, tab);
+      }
+    },
+    {
+      onError: () => {
         localStorage.removeItem('token');
         setIsLoggedIn(false);
         router.reload();
-        return {
-          favoritePaging: {
-            totalCount: 0,
-            lastPage: 0,
-          },
-          favoriteList: [],
-        };
-      });
+      },
+    },
+  );
 
-    const { historyPaging, historyList } = await api.reviewService
-      .postHistoryVideoList({
-        currentPage: 1,
-        listSize: LIST_SIZE,
-      })
-      .catch(() => {
-        localStorage.removeItem('token');
-        setIsLoggedIn(false);
-        router.reload();
-        return {
-          historyPaging: {
-            totalCount: 0,
-            lastPage: 0,
-          },
-          historyList: [],
-        };
-      });
+  const videoList = postReviewListData?.videoList ?? [];
+  const { lastPage, totalCount } = postReviewListData?.paging ?? { lastPage: 1, totalCount: 0 };
 
-    setCurrentPage(1);
-    tab === 'isFavorite'
-      ? (setTotalCount(favoritePaging.totalCount), setLastPage(favoritePaging.lastPage), setFavoriteList(favoriteList))
-      : (setTotalCount(historyPaging.totalCount), setLastPage(historyPaging.lastPage), setHistoryList(historyList));
-    setIsLoading(false);
-  };
-
-  const handlePageChange = async (page: number) => {
+  const handlePageChange = (page: number) => {
     window.scrollTo(0, 0);
-    setIsLoading(true);
-
-    const { favoritePaging, favoriteList } = await api.reviewService.postFavoriteVideoList({
-      currentPage: page,
-      listSize: LIST_SIZE,
-    });
-
-    const { historyPaging, historyList } = await api.reviewService.postHistoryVideoList({
-      currentPage: page,
-      listSize: LIST_SIZE,
-    });
-
     setCurrentPage(page);
-    setTotalCount(tab === 'isFavorite' ? favoritePaging.totalCount : historyPaging.totalCount);
-    setLastPage(tab === 'isFavorite' ? favoritePaging.lastPage : historyPaging.lastPage);
-    setFavoriteList(favoriteList);
-    setHistoryList(historyList);
-    setIsLoading(false);
   };
 
-  const handleClickLike = async (id: number) => {
-    await api.likeService.postLikeData(id);
-    getNewsList();
-  };
+  const { mutate: mutatePostLike } = useMutation(
+    async (id: number) => {
+      return await api.likeService.postLikeData(id);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('postReviewList');
+      },
+    },
+  );
 
   useEffect(() => {
-    isLoggedIn && getNewsList();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    isLoggedIn && setCurrentPage(1);
   }, [tab, isLoggedIn]);
 
   return (
@@ -113,26 +71,26 @@ function Review() {
         <StTabList role="tablist">
           <StTab
             role="tab"
-            aria-selected={tab === 'isFavorite'}
-            isActive={tab === 'isFavorite'}
-            onClick={() => setTab('isFavorite')}>
+            aria-selected={tab === 'favorite'}
+            isActive={tab === 'favorite'}
+            onClick={() => setTab('favorite')}>
             내 즐겨찾기 기록
           </StTab>
           <StTab
             role="tab"
-            aria-selected={tab === 'isLearned'}
-            isActive={tab === 'isLearned'}
-            onClick={() => setTab('isLearned')}>
+            aria-selected={tab === 'history'}
+            isActive={tab === 'history'}
+            onClick={() => setTab('history')}>
             내 학습 기록
           </StTab>
         </StTabList>
         {isLoading ? (
-          <VideoListSkeleton itemNumber={12} hasCountSection={true} />
+          <VideoListSkeleton itemNumber={12} hasCountSection />
         ) : (
           <VideoContainer
             tab={tab}
-            videoList={tab === 'isFavorite' ? favoriteList : historyList}
-            onClickLike={handleClickLike}
+            videoList={videoList}
+            onClickLike={mutatePostLike}
             totalCount={totalCount}
             currentPage={currentPage}
             lastPage={lastPage}
