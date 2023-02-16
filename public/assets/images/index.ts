@@ -11,3 +11,4 @@ export { default as imgMobileBgLast } from './img_mobile_bg_last.webp';
 export { default as imgMobileEar } from './img_mobile_ear.svg';
 export { default as imgMobileFist } from './img_mobile_fist.svg';
 export { default as imgMobileMic } from './img_mobile_mic.svg';
+export { default as imgFallbackBg } from './img_fallback_bg.webp';
