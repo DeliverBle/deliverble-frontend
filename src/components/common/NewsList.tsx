@@ -144,6 +144,7 @@ const StNewsWrapper = styled.article<{ type: string }>`
 const StThumbnail = styled.div<{ type: string }>`
   position: relative;
   cursor: pointer;
+  border-radius: 1rem;
 
   ${({ type }) =>
     type === 'guide' &&
