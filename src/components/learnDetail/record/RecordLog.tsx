@@ -47,10 +47,6 @@ function RecordLog(props: RecordStatusBarProps) {
   };
 
   useEffect(() => {
-    handlePausing();
-  }, [scriptId]);
-
-  useEffect(() => {
     router.events.on('routeChangeStart', handlePausing);
     return () => {
       router.events.off('routeChangeStart', handlePausing);
