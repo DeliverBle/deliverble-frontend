@@ -3,13 +3,22 @@ import { FONT_STYLES } from '@src/styles/fontStyle';
 import { icRecordEmpty } from 'public/assets/icons';
 import styled from 'styled-components';
 import ImageDiv from '@src/components/common/ImageDiv';
+import { isGuideAtom } from '@src/stores/newsState';
+import { useRecoilValue } from 'recoil';
 
 function EmptyRecord() {
+  const isGuide = useRecoilValue(isGuideAtom);
   return (
     <StEmptyRecord>
       <ImageDiv src={icRecordEmpty} className="icRecordEmpty" layout="fill" />
-      <p>저장된 녹음이 없습니다.</p>
-      <p>녹음을 추가해보세요!</p>
+      {isGuide ? (
+        <p>학습하러 이동해서 녹음을 추가해보세요!</p>
+      ) : (
+        <>
+          <p>저장된 녹음이 없습니다.</p>
+          <p>녹음을 추가해보세요!</p>
+        </>
+      )}
     </StEmptyRecord>
   );
 }
@@ -31,14 +40,12 @@ const StEmptyRecord = styled.div`
 
   & > p:nth-of-type(1) {
     padding-top: 2.4rem;
-
     color: ${COLOR.GRAY_45};
     ${FONT_STYLES.B_20_BODY};
   }
 
   & > p:nth-of-type(2) {
     padding-top: 0.8rem;
-
     color: ${COLOR.GRAY_30};
     ${FONT_STYLES.M_16_CAPTION};
   }
