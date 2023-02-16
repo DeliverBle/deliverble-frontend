@@ -41,16 +41,8 @@ import {
   MemoConfirmModalTextByType,
 } from '@src/utils/constant';
 import { useBodyScrollLock } from '@src/hooks/useBodyScrollLock';
-import {
-  icHighlighterClicked,
-  icHighlighterDefault,
-  icHighlighterHover,
-  icSpacingClicked,
-  icSpacingDefault,
-  icSpacingHover,
-  icSpeechGuideInfo,
-  icXButton,
-} from 'public/assets/icons';
+import { icSpeechGuideInfo, icXButton } from 'public/assets/icons';
+import ScriptEditButtonContainer from '@src/components/learnDetail/ScriptEditButtonContainer';
 
 export interface MemoState {
   newMemoId: number;
@@ -85,7 +77,6 @@ function LearnDetail() {
   const getLoginStatus = () => localStorage.getItem('token') ?? '';
   const [prevLink, setPrevLink] = useState('');
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [hoveredChild, setHoveredChild] = useState<number>(0);
   const [isGuideOver, setIsGuideOver] = useState<boolean>(false);
   const [highlightIndex, setHighlightIndex] = useState<number>(INITIAL_NUMBER);
   const [titleList, setTitleList] = useState<Name[]>([]);
@@ -586,87 +577,13 @@ function LearnDetail() {
                         setIsRecordSaved={setIsRecordSaved}
                         onLoginModalOpen={handleLoginModalOpen}
                       />
-                      <StButton
-                        aria-describedby="highlight-tooltip"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (getLoginStatus() === '') {
-                            handleLoginModalOpen();
-                          } else {
-                            isHighlight ? setIsHighlight(false) : setIsHighlight(true);
-                            setIsSpacing(false);
-                            setHoveredChild(0);
-                          }
-                        }}>
-                        {isHighlight ? (
-                          <ImageDiv className="function-button" src={icHighlighterClicked} alt="하이라이트" />
-                        ) : (
-                          <>
-                            <ImageDiv className="function-button" src={icHighlighterHover} alt="하이라이트" />
-                            <ImageDiv
-                              className="default function-button"
-                              src={icHighlighterDefault}
-                              alt="하이라이트"
-                              onMouseOver={() => {
-                                setHoveredChild(1);
-                              }}
-                              onMouseOut={(e) => {
-                                e.stopPropagation();
-                                setHoveredChild(0);
-                              }}
-                            />
-                          </>
-                        )}
-                      </StButton>
-                      <StButton
-                        aria-describedby="spacing-tooltip"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (getLoginStatus() === '') {
-                            handleLoginModalOpen();
-                          } else {
-                            isSpacing ? setIsSpacing(false) : setIsSpacing(true);
-                            setIsHighlight(false);
-                            setHoveredChild(0);
-                          }
-                        }}>
-                        {isSpacing ? (
-                          <ImageDiv className="spacing function-button" src={icSpacingClicked} alt="끊어 읽기" />
-                        ) : (
-                          <>
-                            <ImageDiv
-                              className="spacing function-button spacing-hover"
-                              src={icSpacingHover}
-                              alt="끊어 읽기"
-                            />
-                            <ImageDiv
-                              className="spacing default function-button"
-                              src={icSpacingDefault}
-                              alt="끊어 읽기"
-                              onMouseOver={(e) => {
-                                e.stopPropagation();
-                                setHoveredChild(2);
-                              }}
-                              onMouseOut={(e) => {
-                                e.stopPropagation();
-                                setHoveredChild(0);
-                              }}
-                            />
-                          </>
-                        )}
-                      </StButton>
-                      <StTooltipContainer hoveredChild={hoveredChild}>
-                        <p id="highlight-tooltip" role="tooltip">
-                          드래그해서 하이라이트를
-                          <br />
-                          표시해보세요.
-                        </p>
-                        <p id="spacing-tooltip" role="tooltip">
-                          클릭해서 끊어읽기를
-                          <br />
-                          표시해보세요.
-                        </p>
-                      </StTooltipContainer>
+                      <ScriptEditButtonContainer
+                        handleLoginModalOpen={handleLoginModalOpen}
+                        isHighlight={isHighlight}
+                        isSpacing={isSpacing}
+                        setIsHighlight={setIsHighlight}
+                        setIsSpacing={setIsSpacing}
+                      />
                     </StButtonContainer>
                   </div>
                 </article>
@@ -1042,62 +959,6 @@ const StButtonContainer = styled.div<{ isGuide: boolean }>`
   position: relative;
   padding-right: 0.8rem;
   width: 100%;
-`;
-
-const StTooltipContainer = styled.div<{ hoveredChild: number }>`
-  position: relative;
-  z-index: 2;
-
-  & > p {
-    display: none;
-  }
-
-  ${({ hoveredChild }) =>
-    hoveredChild &&
-    css`
-      & > p:nth-child(${hoveredChild}) {
-        display: block;
-        position: absolute;
-        top: 6.2rem;
-        right: ${hoveredChild === 1 ? '5.6rem' : '-8.8rem'};
-        width: ${hoveredChild === 1 ? '16.5rem' : '13.9rem'};
-        padding: 1rem;
-        border-radius: 0.6rem;
-        background: rgba(22, 15, 53, 0.7);
-        ${FONT_STYLES.SB_15_CAPTION}
-        color: ${COLOR.WHITE};
-        cursor: default;
-      }
-
-      & > p:nth-child(${hoveredChild})::after {
-        position: absolute;
-        bottom: 100%;
-        right: ${hoveredChild === 1 ? '1.6rem' : '10.7rem'};
-        width: 0;
-        height: 0;
-        border: solid transparent;
-        border-width: 0.8rem;
-        border-bottom-color: rgba(22, 15, 53, 0.7);
-        pointer-events: none;
-        content: '';
-      }
-    `}
-`;
-
-const StButton = styled.button`
-  width: 4.8rem;
-  height: 4.8rem;
-
-  &:hover .default img {
-    transition: opacity 0.3s;
-    opacity: 0;
-  }
-
-  .function-button {
-    cursor: pointer;
-    position: absolute;
-    top: 0;
-  }
 `;
 
 const StVideoWrapper = styled.div`

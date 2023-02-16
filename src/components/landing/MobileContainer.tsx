@@ -140,7 +140,7 @@ const StMobileContainer = styled.div`
 
 const StFirstSlide = styled.div`
   text-align: center;
-  height: 65rem;
+  height: 69.4rem;
   background: url(${imgMobileBgFirst.src}) center/cover no-repeat;
 
   p:first-child {
