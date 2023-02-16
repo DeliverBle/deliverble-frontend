@@ -14,17 +14,19 @@ function ErrorFallback(props: FallbackProps) {
   return (
     <>
       <NavigationBar />
-      <StErrorContent>
-        <h1>{customError.statusCode}</h1>
-        <h2>
-          {error.message}
-          <br />
-          에러를 제보해 주시면 더 나은 딜리버블과 함께할 수 있어요!
-        </h2>
-        <a target="_blank" href="https://forms.gle/BGQGeGBLXTM6RBCR7" rel="noreferrer noopener">
-          에러 제보하기
-        </a>
-      </StErrorContent>
+      {customError && (
+        <StErrorContent>
+          <h1>{customError.code}</h1>
+          <h2>
+            {error.message}
+            <br />
+            에러를 제보해 주시면 더 나은 딜리버블과 함께할 수 있어요!
+          </h2>
+          <a target="_blank" href="https://forms.gle/BGQGeGBLXTM6RBCR7" rel="noreferrer noopener">
+            에러 제보하기
+          </a>
+        </StErrorContent>
+      )}
       <Footer />
     </>
   );
