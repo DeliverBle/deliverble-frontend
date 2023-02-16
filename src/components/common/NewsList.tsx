@@ -20,16 +20,18 @@ interface NewsListProps {
 }
 
 function NewsList(props: NewsListProps) {
-  const setIsGuide = useSetRecoilState(isGuideAtom);
   const { type, newsList, onClickLike } = props;
   const router = useRouter();
+  const [isWebpError, setIsWebpError] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const setIsGuide = useSetRecoilState(isGuideAtom);
   const { lockScroll, unlockScroll } = useBodyScrollLock();
   const login = useRecoilValue(loginState);
 
   return (
     <StNewsList type={type}>
       {newsList.map(({ id, title, category, channel, thumbnail, reportDate, isFavorite, haveGuide }) => {
+        const webpThumbnail = thumbnail.replace('/vi/', '/vi_webp/').replace('.jpg', '.webp');
         return (
           <StNewsWrapper
             key={id}
@@ -47,9 +49,8 @@ function NewsList(props: NewsListProps) {
             <StThumbnail type={type}>
               <ImageDiv
                 className="thumbnail"
-                src={thumbnail}
-                blurDataURL={thumbnail}
-                placeholder="blur"
+                src={isWebpError ? thumbnail : webpThumbnail}
+                onError={() => setIsWebpError(true)}
                 layout="fill"
                 alt=""
               />
@@ -142,8 +143,8 @@ const StNewsWrapper = styled.article<{ type: string }>`
 
 const StThumbnail = styled.div<{ type: string }>`
   position: relative;
-  border-radius: 1rem;
   cursor: pointer;
+  border-radius: 1rem;
 
   ${({ type }) =>
     type === 'guide' &&
@@ -178,8 +179,10 @@ const StThumbnail = styled.div<{ type: string }>`
     position: relative;
     z-index: -1;
     padding-top: 56%;
+    background-color: ${COLOR.GRAY_5};
+    border-radius: 1rem;
 
-    & img {
+    img {
       border-radius: 1rem;
       object-fit: cover;
     }
