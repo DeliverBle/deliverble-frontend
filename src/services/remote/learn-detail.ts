@@ -283,22 +283,20 @@ export function learnDetailDataRemote(): LearnDetailService {
         throw new InternalServerError(error.response?.data.message);
       }
     });
-    if (response.statusCode === 200) {
-      return {
-        videoList: response.data
-          ? response.data.exploreNewsDtoCollection.map((video: VideoData) => ({
-              id: video.id,
-              title: video.title,
-              category: video.category,
-              channel: video.channel,
-              thumbnail: video.thumbnail,
-              reportDate: video.reportDate,
-              isFavorite: video.isFavorite,
-              haveGuide: video.haveGuide,
-            }))
-          : [],
-      };
-    }
+    return {
+      videoList: response.data
+        ? response.data.exploreNewsDtoCollection.map((video: VideoData) => ({
+            id: video.id,
+            title: video.title,
+            category: video.category,
+            channel: video.channel,
+            thumbnail: video.thumbnail,
+            reportDate: video.reportDate,
+            isFavorite: video.isFavorite,
+            haveGuide: video.haveGuide,
+          }))
+        : [],
+    };
   };
 
   return {
