@@ -33,13 +33,8 @@ function ScriptEditButtonContainer(props: ScriptEditButtonContainerProps) {
         setHoveredChild={setHoveredChild}
       />
       <StTooltipContainer hoveredChild={hoveredChild}>
-        <p id="highlight-tooltip" role="tooltip">
-          드래그해서 하이라이트를
-          <br />
-          표시해보세요.
-        </p>
-        <p id="spacing-tooltip" role="tooltip">
-          클릭해서 끊어읽기를
+        <p id="script-edit-tooltip" role="tooltip">
+          {hoveredChild === 1 ? '드래그해서 하이라이트' : '클릭해서 끊어읽기'}를
           <br />
           표시해보세요.
         </p>
@@ -61,7 +56,7 @@ const StTooltipContainer = styled.div<{ hoveredChild: number }>`
   ${({ hoveredChild }) =>
     hoveredChild &&
     css`
-      & > p:nth-child(${hoveredChild}) {
+      & > p {
         display: block;
         position: absolute;
         top: 6.2rem;
@@ -75,7 +70,7 @@ const StTooltipContainer = styled.div<{ hoveredChild: number }>`
         cursor: default;
       }
 
-      & > p:nth-child(${hoveredChild})::after {
+      & > p::after {
         position: absolute;
         bottom: 100%;
         right: ${hoveredChild === 1 ? '1.6rem' : '10.7rem'};

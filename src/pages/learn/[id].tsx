@@ -67,7 +67,8 @@ function LearnDetail() {
   const { lockScroll, unlockScroll } = useBodyScrollLock();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [confirmModalText, setConfirmModalText] = useState<ConfirmModalText>(NEW_MEMO_CONFIRM_MODAL_TEXT);
-
+  const [isHighlight, setIsHighlight] = useState(false);
+  const [isSpacing, setIsSpacing] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [player, setPlayer] = useState<YT.Player | null>();
   const [videoState, setVideoState] = useState(INITIAL_NUMBER);
@@ -97,9 +98,6 @@ function LearnDetail() {
   const [text, setText] = useState<string>();
   const [similarNewsList, setSimilarNewsList] = useState<simpleVideoData[]>([]);
   const [currentScriptId, setCurrentScriptId] = useState(0);
-
-  const [isHighlight, setIsHighlight] = useState(false);
-  const [isSpacing, setIsSpacing] = useState(false);
 
   useEffect(() => {
     isRecordSaved &&

@@ -8,6 +8,8 @@ import {
   icSpacingDefault,
   icSpacingHover,
 } from 'public/assets/icons';
+import { useRecoilValue } from 'recoil';
+import { loginState } from '@src/stores/loginState';
 
 interface ScriptEditButtonProps {
   handleLoginModalOpen: () => void;
@@ -20,44 +22,41 @@ interface ScriptEditButtonProps {
 
 function ScriptEditButton(props: ScriptEditButtonProps) {
   const { handleLoginModalOpen, isHighlight, isSpacing, setIsHighlight, setIsSpacing, setHoveredChild } = props;
-  const getLoginStatus = () => localStorage.getItem('token') ?? '';
-  const type = isHighlight !== undefined ? 'highlight' : 'spacing';
-  const icClicked = isHighlight !== undefined ? icHighlighterClicked : icSpacingClicked;
-  const icDefault = isHighlight !== undefined ? icHighlighterDefault : icSpacingDefault;
-  const icHover = isHighlight !== undefined ? icHighlighterHover : icSpacingHover;
+  const login = useRecoilValue(loginState);
+  const highlightButton = isHighlight !== undefined;
+  const type = highlightButton ? '하이라이트' : '끊어 읽기';
 
   const handleClick = () => {
-    if (isHighlight !== undefined) {
-      setIsHighlight(isHighlight ? false : true);
-      setIsSpacing(false);
-    } else {
-      setIsSpacing(isSpacing ? false : true);
-      setIsHighlight(false);
-    }
+    setIsHighlight(highlightButton ? !isHighlight : false);
+    setIsSpacing(highlightButton ? false : !isSpacing);
     setHoveredChild(0);
   };
 
   return (
     <StButton
-      aria-describedby={`${type}-tooltip`}
+      aria-describedby="script-edit-tooltip"
       onClick={(e) => {
         e.stopPropagation();
-        if (getLoginStatus() === '') {
-          handleLoginModalOpen();
-        } else {
-          handleClick();
-        }
+        !login ? handleLoginModalOpen() : handleClick();
       }}>
       {isHighlight || isSpacing ? (
-        <ImageDiv className="function-button" src={icClicked} alt={type} />
+        <ImageDiv
+          className="function-button"
+          src={highlightButton ? icHighlighterClicked : icSpacingClicked}
+          alt={type}
+        />
       ) : (
         <>
-          <ImageDiv className="function-button" src={icHover} alt={type} />
+          <ImageDiv
+            className="function-button"
+            src={highlightButton ? icHighlighterHover : icSpacingHover}
+            alt={type}
+          />
           <ImageDiv
             className="default function-button"
-            src={icDefault}
+            src={highlightButton ? icHighlighterDefault : icSpacingDefault}
             alt={type}
-            onMouseOver={() => setHoveredChild(isHighlight !== undefined ? 1 : 2)}
+            onMouseOver={() => setHoveredChild(highlightButton ? 1 : 2)}
             onMouseOut={(e) => {
               e.stopPropagation();
               setHoveredChild(0);
