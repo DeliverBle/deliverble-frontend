@@ -24,7 +24,7 @@ function ScriptEditButton(props: ScriptEditButtonProps) {
   const { handleLoginModalOpen, isHighlight, isSpacing, setIsHighlight, setIsSpacing, setHoveredChild } = props;
   const login = useRecoilValue(loginState);
   const highlightButton = isHighlight !== undefined;
-  const type = highlightButton ? '하이라이트' : '끊어 읽기';
+  const alt = highlightButton ? '하이라이트' : '끊어 읽기';
 
   const handleClick = () => {
     setIsHighlight(highlightButton ? !isHighlight : false);
@@ -43,19 +43,15 @@ function ScriptEditButton(props: ScriptEditButtonProps) {
         <ImageDiv
           className="function-button"
           src={highlightButton ? icHighlighterClicked : icSpacingClicked}
-          alt={type}
+          alt={alt}
         />
       ) : (
         <>
-          <ImageDiv
-            className="function-button"
-            src={highlightButton ? icHighlighterHover : icSpacingHover}
-            alt={type}
-          />
+          <ImageDiv className="function-button" src={highlightButton ? icHighlighterHover : icSpacingHover} alt={alt} />
           <ImageDiv
             className="default function-button"
             src={highlightButton ? icHighlighterDefault : icSpacingDefault}
-            alt={type}
+            alt={alt}
             onMouseOver={() => setHoveredChild(highlightButton ? 1 : 2)}
             onMouseOut={(e) => {
               e.stopPropagation();
