@@ -16,7 +16,7 @@ function ErrorFallback(props: FallbackProps) {
       <NavigationBar />
       {customError && (
         <StErrorContent>
-          <h1>{customError.code}</h1>
+          <h1>{customError.statusCode}</h1>
           <h2>
             {error.message}
             <br />
