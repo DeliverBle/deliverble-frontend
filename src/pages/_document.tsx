@@ -37,7 +37,7 @@ export default class MyDocument extends Document {
             rel="preconnect"
             as="style"
             crossOrigin=""
-            href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.4/dist/web/static/pretendard-dynamic-subset.css?display=swap"
+            href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.4/dist/web/static/pretendard-dynamic-subset.css"
           />
         </Head>
         <body>
