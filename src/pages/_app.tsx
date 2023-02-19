@@ -19,6 +19,9 @@ function MyApp({ Component, pageProps }: AppProps) {
             useErrorBoundary: true,
             retry: 0,
           },
+          mutations: {
+            useErrorBoundary: true,
+          },
         },
       }),
   );
