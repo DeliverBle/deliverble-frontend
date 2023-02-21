@@ -1,7 +1,7 @@
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import Link from 'next/link';
-import { imgFallbackBg } from 'public/assets/images';
+import { imgErrorBg } from 'public/assets/images';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -37,7 +37,7 @@ const StErrorContent = styled.div`
   align-items: center;
   justify-content: center;
   min-height: 108rem;
-  background: url(${imgFallbackBg.src}) center/cover no-repeat;
+  background: url(${imgErrorBg.src}) center/cover no-repeat;
 
   h1 {
     font-family: 'Dongle';
