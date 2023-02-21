@@ -1,8 +1,8 @@
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
+import { STATUS_CODE } from '@src/utils/constant';
 import Link from 'next/link';
 import { imgErrorBg } from 'public/assets/images';
-import React from 'react';
 import styled from 'styled-components';
 
 interface ErrorContentProps {
@@ -16,7 +16,7 @@ function ErrorContent(props: ErrorContentProps) {
     <StErrorContent>
       <h1>{statusCode}</h1>
       <h2>{errorMessage}</h2>
-      {statusCode === 404 ? (
+      {statusCode === STATUS_CODE.NOT_FOUND ? (
         <Link href="/home">
           <a>홈으로 돌아가기</a>
         </Link>

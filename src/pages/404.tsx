@@ -3,6 +3,7 @@ import Footer from '@src/components/common/Footer';
 import SEO from '@src/components/common/SEO';
 import styled from 'styled-components';
 import ErrorContent from '@src/components/common/ErrorContent';
+import { STATUS_CODE } from '@src/utils/constant';
 
 function Custom404() {
   return (
@@ -10,7 +11,7 @@ function Custom404() {
       <SEO title="Deilverble" />
       <NavigationBar />
       <ErrorContent
-        statusCode={404}
+        statusCode={STATUS_CODE.NOT_FOUND}
         errorMessage={
           '찾을 수 없는 페이지입니다.' + '\n' + '입력한 주소가 맞는지 확인하신 후, 딜리버블과 다시 함께 해요!'
         }
