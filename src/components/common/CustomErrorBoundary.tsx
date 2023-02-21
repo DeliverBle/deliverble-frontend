@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { ReactNode } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { QueryErrorResetBoundary, useQueryErrorResetBoundary } from 'react-query';
-import ErrorFallback from './ErrorFallback';
+import Fallback from '../../pages/fallback';
 
 interface CustomErrorBoundaryProps {
   children: ReactNode;
@@ -15,7 +15,7 @@ function CustomErrorBoundary(props: CustomErrorBoundaryProps) {
 
   return (
     <QueryErrorResetBoundary>
-      <ErrorBoundary onReset={reset} fallbackRender={ErrorFallback} key={router.pathname}>
+      <ErrorBoundary onReset={reset} fallbackRender={Fallback} key={router.pathname}>
         {children}
       </ErrorBoundary>
     </QueryErrorResetBoundary>
