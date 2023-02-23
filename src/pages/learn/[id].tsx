@@ -656,7 +656,15 @@ function LearnDetail() {
                 <p>{SPEECH_GUIDE_TOOLTIP_TEXT.description}</p>
               </StGuideTooltip>
             )}
-            {isGuide && <StLearnButton onClick={() => setIsGuide((prev) => !prev)}>학습하러 가기</StLearnButton>}
+            {isGuide && (
+              <StLearnButton
+                onClick={() => {
+                  setIsGuide((prev) => !prev);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}>
+                학습하러 가기
+              </StLearnButton>
+            )}
           </StLearnBox>
         )}
         {!isGuide && videoData && (
