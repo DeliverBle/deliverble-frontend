@@ -10,7 +10,6 @@ import {
   DeleteRecordData,
   ChangeRecordNameData,
 } from '../api/types/learn-detail';
-import { VideoData } from '../api/types/home';
 import { API } from './base';
 import { InternalServerError } from '../api/types/error';
 import { STATUS_CODE } from '@src/utils/constant';
@@ -33,25 +32,9 @@ export function learnDetailDataRemote(): LearnDetailService {
         startTime: response.data.startTime,
         endTime: response.data.endTime,
         scriptsId: response.data2[scriptIndex].id,
-        tags: response.data.tagsForView.map((tag: Tag) => ({
-          id: tag.id,
-          name: tag.name,
-        })),
-        scripts: response.data2[scriptIndex].sentences.map((sentence: Script) => ({
-          id: sentence.id,
-          order: sentence.order,
-          text: sentence.text,
-          startTime: sentence.startTime,
-          endTime: sentence.endTime,
-        })),
-        memos: response.data2[scriptIndex].memos.map((memo: MemoData) => ({
-          id: memo.id,
-          keyword: memo.keyword,
-          order: memo.order,
-          startIndex: memo.startIndex,
-          content: memo.content,
-          highlightId: memo.highlightId,
-        })),
+        tags: response.data.tagsForView,
+        scripts: response.data2[scriptIndex].sentences,
+        memos: response.data2[scriptIndex].memos,
         names: response.data2.map((name: Name) => ({
           id: name.id,
           name: name.name,
@@ -75,17 +58,8 @@ export function learnDetailDataRemote(): LearnDetailService {
         startTime: response.data.startTime,
         endTime: response.data.endTime,
         scriptsId: response.data2[0].id,
-        tags: response.data.tagsForView.map((tag: Tag) => ({
-          id: tag.id,
-          name: tag.name,
-        })),
-        scripts: response.data2[0].sentences.map((sentence: Script) => ({
-          id: sentence.id,
-          text: sentence.text,
-          order: sentence.order,
-          startTime: sentence.startTime,
-          endTime: sentence.endTime,
-        })),
+        tags: response.data.tagsForView,
+        scripts: response.data2[0].sentences,
       };
     } else throw '서버 통신 실패';
   };
@@ -284,18 +258,7 @@ export function learnDetailDataRemote(): LearnDetailService {
       }
     });
     return {
-      videoList: response.data
-        ? response.data.exploreNewsDtoCollection.map((video: VideoData) => ({
-            id: video.id,
-            title: video.title,
-            category: video.category,
-            channel: video.channel,
-            thumbnail: video.thumbnail,
-            reportDate: video.reportDate,
-            isFavorite: video.isFavorite,
-            haveGuide: video.haveGuide,
-          }))
-        : [],
+      videoList: response.data ? response.data.exploreNewsDtoCollection : [],
     };
   };
 
