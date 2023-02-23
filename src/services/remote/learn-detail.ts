@@ -12,6 +12,9 @@ import {
 } from '../api/types/learn-detail';
 import { VideoData } from '../api/types/home';
 import { API } from './base';
+import { InternalServerError } from '../api/types/error';
+import { STATUS_CODE } from '@src/utils/constant';
+import { AxiosError } from 'axios';
 
 export function learnDetailDataRemote(): LearnDetailService {
   const getPrivateVideoData = async (videoId: number, index: number) => {
@@ -275,23 +278,25 @@ export function learnDetailDataRemote(): LearnDetailService {
   const getSimilarVideoData = async (videoId: number) => {
     const response = await API.get({
       url: `/news/similar/${videoId}`,
+    }).catch((error: AxiosError<Error>) => {
+      if (error.response?.status === STATUS_CODE.INTERNAL_SERVER_ERROR) {
+        throw new InternalServerError(error.response?.data.message);
+      }
     });
-    if (response.statusCode === 200) {
-      return {
-        videoList: response.data
-          ? response.data.exploreNewsDtoCollection.map((video: VideoData) => ({
-              id: video.id,
-              title: video.title,
-              category: video.category,
-              channel: video.channel,
-              thumbnail: video.thumbnail,
-              reportDate: video.reportDate,
-              isFavorite: video.isFavorite,
-              haveGuide: video.haveGuide,
-            }))
-          : [],
-      };
-    } else throw '서버 통신 실패';
+    return {
+      videoList: response.data
+        ? response.data.exploreNewsDtoCollection.map((video: VideoData) => ({
+            id: video.id,
+            title: video.title,
+            category: video.category,
+            channel: video.channel,
+            thumbnail: video.thumbnail,
+            reportDate: video.reportDate,
+            isFavorite: video.isFavorite,
+            haveGuide: video.haveGuide,
+          }))
+        : [],
+    };
   };
 
   return {
