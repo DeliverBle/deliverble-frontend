@@ -49,7 +49,7 @@ function Landing() {
         </StMobile>
       )}
       {deviceType === 'desktop' && (
-        <StLanding>
+        <div>
           <ScrollControl slideNumber={slideNumber} setSlideNumber={setSlideNumber} setStopObserve={setStopObserve} />
           <Header isFirstScrolled={isFirstScrolled} isSecondScrolled={isSecondScrolled} />
           <SliderContainer
@@ -58,21 +58,13 @@ function Landing() {
             stopObserve={stopObserve}
             setStopObserve={setStopObserve}
           />
-        </StLanding>
+        </div>
       )}
     </div>
   );
 }
 
 export default Landing;
-
-const StLanding = styled.div`
-  @font-face {
-    font-family: 'Dongle';
-    font-display: swap;
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108_2@1.0/Dongle-Bold.woff') format('woff');
-  }
-`;
 
 const StMobile = styled.div`
   display: flex;

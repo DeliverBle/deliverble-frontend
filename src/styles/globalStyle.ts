@@ -57,6 +57,12 @@ const GlobalStyle = createGlobalStyle`
   input {
     outline: none; 
   }
+
+  @font-face {
+    font-family: 'Dongle';
+    font-display: swap;
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108_2@1.0/Dongle-Bold.woff') format('woff');
+  }
 `;
 
 export default GlobalStyle;

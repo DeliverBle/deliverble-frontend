@@ -9,6 +9,15 @@ const nextConfig = {
     locales: ['ko'],
     defaultLocale: 'ko',
   },
+  async redirects() {
+    return [
+      {
+        source: '/fallback',
+        destination: '/',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
