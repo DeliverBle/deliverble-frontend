@@ -388,7 +388,6 @@ const StNameChanging = styled.input<{ isTextLengthExceeded: boolean }>`
   border-radius: 1.2rem;
   background-color: transparent;
 
-  font-family: 'Pretendard';
   color: ${COLOR.BLACK};
   ${FONT_STYLES.M_25_BODY};
 
