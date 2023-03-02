@@ -44,6 +44,8 @@ function RecordLog(props: RecordStatusBarProps) {
 
   const handlePausing = () => {
     audioRef.current?.pause();
+    setIsPlaying(false);
+    setIsPausing(false);
   };
 
   useEffect(() => {
@@ -52,6 +54,10 @@ function RecordLog(props: RecordStatusBarProps) {
       router.events.off('routeChangeStart', handlePausing);
     };
   }, [router.events]);
+
+  useEffect(() => {
+    handlePausing();
+  }, [scriptId]);
 
   const { data } = useQuery(
     ['recordData', isRecordSaved, isDataChanged, scriptId],
@@ -138,7 +144,6 @@ function RecordLog(props: RecordStatusBarProps) {
     if (!isPlaying) {
       // 이전에 재생했던 녹음이 아닐 경우,  //audioRef에 정보가 없을 경우;
       if (linkClicked !== link || !audioRef.current) {
-        audioRef.current = new Audio();
         getAudioLink();
         //한번 재생했던 녹음을 다시 재생할 경우.
       } else if (!isPausing) {
