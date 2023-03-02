@@ -163,7 +163,6 @@ const StForm = styled.textarea`
   border-radius: 1.2rem;
   background-color: transparent;
 
-  font-family: 'Pretendard';
   ${FONT_STYLES.R_23_MEMO};
   color: ${COLOR.GRAY_80};
 
