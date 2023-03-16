@@ -111,20 +111,18 @@ function LearnDetail() {
     videoData?.scriptsId && setCurrentScriptId(videoData?.scriptsId);
   }, [videoData, currentScriptId]);
 
-  const getHighlightIndex = (parentNode: ParentNode | null, targetId: string) => {
-    const childNodes = parentNode?.childNodes;
+  const getHighlightIndex = (contextTarget: HTMLElement, targetId: string) => {
+    const childNodes = contextTarget.parentNode?.childNodes;
     if (childNodes) {
       let stringLength = 0;
       for (let i = 0; i < childNodes.length; i++) {
-        const childElement = childNodes[i] as HTMLElement;
-        if (childElement.id === targetId) {
+        const { id, textContent: text } = childNodes[i] as HTMLElement;
+        if (id === targetId) {
           setHighlightIndex(stringLength);
           return stringLength;
         }
-        if (childNodes[i].textContent !== '/') {
-          stringLength += childNodes[i]?.textContent?.replaceAll('/', ' ').length ?? 0;
-        } else {
-          stringLength += 1;
+        if (text) {
+          stringLength += text !== '/' ? text.replaceAll('/', ' ').length : 1;
         }
       }
     }
