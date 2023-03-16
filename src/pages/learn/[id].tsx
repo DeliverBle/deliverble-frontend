@@ -43,6 +43,7 @@ import {
 import { useBodyScrollLock } from '@src/hooks/useBodyScrollLock';
 import { icSpeechGuideInfo, icXButton } from 'public/assets/icons';
 import ScriptEditButtonContainer from '@src/components/learnDetail/ScriptEditButtonContainer';
+import { underlineMemo } from '@src/utils/underlineMemo';
 
 export interface MemoState {
   newMemoId: number;
@@ -127,38 +128,6 @@ function LearnDetail() {
         }
       }
     }
-  };
-
-  const createMarkStyles = (script: string) => {
-    let styles = ``;
-    const markIdList = [];
-    let startIndex = script.indexOf('<mark id=');
-    let endIndex = script.indexOf('>', startIndex + 9);
-    let markId = '';
-    if (startIndex !== -1 && endIndex !== -1) {
-      markId = script.substring(startIndex + 9, endIndex);
-    }
-
-    while (markId) {
-      markIdList.push(markId);
-      startIndex = script.indexOf('<mark id=', endIndex);
-      endIndex = script.indexOf('>', startIndex + 9);
-      if (startIndex === -1 || endIndex === -1) break;
-      markId = script.substring(startIndex + 9, endIndex);
-    }
-
-    markIdList.forEach((id, i) => {
-      if (memoList.find(({ highlightId, content }) => highlightId === id && content)) {
-        styles += `
-          mark:nth-of-type(${i + 1}) {
-            border-bottom: 0.7rem solid #4E8AFF;
-            border-image: linear-gradient(white 94%, #4E8AFF 90%);
-            border-image-slice: 4;
-          }
-        `;
-      }
-    });
-    return styles;
   };
 
   useEffect(() => {
@@ -269,16 +238,18 @@ function LearnDetail() {
     }
 
     const markTag = contextTarget.closest('mark');
-    const startIndex = markTag && getHighlightIndex(contextTarget?.parentNode, contextTarget.id);
-    if (startIndex && markTag) {
-      setMemoInfo({
-        scriptId,
-        order,
-        startIndex,
-        keyword: markTag.innerText.replaceAll('/', ' '),
-        highlightId: markTag.id,
-      });
-      setClickedMemo(memoList.find((memo) => memo.highlightId === markTag.id));
+    if (markTag) {
+      const startIndex = getHighlightIndex(contextTarget, markTag.id);
+      if (startIndex) {
+        setMemoInfo({
+          scriptId,
+          order,
+          startIndex,
+          keyword: markTag.innerText.replaceAll('/', ' '),
+          highlightId: markTag.id,
+        });
+        setClickedMemo(memoList.find((memo) => memo.highlightId === markTag.id));
+      }
     }
   };
 
@@ -542,7 +513,7 @@ function LearnDetail() {
                           }}
                           key={id}
                           onClick={() => player?.seekTo(startTime, true)}
-                          markStyles={createMarkStyles(text)}
+                          underline={underlineMemo(text, memoList)}
                           isActive={startTime <= currentTime && currentTime < endTime}>
                           <div id={id.toString()} dangerouslySetInnerHTML={{ __html: text }}></div>
                         </StScriptText>
@@ -932,7 +903,7 @@ const StLearnSection = styled.section<{ isGuide: boolean }>`
   }
 `;
 
-const StScriptText = styled.div<{ isActive: boolean; markStyles: string }>`
+const StScriptText = styled.div<{ isActive: boolean; underline: string }>`
   position: relative;
   font-size: 2.6rem;
   font-weight: ${({ isActive }) => (isActive ? 600 : 400)};
@@ -952,7 +923,7 @@ const StScriptText = styled.div<{ isActive: boolean; markStyles: string }>`
     color: ${({ isActive }) => (isActive ? COLOR.MAIN_BLUE : COLOR.BLACK)};
   }
 
-  ${({ markStyles }) => markStyles};
+  ${({ underline }) => underline};
 
   & > mark:hover {
     color: ${COLOR.MAIN_BLUE};
