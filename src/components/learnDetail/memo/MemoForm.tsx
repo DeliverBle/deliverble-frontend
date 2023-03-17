@@ -114,11 +114,9 @@ function MemoForm(props: MemoFormProps) {
     const { newMemoId, editMemoId } = memoState;
     if (newMemoId !== INITIAL_NUMBER || editMemoId !== INITIAL_NUMBER) {
       window.addEventListener('mousedown', handleClickOutside);
-      window.addEventListener('contextmenu', handleClickOutside);
     }
     return () => {
       window.removeEventListener('mousedown', handleClickOutside);
-      window.removeEventListener('contextmenu', handleClickOutside);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [memoState]);
