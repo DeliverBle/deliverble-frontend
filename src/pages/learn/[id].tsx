@@ -78,7 +78,6 @@ function LearnDetail() {
   const [prevLink, setPrevLink] = useState('');
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isGuideOver, setIsGuideOver] = useState<boolean>(false);
-  const [highlightIndex, setHighlightIndex] = useState<number>(INITIAL_NUMBER);
   const [titleList, setTitleList] = useState<Name[]>([]);
   const [clickedTitleIndex, setClickedTitleIndex] = useState(0);
   const [isTitleInputVisible, setIsTitleInputVisible] = useState(false);
@@ -117,7 +116,6 @@ function LearnDetail() {
       for (let i = 0; i < childNodes.length; i++) {
         const childElement = childNodes[i] as HTMLElement;
         if (childElement.id === targetId) {
-          setHighlightIndex(stringLength);
           return stringLength;
         }
         if (childNodes[i].textContent !== '/') {
@@ -269,16 +267,22 @@ function LearnDetail() {
     }
 
     const markTag = contextTarget.closest('mark');
-    const startIndex = markTag && getHighlightIndex(contextTarget?.parentNode, contextTarget.id);
-    if (startIndex && markTag) {
-      setMemoInfo({
-        scriptId,
-        order,
-        startIndex,
-        keyword: markTag.innerText.replaceAll('/', ' '),
-        highlightId: markTag.id,
-      });
-      setClickedMemo(memoList.find((memo) => memo.highlightId === markTag.id));
+    if (markTag) {
+      const startIndex = getHighlightIndex(contextTarget?.parentNode, contextTarget.id);
+      const { newMemoId, editMemoId } = memoState;
+      if (newMemoId === INITIAL_NUMBER && editMemoId === INITIAL_NUMBER) {
+        setIsContextMenuOpen(true);
+        if (startIndex) {
+          setMemoInfo({
+            scriptId,
+            order,
+            startIndex,
+            keyword: markTag.innerText.replaceAll('/', ' '),
+            highlightId: markTag.id,
+          });
+          setClickedMemo(memoList.find((memo) => memo.highlightId === markTag.id));
+        }
+      }
     }
   };
 
@@ -375,21 +379,6 @@ function LearnDetail() {
   }, [clickedDeleteMemo, memoState]);
 
   useEffect(() => {
-    const { newMemoId, editMemoId } = memoState;
-    if (highlightIndex !== INITIAL_NUMBER && newMemoId === INITIAL_NUMBER && editMemoId === INITIAL_NUMBER) {
-      setIsContextMenuOpen(true);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [highlightIndex]);
-
-  useEffect(() => {
-    const { newMemoId, editMemoId } = memoState;
-    if (newMemoId === INITIAL_NUMBER && editMemoId === INITIAL_NUMBER) {
-      setHighlightIndex(INITIAL_NUMBER);
-    }
-  }, [memoState]);
-
-  useEffect(() => {
     if (isHighlight || isSpacing) {
       setIsEditing(true);
     } else {
@@ -447,7 +436,6 @@ function LearnDetail() {
         eventTarget.tagName !== 'SPAN'
       ) {
         setIsContextMenuOpen(false);
-        setHighlightIndex(INITIAL_NUMBER);
       }
     };
     if (isContextMenuOpen) {
