@@ -15,50 +15,44 @@ function useRightClickHandler(props: useRightClickHandlerProps) {
   const [memoInfo, setMemoInfo] = useState<MemoInfo>(INITIAL_MEMO);
   const [clickedMemo, setClickedMemo] = useState<MemoData>();
 
-  const getHighlightIndex = (contextTarget: HTMLElement, targetId: string) => {
-    const childNodes = contextTarget.parentNode?.childNodes;
-    if (childNodes) {
-      let stringLength = 0;
-      for (let i = 0; i < childNodes.length; i++) {
-        const { id, textContent: text } = childNodes[i] as HTMLElement;
-        if (id === targetId) {
-          return stringLength;
-        }
-        if (text) {
-          stringLength += text !== '/' ? text.replaceAll('/', ' ').length : 1;
-        }
-      }
-    }
-  };
-
   const handleRightClick = (e: React.MouseEvent, scriptId: number, order: number) => {
-    const contextTarget = e.target as HTMLElement;
-    setRightClickedElement(contextTarget);
-    if (contextTarget.closest('span')) {
+    const clickedElement = e.target as HTMLElement;
+    setRightClickedElement(clickedElement);
+
+    const element = clickedElement.closest('mark, span') as HTMLElement;
+    if (element?.tagName === 'MARK') {
+      handleRightClickOnMark(element, scriptId, order);
+    } else {
       setIsContextMenuOpen(true);
-      return;
     }
-    const markTag = contextTarget.closest('mark');
-    if (markTag) {
-      const startIndex = getHighlightIndex(contextTarget, markTag.id);
-      const { newMemoId, editMemoId } = memoState;
-      if (newMemoId === INITIAL_NUMBER && editMemoId === INITIAL_NUMBER) {
-        setIsContextMenuOpen(true);
-        if (startIndex) {
-          setMemoInfo({
-            scriptId,
-            order,
-            startIndex,
-            keyword: markTag.innerText.replaceAll('/', ' '),
-            highlightId: markTag.id,
-          });
-          setClickedMemo(memoList.find((memo) => memo.highlightId === markTag.id));
-        }
+  };
+
+  const handleRightClickOnMark = (highlight: HTMLElement, scriptId: number, order: number) => {
+    const { newMemoId, editMemoId } = memoState;
+    if (newMemoId === INITIAL_NUMBER && editMemoId === INITIAL_NUMBER) {
+      setIsContextMenuOpen(true);
+
+      const startIndex = getHighlightIndex(highlight, highlight.id);
+      if (startIndex) {
+        const keyword = highlight.innerText.replace(/\//g, ' ');
+        const highlightId = highlight.id;
+        setMemoInfo({ scriptId, order, startIndex, keyword, highlightId });
+        setClickedMemo(memoList.find((memo) => memo.highlightId === highlightId));
       }
     }
   };
 
-  return { rightClickedElement, isContextMenuOpen, setIsContextMenuOpen, memoInfo, clickedMemo, handleRightClick };
+  const getHighlightIndex = (highlight: HTMLElement, targetId: string) => {
+    const childNodes = Array.from(highlight.parentNode?.childNodes || []);
+    let stringLength = 0;
+    for (const childNode of childNodes) {
+      const { id, textContent: text } = childNode as HTMLElement;
+      if (id === targetId) return stringLength;
+      stringLength += text !== '/' ? text?.replace(/\//g, ' ').length ?? 0 : 1;
+    }
+  };
+
+  return { rightClickedElement, memoInfo, clickedMemo, isContextMenuOpen, setIsContextMenuOpen, handleRightClick };
 }
 
 export default useRightClickHandler;
