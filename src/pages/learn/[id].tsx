@@ -31,7 +31,6 @@ import { FONT_STYLES } from '@src/styles/fontStyle';
 import {
   INITIAL_NUMBER,
   INITIAL_MEMO_STATE,
-  INITIAL_MEMO,
   DELETE_SCRIPT_CONFIRM_MODAL_TEXT,
   SCRIPT_MAX_COUNT,
   SPEECH_GUIDE_TOOLTIP_TEXT,
@@ -44,6 +43,7 @@ import { useBodyScrollLock } from '@src/hooks/useBodyScrollLock';
 import { icSpeechGuideInfo, icXButton } from 'public/assets/icons';
 import ScriptEditButtonContainer from '@src/components/learnDetail/ScriptEditButtonContainer';
 import { underlineMemo } from '@src/utils/underlineMemo';
+import useRightClickHandler from '@src/hooks/useRightClickHandler';
 
 export interface MemoState {
   newMemoId: number;
@@ -85,12 +85,8 @@ function LearnDetail() {
   const [titleInputIndex, setTitleInputIndex] = useState(-1);
   const [memoList, setMemoList] = useState<MemoData[]>([]);
   const [memoState, setMemoState] = useState<MemoState>(INITIAL_MEMO_STATE);
-  const [memoInfo, setMemoInfo] = useState<MemoInfo>(INITIAL_MEMO);
-  const [clickedMemo, setClickedMemo] = useState<MemoData>();
   const [clickedDeleteMemo, setClickedDeleteMemo] = useState<boolean>(false);
   const contextMenuRef = useRef<HTMLDivElement>(null);
-  const [isContextMenuOpen, setIsContextMenuOpen] = useState<boolean>(false);
-  const [rightClickedElement, setRightClickedElement] = useState<HTMLElement>();
   const [studyLogTab, setStudyLogTab] = useState<string>('memo');
   const [isRecordSaved, setIsRecordSaved] = useState<boolean>(false);
   const [clickedDeleteType, setClickedDeleteType] = useState<string>('');
@@ -98,6 +94,9 @@ function LearnDetail() {
   const [text, setText] = useState<string>();
   const [similarNewsList, setSimilarNewsList] = useState<simpleVideoData[]>([]);
   const [currentScriptId, setCurrentScriptId] = useState(0);
+
+  const { rightClickedElement, isContextMenuOpen, setIsContextMenuOpen, memoInfo, clickedMemo, handleRightClick } =
+    useRightClickHandler({ memoList, memoState });
 
   useEffect(() => {
     isRecordSaved &&
@@ -109,22 +108,6 @@ function LearnDetail() {
   useEffect(() => {
     videoData?.scriptsId && setCurrentScriptId(videoData?.scriptsId);
   }, [videoData, currentScriptId]);
-
-  const getHighlightIndex = (contextTarget: HTMLElement, targetId: string) => {
-    const childNodes = contextTarget.parentNode?.childNodes;
-    if (childNodes) {
-      let stringLength = 0;
-      for (let i = 0; i < childNodes.length; i++) {
-        const { id, textContent: text } = childNodes[i] as HTMLElement;
-        if (id === targetId) {
-          return stringLength;
-        }
-        if (text) {
-          stringLength += text !== '/' ? text.replaceAll('/', ' ').length : 1;
-        }
-      }
-    }
-  };
 
   useEffect(() => {
     (async () => {
@@ -224,33 +207,6 @@ function LearnDetail() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clickedDeleteType]);
-
-  const handleRightClick = (e: React.MouseEvent, scriptId: number, order: number) => {
-    const contextTarget = e.target as HTMLElement;
-    setRightClickedElement(contextTarget);
-    if (contextTarget.closest('span')) {
-      setIsContextMenuOpen(true);
-      return;
-    }
-    const markTag = contextTarget.closest('mark');
-    if (markTag) {
-      const startIndex = getHighlightIndex(contextTarget, markTag.id);
-      const { newMemoId, editMemoId } = memoState;
-      if (newMemoId === INITIAL_NUMBER && editMemoId === INITIAL_NUMBER) {
-        setIsContextMenuOpen(true);
-        if (startIndex) {
-          setMemoInfo({
-            scriptId,
-            order,
-            startIndex,
-            keyword: markTag.innerText.replaceAll('/', ' '),
-            highlightId: markTag.id,
-          });
-          setClickedMemo(memoList.find((memo) => memo.highlightId === markTag.id));
-        }
-      }
-    }
-  };
 
   const handleScriptAdd = async () => {
     const response = await api.learnDetailService.postNewScriptData(Number(detailId));
