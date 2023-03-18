@@ -13,14 +13,11 @@ import NewsList from '@src/components/common/NewsList';
 import ConfirmModal, { ConfirmModalText, MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
 import ContextMenu from '@src/components/learnDetail/ContextMenu';
 import GuideModal from '@src/components/learnDetail/GuideModal';
-import EmptyMemo from '@src/components/learnDetail/memo/EmptyMemo';
-import MemoList from '@src/components/learnDetail/memo/MemoList';
 import ScriptEdit from '@src/components/learnDetail/ScriptEdit';
 import VideoDetail from '@src/components/learnDetail/VideoDetail';
 import LoginModal from '@src/components/login/LoginModal';
 import ScriptTitle from '@src/components/learnDetail/ScriptTitle';
 import RecordStatusBar from '@src/components/learnDetail/record/RecordStatusBar';
-import RecordLog from '@src/components/learnDetail/record/RecordLog';
 import { api } from '@src/services/api';
 import { MemoData, Name, VideoData } from '@src/services/api/types/learn-detail';
 import { VideoData as simpleVideoData } from '@src/services/api/types/home';
@@ -44,6 +41,7 @@ import { icSpeechGuideInfo, icXButton } from 'public/assets/icons';
 import ScriptEditButtonContainer from '@src/components/learnDetail/ScriptEditButtonContainer';
 import { underlineMemo } from '@src/utils/underlineMemo';
 import useRightClickHandler from '@src/hooks/useRightClickHandler';
+import StudyLog from '@src/components/learnDetail/StudyLog';
 
 export interface MemoState {
   newMemoId: number;
@@ -87,23 +85,14 @@ function LearnDetail() {
   const [memoState, setMemoState] = useState<MemoState>(INITIAL_MEMO_STATE);
   const [clickedDeleteMemo, setClickedDeleteMemo] = useState<boolean>(false);
   const contextMenuRef = useRef<HTMLDivElement>(null);
-  const [studyLogTab, setStudyLogTab] = useState<string>('memo');
   const [isRecordSaved, setIsRecordSaved] = useState<boolean>(false);
   const [clickedDeleteType, setClickedDeleteType] = useState<string>('');
   const [order, setOrder] = useState<number>();
   const [text, setText] = useState<string>();
   const [similarNewsList, setSimilarNewsList] = useState<simpleVideoData[]>([]);
   const [currentScriptId, setCurrentScriptId] = useState(0);
-
   const { rightClickedElement, isContextMenuOpen, setIsContextMenuOpen, memoInfo, clickedMemo, handleRightClick } =
     useRightClickHandler({ memoList, memoState });
-
-  useEffect(() => {
-    isRecordSaved &&
-      setTimeout(() => {
-        setStudyLogTab('record');
-      }, 1000);
-  }, [isRecordSaved]);
 
   useEffect(() => {
     videoData?.scriptsId && setCurrentScriptId(videoData?.scriptsId);
@@ -522,42 +511,16 @@ function LearnDetail() {
                     onEnd={(e) => e.target.seekTo(videoData.startTime)}
                   />
                 </StVideoWrapper>
-                <StStudyLogContainer>
-                  <StStudyLogTabList role="tablist">
-                    <StStudyLogTab
-                      role="tab"
-                      aria-selected={studyLogTab === 'memo'}
-                      isActive={studyLogTab === 'memo'}
-                      onClick={() => setStudyLogTab('memo')}>
-                      메모
-                    </StStudyLogTab>
-                    <StStudyLogTab
-                      role="tab"
-                      aria-selected={studyLogTab === 'record'}
-                      isActive={studyLogTab === 'record'}
-                      onClick={() => setStudyLogTab('record')}>
-                      녹음
-                    </StStudyLogTab>
-                  </StStudyLogTabList>
-                  {studyLogTab === 'memo' ? (
-                    <StMemoWrapper>
-                      {memoList.length || memoState.newMemoId !== INITIAL_NUMBER ? (
-                        <MemoList
-                          memoList={memoList}
-                          memoState={memoState}
-                          memoInfo={memoInfo}
-                          setMemoList={setMemoList}
-                          setMemoState={setMemoState}
-                          onMemoModal={handleMemoModal}
-                        />
-                      ) : (
-                        <EmptyMemo />
-                      )}
-                    </StMemoWrapper>
-                  ) : (
-                    <RecordLog scriptId={currentScriptId} isRecordSaved={isRecordSaved} />
-                  )}
-                </StStudyLogContainer>
+                <StudyLog
+                  currentScriptId={currentScriptId}
+                  isRecordSaved={isRecordSaved}
+                  memoInfo={memoInfo}
+                  memoList={memoList}
+                  memoState={memoState}
+                  setMemoList={setMemoList}
+                  setMemoState={setMemoState}
+                  onMemoModal={handleMemoModal}
+                />
               </aside>
             </main>
             {isGuideOver && (
@@ -902,35 +865,4 @@ const StVideoWrapper = styled.div`
     top: 0;
     opacity: 1;
   }
-`;
-
-const StStudyLogContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const StStudyLogTabList = styled.ul`
-  display: flex;
-  align-items: center;
-  margin-bottom: 2rem;
-`;
-
-const StStudyLogTab = styled.li<{ isActive: boolean }>`
-  color: ${({ isActive }) => (isActive ? COLOR.BLACK : COLOR.GRAY_30)};
-  ${FONT_STYLES.SB_24_HEADLINE};
-  cursor: pointer;
-
-  &:not(:last-child):after {
-    content: '|';
-    margin: 0 1.6rem;
-    color: ${COLOR.GRAY_30};
-    font-weight: 400;
-  }
-`;
-
-const StMemoWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  position: relative;
 `;
