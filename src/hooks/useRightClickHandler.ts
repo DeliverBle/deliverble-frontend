@@ -13,7 +13,6 @@ function useRightClickHandler(props: useRightClickHandlerProps) {
   const [rightClickedElement, setRightClickedElement] = useState<HTMLElement>();
   const [isContextMenuOpen, setIsContextMenuOpen] = useState<boolean>(false);
   const [memoInfo, setMemoInfo] = useState<MemoInfo>(INITIAL_MEMO);
-  const [clickedMemo, setClickedMemo] = useState<MemoData>();
 
   const handleRightClick = (e: React.MouseEvent, scriptId: number, order: number) => {
     const clickedElement = e.target as HTMLElement;
@@ -36,8 +35,8 @@ function useRightClickHandler(props: useRightClickHandlerProps) {
       if (startIndex) {
         const keyword = highlight.innerText.replace(/\//g, ' ');
         const highlightId = highlight.id;
-        setMemoInfo({ scriptId, order, startIndex, keyword, highlightId });
-        setClickedMemo(memoList.find((memo) => memo.highlightId === highlightId));
+        const id = memoList.find((memo) => memo.highlightId === highlightId)?.id ?? INITIAL_NUMBER;
+        setMemoInfo((prev) => ({ ...prev, id, scriptId, order, startIndex, keyword, highlightId }));
       }
     }
   };
@@ -52,7 +51,7 @@ function useRightClickHandler(props: useRightClickHandlerProps) {
     }
   };
 
-  return { rightClickedElement, memoInfo, clickedMemo, isContextMenuOpen, setIsContextMenuOpen, handleRightClick };
+  return { rightClickedElement, memoInfo, isContextMenuOpen, setIsContextMenuOpen, handleRightClick };
 }
 
 export default useRightClickHandler;

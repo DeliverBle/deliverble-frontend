@@ -22,25 +22,8 @@ function MemoList(props: MemoListProps) {
   useEffect(() => {
     setMemoList((prev: MemoData[]) => prev.filter((memo) => memo.content !== ''));
     if (memoState.newMemoId !== INITIAL_NUMBER) {
-      const { order, startIndex, keyword, highlightId } = memoInfo;
       setMemoList((prev: MemoData[]) =>
-        [
-          ...prev,
-          {
-            id: INITIAL_NUMBER,
-            order,
-            startIndex,
-            keyword,
-            content: '',
-            highlightId,
-          },
-        ].sort((a, b) => {
-          if (a.order > b.order) return 1;
-          if (a.order < b.order) return -1;
-          if (a.startIndex > b.startIndex) return 1;
-          if (a.startIndex < b.startIndex) return -1;
-          return 0;
-        }),
+        [...prev, memoInfo].sort((a, b) => a.order - b.order || a.startIndex - b.startIndex),
       );
     }
   }, [memoState, memoInfo, setMemoList]);

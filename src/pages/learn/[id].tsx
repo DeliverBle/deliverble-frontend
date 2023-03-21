@@ -49,11 +49,13 @@ export interface MemoState {
   deleteMemoId: number;
 }
 export interface MemoInfo {
+  id: number;
   scriptId: number;
   order: number;
   startIndex: number;
   keyword: string;
   highlightId: string;
+  content: string;
 }
 
 function LearnDetail() {
@@ -91,7 +93,7 @@ function LearnDetail() {
   const [text, setText] = useState<string>();
   const [similarNewsList, setSimilarNewsList] = useState<simpleVideoData[]>([]);
   const [currentScriptId, setCurrentScriptId] = useState(0);
-  const { rightClickedElement, isContextMenuOpen, setIsContextMenuOpen, memoInfo, clickedMemo, handleRightClick } =
+  const { rightClickedElement, isContextMenuOpen, setIsContextMenuOpen, memoInfo, handleRightClick } =
     useRightClickHandler({ memoList, memoState });
 
   useEffect(() => {
@@ -448,7 +450,7 @@ function LearnDetail() {
                       ))}
                     {!isEditing && isContextMenuOpen && rightClickedElement && (
                       <ContextMenu
-                        clickedMemoId={clickedMemo?.id}
+                        clickedMemoId={memoInfo.id}
                         rightClickedElement={rightClickedElement}
                         isEditing={isEditing}
                         setMemoState={setMemoState}
