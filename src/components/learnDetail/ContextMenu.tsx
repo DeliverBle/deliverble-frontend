@@ -7,7 +7,7 @@ import React, { Dispatch, SetStateAction } from 'react';
 import styled, { css } from 'styled-components';
 
 interface ContextMenuProps {
-  clickedMemoId: number;
+  clickedMemoId?: number;
   rightClickedElement: HTMLElement;
   isEditing: boolean;
   setMemoState?: Dispatch<SetStateAction<MemoState>>;
@@ -25,7 +25,9 @@ function ContextMenu(props: ContextMenuProps) {
     e.stopPropagation();
     if (setMemoState) {
       setMemoState((prev: MemoState) =>
-        clickedMemoId !== INITIAL_NUMBER ? { ...prev, editMemoId: clickedMemoId } : { ...prev, newMemoId: 0 },
+        clickedMemoId && clickedMemoId !== INITIAL_NUMBER
+          ? { ...prev, editMemoId: clickedMemoId }
+          : { ...prev, newMemoId: 0 },
       );
     }
     setIsContextMenuOpen(false);
