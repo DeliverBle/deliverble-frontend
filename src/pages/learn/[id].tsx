@@ -278,20 +278,6 @@ function LearnDetail() {
     setIsLoginModalOpen(false);
   };
 
-  // useEffect(() => {
-  //   (async () => {
-  //     const { deleteMemoId } = memoState;
-  //     if (clickedDeleteMemo && deleteMemoId !== INITIAL_NUMBER) {
-  //       const memoList = await api.learnDetailService.deleteMemoData(deleteMemoId);
-  //       if (memoList) {
-  //         setMemoList(memoList);
-  //         setClickedDeleteMemo(false);
-  //         setMemoState(INITIAL_MEMO_STATE);
-  //       }
-  //     }
-  //   })();
-  // }, [clickedDeleteMemo, memoState]);
-
   useEffect(() => {
     (async () => {
       const { deleteMemoId } = memoState;
