@@ -21,7 +21,7 @@ interface MemoFormProps {
 
 function MemoForm(props: MemoFormProps) {
   const { scriptId, memoData, memoState, setMemoList, setMemoState, onMemoModal } = props;
-  const { id, keyword, content, order, startIndex, highlightId } = memoData;
+  const { id, content } = memoData;
   const { newMemoId, editMemoId } = memoState;
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [textLength, setTextLength] = useState(0);
@@ -51,17 +51,9 @@ function MemoForm(props: MemoFormProps) {
     editMemoId !== INITIAL_NUMBER && onMemoModal('edit');
   };
 
-  const createMemo = async (newContent: string) => {
-    const memoList = await api.learnDetailService.postMemoData(
-      {
-        keyword,
-        order,
-        startIndex,
-        content: newContent,
-        highlightId,
-      },
-      scriptId,
-    );
+  const createMemo = async (content: string) => {
+    delete memoData.id;
+    const memoList = await api.learnDetailService.postMemoData({ ...memoData, content }, scriptId);
     memoList && setMemoList(memoList);
     setMemoState(INITIAL_MEMO_STATE);
   };
