@@ -1,6 +1,7 @@
 import ImageDiv from '@src/components/common/ImageDiv';
+import useClickOutside from '@src/hooks/useClickOutside';
 import { icDotDefault, icDotHover } from 'public/assets/icons';
-import { useState, useRef, useEffect, Dispatch, SetStateAction } from 'react';
+import { useState, useRef, Dispatch, SetStateAction } from 'react';
 import styled from 'styled-components';
 import RecordDropdown from './RecordDropdown';
 
@@ -17,22 +18,15 @@ function RecordDotButton(props: RecordDotButtonProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const recordDropdownRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const handleClickOutside = (e: Event) => {
+  useClickOutside({
+    isEnabled: isDropdownOpen,
+    handleClickOutside: (e: Event) => {
       const eventTarget = e.target as HTMLElement;
       if (isDropdownOpen && !recordDropdownRef?.current?.contains(eventTarget)) {
         setIsDropdownOpen(false);
       }
-    };
-    if (isDropdownOpen) {
-      window.addEventListener('click', handleClickOutside);
-      window.addEventListener('contextmenu', handleClickOutside);
-    }
-    return () => {
-      window.removeEventListener('click', handleClickOutside);
-      window.removeEventListener('contextmenu', handleClickOutside);
-    };
-  }, [isDropdownOpen]);
+    },
+  });
 
   return (
     <StRecordDotButton ref={recordDropdownRef} onClick={() => setIsDropdownOpen((prev) => !prev)}>

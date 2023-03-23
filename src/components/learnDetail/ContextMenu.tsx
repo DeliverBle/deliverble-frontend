@@ -3,7 +3,7 @@ import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { INITIAL_NUMBER } from '@src/utils/constant';
 import { calcContextMenuPoint } from '@src/utils/contextMenu';
-import React, { Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, forwardRef, Ref, SetStateAction } from 'react';
 import styled, { css } from 'styled-components';
 
 interface ContextMenuProps {
@@ -15,7 +15,7 @@ interface ContextMenuProps {
   setClickedDeleteType: (type: string) => void;
 }
 
-function ContextMenu(props: ContextMenuProps) {
+function ContextMenu(props: ContextMenuProps, ref: Ref<HTMLDivElement>) {
   const { clickedMemoId, rightClickedElement, isEditing, setMemoState, setIsContextMenuOpen, setClickedDeleteType } =
     props;
   const { x, y } = calcContextMenuPoint(rightClickedElement);
@@ -41,7 +41,7 @@ function ContextMenu(props: ContextMenuProps) {
 
   if (!clickedTag) return null;
   return (
-    <StContextMenu top={y} left={x} clickedTag={clickedTag} isEditing={isEditing}>
+    <StContextMenu top={y} left={x} clickedTag={clickedTag} isEditing={isEditing} ref={ref}>
       {clickedTag === 'MARK' && !isEditing && (
         <button type="button" onClick={handleMemoState}>
           {clickedMemoId !== INITIAL_NUMBER ? '메모 수정' : '메모 추가'}
@@ -54,7 +54,7 @@ function ContextMenu(props: ContextMenuProps) {
   );
 }
 
-export default ContextMenu;
+export default forwardRef(ContextMenu);
 
 const StContextMenu = styled.div<{ top: number; left: number; clickedTag: string; isEditing: boolean }>`
   display: flex;
@@ -63,7 +63,7 @@ const StContextMenu = styled.div<{ top: number; left: number; clickedTag: string
   justify-content: center;
   position: absolute;
 
-  width: ${({ clickedTag, isEditing }) => (clickedTag === 'MARK' && !isEditing ? '14.4rem' : '13rem')};
+  width: ${({ clickedTag, isEditing }) => (clickedTag === 'MARK' && !isEditing ? '14.4rem' : '14rem')};
   padding: 0.7rem 0;
   border: 0.1rem solid ${COLOR.GRAY_10};
   border-radius: 1.2rem;
@@ -82,7 +82,7 @@ const StContextMenu = styled.div<{ top: number; left: number; clickedTag: string
     justify-content: center;
     border-radius: 0.8rem;
 
-    width: ${({ clickedTag, isEditing }) => (clickedTag === 'MARK' && !isEditing ? '13.2rem' : '11.8rem')};
+    width: ${({ clickedTag, isEditing }) => (clickedTag === 'MARK' && !isEditing ? '13.2rem' : '13.2rem')};
     padding: 0.5rem 1.6rem;
     ${FONT_STYLES.SB_16_CAPTION}
     color: ${COLOR.BLACK};
