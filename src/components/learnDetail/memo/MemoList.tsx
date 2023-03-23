@@ -30,28 +30,17 @@ function MemoList(props: MemoListProps) {
 
   return (
     <StMemoList>
-      {memoList.map((memo) => {
-        const tempMemo = {
-          id: memo.id,
-          order: memoInfo.order,
-          startIndex: memoInfo.startIndex,
-          keyword: memo.keyword,
-          content: memo.content,
-          highlightId: memo.highlightId,
-        };
-
-        return (
-          <MemoItem
-            key={memo.id}
-            scriptId={memoInfo.scriptId}
-            memoData={tempMemo}
-            memoState={memoState}
-            setMemoList={setMemoList}
-            setMemoState={setMemoState}
-            onMemoModal={onMemoModal}
-          />
-        );
-      })}
+      {memoList.map((memo) => (
+        <MemoItem
+          key={memo.id}
+          scriptId={memoInfo.scriptId}
+          memoData={memo}
+          memoState={memoState}
+          setMemoList={setMemoList}
+          setMemoState={setMemoState}
+          onMemoModal={onMemoModal}
+        />
+      ))}
     </StMemoList>
   );
 }
