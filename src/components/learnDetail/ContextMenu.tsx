@@ -1,6 +1,7 @@
 import { MemoState } from '@src/pages/learn/[id]';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
+import { INITIAL_NUMBER } from '@src/utils/constant';
 import { calcContextMenuPoint } from '@src/utils/contextMenu';
 import React, { Dispatch, SetStateAction } from 'react';
 import styled, { css } from 'styled-components';
@@ -24,7 +25,9 @@ function ContextMenu(props: ContextMenuProps) {
     e.stopPropagation();
     if (setMemoState) {
       setMemoState((prev: MemoState) =>
-        clickedMemoId ? { ...prev, editMemoId: clickedMemoId } : { ...prev, newMemoId: 0 },
+        clickedMemoId && clickedMemoId !== INITIAL_NUMBER
+          ? { ...prev, editMemoId: clickedMemoId }
+          : { ...prev, newMemoId: 0 },
       );
     }
     setIsContextMenuOpen(false);
@@ -41,7 +44,7 @@ function ContextMenu(props: ContextMenuProps) {
     <StContextMenu top={y} left={x} clickedTag={clickedTag} isEditing={isEditing}>
       {clickedTag === 'MARK' && !isEditing && (
         <button type="button" onClick={handleMemoState}>
-          {clickedMemoId ? '메모 수정' : '메모 추가'}
+          {clickedMemoId !== INITIAL_NUMBER ? '메모 수정' : '메모 추가'}
         </button>
       )}
       <button type="button" onClick={(e) => handleContextMenu(e, clickedTag)}>
