@@ -1,4 +1,5 @@
 import { useBodyScrollLock } from '@src/hooks/useBodyScrollLock';
+import useClickOutside from '@src/hooks/useClickOutside';
 import { loginState } from '@src/stores/loginState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
@@ -6,7 +7,7 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { icDeliverbleNav, icMypageButton } from 'public/assets/icons';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import styled, { css } from 'styled-components';
 import LoginModal from '../login/LoginModal';
@@ -22,8 +23,10 @@ function NavigationBar() {
   const login = useRecoilValue(loginState);
   const { lockScroll, unlockScroll } = useBodyScrollLock();
 
-  useEffect(() => {
-    const handleClickOutside = (e: Event) => {
+  useClickOutside({
+    isEnabled: isProfileModalOpen,
+    event: 'click',
+    handleClickOutside: (e: Event) => {
       const eventTarget = e.target as HTMLElement;
       if (
         isProfileModalOpen &&
@@ -32,14 +35,8 @@ function NavigationBar() {
       ) {
         setIsProfileModalOpen(false);
       }
-    };
-    if (isProfileModalOpen) {
-      window.addEventListener('click', handleClickOutside);
-    }
-    return () => {
-      window.removeEventListener('click', handleClickOutside);
-    };
-  }, [isProfileModalOpen]);
+    },
+  });
 
   return (
     <>
