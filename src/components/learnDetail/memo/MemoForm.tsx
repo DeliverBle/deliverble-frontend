@@ -1,4 +1,5 @@
 import { MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
+import useClickOutside from '@src/hooks/useClickOutside';
 import { MemoState } from '@src/pages/learn/[id]';
 import { api } from '@src/services/api';
 import { MemoData } from '@src/services/api/types/learn-detail';
@@ -25,6 +26,17 @@ function MemoForm(props: MemoFormProps) {
   const { newMemoId, editMemoId } = memoState;
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [textLength, setTextLength] = useState(0);
+
+  useClickOutside({
+    isEnabled: newMemoId !== INITIAL_NUMBER || editMemoId !== INITIAL_NUMBER,
+    handleClickOutside: (e: Event) => {
+      const eventTarget = e.target as HTMLElement;
+      const memo = eventTarget.closest('.memo');
+      if (!memo && eventTarget.className !== 'modal-button') {
+        handleDone(eventTarget);
+      }
+    },
+  });
 
   const handleChange = () => {
     const textarea = textareaRef.current;
@@ -101,25 +113,6 @@ function MemoForm(props: MemoFormProps) {
   useEffect(() => {
     content && setTextLength(content.length);
   }, [content]);
-
-  useEffect(() => {
-    const handleClickOutside = (e: Event) => {
-      const eventTarget = e.target as HTMLElement;
-      const memo = eventTarget.closest('.memo');
-      if (!memo && eventTarget.className !== 'modal-button') {
-        handleDone(eventTarget);
-      }
-    };
-
-    const { newMemoId, editMemoId } = memoState;
-    if (newMemoId !== INITIAL_NUMBER || editMemoId !== INITIAL_NUMBER) {
-      window.addEventListener('mousedown', handleClickOutside);
-    }
-    return () => {
-      window.removeEventListener('mousedown', handleClickOutside);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [memoState]);
 
   return (
     <StMemoForm>

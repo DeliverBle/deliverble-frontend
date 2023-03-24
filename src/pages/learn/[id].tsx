@@ -42,6 +42,7 @@ import ScriptEditButtonContainer from '@src/components/learnDetail/ScriptEditBut
 import { underlineMemo } from '@src/utils/underlineMemo';
 import useRightClickHandler from '@src/hooks/useRightClickHandler';
 import StudyLog from '@src/components/learnDetail/StudyLog';
+import useClickOutside from '@src/hooks/useClickOutside';
 
 export interface MemoState {
   newMemoId: number;
@@ -338,28 +339,15 @@ function LearnDetail() {
     return () => interval && clearInterval(interval);
   }, [player, videoState]);
 
-  useEffect(() => {
-    const handleClickOutside = (e: Event) => {
+  useClickOutside({
+    isEnabled: isContextMenuOpen,
+    handleClickOutside: (e: Event) => {
       const eventTarget = e.target as HTMLElement;
-
-      if (
-        isContextMenuOpen &&
-        !contextMenuRef?.current?.contains(eventTarget) &&
-        eventTarget.tagName !== 'MARK' &&
-        eventTarget.tagName !== 'SPAN'
-      ) {
+      if (isContextMenuOpen && !contextMenuRef?.current?.contains(eventTarget)) {
         setIsContextMenuOpen(false);
       }
-    };
-    if (isContextMenuOpen) {
-      window.addEventListener('click', handleClickOutside);
-      window.addEventListener('contextmenu', handleClickOutside);
-    }
-    return () => {
-      window.removeEventListener('click', handleClickOutside);
-      window.removeEventListener('contextmenu', handleClickOutside);
-    };
-  }, [isContextMenuOpen]);
+    },
+  });
 
   useEffect(() => {
     const storage = globalThis?.sessionStorage;
@@ -435,7 +423,6 @@ function LearnDetail() {
                     {!isEditing &&
                       videoData.scripts.map(({ id, order, text, startTime, endTime }, i) => (
                         <StScriptText
-                          ref={contextMenuRef}
                           onContextMenu={(e) => {
                             e.preventDefault();
                             setOrder(i + 1);
@@ -450,6 +437,7 @@ function LearnDetail() {
                       ))}
                     {!isEditing && isContextMenuOpen && rightClickedElement && (
                       <ContextMenu
+                        ref={contextMenuRef}
                         clickedMemoId={memoInfo.id}
                         rightClickedElement={rightClickedElement}
                         isEditing={isEditing}

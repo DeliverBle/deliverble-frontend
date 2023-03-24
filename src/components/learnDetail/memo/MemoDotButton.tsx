@@ -1,11 +1,12 @@
 import ImageDiv from '@src/components/common/ImageDiv';
 import { icDotDefault, icDotHover } from 'public/assets/icons';
-import { useState, useRef, useEffect, Dispatch, SetStateAction } from 'react';
+import { useState, useRef, Dispatch, SetStateAction } from 'react';
 import styled from 'styled-components';
 import MemoDropdown from './MemoDropdown';
 import { MemoState } from '@src/pages/learn/[id]';
 import { MemoData } from '@src/services/api/types/learn-detail';
 import { MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
+import useClickOutside from '@src/hooks/useClickOutside';
 
 interface MemoDotButtonProps {
   memoData: MemoData;
@@ -18,22 +19,15 @@ function MemoDotButton(props: MemoDotButtonProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const memoDropdownRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const handleClickOutside = (e: Event) => {
+  useClickOutside({
+    isEnabled: isDropdownOpen,
+    handleClickOutside: (e: Event) => {
       const eventTarget = e.target as HTMLElement;
       if (isDropdownOpen && !memoDropdownRef?.current?.contains(eventTarget)) {
         setIsDropdownOpen(false);
       }
-    };
-    if (isDropdownOpen) {
-      window.addEventListener('click', handleClickOutside);
-      window.addEventListener('contextmenu', handleClickOutside);
-    }
-    return () => {
-      window.removeEventListener('click', handleClickOutside);
-      window.removeEventListener('contextmenu', handleClickOutside);
-    };
-  }, [isDropdownOpen]);
+    },
+  });
 
   return (
     <StMemoDotButton ref={memoDropdownRef} onClick={() => setIsDropdownOpen((prev) => !prev)}>
