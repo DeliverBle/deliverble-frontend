@@ -14,16 +14,20 @@ interface MemoListProps {
   setMemoList: Dispatch<SetStateAction<MemoData[]>>;
   setMemoState: Dispatch<SetStateAction<MemoState>>;
   onMemoModal: (type: MemoConfirmModalKey) => void;
+  handleMemo: (type: MemoConfirmModalKey, content?: string) => Promise<void>;
 }
 
 function MemoList(props: MemoListProps) {
-  const { memoList, memoState, memoInfo, setMemoList, setMemoState, onMemoModal } = props;
+  const { memoList, memoState, memoInfo, setMemoList, setMemoState, onMemoModal, handleMemo } = props;
 
+  //  TODO: 이 작업을 꼭 이 컴포넌트 안에서 해야할까?
   useEffect(() => {
     setMemoList((prev: MemoData[]) => prev.filter((memo) => memo.content !== ''));
     if (memoState.newMemoId !== INITIAL_NUMBER) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { scriptId, ...memo } = memoInfo;
       setMemoList((prev: MemoData[]) =>
-        [...prev, memoInfo].sort((a, b) => a.order - b.order || a.startIndex - b.startIndex),
+        [...prev, memo].sort((a, b) => a.order - b.order || a.startIndex - b.startIndex),
       );
     }
   }, [memoState, memoInfo, setMemoList]);
@@ -33,12 +37,13 @@ function MemoList(props: MemoListProps) {
       {memoList.map((memo) => (
         <MemoItem
           key={memo.id}
-          scriptId={memoInfo.scriptId}
+          scriptId={memoInfo.scriptId} // TODO: 수정 가능성 고려해볼 것
           memoData={memo}
           memoState={memoState}
           setMemoList={setMemoList}
           setMemoState={setMemoState}
           onMemoModal={onMemoModal}
+          handleMemo={handleMemo}
         />
       ))}
     </StMemoList>

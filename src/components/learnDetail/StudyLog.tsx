@@ -17,11 +17,21 @@ interface StudyLogProps {
   onMemoModal: (type: MemoConfirmModalKey) => void;
   currentScriptId: number;
   isRecordSaved: boolean;
+  handleMemo: (type: MemoConfirmModalKey, content?: string) => Promise<void>;
 }
 
 function StudyLog(props: StudyLogProps) {
-  const { memoInfo, memoList, memoState, setMemoList, setMemoState, onMemoModal, currentScriptId, isRecordSaved } =
-    props;
+  const {
+    memoInfo,
+    memoList,
+    memoState,
+    setMemoList,
+    setMemoState,
+    onMemoModal,
+    currentScriptId,
+    isRecordSaved,
+    handleMemo,
+  } = props;
   const [studyLogTab, setStudyLogTab] = useState<string>('memo');
 
   useEffect(() => {
@@ -57,6 +67,7 @@ function StudyLog(props: StudyLogProps) {
           setMemoList={setMemoList}
           setMemoState={setMemoState}
           onMemoModal={onMemoModal}
+          handleMemo={handleMemo}
         />
       ) : (
         <RecordLog scriptId={currentScriptId} isRecordSaved={isRecordSaved} />
