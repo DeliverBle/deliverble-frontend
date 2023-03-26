@@ -11,7 +11,6 @@ import styled, { css } from 'styled-components';
 import ImageDiv from '../../common/ImageDiv';
 
 interface MemoFormProps {
-  scriptId: number;
   memoData: MemoData;
   memoState: MemoState;
   setMemoState: Dispatch<SetStateAction<MemoState>>;
@@ -62,7 +61,7 @@ function MemoForm(props: MemoFormProps) {
     editMemoId !== INITIAL_NUMBER && onMemoModal('edit');
   };
 
-  const handleDone = async (target?: HTMLElement) => {
+  const handleDone = (target?: HTMLElement) => {
     const textarea = textareaRef.current;
     if (!textarea) return;
 

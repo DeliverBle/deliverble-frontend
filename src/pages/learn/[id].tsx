@@ -534,7 +534,6 @@ function LearnDetail() {
                 <StudyLog
                   currentScriptId={currentScriptId}
                   isRecordSaved={isRecordSaved}
-                  memoInfo={memoInfo}
                   memoList={memoList}
                   memoState={memoState}
                   setMemoState={setMemoState}

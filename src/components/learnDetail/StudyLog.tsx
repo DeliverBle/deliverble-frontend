@@ -1,7 +1,7 @@
 import { MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
 import MemoLog from '@src/components/learnDetail/memo/MemoLog';
 import RecordLog from '@src/components/learnDetail/record/RecordLog';
-import { MemoInfo, MemoState } from '@src/pages/learn/[id]';
+import { MemoState } from '@src/pages/learn/[id]';
 import { MemoData } from '@src/services/api/types/learn-detail';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
@@ -9,7 +9,6 @@ import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import styled from 'styled-components';
 
 interface StudyLogProps {
-  memoInfo: MemoInfo;
   memoList: MemoData[];
   memoState: MemoState;
   setMemoState: Dispatch<SetStateAction<MemoState>>;
@@ -20,8 +19,7 @@ interface StudyLogProps {
 }
 
 function StudyLog(props: StudyLogProps) {
-  const { memoInfo, memoList, memoState, setMemoState, onMemoModal, currentScriptId, isRecordSaved, handleMemo } =
-    props;
+  const { memoList, memoState, setMemoState, onMemoModal, currentScriptId, isRecordSaved, handleMemo } = props;
   const [studyLogTab, setStudyLogTab] = useState<string>('memo');
 
   useEffect(() => {
@@ -51,7 +49,6 @@ function StudyLog(props: StudyLogProps) {
       </StStudyLogTabList>
       {studyLogTab === 'memo' ? (
         <MemoLog
-          memoInfo={memoInfo}
           memoList={memoList}
           memoState={memoState}
           setMemoState={setMemoState}

@@ -1,7 +1,7 @@
 import { MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
 import EmptyMemo from '@src/components/learnDetail/memo/EmptyMemo';
 import MemoItem from '@src/components/learnDetail/memo/MemoItem';
-import { MemoInfo, MemoState } from '@src/pages/learn/[id]';
+import { MemoState } from '@src/pages/learn/[id]';
 import { MemoData } from '@src/services/api/types/learn-detail';
 import { COLOR } from '@src/styles/color';
 import { INITIAL_NUMBER } from '@src/utils/constant';
@@ -9,7 +9,6 @@ import { Dispatch, SetStateAction } from 'react';
 import styled from 'styled-components';
 
 interface MemoLogProps {
-  memoInfo: MemoInfo;
   memoList: MemoData[];
   memoState: MemoState;
   setMemoState: Dispatch<SetStateAction<MemoState>>;
@@ -18,7 +17,7 @@ interface MemoLogProps {
 }
 
 function MemoLog(props: MemoLogProps) {
-  const { memoInfo, memoList, memoState, setMemoState, onMemoModal, handleMemo } = props;
+  const { memoList, memoState, setMemoState, onMemoModal, handleMemo } = props;
 
   return (
     <StMemoLog>
@@ -27,7 +26,6 @@ function MemoLog(props: MemoLogProps) {
           {memoList.map((memo) => (
             <MemoItem
               key={memo.id}
-              scriptId={memoInfo.scriptId} // TODO: 수정 가능성 고려해볼 것
               memoData={memo}
               memoState={memoState}
               setMemoState={setMemoState}
