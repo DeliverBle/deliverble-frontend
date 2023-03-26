@@ -1,8 +1,9 @@
 import { MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
 import EmptyMemo from '@src/components/learnDetail/memo/EmptyMemo';
-import MemoList from '@src/components/learnDetail/memo/MemoList';
+import MemoItem from '@src/components/learnDetail/memo/MemoItem';
 import { MemoInfo, MemoState } from '@src/pages/learn/[id]';
 import { MemoData } from '@src/services/api/types/learn-detail';
+import { COLOR } from '@src/styles/color';
 import { INITIAL_NUMBER } from '@src/utils/constant';
 import { Dispatch, SetStateAction } from 'react';
 import styled from 'styled-components';
@@ -22,14 +23,19 @@ function MemoLog(props: MemoLogProps) {
   return (
     <StMemoLog>
       {memoList.length || memoState.newMemoId !== INITIAL_NUMBER ? (
-        <MemoList
-          memoList={memoList}
-          memoState={memoState}
-          memoInfo={memoInfo}
-          setMemoState={setMemoState}
-          onMemoModal={onMemoModal}
-          handleMemo={handleMemo}
-        />
+        <StMemoList>
+          {memoList.map((memo) => (
+            <MemoItem
+              key={memo.id}
+              scriptId={memoInfo.scriptId} // TODO: 수정 가능성 고려해볼 것
+              memoData={memo}
+              memoState={memoState}
+              setMemoState={setMemoState}
+              onMemoModal={onMemoModal}
+              handleMemo={handleMemo}
+            />
+          ))}
+        </StMemoList>
       ) : (
         <EmptyMemo />
       )}
@@ -44,4 +50,23 @@ const StMemoLog = styled.div`
   flex-direction: column;
   justify-content: center;
   position: relative;
+`;
+
+const StMemoList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+
+  height: 40.7rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 1rem;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: ${COLOR.GRAY_10};
+    border-radius: 1.3rem;
+  }
 `;
