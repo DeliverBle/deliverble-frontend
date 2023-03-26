@@ -278,6 +278,21 @@ function LearnDetail() {
     setIsLoginModalOpen(false);
   };
 
+  const handleMemo = async (type: MemoConfirmModalKey, content?: string) => {
+    if (type === 'new' && content) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { id, ...memo } = memoInfo;
+      const memoList = await api.learnDetailService.postMemoData({ ...memo, content }, memoInfo.scriptId);
+      memoList && setMemoList(memoList);
+      setMemoState(INITIAL_MEMO_STATE);
+    } else if (type === 'edit' && content) {
+      const { editMemoId } = memoState;
+      const memoList = await api.learnDetailService.updateMemoData(editMemoId, content);
+      memoList && setMemoList(memoList);
+      setMemoState(INITIAL_MEMO_STATE);
+    }
+  };
+
   useEffect(() => {
     (async () => {
       const { deleteMemoId } = memoState;
@@ -510,6 +525,7 @@ function LearnDetail() {
                   setMemoList={setMemoList}
                   setMemoState={setMemoState}
                   onMemoModal={handleMemoModal}
+                  handleMemo={handleMemo}
                 />
               </aside>
             </main>
