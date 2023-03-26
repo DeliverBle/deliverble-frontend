@@ -12,7 +12,6 @@ interface StudyLogProps {
   memoInfo: MemoInfo;
   memoList: MemoData[];
   memoState: MemoState;
-  setMemoList: Dispatch<SetStateAction<MemoData[]>>;
   setMemoState: Dispatch<SetStateAction<MemoState>>;
   onMemoModal: (type: MemoConfirmModalKey) => void;
   currentScriptId: number;
@@ -21,17 +20,8 @@ interface StudyLogProps {
 }
 
 function StudyLog(props: StudyLogProps) {
-  const {
-    memoInfo,
-    memoList,
-    memoState,
-    setMemoList,
-    setMemoState,
-    onMemoModal,
-    currentScriptId,
-    isRecordSaved,
-    handleMemo,
-  } = props;
+  const { memoInfo, memoList, memoState, setMemoState, onMemoModal, currentScriptId, isRecordSaved, handleMemo } =
+    props;
   const [studyLogTab, setStudyLogTab] = useState<string>('memo');
 
   useEffect(() => {
@@ -64,7 +54,6 @@ function StudyLog(props: StudyLogProps) {
           memoInfo={memoInfo}
           memoList={memoList}
           memoState={memoState}
-          setMemoList={setMemoList}
           setMemoState={setMemoState}
           onMemoModal={onMemoModal}
           handleMemo={handleMemo}

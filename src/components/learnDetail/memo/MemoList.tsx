@@ -3,34 +3,20 @@ import { COLOR } from '@src/styles/color';
 import styled from 'styled-components';
 import MemoItem from './MemoItem';
 import { MemoInfo, MemoState } from '@src/pages/learn/[id]';
-import { Dispatch, SetStateAction, useEffect } from 'react';
-import { INITIAL_NUMBER } from '@src/utils/constant';
+import { Dispatch, SetStateAction } from 'react';
 import { MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
 
 interface MemoListProps {
   memoList: MemoData[];
   memoState: MemoState;
   memoInfo: MemoInfo;
-  setMemoList: Dispatch<SetStateAction<MemoData[]>>;
   setMemoState: Dispatch<SetStateAction<MemoState>>;
   onMemoModal: (type: MemoConfirmModalKey) => void;
   handleMemo: (type: MemoConfirmModalKey, content?: string) => Promise<void>;
 }
 
 function MemoList(props: MemoListProps) {
-  const { memoList, memoState, memoInfo, setMemoList, setMemoState, onMemoModal, handleMemo } = props;
-
-  //  TODO: 이 작업을 꼭 이 컴포넌트 안에서 해야할까?
-  useEffect(() => {
-    setMemoList((prev: MemoData[]) => prev.filter((memo) => memo.content !== ''));
-    if (memoState.newMemoId !== INITIAL_NUMBER) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { scriptId, ...memo } = memoInfo;
-      setMemoList((prev: MemoData[]) =>
-        [...prev, memo].sort((a, b) => a.order - b.order || a.startIndex - b.startIndex),
-      );
-    }
-  }, [memoState, memoInfo, setMemoList]);
+  const { memoList, memoState, memoInfo, setMemoState, onMemoModal, handleMemo } = props;
 
   return (
     <StMemoList>
@@ -40,7 +26,6 @@ function MemoList(props: MemoListProps) {
           scriptId={memoInfo.scriptId} // TODO: 수정 가능성 고려해볼 것
           memoData={memo}
           memoState={memoState}
-          setMemoList={setMemoList}
           setMemoState={setMemoState}
           onMemoModal={onMemoModal}
           handleMemo={handleMemo}

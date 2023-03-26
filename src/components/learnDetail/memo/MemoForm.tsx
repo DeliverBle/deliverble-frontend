@@ -1,7 +1,6 @@
 import { MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
 import useClickOutside from '@src/hooks/useClickOutside';
 import { MemoState } from '@src/pages/learn/[id]';
-// import { api } from '@src/services/api';
 import { MemoData } from '@src/services/api/types/learn-detail';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
@@ -15,26 +14,14 @@ interface MemoFormProps {
   scriptId: number;
   memoData: MemoData;
   memoState: MemoState;
-  setMemoList: (memoList: MemoData[]) => void;
   setMemoState: Dispatch<SetStateAction<MemoState>>;
   onMemoModal: (type: MemoConfirmModalKey) => void;
   handleMemo: (type: MemoConfirmModalKey, content?: string) => Promise<void>;
 }
 
 function MemoForm(props: MemoFormProps) {
-  const {
-    // scriptId,
-    memoData,
-    memoState,
-    // setMemoList,
-    setMemoState,
-    onMemoModal,
-    handleMemo,
-  } = props;
-  const {
-    // id,
-    content,
-  } = memoData;
+  const { memoData, memoState, setMemoState, onMemoModal, handleMemo } = props;
+  const { content } = memoData;
   const { newMemoId, editMemoId } = memoState;
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [textLength, setTextLength] = useState(0);
@@ -75,27 +62,12 @@ function MemoForm(props: MemoFormProps) {
     editMemoId !== INITIAL_NUMBER && onMemoModal('edit');
   };
 
-  // const createMemo = async (content: string) => {
-  //   delete memoData.id;
-  //   const memoList = await api.learnDetailService.postMemoData({ ...memoData, content }, scriptId);
-  //   memoList && setMemoList(memoList);
-  //   setMemoState(INITIAL_MEMO_STATE);
-  // };
-
-  // const updateMemo = async (newContent: string) => {
-  //   const memoList = id && (await api.learnDetailService.updateMemoData(id, newContent));
-  //   memoList && setMemoList(memoList);
-  //   setMemoState(INITIAL_MEMO_STATE);
-  // };
-
   const handleDone = async (target?: HTMLElement) => {
     const textarea = textareaRef.current;
     if (!textarea) return;
 
     const newContent = textarea.value;
     if (newContent) {
-      // newMemoId !== INITIAL_NUMBER && createMemo(newContent);
-      // editMemoId !== INITIAL_NUMBER && updateMemo(newContent);
       newMemoId !== INITIAL_NUMBER && handleMemo('new', newContent);
       editMemoId !== INITIAL_NUMBER && handleMemo('edit', newContent);
       return;

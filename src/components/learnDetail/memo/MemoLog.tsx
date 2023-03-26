@@ -11,14 +11,13 @@ interface MemoLogProps {
   memoInfo: MemoInfo;
   memoList: MemoData[];
   memoState: MemoState;
-  setMemoList: Dispatch<SetStateAction<MemoData[]>>;
   setMemoState: Dispatch<SetStateAction<MemoState>>;
   onMemoModal: (type: MemoConfirmModalKey) => void;
   handleMemo: (type: MemoConfirmModalKey, content?: string) => Promise<void>;
 }
 
 function MemoLog(props: MemoLogProps) {
-  const { memoInfo, memoList, memoState, setMemoList, setMemoState, onMemoModal, handleMemo } = props;
+  const { memoInfo, memoList, memoState, setMemoState, onMemoModal, handleMemo } = props;
 
   return (
     <StMemoLog>
@@ -27,7 +26,6 @@ function MemoLog(props: MemoLogProps) {
           memoList={memoList}
           memoState={memoState}
           memoInfo={memoInfo}
-          setMemoList={setMemoList}
           setMemoState={setMemoState}
           onMemoModal={onMemoModal}
           handleMemo={handleMemo}
