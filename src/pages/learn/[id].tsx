@@ -41,6 +41,7 @@ import { underlineMemo } from '@src/utils/underlineMemo';
 import useRightClickHandler from '@src/hooks/useRightClickHandler';
 import StudyLog from '@src/components/learnDetail/StudyLog';
 import useClickOutside from '@src/hooks/useClickOutside';
+import useUpdateMemoList from '@src/hooks/useUpdateMemoList';
 
 export interface MemoState {
   newMemoId: number;
@@ -84,7 +85,6 @@ function LearnDetail() {
   const [titleInputIndex, setTitleInputIndex] = useState(-1);
   const [memoList, setMemoList] = useState<MemoData[]>([]);
   const [memoState, setMemoState] = useState<MemoState>(INITIAL_MEMO_STATE);
-  const [clickedDeleteMemo, setClickedDeleteMemo] = useState<boolean>(false);
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const [isRecordSaved, setIsRecordSaved] = useState<boolean>(false);
   const [clickedDeleteType, setClickedDeleteType] = useState<string>('');
@@ -94,6 +94,7 @@ function LearnDetail() {
   const [currentScriptId, setCurrentScriptId] = useState(0);
   const { rightClickedElement, isContextMenuOpen, setIsContextMenuOpen, memoInfo, handleRightClick } =
     useRightClickHandler({ memoList, memoState });
+  const updateMemoList = useUpdateMemoList({ memoState, memoInfo, setMemoList, setMemoState });
   const ContextMenu = dynamic(() => import('@src/components/learnDetail/ContextMenu'), { ssr: false });
   const GuideModal = dynamic(() => import('@src/components/learnDetail/GuideModal'), { ssr: false });
   const ConfirmModal = dynamic(() => import('@src/components/learnDetail/ConfirmModal'), { ssr: false });
@@ -160,7 +161,7 @@ function LearnDetail() {
     const highlightId = rightClickedElement && rightClickedElement.id;
     const deleteMemoId = memoList.find((memo) => memo.highlightId === highlightId)?.id;
     deleteMemoId && setMemoState((prev: MemoState) => ({ ...prev, deleteMemoId }));
-    setClickedDeleteMemo(true);
+    updateMemoList('delete');
   };
 
   const deleteElement = () => {
@@ -230,11 +231,6 @@ function LearnDetail() {
     }
   };
 
-  const handleMemoModal = (type: MemoConfirmModalKey) => {
-    setIsConfirmOpen(true);
-    setConfirmModalText(MemoConfirmModalTextByType[type]);
-  };
-
   const handleTitleDeleteModal = () => {
     setConfirmModalText(DELETE_SCRIPT_CONFIRM_MODAL_TEXT);
     setIsConfirmOpen(true);
@@ -280,19 +276,27 @@ function LearnDetail() {
     setIsLoginModalOpen(false);
   };
 
-  useEffect(() => {
-    (async () => {
-      const { deleteMemoId } = memoState;
-      if (clickedDeleteMemo && deleteMemoId !== INITIAL_NUMBER) {
-        const memoList = await api.learnDetailService.deleteMemoData(deleteMemoId);
-        if (memoList) {
-          setMemoList(memoList);
-          setClickedDeleteMemo(false);
-          setMemoState(INITIAL_MEMO_STATE);
-        }
-      }
-    })();
-  }, [clickedDeleteMemo, memoState]);
+  const cancelCreateMemo = () => {
+    setMemoList((prev: MemoData[]) => prev.filter(({ content }) => content !== ''));
+  };
+
+  const handleMemoModal = (type: MemoConfirmModalKey) => {
+    setIsConfirmOpen(true);
+    setConfirmModalText(MemoConfirmModalTextByType[type]);
+  };
+
+  const handleMemoState = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsContextMenuOpen(false);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { scriptId, ...memo } = memoInfo;
+    if (memo.id !== INITIAL_NUMBER) {
+      setMemoState((prev: MemoState) => ({ ...prev, editMemoId: memo.id }));
+      return;
+    }
+    setMemoState((prev: MemoState) => ({ ...prev, newMemoId: 0 }));
+    setMemoList((prev: MemoData[]) => [...prev, memo].sort((a, b) => a.order - b.order || a.startIndex - b.startIndex));
+  };
 
   useEffect(() => {
     if (isHighlight || isSpacing) {
@@ -447,9 +451,9 @@ function LearnDetail() {
                         clickedMemoId={memoInfo.id}
                         rightClickedElement={rightClickedElement}
                         isEditing={isEditing}
-                        setMemoState={setMemoState}
                         setIsContextMenuOpen={setIsContextMenuOpen}
                         setClickedDeleteType={setClickedDeleteType}
+                        handleMemoState={handleMemoState}
                       />
                     )}
                     {isEditing && (
@@ -460,7 +464,7 @@ function LearnDetail() {
                         clickedTitleIndex={clickedTitleIndex}
                         memoList={memoList}
                         setMemoState={setMemoState}
-                        setClickedDeleteMemo={setClickedDeleteMemo}
+                        updateMemoList={updateMemoList}
                       />
                     )}
                   </div>
@@ -510,12 +514,11 @@ function LearnDetail() {
                 <StudyLog
                   currentScriptId={currentScriptId}
                   isRecordSaved={isRecordSaved}
-                  memoInfo={memoInfo}
                   memoList={memoList}
                   memoState={memoState}
-                  setMemoList={setMemoList}
                   setMemoState={setMemoState}
                   onMemoModal={handleMemoModal}
+                  updateMemoList={updateMemoList}
                 />
               </aside>
             </main>
@@ -557,10 +560,11 @@ function LearnDetail() {
         {isConfirmOpen && (
           <ConfirmModal
             confirmModalText={confirmModalText}
-            setMemoState={setMemoState}
+            updateMemoList={updateMemoList}
             setIsConfirmOpen={setIsConfirmOpen}
-            setClickedDeleteMemo={setClickedDeleteMemo}
+            setMemoState={setMemoState}
             onTitleDelete={handleScriptDelete}
+            cancelCreateMemo={cancelCreateMemo}
           />
         )}
         {isLoginModalOpen && <LoginModal closeModal={handleLoginModalClose} />}

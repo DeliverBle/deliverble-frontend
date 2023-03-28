@@ -8,6 +8,7 @@ import { MemoData, VideoData } from '@src/services/api/types/learn-detail';
 import { useRouter } from 'next/router';
 import { MemoState } from '@src/pages/learn/[id]';
 import useClickOutside from '@src/hooks/useClickOutside';
+import { MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
 
 interface ScriptEditProps {
   isEditing: boolean;
@@ -16,13 +17,13 @@ interface ScriptEditProps {
   clickedTitleIndex: number;
   memoList: MemoData[];
   setMemoState: Dispatch<SetStateAction<MemoState>>;
-  setClickedDeleteMemo: (isDelete: boolean) => void;
+  updateMemoList: (type: MemoConfirmModalKey, content?: string) => void;
 }
 
 function ScriptEdit(props: ScriptEditProps) {
   const router = useRouter();
   const { id: detailId } = router.query;
-  const { isEditing, isHighlight, isSpacing, clickedTitleIndex, memoList, setMemoState, setClickedDeleteMemo } = props;
+  const { isEditing, isHighlight, isSpacing, clickedTitleIndex, memoList, setMemoState, updateMemoList } = props;
   const [highlightAlert, setHighlightAlert] = useState<boolean>(false);
   const [order, setOrder] = useState<number>();
   const [text, setText] = useState<string>();
@@ -71,7 +72,7 @@ function ScriptEdit(props: ScriptEditProps) {
     const highlightId = rightClickedElement && rightClickedElement.id;
     const deleteMemoId = memoList.find((memo) => memo.highlightId === highlightId)?.id;
     deleteMemoId && setMemoState((prev: MemoState) => ({ ...prev, deleteMemoId }));
-    setClickedDeleteMemo(true);
+    updateMemoList('delete');
   };
 
   const deleteElement = () => {

@@ -2,13 +2,14 @@ import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { Dispatch, SetStateAction, useEffect } from 'react';
-import { MemoState } from '@src/pages/learn/[id]';
 import Portal from '../common/Portal';
 import {
   DELETE_MEMO_CONFIRM_MODAL_TEXT,
   DELETE_SCRIPT_CONFIRM_MODAL_TEXT,
   INITIAL_MEMO_STATE,
+  NEW_MEMO_CONFIRM_MODAL_TEXT,
 } from '@src/utils/constant';
+import { MemoState } from '@src/pages/learn/[id]';
 
 export type MemoConfirmModalKey = 'new' | 'edit' | 'delete';
 
@@ -23,12 +24,13 @@ interface ConfirmModalProps {
   confirmModalText: ConfirmModalText;
   setMemoState: Dispatch<SetStateAction<MemoState>>;
   setIsConfirmOpen: (close: boolean) => void;
-  setClickedDeleteMemo: (clicked: boolean) => void;
   onTitleDelete: () => void;
+  updateMemoList: (type: MemoConfirmModalKey, content?: string) => void;
+  cancelCreateMemo: () => void;
 }
 
 function ConfirmModal(props: ConfirmModalProps) {
-  const { confirmModalText, setMemoState, setIsConfirmOpen, setClickedDeleteMemo, onTitleDelete } = props;
+  const { confirmModalText, setIsConfirmOpen, setMemoState, onTitleDelete, updateMemoList, cancelCreateMemo } = props;
   const { mainText, subText, leftButtonText, rightButtonText } = confirmModalText;
 
   useEffect(() => {
@@ -43,12 +45,13 @@ function ConfirmModal(props: ConfirmModalProps) {
       onTitleDelete();
       return;
     }
-
     if (mainText === DELETE_MEMO_CONFIRM_MODAL_TEXT.mainText) {
-      setClickedDeleteMemo(true);
+      updateMemoList('delete');
       return;
     }
-
+    if (mainText === NEW_MEMO_CONFIRM_MODAL_TEXT.mainText) {
+      cancelCreateMemo();
+    }
     setMemoState(INITIAL_MEMO_STATE);
   };
 

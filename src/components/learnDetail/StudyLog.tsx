@@ -1,7 +1,7 @@
 import { MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
 import MemoLog from '@src/components/learnDetail/memo/MemoLog';
 import RecordLog from '@src/components/learnDetail/record/RecordLog';
-import { MemoInfo, MemoState } from '@src/pages/learn/[id]';
+import { MemoState } from '@src/pages/learn/[id]';
 import { MemoData } from '@src/services/api/types/learn-detail';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
@@ -9,19 +9,17 @@ import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import styled from 'styled-components';
 
 interface StudyLogProps {
-  memoInfo: MemoInfo;
   memoList: MemoData[];
   memoState: MemoState;
-  setMemoList: Dispatch<SetStateAction<MemoData[]>>;
   setMemoState: Dispatch<SetStateAction<MemoState>>;
   onMemoModal: (type: MemoConfirmModalKey) => void;
   currentScriptId: number;
   isRecordSaved: boolean;
+  updateMemoList: (type: MemoConfirmModalKey, content?: string) => void;
 }
 
 function StudyLog(props: StudyLogProps) {
-  const { memoInfo, memoList, memoState, setMemoList, setMemoState, onMemoModal, currentScriptId, isRecordSaved } =
-    props;
+  const { memoList, memoState, setMemoState, onMemoModal, currentScriptId, isRecordSaved, updateMemoList } = props;
   const [studyLogTab, setStudyLogTab] = useState<string>('memo');
 
   useEffect(() => {
@@ -51,12 +49,11 @@ function StudyLog(props: StudyLogProps) {
       </StStudyLogTabList>
       {studyLogTab === 'memo' ? (
         <MemoLog
-          memoInfo={memoInfo}
           memoList={memoList}
           memoState={memoState}
-          setMemoList={setMemoList}
           setMemoState={setMemoState}
           onMemoModal={onMemoModal}
+          updateMemoList={updateMemoList}
         />
       ) : (
         <RecordLog scriptId={currentScriptId} isRecordSaved={isRecordSaved} />
