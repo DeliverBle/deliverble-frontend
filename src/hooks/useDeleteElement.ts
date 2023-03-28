@@ -6,7 +6,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 interface useDeleteElementProps {
   rightClickedElement?: HTMLElement;
   clickedTitleIndex: number;
-  detailId?: string | string[];
+  detailId: string;
   videoData?: VideoData;
   setVideoData: Dispatch<SetStateAction<VideoData | undefined>>;
   updateMemoList: (type: MemoConfirmModalKey, content?: string) => void;

@@ -63,7 +63,7 @@ export interface MemoInfo {
 
 function LearnDetail() {
   const router = useRouter();
-  const { id: detailId } = router.query;
+  const detailId = router.query.id as string;
   const [isGuide, setIsGuide] = useRecoilState(isGuideAtom);
   const isLoggedIn = useRecoilValue(loginState);
   const [videoData, setVideoData] = useState<VideoData>();
