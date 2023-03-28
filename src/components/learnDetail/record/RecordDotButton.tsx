@@ -1,9 +1,9 @@
+import dynamic from 'next/dynamic';
 import ImageDiv from '@src/components/common/ImageDiv';
 import useClickOutside from '@src/hooks/useClickOutside';
 import { icDotDefault, icDotHover } from 'public/assets/icons';
 import { useState, useRef, Dispatch, SetStateAction } from 'react';
 import styled from 'styled-components';
-import RecordDropdown from './RecordDropdown';
 
 interface RecordDotButtonProps {
   link: string;
@@ -17,6 +17,7 @@ function RecordDotButton(props: RecordDotButtonProps) {
   const { link, scriptId, setIsDataChanged, setIsNameChanging, setRecordLinkChanging } = props;
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const recordDropdownRef = useRef<HTMLDivElement>(null);
+  const RecordDropdown = dynamic(() => import('./RecordDropdown'));
 
   useClickOutside({
     isEnabled: isDropdownOpen,

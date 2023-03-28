@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { useMutation, useQuery } from 'react-query';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import YouTube from 'react-youtube';
 import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
@@ -10,12 +11,9 @@ import ImageDiv from '@src/components/common/ImageDiv';
 import Like from '@src/components/common/Like';
 import SEO from '@src/components/common/SEO';
 import NewsList from '@src/components/common/NewsList';
-import ConfirmModal, { ConfirmModalText, MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
-import ContextMenu from '@src/components/learnDetail/ContextMenu';
-import GuideModal from '@src/components/learnDetail/GuideModal';
+import { ConfirmModalText, MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
 import ScriptEdit from '@src/components/learnDetail/ScriptEdit';
 import VideoDetail from '@src/components/learnDetail/VideoDetail';
-import LoginModal from '@src/components/login/LoginModal';
 import ScriptTitle from '@src/components/learnDetail/ScriptTitle';
 import RecordStatusBar from '@src/components/learnDetail/record/RecordStatusBar';
 import { api } from '@src/services/api';
@@ -96,6 +94,10 @@ function LearnDetail() {
   const [currentScriptId, setCurrentScriptId] = useState(0);
   const { rightClickedElement, isContextMenuOpen, setIsContextMenuOpen, memoInfo, handleRightClick } =
     useRightClickHandler({ memoList, memoState });
+  const ContextMenu = dynamic(() => import('@src/components/learnDetail/ContextMenu'));
+  const GuideModal = dynamic(() => import('@src/components/learnDetail/GuideModal'));
+  const ConfirmModal = dynamic(() => import('@src/components/learnDetail/ConfirmModal'));
+  const LoginModal = dynamic(() => import('@src/components/login/LoginModal'));
 
   useEffect(() => {
     videoData?.scriptsId && setCurrentScriptId(videoData?.scriptsId);
@@ -343,7 +345,11 @@ function LearnDetail() {
     isEnabled: isContextMenuOpen,
     handleClickOutside: (e: Event) => {
       const eventTarget = e.target as HTMLElement;
-      if (isContextMenuOpen && !contextMenuRef?.current?.contains(eventTarget)) {
+      if (
+        isContextMenuOpen &&
+        contextMenuRef.current instanceof HTMLElement &&
+        !contextMenuRef.current.contains(eventTarget)
+      ) {
         setIsContextMenuOpen(false);
       }
     },

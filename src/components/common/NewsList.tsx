@@ -4,12 +4,12 @@ import { loginState } from '@src/stores/loginState';
 import { isGuideAtom } from '@src/stores/newsState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { icSpeechGuideLogo } from 'public/assets/icons';
 import { useState } from 'react';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import styled, { css } from 'styled-components';
-import LoginModal from '../login/LoginModal';
 import ImageDiv from './ImageDiv';
 import Like from './Like';
 
@@ -27,6 +27,7 @@ function NewsList(props: NewsListProps) {
   const setIsGuide = useSetRecoilState(isGuideAtom);
   const { lockScroll, unlockScroll } = useBodyScrollLock();
   const login = useRecoilValue(loginState);
+  const LoginModal = dynamic(() => import('@src/components/login/LoginModal'));
 
   return (
     <StNewsList type={type}>

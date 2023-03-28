@@ -1,8 +1,8 @@
+import dynamic from 'next/dynamic';
 import ImageDiv from '@src/components/common/ImageDiv';
 import { icDotDefault, icDotHover } from 'public/assets/icons';
 import { useState, useRef, Dispatch, SetStateAction } from 'react';
 import styled from 'styled-components';
-import MemoDropdown from './MemoDropdown';
 import { MemoState } from '@src/pages/learn/[id]';
 import { MemoData } from '@src/services/api/types/learn-detail';
 import { MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
@@ -18,6 +18,7 @@ function MemoDotButton(props: MemoDotButtonProps) {
   const { memoData, setMemoState, onMemoModal } = props;
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const memoDropdownRef = useRef<HTMLDivElement>(null);
+  const MemoDropdown = dynamic(() => import('./MemoDropdown'));
 
   useClickOutside({
     isEnabled: isDropdownOpen,
