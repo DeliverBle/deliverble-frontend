@@ -229,11 +229,6 @@ function LearnDetail() {
     }
   };
 
-  const handleMemoModal = (type: MemoConfirmModalKey) => {
-    setIsConfirmOpen(true);
-    setConfirmModalText(MemoConfirmModalTextByType[type]);
-  };
-
   const handleTitleDeleteModal = () => {
     setConfirmModalText(DELETE_SCRIPT_CONFIRM_MODAL_TEXT);
     setIsConfirmOpen(true);
@@ -281,6 +276,11 @@ function LearnDetail() {
 
   const cancelCreateMemo = () => {
     setMemoList((prev: MemoData[]) => prev.filter(({ content }) => content !== ''));
+  };
+
+  const handleMemoModal = (type: MemoConfirmModalKey) => {
+    setIsConfirmOpen(true);
+    setConfirmModalText(MemoConfirmModalTextByType[type]);
   };
 
   const handleMemoState = (e: React.MouseEvent) => {
