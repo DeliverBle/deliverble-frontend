@@ -43,6 +43,7 @@ import { underlineMemo } from '@src/utils/underlineMemo';
 import useRightClickHandler from '@src/hooks/useRightClickHandler';
 import StudyLog from '@src/components/learnDetail/StudyLog';
 import useClickOutside from '@src/hooks/useClickOutside';
+import useUpdateMemoList from '@src/hooks/useUpdateMemoList';
 
 export interface MemoState {
   newMemoId: number;
@@ -86,7 +87,6 @@ function LearnDetail() {
   const [titleInputIndex, setTitleInputIndex] = useState(-1);
   const [memoList, setMemoList] = useState<MemoData[]>([]);
   const [memoState, setMemoState] = useState<MemoState>(INITIAL_MEMO_STATE);
-  const [clickedDeleteMemo, setClickedDeleteMemo] = useState<boolean>(false);
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const [isRecordSaved, setIsRecordSaved] = useState<boolean>(false);
   const [clickedDeleteType, setClickedDeleteType] = useState<string>('');
@@ -96,6 +96,7 @@ function LearnDetail() {
   const [currentScriptId, setCurrentScriptId] = useState(0);
   const { rightClickedElement, isContextMenuOpen, setIsContextMenuOpen, memoInfo, handleRightClick } =
     useRightClickHandler({ memoList, memoState });
+  const updateMemoList = useUpdateMemoList({ memoState, memoInfo, setMemoList, setMemoState });
 
   useEffect(() => {
     videoData?.scriptsId && setCurrentScriptId(videoData?.scriptsId);
@@ -158,7 +159,7 @@ function LearnDetail() {
     const highlightId = rightClickedElement && rightClickedElement.id;
     const deleteMemoId = memoList.find((memo) => memo.highlightId === highlightId)?.id;
     deleteMemoId && setMemoState((prev: MemoState) => ({ ...prev, deleteMemoId }));
-    setClickedDeleteMemo(true);
+    updateMemoList('delete');
   };
 
   const deleteElement = () => {
@@ -278,49 +279,22 @@ function LearnDetail() {
     setIsLoginModalOpen(false);
   };
 
-  //  TODO: 이 작업을 꼭 이 컴포넌트 안에서 해야할까?
-  useEffect(() => {
-    // 메모 추가했다가 추가안하고 그냥 취소한 경우 메모리스트에 남아있는 거 지워줘야 함
-    // 근데 그거를 cancel을 눌렀을 때 하는 게 맞지 않나 싶기도 하고
-    setMemoList((prev: MemoData[]) => prev.filter((memo) => memo.content !== ''));
-
-    if (memoState.newMemoId !== INITIAL_NUMBER) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { scriptId, ...memo } = memoInfo;
-      setMemoList((prev: MemoData[]) =>
-        [...prev, memo].sort((a, b) => a.order - b.order || a.startIndex - b.startIndex),
-      );
-    }
-  }, [memoState, memoInfo, setMemoList]);
-
-  const handleMemo = async (type: MemoConfirmModalKey, content?: string) => {
-    if (type === 'new' && content) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { id, ...memo } = memoInfo;
-      const memoList = await api.learnDetailService.postMemoData({ ...memo, content }, memoInfo.scriptId);
-      memoList && setMemoList(memoList);
-      setMemoState(INITIAL_MEMO_STATE);
-    } else if (type === 'edit' && content) {
-      const { editMemoId } = memoState;
-      const memoList = await api.learnDetailService.updateMemoData(editMemoId, content);
-      memoList && setMemoList(memoList);
-      setMemoState(INITIAL_MEMO_STATE);
-    }
+  const cancelCreateMemo = () => {
+    setMemoList((prev: MemoData[]) => prev.filter(({ content }) => content !== ''));
   };
 
-  useEffect(() => {
-    (async () => {
-      const { deleteMemoId } = memoState;
-      if (clickedDeleteMemo && deleteMemoId !== INITIAL_NUMBER) {
-        const memoList = await api.learnDetailService.deleteMemoData(deleteMemoId);
-        if (memoList) {
-          setMemoList(memoList);
-          setClickedDeleteMemo(false);
-          setMemoState(INITIAL_MEMO_STATE);
-        }
-      }
-    })();
-  }, [clickedDeleteMemo, memoState]);
+  const handleMemoState = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsContextMenuOpen(false);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { scriptId, ...memo } = memoInfo;
+    if (memo.id !== INITIAL_NUMBER) {
+      setMemoState((prev: MemoState) => ({ ...prev, editMemoId: memo.id }));
+      return;
+    }
+    setMemoState((prev: MemoState) => ({ ...prev, newMemoId: 0 }));
+    setMemoList((prev: MemoData[]) => [...prev, memo].sort((a, b) => a.order - b.order || a.startIndex - b.startIndex));
+  };
 
   useEffect(() => {
     if (isHighlight || isSpacing) {
@@ -471,9 +445,9 @@ function LearnDetail() {
                         clickedMemoId={memoInfo.id}
                         rightClickedElement={rightClickedElement}
                         isEditing={isEditing}
-                        setMemoState={setMemoState}
                         setIsContextMenuOpen={setIsContextMenuOpen}
                         setClickedDeleteType={setClickedDeleteType}
+                        handleMemoState={handleMemoState}
                       />
                     )}
                     {isEditing && (
@@ -484,7 +458,7 @@ function LearnDetail() {
                         clickedTitleIndex={clickedTitleIndex}
                         memoList={memoList}
                         setMemoState={setMemoState}
-                        setClickedDeleteMemo={setClickedDeleteMemo}
+                        updateMemoList={updateMemoList}
                       />
                     )}
                   </div>
@@ -538,7 +512,7 @@ function LearnDetail() {
                   memoState={memoState}
                   setMemoState={setMemoState}
                   onMemoModal={handleMemoModal}
-                  handleMemo={handleMemo}
+                  updateMemoList={updateMemoList}
                 />
               </aside>
             </main>
@@ -580,10 +554,11 @@ function LearnDetail() {
         {isConfirmOpen && (
           <ConfirmModal
             confirmModalText={confirmModalText}
-            setMemoState={setMemoState}
+            updateMemoList={updateMemoList}
             setIsConfirmOpen={setIsConfirmOpen}
-            setClickedDeleteMemo={setClickedDeleteMemo}
+            setMemoState={setMemoState}
             onTitleDelete={handleScriptDelete}
+            cancelCreateMemo={cancelCreateMemo}
           />
         )}
         {isLoginModalOpen && <LoginModal closeModal={handleLoginModalClose} />}

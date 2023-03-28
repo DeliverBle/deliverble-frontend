@@ -18,12 +18,12 @@ interface MemoProps {
   memoState: MemoState;
   setMemoState: Dispatch<SetStateAction<MemoState>>;
   onMemoModal: (type: MemoConfirmModalKey) => void;
-  handleMemo: (type: MemoConfirmModalKey, content?: string) => Promise<void>;
+  updateMemoList: (type: MemoConfirmModalKey, content?: string) => void;
 }
 
 function MemoItem(props: MemoProps) {
   const isGuide = useRecoilValue(isGuideAtom);
-  const { memoData, memoState, setMemoState, onMemoModal, handleMemo } = props;
+  const { memoData, memoState, setMemoState, onMemoModal, updateMemoList } = props;
   const { id, keyword, content } = memoData;
   const [foldButton, setFoldButton] = useState(false);
 
@@ -57,7 +57,7 @@ function MemoItem(props: MemoProps) {
           memoState={memoState}
           setMemoState={setMemoState}
           onMemoModal={onMemoModal}
-          handleMemo={handleMemo}
+          updateMemoList={updateMemoList}
         />
       ) : (
         <>

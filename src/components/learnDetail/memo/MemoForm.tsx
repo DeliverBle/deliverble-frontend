@@ -15,11 +15,11 @@ interface MemoFormProps {
   memoState: MemoState;
   setMemoState: Dispatch<SetStateAction<MemoState>>;
   onMemoModal: (type: MemoConfirmModalKey) => void;
-  handleMemo: (type: MemoConfirmModalKey, content?: string) => Promise<void>;
+  updateMemoList: (type: MemoConfirmModalKey, content?: string) => void;
 }
 
 function MemoForm(props: MemoFormProps) {
-  const { memoData, memoState, setMemoState, onMemoModal, handleMemo } = props;
+  const { memoData, memoState, setMemoState, onMemoModal, updateMemoList } = props;
   const { content } = memoData;
   const { newMemoId, editMemoId } = memoState;
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -67,8 +67,8 @@ function MemoForm(props: MemoFormProps) {
 
     const newContent = textarea.value;
     if (newContent) {
-      newMemoId !== INITIAL_NUMBER && handleMemo('new', newContent);
-      editMemoId !== INITIAL_NUMBER && handleMemo('edit', newContent);
+      newMemoId !== INITIAL_NUMBER && updateMemoList('new', newContent);
+      editMemoId !== INITIAL_NUMBER && updateMemoList('edit', newContent);
       return;
     }
 
