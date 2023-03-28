@@ -7,6 +7,7 @@ import ContextMenu from '@src/components/learnDetail/ContextMenu';
 import { MemoData, VideoData } from '@src/services/api/types/learn-detail';
 import { useRouter } from 'next/router';
 import { MemoState } from '@src/pages/learn/[id]';
+import useClickOutside from '@src/hooks/useClickOutside';
 
 interface ScriptEditProps {
   isEditing: boolean;
@@ -256,29 +257,15 @@ function ScriptEdit(props: ScriptEditProps) {
     })();
   }, [clickedTitleIndex, detailId]);
 
-  useEffect(() => {
-    const handleClickOutside = (e: Event) => {
+  useClickOutside({
+    isEnabled: isContextMenuOpen,
+    handleClickOutside: (e: Event) => {
       const eventTarget = e.target as HTMLElement;
-
-      if (
-        isContextMenuOpen &&
-        !contextMenuRef?.current?.contains(eventTarget) &&
-        eventTarget.tagName !== 'MARK' &&
-        eventTarget.tagName !== 'SPAN'
-      ) {
+      if (isContextMenuOpen && !contextMenuRef?.current?.contains(eventTarget)) {
         setIsContextMenuOpen(false);
       }
-    };
-
-    if (isContextMenuOpen) {
-      window.addEventListener('click', handleClickOutside);
-      window.addEventListener('contextmenu', handleClickOutside);
-    }
-    return () => {
-      window.removeEventListener('click', handleClickOutside);
-      window.removeEventListener('contextmenu', handleClickOutside);
-    };
-  }, [isContextMenuOpen]);
+    },
+  });
 
   return (
     <>
@@ -294,7 +281,6 @@ function ScriptEdit(props: ScriptEditProps) {
         ref={learnRef}>
         {videoData?.scripts.map(({ id, text }, i) => (
           <StScriptText
-            ref={contextMenuRef}
             onContextMenu={(e) => {
               e.preventDefault();
               handleRightClick(e);
@@ -306,6 +292,7 @@ function ScriptEdit(props: ScriptEditProps) {
         ))}
         {isContextMenuOpen && rightClickedElement && (
           <ContextMenu
+            ref={contextMenuRef}
             rightClickedElement={rightClickedElement}
             isEditing={isEditing}
             setIsContextMenuOpen={setIsContextMenuOpen}

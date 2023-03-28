@@ -5,6 +5,7 @@ import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { icArrow, icCheckedBox, icEmptyBox } from 'public/assets/icons';
 import { ALL } from '@src/utils/constant';
+import useClickOutside from '@src/hooks/useClickOutside';
 
 interface SelectBoxProps {
   optionName: string;
@@ -40,19 +41,15 @@ function SelectBox(props: SelectBoxProps) {
     setConditionList(checkedList.includes(ALL) || checkedList.length === optionList.length - 1 ? [] : checkedList);
   }, [checkedList, optionList, setConditionList]);
 
-  useEffect(() => {
-    const handleClickOutside = (e: Event) => {
+  useClickOutside({
+    isEnabled: isClicked,
+    handleClickOutside: (e: Event) => {
       const eventTarget = e.target as HTMLElement;
       if (isClicked && !selectBoxRef?.current?.contains(eventTarget)) {
         setIsClicked(false);
       }
-    };
-
-    window.addEventListener('click', handleClickOutside);
-    return () => {
-      window.removeEventListener('click', handleClickOutside);
-    };
-  }, [isClicked]);
+    },
+  });
 
   return (
     <StSelectBox ref={selectBoxRef} isClicked={isClicked}>

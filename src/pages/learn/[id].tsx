@@ -13,14 +13,11 @@ import NewsList from '@src/components/common/NewsList';
 import ConfirmModal, { ConfirmModalText, MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
 import ContextMenu from '@src/components/learnDetail/ContextMenu';
 import GuideModal from '@src/components/learnDetail/GuideModal';
-import EmptyMemo from '@src/components/learnDetail/memo/EmptyMemo';
-import MemoList from '@src/components/learnDetail/memo/MemoList';
 import ScriptEdit from '@src/components/learnDetail/ScriptEdit';
 import VideoDetail from '@src/components/learnDetail/VideoDetail';
 import LoginModal from '@src/components/login/LoginModal';
 import ScriptTitle from '@src/components/learnDetail/ScriptTitle';
 import RecordStatusBar from '@src/components/learnDetail/record/RecordStatusBar';
-import RecordLog from '@src/components/learnDetail/record/RecordLog';
 import { api } from '@src/services/api';
 import { MemoData, Name, VideoData } from '@src/services/api/types/learn-detail';
 import { VideoData as simpleVideoData } from '@src/services/api/types/home';
@@ -31,7 +28,6 @@ import { FONT_STYLES } from '@src/styles/fontStyle';
 import {
   INITIAL_NUMBER,
   INITIAL_MEMO_STATE,
-  INITIAL_MEMO,
   DELETE_SCRIPT_CONFIRM_MODAL_TEXT,
   SCRIPT_MAX_COUNT,
   SPEECH_GUIDE_TOOLTIP_TEXT,
@@ -43,6 +39,10 @@ import {
 import { useBodyScrollLock } from '@src/hooks/useBodyScrollLock';
 import { icSpeechGuideInfo, icXButton } from 'public/assets/icons';
 import ScriptEditButtonContainer from '@src/components/learnDetail/ScriptEditButtonContainer';
+import { underlineMemo } from '@src/utils/underlineMemo';
+import useRightClickHandler from '@src/hooks/useRightClickHandler';
+import StudyLog from '@src/components/learnDetail/StudyLog';
+import useClickOutside from '@src/hooks/useClickOutside';
 
 export interface MemoState {
   newMemoId: number;
@@ -50,11 +50,13 @@ export interface MemoState {
   deleteMemoId: number;
 }
 export interface MemoInfo {
+  id: number;
   scriptId: number;
   order: number;
   startIndex: number;
   keyword: string;
   highlightId: string;
+  content: string;
 }
 
 function LearnDetail() {
@@ -78,88 +80,26 @@ function LearnDetail() {
   const [prevLink, setPrevLink] = useState('');
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isGuideOver, setIsGuideOver] = useState<boolean>(false);
-  const [highlightIndex, setHighlightIndex] = useState<number>(INITIAL_NUMBER);
   const [titleList, setTitleList] = useState<Name[]>([]);
   const [clickedTitleIndex, setClickedTitleIndex] = useState(0);
   const [isTitleInputVisible, setIsTitleInputVisible] = useState(false);
   const [titleInputIndex, setTitleInputIndex] = useState(-1);
   const [memoList, setMemoList] = useState<MemoData[]>([]);
   const [memoState, setMemoState] = useState<MemoState>(INITIAL_MEMO_STATE);
-  const [memoInfo, setMemoInfo] = useState<MemoInfo>(INITIAL_MEMO);
-  const [clickedMemo, setClickedMemo] = useState<MemoData>();
   const [clickedDeleteMemo, setClickedDeleteMemo] = useState<boolean>(false);
   const contextMenuRef = useRef<HTMLDivElement>(null);
-  const [isContextMenuOpen, setIsContextMenuOpen] = useState<boolean>(false);
-  const [rightClickedElement, setRightClickedElement] = useState<HTMLElement>();
-  const [studyLogTab, setStudyLogTab] = useState<string>('memo');
   const [isRecordSaved, setIsRecordSaved] = useState<boolean>(false);
   const [clickedDeleteType, setClickedDeleteType] = useState<string>('');
   const [order, setOrder] = useState<number>();
   const [text, setText] = useState<string>();
   const [similarNewsList, setSimilarNewsList] = useState<simpleVideoData[]>([]);
   const [currentScriptId, setCurrentScriptId] = useState(0);
-
-  useEffect(() => {
-    isRecordSaved &&
-      setTimeout(() => {
-        setStudyLogTab('record');
-      }, 1000);
-  }, [isRecordSaved]);
+  const { rightClickedElement, isContextMenuOpen, setIsContextMenuOpen, memoInfo, handleRightClick } =
+    useRightClickHandler({ memoList, memoState });
 
   useEffect(() => {
     videoData?.scriptsId && setCurrentScriptId(videoData?.scriptsId);
   }, [videoData, currentScriptId]);
-
-  const getHighlightIndex = (parentNode: ParentNode | null, targetId: string) => {
-    const childNodes = parentNode?.childNodes;
-    if (childNodes) {
-      let stringLength = 0;
-      for (let i = 0; i < childNodes.length; i++) {
-        const childElement = childNodes[i] as HTMLElement;
-        if (childElement.id === targetId) {
-          setHighlightIndex(stringLength);
-          return stringLength;
-        }
-        if (childNodes[i].textContent !== '/') {
-          stringLength += childNodes[i]?.textContent?.replaceAll('/', ' ').length ?? 0;
-        } else {
-          stringLength += 1;
-        }
-      }
-    }
-  };
-
-  const createMarkStyles = (script: string) => {
-    let styles = ``;
-    const markIdList = [];
-    let startIndex = script.indexOf('<mark id=');
-    let endIndex = script.indexOf('>', startIndex + 9);
-    let markId = '';
-    if (startIndex !== -1 && endIndex !== -1) {
-      markId = script.substring(startIndex + 9, endIndex);
-    }
-
-    while (markId) {
-      markIdList.push(markId);
-      startIndex = script.indexOf('<mark id=', endIndex);
-      endIndex = script.indexOf('>', startIndex + 9);
-      if (startIndex === -1 || endIndex === -1) break;
-      markId = script.substring(startIndex + 9, endIndex);
-    }
-
-    markIdList.forEach((id, i) => {
-      if (memoList.find(({ highlightId, content }) => highlightId === id && content)) {
-        styles += `
-          mark:nth-of-type(${i + 1}) {
-            border-bottom: 0.7rem solid #4E8AFF;
-            border-image: linear-gradient(white 94%, #4E8AFF 90%);
-            border-image-slice: 4;
-          }
-        `;
-      }
-    });
-    return styles;
-  };
 
   useEffect(() => {
     (async () => {
@@ -260,28 +200,6 @@ function LearnDetail() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clickedDeleteType]);
 
-  const handleRightClick = (e: React.MouseEvent, scriptId: number, order: number) => {
-    const contextTarget = e.target as HTMLElement;
-    setRightClickedElement(contextTarget);
-
-    if (contextTarget.closest('span')) {
-      setIsContextMenuOpen(true);
-    }
-
-    const markTag = contextTarget.closest('mark');
-    const startIndex = markTag && getHighlightIndex(contextTarget?.parentNode, contextTarget.id);
-    if (startIndex && markTag) {
-      setMemoInfo({
-        scriptId,
-        order,
-        startIndex,
-        keyword: markTag.innerText.replaceAll('/', ' '),
-        highlightId: markTag.id,
-      });
-      setClickedMemo(memoList.find((memo) => memo.highlightId === markTag.id));
-    }
-  };
-
   const handleScriptAdd = async () => {
     const response = await api.learnDetailService.postNewScriptData(Number(detailId));
     if (response.isSuccess) {
@@ -375,21 +293,6 @@ function LearnDetail() {
   }, [clickedDeleteMemo, memoState]);
 
   useEffect(() => {
-    const { newMemoId, editMemoId } = memoState;
-    if (highlightIndex !== INITIAL_NUMBER && newMemoId === INITIAL_NUMBER && editMemoId === INITIAL_NUMBER) {
-      setIsContextMenuOpen(true);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [highlightIndex]);
-
-  useEffect(() => {
-    const { newMemoId, editMemoId } = memoState;
-    if (newMemoId === INITIAL_NUMBER && editMemoId === INITIAL_NUMBER) {
-      setHighlightIndex(INITIAL_NUMBER);
-    }
-  }, [memoState]);
-
-  useEffect(() => {
     if (isHighlight || isSpacing) {
       setIsEditing(true);
     } else {
@@ -436,29 +339,15 @@ function LearnDetail() {
     return () => interval && clearInterval(interval);
   }, [player, videoState]);
 
-  useEffect(() => {
-    const handleClickOutside = (e: Event) => {
+  useClickOutside({
+    isEnabled: isContextMenuOpen,
+    handleClickOutside: (e: Event) => {
       const eventTarget = e.target as HTMLElement;
-
-      if (
-        isContextMenuOpen &&
-        !contextMenuRef?.current?.contains(eventTarget) &&
-        eventTarget.tagName !== 'MARK' &&
-        eventTarget.tagName !== 'SPAN'
-      ) {
+      if (isContextMenuOpen && !contextMenuRef?.current?.contains(eventTarget)) {
         setIsContextMenuOpen(false);
-        setHighlightIndex(INITIAL_NUMBER);
       }
-    };
-    if (isContextMenuOpen) {
-      window.addEventListener('click', handleClickOutside);
-      window.addEventListener('contextmenu', handleClickOutside);
-    }
-    return () => {
-      window.removeEventListener('click', handleClickOutside);
-      window.removeEventListener('contextmenu', handleClickOutside);
-    };
-  }, [isContextMenuOpen]);
+    },
+  });
 
   useEffect(() => {
     const storage = globalThis?.sessionStorage;
@@ -534,7 +423,6 @@ function LearnDetail() {
                     {!isEditing &&
                       videoData.scripts.map(({ id, order, text, startTime, endTime }, i) => (
                         <StScriptText
-                          ref={contextMenuRef}
                           onContextMenu={(e) => {
                             e.preventDefault();
                             setOrder(i + 1);
@@ -542,14 +430,15 @@ function LearnDetail() {
                           }}
                           key={id}
                           onClick={() => player?.seekTo(startTime, true)}
-                          markStyles={createMarkStyles(text)}
+                          underline={underlineMemo(text, memoList)}
                           isActive={startTime <= currentTime && currentTime < endTime}>
                           <div id={id.toString()} dangerouslySetInnerHTML={{ __html: text }}></div>
                         </StScriptText>
                       ))}
                     {!isEditing && isContextMenuOpen && rightClickedElement && (
                       <ContextMenu
-                        clickedMemoId={clickedMemo?.id}
+                        ref={contextMenuRef}
+                        clickedMemoId={memoInfo.id}
                         rightClickedElement={rightClickedElement}
                         isEditing={isEditing}
                         setMemoState={setMemoState}
@@ -612,42 +501,16 @@ function LearnDetail() {
                     onEnd={(e) => e.target.seekTo(videoData.startTime)}
                   />
                 </StVideoWrapper>
-                <StStudyLogContainer>
-                  <StStudyLogTabList role="tablist">
-                    <StStudyLogTab
-                      role="tab"
-                      aria-selected={studyLogTab === 'memo'}
-                      isActive={studyLogTab === 'memo'}
-                      onClick={() => setStudyLogTab('memo')}>
-                      메모
-                    </StStudyLogTab>
-                    <StStudyLogTab
-                      role="tab"
-                      aria-selected={studyLogTab === 'record'}
-                      isActive={studyLogTab === 'record'}
-                      onClick={() => setStudyLogTab('record')}>
-                      녹음
-                    </StStudyLogTab>
-                  </StStudyLogTabList>
-                  {studyLogTab === 'memo' ? (
-                    <StMemoWrapper>
-                      {memoList.length || memoState.newMemoId !== INITIAL_NUMBER ? (
-                        <MemoList
-                          memoList={memoList}
-                          memoState={memoState}
-                          memoInfo={memoInfo}
-                          setMemoList={setMemoList}
-                          setMemoState={setMemoState}
-                          onMemoModal={handleMemoModal}
-                        />
-                      ) : (
-                        <EmptyMemo />
-                      )}
-                    </StMemoWrapper>
-                  ) : (
-                    <RecordLog scriptId={currentScriptId} isRecordSaved={isRecordSaved} />
-                  )}
-                </StStudyLogContainer>
+                <StudyLog
+                  currentScriptId={currentScriptId}
+                  isRecordSaved={isRecordSaved}
+                  memoInfo={memoInfo}
+                  memoList={memoList}
+                  memoState={memoState}
+                  setMemoList={setMemoList}
+                  setMemoState={setMemoState}
+                  onMemoModal={handleMemoModal}
+                />
               </aside>
             </main>
             {isGuideOver && (
@@ -932,7 +795,7 @@ const StLearnSection = styled.section<{ isGuide: boolean }>`
   }
 `;
 
-const StScriptText = styled.div<{ isActive: boolean; markStyles: string }>`
+const StScriptText = styled.div<{ isActive: boolean; underline: string }>`
   position: relative;
   font-size: 2.6rem;
   font-weight: ${({ isActive }) => (isActive ? 600 : 400)};
@@ -952,7 +815,7 @@ const StScriptText = styled.div<{ isActive: boolean; markStyles: string }>`
     color: ${({ isActive }) => (isActive ? COLOR.MAIN_BLUE : COLOR.BLACK)};
   }
 
-  ${({ markStyles }) => markStyles};
+  ${({ underline }) => underline};
 
   & > mark:hover {
     color: ${COLOR.MAIN_BLUE};
@@ -992,35 +855,4 @@ const StVideoWrapper = styled.div`
     top: 0;
     opacity: 1;
   }
-`;
-
-const StStudyLogContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const StStudyLogTabList = styled.ul`
-  display: flex;
-  align-items: center;
-  margin-bottom: 2rem;
-`;
-
-const StStudyLogTab = styled.li<{ isActive: boolean }>`
-  color: ${({ isActive }) => (isActive ? COLOR.BLACK : COLOR.GRAY_30)};
-  ${FONT_STYLES.SB_24_HEADLINE};
-  cursor: pointer;
-
-  &:not(:last-child):after {
-    content: '|';
-    margin: 0 1.6rem;
-    color: ${COLOR.GRAY_30};
-    font-weight: 400;
-  }
-`;
-
-const StMemoWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  position: relative;
 `;

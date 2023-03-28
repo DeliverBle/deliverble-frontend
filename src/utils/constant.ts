@@ -83,11 +83,13 @@ export const INITIAL_MEMO_STATE = {
 };
 
 export const INITIAL_MEMO = {
+  id: INITIAL_NUMBER,
   scriptId: INITIAL_NUMBER,
   order: INITIAL_NUMBER,
   startIndex: INITIAL_NUMBER,
   keyword: '',
   highlightId: '',
+  content: '',
 };
 
 export const STATUS_CODE = {
