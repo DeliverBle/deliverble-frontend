@@ -1,59 +1,22 @@
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState, MouseEvent } from 'react';
 import HighlightModal from './HighlightModal';
 import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
-import { api } from '@src/services/api';
-import ContextMenu from '@src/components/learnDetail/ContextMenu';
-import { MemoData, VideoData } from '@src/services/api/types/learn-detail';
-import { useRouter } from 'next/router';
-import { MemoState } from '@src/pages/learn/[id]';
-import useClickOutside from '@src/hooks/useClickOutside';
-import { MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
+import { VideoData } from '@src/services/api/types/learn-detail';
 
 interface ScriptEditProps {
-  isEditing: boolean;
+  videoData: VideoData;
   isHighlight: boolean;
   isSpacing: boolean;
-  clickedTitleIndex: number;
-  memoList: MemoData[];
-  setMemoState: Dispatch<SetStateAction<MemoState>>;
-  updateMemoList: (type: MemoConfirmModalKey, content?: string) => void;
+  handleRightClick: (e: MouseEvent, scriptId: number, order: number) => void;
+  setOrder: Dispatch<SetStateAction<number | undefined>>;
+  nodeToText: (anchorNode: Node | null | undefined) => void;
 }
 
 function ScriptEdit(props: ScriptEditProps) {
-  const router = useRouter();
-  const { id: detailId } = router.query;
-  const { isEditing, isHighlight, isSpacing, clickedTitleIndex, memoList, setMemoState, updateMemoList } = props;
+  const { isHighlight, isSpacing, handleRightClick, videoData, setOrder, nodeToText } = props;
   const [highlightAlert, setHighlightAlert] = useState<boolean>(false);
-  const [order, setOrder] = useState<number>();
-  const [text, setText] = useState<string>();
-  const [videoData, setVideoData] = useState<VideoData>();
   const learnRef = useRef<HTMLDivElement>(null);
-  const [isContextMenuOpen, setIsContextMenuOpen] = useState<boolean>(false);
-  const [rightClickedElement, setRightClickedElement] = useState<HTMLElement>();
-  const contextMenuRef = useRef<HTMLDivElement>(null);
-  const [clickedDeleteType, setClickedDeleteType] = useState<string>('');
-
-  useEffect(() => {
-    (async () => {
-      if (order !== -1 && text !== '' && order && text && videoData?.names) {
-        const id = videoData?.names[clickedTitleIndex].id;
-        await api.learnDetailService.postSentenceData(
-          {
-            order,
-            text,
-          },
-          id,
-          clickedTitleIndex,
-        );
-        const data = await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedTitleIndex);
-        setVideoData(data);
-        setText('');
-        setOrder(-1);
-      }
-    })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [order, text]);
 
   useEffect(() => {
     if (highlightAlert) {
@@ -67,59 +30,6 @@ function ScriptEdit(props: ScriptEditProps) {
       }
     }
   }, [highlightAlert]);
-
-  const isHighlightInMemo = () => {
-    const highlightId = rightClickedElement && rightClickedElement.id;
-    const deleteMemoId = memoList.find((memo) => memo.highlightId === highlightId)?.id;
-    deleteMemoId && setMemoState((prev: MemoState) => ({ ...prev, deleteMemoId }));
-    updateMemoList('delete');
-  };
-
-  const deleteElement = () => {
-    if (rightClickedElement) {
-      const parentElement = rightClickedElement.parentElement;
-      const removeElement = document.getElementById(rightClickedElement.id);
-      const fragment = document.createDocumentFragment();
-      const div = document.createElement('div');
-      const blank = document.createTextNode(' ');
-
-      switch (clickedDeleteType) {
-        case 'MARK':
-          if (removeElement?.innerHTML) {
-            div.innerHTML = removeElement?.innerHTML;
-          }
-          while (div.firstChild) {
-            fragment.appendChild(div.firstChild);
-          }
-          removeElement?.replaceWith(fragment);
-          nodeToText(parentElement);
-          isHighlightInMemo();
-          break;
-        case 'SPAN':
-          if (removeElement) {
-            removeElement.replaceWith(blank);
-          }
-          nodeToText(parentElement);
-          break;
-      }
-    }
-  };
-
-  useEffect(() => {
-    setClickedDeleteType('');
-    if (clickedDeleteType) {
-      deleteElement();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [clickedDeleteType]);
-
-  const handleRightClick = (e: React.MouseEvent) => {
-    const contextTarget = e.target as HTMLElement;
-    if (contextTarget.closest('mark') || contextTarget.closest('span')) {
-      setIsContextMenuOpen(true);
-      setRightClickedElement(contextTarget);
-    }
-  };
 
   const handleClick = (e: React.MouseEvent) => {
     const selection = window.getSelection();
@@ -219,55 +129,6 @@ function ScriptEdit(props: ScriptEditProps) {
     nodeToText(selection?.anchorNode);
   };
 
-  const nodeToText = (anchorNode: Node | null | undefined) => {
-    let textValue = '';
-    if (anchorNode?.nodeName === 'MARK') {
-      nodeToText(anchorNode.parentNode);
-      return;
-    }
-
-    if (anchorNode?.childNodes) {
-      for (let i = 0; i < anchorNode?.childNodes.length; i++) {
-        const childNodeItem = anchorNode?.childNodes[i] as HTMLElement;
-        const elementId = childNodeItem?.id;
-        switch (childNodeItem.nodeName) {
-          case '#text':
-            textValue += childNodeItem.nodeValue;
-            break;
-          case 'MARK':
-            if (childNodeItem.textContent?.includes('/')) {
-              const markInnerHTML = childNodeItem.innerHTML;
-              textValue += `<mark id=${elementId}>${markInnerHTML}</mark>`;
-            } else {
-              textValue += `<mark id=${elementId}>${childNodeItem.textContent}</mark>`;
-            }
-            break;
-          case 'SPAN':
-            textValue += `<span id=${elementId}>/</span>`;
-            break;
-        }
-      }
-      setText(textValue);
-    }
-  };
-
-  useEffect(() => {
-    (async () => {
-      const data = await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedTitleIndex);
-      setVideoData(data);
-    })();
-  }, [clickedTitleIndex, detailId]);
-
-  useClickOutside({
-    isEnabled: isContextMenuOpen,
-    handleClickOutside: (e: Event) => {
-      const eventTarget = e.target as HTMLElement;
-      if (isContextMenuOpen && !contextMenuRef?.current?.contains(eventTarget)) {
-        setIsContextMenuOpen(false);
-      }
-    },
-  });
-
   return (
     <>
       <StWrapper
@@ -280,26 +141,17 @@ function ScriptEdit(props: ScriptEditProps) {
         onPaste={(e) => e.preventDefault()}
         onKeyDown={(e) => e.preventDefault()}
         ref={learnRef}>
-        {videoData?.scripts.map(({ id, text }, i) => (
+        {videoData?.scripts.map(({ id, text, order }, i) => (
           <StScriptText
             onContextMenu={(e) => {
               e.preventDefault();
-              handleRightClick(e);
+              handleRightClick(e, videoData.scriptsId, order);
               setOrder(i + 1);
             }}
             key={id}
             onClick={() => setOrder(i + 1)}
             dangerouslySetInnerHTML={{ __html: text }}></StScriptText>
         ))}
-        {isContextMenuOpen && rightClickedElement && (
-          <ContextMenu
-            ref={contextMenuRef}
-            rightClickedElement={rightClickedElement}
-            isEditing={isEditing}
-            setIsContextMenuOpen={setIsContextMenuOpen}
-            setClickedDeleteType={setClickedDeleteType}
-          />
-        )}
       </StWrapper>
       {highlightAlert && <HighlightModal closeModal={() => setHighlightAlert(false)} />}
     </>
