@@ -106,11 +106,7 @@ function MemoForm(props: MemoFormProps) {
           <ImageDiv src={icMemoXButton} alt="취소" />
         </button>
         <StDoneButton type="button" onClick={() => handleDone()} textLength={textLength}>
-          {textLength ? (
-            <ImageDiv src={icCheckButton} alt="완료" />
-          ) : (
-            <ImageDiv src={icInactiveCheckButton} alt="비활성화" />
-          )}
+          <ImageDiv src={textLength ? icCheckButton : icInactiveCheckButton} alt="완료" />
         </StDoneButton>
       </StButtonContainer>
     </StMemoForm>

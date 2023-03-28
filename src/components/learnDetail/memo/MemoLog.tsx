@@ -4,7 +4,6 @@ import MemoItem from '@src/components/learnDetail/memo/MemoItem';
 import { MemoState } from '@src/pages/learn/[id]';
 import { MemoData } from '@src/services/api/types/learn-detail';
 import { COLOR } from '@src/styles/color';
-import { INITIAL_NUMBER } from '@src/utils/constant';
 import { Dispatch, SetStateAction } from 'react';
 import styled from 'styled-components';
 
@@ -21,7 +20,7 @@ function MemoLog(props: MemoLogProps) {
 
   return (
     <StMemoLog>
-      {memoList.length || memoState.newMemoId !== INITIAL_NUMBER ? (
+      {memoList.length ? (
         <StMemoList>
           {memoList.map((memo) => (
             <MemoItem

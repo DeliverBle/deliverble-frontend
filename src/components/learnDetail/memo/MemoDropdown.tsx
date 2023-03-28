@@ -16,27 +16,25 @@ function MemoDropdown(props: MemoDropdownProps) {
   const { memoData, setMemoState, onMemoModal } = props;
   const { id } = memoData;
 
+  const handleClickEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    id && setMemoState((prev: MemoState) => ({ ...prev, editMemoId: id }));
+  };
+
   const handleClickDelete = () => {
     id && setMemoState((prev: MemoState) => ({ ...prev, deleteMemoId: id }));
     onMemoModal('delete');
   };
 
   return (
-    <>
-      <StMemoDropdown>
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            id && setMemoState((prev: MemoState) => ({ ...prev, editMemoId: id }));
-          }}>
-          메모 수정
-        </button>
-        <button type="button" onClick={handleClickDelete}>
-          메모 삭제
-        </button>
-      </StMemoDropdown>
-    </>
+    <StMemoDropdown>
+      <button type="button" onClick={handleClickEdit}>
+        메모 수정
+      </button>
+      <button type="button" onClick={handleClickDelete}>
+        메모 삭제
+      </button>
+    </StMemoDropdown>
   );
 }
 
