@@ -90,8 +90,6 @@ function useDeleteElement(props: useDeleteElementProps) {
 
   useEffect(() => {
     (async () => {
-      console.log('order', order);
-      console.log('text', text);
       if (order !== -1 && text !== '' && order && text && videoData?.names) {
         const id = videoData?.names[clickedTitleIndex].id;
         await api.learnDetailService.postSentenceData({ order, text }, id, clickedTitleIndex);
