@@ -21,7 +21,7 @@ function useRightClickHandler(props: useRightClickHandlerProps) {
     const element = clickedElement.closest('mark, span') as HTMLElement;
     if (element?.tagName === 'MARK') {
       handleRightClickOnMark(element, scriptId, order);
-    } else {
+    } else if (element?.tagName === 'SPAN') {
       setIsContextMenuOpen(true);
     }
   };

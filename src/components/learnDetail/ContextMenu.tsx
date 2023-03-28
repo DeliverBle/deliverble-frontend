@@ -1,37 +1,24 @@
-import { MemoState } from '@src/pages/learn/[id]';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { INITIAL_NUMBER } from '@src/utils/constant';
 import { calcContextMenuPoint } from '@src/utils/contextMenu';
-import React, { Dispatch, forwardRef, Ref, SetStateAction } from 'react';
+import { forwardRef, Ref } from 'react';
 import styled, { css } from 'styled-components';
 
 interface ContextMenuProps {
   clickedMemoId?: number;
   rightClickedElement: HTMLElement;
   isEditing: boolean;
-  setMemoState?: Dispatch<SetStateAction<MemoState>>;
   setIsContextMenuOpen: (open: boolean) => void;
   setClickedDeleteType: (type: string) => void;
+  handleMemoState?: (e: React.MouseEvent) => void;
 }
 
 function ContextMenu(props: ContextMenuProps, ref: Ref<HTMLDivElement>) {
-  const { clickedMemoId, rightClickedElement, isEditing, setMemoState, setIsContextMenuOpen, setClickedDeleteType } =
+  const { clickedMemoId, rightClickedElement, isEditing, setIsContextMenuOpen, setClickedDeleteType, handleMemoState } =
     props;
   const { x, y } = calcContextMenuPoint(rightClickedElement);
   const clickedTag = rightClickedElement.tagName;
-
-  const handleMemoState = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (setMemoState) {
-      setMemoState((prev: MemoState) =>
-        clickedMemoId && clickedMemoId !== INITIAL_NUMBER
-          ? { ...prev, editMemoId: clickedMemoId }
-          : { ...prev, newMemoId: 0 },
-      );
-    }
-    setIsContextMenuOpen(false);
-  };
 
   const handleContextMenu = (e: React.MouseEvent, type: string) => {
     e.stopPropagation();

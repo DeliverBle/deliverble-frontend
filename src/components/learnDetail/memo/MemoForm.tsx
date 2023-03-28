@@ -1,7 +1,6 @@
 import { MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
 import useClickOutside from '@src/hooks/useClickOutside';
 import { MemoState } from '@src/pages/learn/[id]';
-import { api } from '@src/services/api';
 import { MemoData } from '@src/services/api/types/learn-detail';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
@@ -12,17 +11,16 @@ import styled, { css } from 'styled-components';
 import ImageDiv from '../../common/ImageDiv';
 
 interface MemoFormProps {
-  scriptId: number;
   memoData: MemoData;
   memoState: MemoState;
-  setMemoList: (memoList: MemoData[]) => void;
   setMemoState: Dispatch<SetStateAction<MemoState>>;
   onMemoModal: (type: MemoConfirmModalKey) => void;
+  updateMemoList: (type: MemoConfirmModalKey, content?: string) => void;
 }
 
 function MemoForm(props: MemoFormProps) {
-  const { scriptId, memoData, memoState, setMemoList, setMemoState, onMemoModal } = props;
-  const { id, keyword, content, order, startIndex, highlightId } = memoData;
+  const { memoData, memoState, setMemoState, onMemoModal, updateMemoList } = props;
+  const { content } = memoData;
   const { newMemoId, editMemoId } = memoState;
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [textLength, setTextLength] = useState(0);
@@ -63,35 +61,14 @@ function MemoForm(props: MemoFormProps) {
     editMemoId !== INITIAL_NUMBER && onMemoModal('edit');
   };
 
-  const createMemo = async (newContent: string) => {
-    const memoList = await api.learnDetailService.postMemoData(
-      {
-        keyword,
-        order,
-        startIndex,
-        content: newContent,
-        highlightId,
-      },
-      scriptId,
-    );
-    memoList && setMemoList(memoList);
-    setMemoState(INITIAL_MEMO_STATE);
-  };
-
-  const updateMemo = async (newContent: string) => {
-    const memoList = id && (await api.learnDetailService.updateMemoData(id, newContent));
-    memoList && setMemoList(memoList);
-    setMemoState(INITIAL_MEMO_STATE);
-  };
-
-  const handleDone = async (target?: HTMLElement) => {
+  const handleDone = (target?: HTMLElement) => {
     const textarea = textareaRef.current;
     if (!textarea) return;
 
     const newContent = textarea.value;
     if (newContent) {
-      newMemoId !== INITIAL_NUMBER && createMemo(newContent);
-      editMemoId !== INITIAL_NUMBER && updateMemo(newContent);
+      newMemoId !== INITIAL_NUMBER && updateMemoList('new', newContent);
+      editMemoId !== INITIAL_NUMBER && updateMemoList('edit', newContent);
       return;
     }
 
@@ -129,11 +106,7 @@ function MemoForm(props: MemoFormProps) {
           <ImageDiv src={icMemoXButton} alt="취소" />
         </button>
         <StDoneButton type="button" onClick={() => handleDone()} textLength={textLength}>
-          {textLength ? (
-            <ImageDiv src={icCheckButton} alt="완료" />
-          ) : (
-            <ImageDiv src={icInactiveCheckButton} alt="비활성화" />
-          )}
+          <ImageDiv src={textLength ? icCheckButton : icInactiveCheckButton} alt="완료" />
         </StDoneButton>
       </StButtonContainer>
     </StMemoForm>

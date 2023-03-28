@@ -1,35 +1,38 @@
 import { MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
 import EmptyMemo from '@src/components/learnDetail/memo/EmptyMemo';
-import MemoList from '@src/components/learnDetail/memo/MemoList';
-import { MemoInfo, MemoState } from '@src/pages/learn/[id]';
+import MemoItem from '@src/components/learnDetail/memo/MemoItem';
+import { MemoState } from '@src/pages/learn/[id]';
 import { MemoData } from '@src/services/api/types/learn-detail';
-import { INITIAL_NUMBER } from '@src/utils/constant';
+import { COLOR } from '@src/styles/color';
 import { Dispatch, SetStateAction } from 'react';
 import styled from 'styled-components';
 
 interface MemoLogProps {
-  memoInfo: MemoInfo;
   memoList: MemoData[];
   memoState: MemoState;
-  setMemoList: Dispatch<SetStateAction<MemoData[]>>;
   setMemoState: Dispatch<SetStateAction<MemoState>>;
   onMemoModal: (type: MemoConfirmModalKey) => void;
+  updateMemoList: (type: MemoConfirmModalKey, content?: string) => void;
 }
 
 function MemoLog(props: MemoLogProps) {
-  const { memoInfo, memoList, memoState, setMemoList, setMemoState, onMemoModal } = props;
+  const { memoList, memoState, setMemoState, onMemoModal, updateMemoList } = props;
 
   return (
     <StMemoLog>
-      {memoList.length || memoState.newMemoId !== INITIAL_NUMBER ? (
-        <MemoList
-          memoList={memoList}
-          memoState={memoState}
-          memoInfo={memoInfo}
-          setMemoList={setMemoList}
-          setMemoState={setMemoState}
-          onMemoModal={onMemoModal}
-        />
+      {memoList.length ? (
+        <StMemoList>
+          {memoList.map((memo) => (
+            <MemoItem
+              key={memo.id}
+              memoData={memo}
+              memoState={memoState}
+              setMemoState={setMemoState}
+              onMemoModal={onMemoModal}
+              updateMemoList={updateMemoList}
+            />
+          ))}
+        </StMemoList>
       ) : (
         <EmptyMemo />
       )}
@@ -44,4 +47,23 @@ const StMemoLog = styled.div`
   flex-direction: column;
   justify-content: center;
   position: relative;
+`;
+
+const StMemoList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+
+  height: 40.7rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 1rem;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: ${COLOR.GRAY_10};
+    border-radius: 1.3rem;
+  }
 `;

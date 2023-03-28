@@ -14,17 +14,16 @@ import { isGuideAtom } from '@src/stores/newsState';
 import { MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
 
 interface MemoProps {
-  scriptId: number;
   memoData: MemoData;
   memoState: MemoState;
-  setMemoList: (memoList: MemoData[]) => void;
   setMemoState: Dispatch<SetStateAction<MemoState>>;
   onMemoModal: (type: MemoConfirmModalKey) => void;
+  updateMemoList: (type: MemoConfirmModalKey, content?: string) => void;
 }
 
 function MemoItem(props: MemoProps) {
   const isGuide = useRecoilValue(isGuideAtom);
-  const { scriptId, memoData, memoState, setMemoList, setMemoState, onMemoModal } = props;
+  const { memoData, memoState, setMemoState, onMemoModal, updateMemoList } = props;
   const { id, keyword, content } = memoData;
   const [foldButton, setFoldButton] = useState(false);
 
@@ -54,12 +53,11 @@ function MemoItem(props: MemoProps) {
       <StKeyword>{keyword}</StKeyword>
       {!content || memoState.editMemoId === id ? (
         <MemoForm
-          scriptId={scriptId}
           memoData={memoData}
           memoState={memoState}
-          setMemoList={setMemoList}
           setMemoState={setMemoState}
           onMemoModal={onMemoModal}
+          updateMemoList={updateMemoList}
         />
       ) : (
         <>
