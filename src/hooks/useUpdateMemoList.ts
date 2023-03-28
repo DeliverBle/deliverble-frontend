@@ -6,14 +6,14 @@ import { api } from '@src/services/api';
 import { MemoData } from '@src/services/api/types/learn-detail';
 import { INITIAL_MEMO_STATE } from '@src/utils/constant';
 
-interface useRightClickHandlerProps {
+interface useUpdateMemoListProps {
   memoState: MemoState;
   memoInfo: MemoInfo;
   setMemoList: React.Dispatch<React.SetStateAction<MemoData[]>>;
   setMemoState: React.Dispatch<React.SetStateAction<MemoState>>;
 }
 
-function useUpdateMemoList(props: useRightClickHandlerProps) {
+function useUpdateMemoList(props: useUpdateMemoListProps) {
   const { memoState, memoInfo, setMemoList, setMemoState } = props;
 
   const createMemo = async (content: string) => {
@@ -30,8 +30,10 @@ function useUpdateMemoList(props: useRightClickHandlerProps) {
 
   const deleteMemo = async () => {
     const id = memoState.deleteMemoId !== -1 ? memoState.deleteMemoId : memoInfo.id;
-    const memoList = await api.learnDetailService.deleteMemoData(id);
-    memoList && setMemoList(memoList);
+    if (id !== -1) {
+      const memoList = await api.learnDetailService.deleteMemoData(id);
+      memoList && setMemoList(memoList);
+    }
   };
 
   const updateMemoList = (type: MemoConfirmModalKey, content?: string) => {
