@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "analyze": "cross-env ANALYZE=true next build"
   },
   "dependencies": {
     "axios": "^0.27.2",
@@ -36,6 +37,7 @@
     "@typescript-eslint/eslint-plugin": "^5.30.5",
     "@typescript-eslint/parser": "^5.30.5",
     "babel-plugin-styled-components": "^2.0.7",
+    "cross-env": "^7.0.3",
     "eslint": "^8.19.0",
     "eslint-config-next": "12.2.1",
     "eslint-config-prettier": "^8.5.0",
