@@ -17,7 +17,7 @@ function RecordDotButton(props: RecordDotButtonProps) {
   const { link, scriptId, setIsDataChanged, setIsNameChanging, setRecordLinkChanging } = props;
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const recordDropdownRef = useRef<HTMLDivElement>(null);
-  const RecordDropdown = dynamic(() => import('./RecordDropdown'));
+  const RecordDropdown = dynamic(() => import('./RecordDropdown'), { ssr: false });
 
   useClickOutside({
     isEnabled: isDropdownOpen,

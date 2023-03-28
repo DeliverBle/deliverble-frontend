@@ -27,7 +27,7 @@ function NewsList(props: NewsListProps) {
   const setIsGuide = useSetRecoilState(isGuideAtom);
   const { lockScroll, unlockScroll } = useBodyScrollLock();
   const login = useRecoilValue(loginState);
-  const LoginModal = dynamic(() => import('@src/components/login/LoginModal'));
+  const LoginModal = dynamic(() => import('@src/components/login/LoginModal'), { ssr: false });
 
   return (
     <StNewsList type={type}>

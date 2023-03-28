@@ -18,7 +18,7 @@ function MemoDotButton(props: MemoDotButtonProps) {
   const { memoData, setMemoState, onMemoModal } = props;
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const memoDropdownRef = useRef<HTMLDivElement>(null);
-  const MemoDropdown = dynamic(() => import('./MemoDropdown'));
+  const MemoDropdown = dynamic(() => import('./MemoDropdown'), { ssr: false });
 
   useClickOutside({
     isEnabled: isDropdownOpen,

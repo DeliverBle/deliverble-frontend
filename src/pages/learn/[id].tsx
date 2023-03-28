@@ -94,10 +94,10 @@ function LearnDetail() {
   const [currentScriptId, setCurrentScriptId] = useState(0);
   const { rightClickedElement, isContextMenuOpen, setIsContextMenuOpen, memoInfo, handleRightClick } =
     useRightClickHandler({ memoList, memoState });
-  const ContextMenu = dynamic(() => import('@src/components/learnDetail/ContextMenu'));
-  const GuideModal = dynamic(() => import('@src/components/learnDetail/GuideModal'));
-  const ConfirmModal = dynamic(() => import('@src/components/learnDetail/ConfirmModal'));
-  const LoginModal = dynamic(() => import('@src/components/login/LoginModal'));
+  const ContextMenu = dynamic(() => import('@src/components/learnDetail/ContextMenu'), { ssr: false });
+  const GuideModal = dynamic(() => import('@src/components/learnDetail/GuideModal'), { ssr: false });
+  const ConfirmModal = dynamic(() => import('@src/components/learnDetail/ConfirmModal'), { ssr: false });
+  const LoginModal = dynamic(() => import('@src/components/login/LoginModal'), { ssr: false });
 
   useEffect(() => {
     videoData?.scriptsId && setCurrentScriptId(videoData?.scriptsId);

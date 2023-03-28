@@ -21,7 +21,7 @@ function NavigationBar() {
   const login = useRecoilValue(loginState);
   const { lockScroll, unlockScroll } = useBodyScrollLock();
   const ProfileModal = dynamic(() => import('./ProfileModal'));
-  const LoginModal = dynamic(() => import('@src/components/login/LoginModal'));
+  const LoginModal = dynamic(() => import('@src/components/login/LoginModal'), { ssr: false });
 
   useClickOutside({
     isEnabled: isProfileModalOpen,
