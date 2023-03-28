@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import Link from 'next/link';
 import { MutableRefObject, useEffect } from 'react';
-import Lottie from 'lottie-react';
+import Lottie from 'lottie-light-react';
 import { step1Lottie, step2Lottie, step3Lottie } from 'public/assets/lottie';
 import {
   imgLandingBgFirst,

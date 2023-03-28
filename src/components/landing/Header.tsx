@@ -1,7 +1,7 @@
+import dynamic from 'next/dynamic';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { icDeliverbleBlue, icDeliverbleWhite } from 'public/assets/icons';
-import LoginModal from '../login/LoginModal';
 import { COLOR } from 'src/styles/color';
 import { FONT_STYLES } from 'src/styles/fontStyle';
 import ImageDiv from '../common/ImageDiv';
@@ -19,6 +19,7 @@ function Header(props: HeaderProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const isLoggedIn = useRecoilValue(loginState);
   const { lockScroll, unlockScroll } = useBodyScrollLock();
+  const LoginModal = dynamic(() => import('@src/components/login/LoginModal'), { ssr: false });
 
   return (
     <>

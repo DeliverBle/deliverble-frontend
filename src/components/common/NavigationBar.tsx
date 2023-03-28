@@ -10,9 +10,7 @@ import { icDeliverbleNav, icMypageButton } from 'public/assets/icons';
 import { useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import styled, { css } from 'styled-components';
-import LoginModal from '../login/LoginModal';
 import ImageDiv from './ImageDiv';
-import ProfileModal from './ProfileModal';
 
 function NavigationBar() {
   const router = useRouter();
@@ -22,6 +20,8 @@ function NavigationBar() {
   const profileImageRef = useRef<HTMLButtonElement>(null);
   const login = useRecoilValue(loginState);
   const { lockScroll, unlockScroll } = useBodyScrollLock();
+  const ProfileModal = dynamic(() => import('./ProfileModal'), { ssr: false });
+  const LoginModal = dynamic(() => import('@src/components/login/LoginModal'), { ssr: false });
 
   useClickOutside({
     isEnabled: isProfileModalOpen,
