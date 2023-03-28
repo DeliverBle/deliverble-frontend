@@ -42,6 +42,7 @@ import useRightClickHandler from '@src/hooks/useRightClickHandler';
 import StudyLog from '@src/components/learnDetail/StudyLog';
 import useClickOutside from '@src/hooks/useClickOutside';
 import useUpdateMemoList from '@src/hooks/useUpdateMemoList';
+import useDeleteElement from '@src/hooks/useDeleteElement';
 
 export interface MemoState {
   newMemoId: number;
@@ -60,7 +61,7 @@ export interface MemoInfo {
 
 function LearnDetail() {
   const router = useRouter();
-  const { id: detailId } = router.query;
+  const detailId = router.query.id as string;
   const [isGuide, setIsGuide] = useRecoilState(isGuideAtom);
   const isLoggedIn = useRecoilValue(loginState);
   const [videoData, setVideoData] = useState<VideoData>();
@@ -87,14 +88,19 @@ function LearnDetail() {
   const [memoState, setMemoState] = useState<MemoState>(INITIAL_MEMO_STATE);
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const [isRecordSaved, setIsRecordSaved] = useState<boolean>(false);
-  const [clickedDeleteType, setClickedDeleteType] = useState<string>('');
-  const [order, setOrder] = useState<number>();
-  const [text, setText] = useState<string>();
   const [similarNewsList, setSimilarNewsList] = useState<simpleVideoData[]>([]);
   const [currentScriptId, setCurrentScriptId] = useState(0);
   const { rightClickedElement, isContextMenuOpen, setIsContextMenuOpen, memoInfo, handleRightClick } =
     useRightClickHandler({ memoList, memoState });
   const updateMemoList = useUpdateMemoList({ memoState, memoInfo, setMemoList, setMemoState });
+  const { setOrder, setText, setClickedDeleteType, nodeToText } = useDeleteElement({
+    rightClickedElement,
+    clickedTitleIndex,
+    detailId,
+    videoData,
+    setVideoData,
+    updateMemoList,
+  });
   const ContextMenu = dynamic(() => import('@src/components/learnDetail/ContextMenu'), { ssr: false });
   const GuideModal = dynamic(() => import('@src/components/learnDetail/GuideModal'), { ssr: false });
   const ConfirmModal = dynamic(() => import('@src/components/learnDetail/ConfirmModal'), { ssr: false });
@@ -103,105 +109,6 @@ function LearnDetail() {
   useEffect(() => {
     videoData?.scriptsId && setCurrentScriptId(videoData?.scriptsId);
   }, [videoData, currentScriptId]);
-
-  useEffect(() => {
-    (async () => {
-      if (order !== -1 && text !== '' && order && text && videoData?.names) {
-        const id = videoData?.names[clickedTitleIndex].id;
-        await api.learnDetailService.postSentenceData(
-          {
-            order,
-            text,
-          },
-          id,
-          clickedTitleIndex,
-        );
-        const data = await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedTitleIndex);
-        setVideoData(data);
-        setText('');
-        setOrder(-1);
-      }
-    })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [order, text]);
-
-  const nodeToText = (anchorNode: Node | null | undefined) => {
-    let textValue = '';
-    if (anchorNode?.nodeName === 'MARK') {
-      nodeToText(anchorNode.parentNode);
-      return;
-    }
-
-    if (anchorNode?.childNodes) {
-      for (let i = 0; i < anchorNode?.childNodes.length; i++) {
-        const childNodeItem = anchorNode?.childNodes[i];
-        const elementId = childNodeItem.firstChild?.parentElement?.id;
-        switch (childNodeItem.nodeName) {
-          case '#text':
-            textValue += childNodeItem.nodeValue;
-            break;
-          case 'MARK':
-            if (childNodeItem.textContent?.includes('/')) {
-              const markInnerHTML = childNodeItem.firstChild?.parentElement?.innerHTML;
-              textValue += `<mark id=${elementId}>${markInnerHTML}</mark>`;
-            } else {
-              textValue += `<mark id=${elementId}>${childNodeItem.textContent}</mark>`;
-            }
-            break;
-          case 'SPAN':
-            textValue += `<span id=${elementId}>/</span>`;
-            break;
-        }
-      }
-      setText(textValue);
-    }
-  };
-
-  const isHighlightInMemo = () => {
-    const highlightId = rightClickedElement && rightClickedElement.id;
-    const deleteMemoId = memoList.find((memo) => memo.highlightId === highlightId)?.id;
-    deleteMemoId && setMemoState((prev: MemoState) => ({ ...prev, deleteMemoId }));
-    updateMemoList('delete');
-  };
-
-  const deleteElement = () => {
-    if (rightClickedElement) {
-      const parentElement = rightClickedElement.parentElement;
-      const removeElement = document.getElementById(rightClickedElement.id);
-      const fragment = document.createDocumentFragment();
-      const div = document.createElement('div');
-      const blank = document.createTextNode(' ');
-
-      switch (clickedDeleteType) {
-        case 'MARK':
-          if (removeElement?.innerHTML) {
-            div.innerHTML = removeElement?.innerHTML;
-          }
-          while (div.firstChild) {
-            fragment.appendChild(div.firstChild);
-          }
-          removeElement?.replaceWith(fragment);
-          nodeToText(parentElement);
-          isHighlightInMemo();
-          break;
-        case 'SPAN':
-          if (removeElement) {
-            removeElement.replaceWith(blank);
-          }
-          nodeToText(parentElement);
-          break;
-      }
-    }
-  };
-
-  useEffect(() => {
-    setClickedDeleteType('');
-    if (clickedDeleteType) {
-      deleteElement();
-      setIsContextMenuOpen(false);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [clickedDeleteType]);
 
   const handleScriptAdd = async () => {
     const response = await api.learnDetailService.postNewScriptData(Number(detailId));
@@ -445,7 +352,7 @@ function LearnDetail() {
                           <div id={id.toString()} dangerouslySetInnerHTML={{ __html: text }}></div>
                         </StScriptText>
                       ))}
-                    {!isEditing && isContextMenuOpen && rightClickedElement && (
+                    {isContextMenuOpen && rightClickedElement && (
                       <ContextMenu
                         ref={contextMenuRef}
                         clickedMemoId={memoInfo.id}
@@ -458,13 +365,12 @@ function LearnDetail() {
                     )}
                     {isEditing && (
                       <ScriptEdit
-                        isEditing={isEditing}
+                        videoData={videoData}
                         isHighlight={isHighlight}
                         isSpacing={isSpacing}
-                        clickedTitleIndex={clickedTitleIndex}
-                        memoList={memoList}
-                        setMemoState={setMemoState}
-                        updateMemoList={updateMemoList}
+                        handleRightClick={handleRightClick}
+                        nodeToText={nodeToText}
+                        setOrder={setOrder}
                       />
                     )}
                   </div>
