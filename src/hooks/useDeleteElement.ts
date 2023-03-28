@@ -1,14 +1,14 @@
 import { MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
 import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/learn-detail';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 interface useDeleteElementProps {
   rightClickedElement?: HTMLElement;
   clickedTitleIndex: number;
   detailId?: string | string[];
   videoData?: VideoData;
-  setVideoData: React.Dispatch<React.SetStateAction<VideoData | undefined>>;
+  setVideoData: Dispatch<SetStateAction<VideoData | undefined>>;
   updateMemoList: (type: MemoConfirmModalKey, content?: string) => void;
 }
 
