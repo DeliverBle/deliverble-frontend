@@ -1,30 +1,38 @@
 import ImageDiv from '@src/components/common/ImageDiv';
+import { SpeechGuideTooltip } from '@src/components/learnDetail/speechGuide';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
+import { useRouter } from 'next/router';
 import { icSpeechGuideInfo } from 'public/assets/icons';
-import { SetterOrUpdater } from 'recoil';
+import { useState } from 'react';
 import styled, { css } from 'styled-components';
 
-interface SpeechGuideTitleProps {
-  isGuide: boolean;
-  setIsGuide: SetterOrUpdater<boolean>;
-  setIsGuideOver: (over: boolean) => void;
-}
+function SpeechGuideTitle() {
+  const router = useRouter();
+  const { id, speechGuide } = router.query;
+  const [isGuideOver, setIsGuideOver] = useState<boolean>(false);
 
-function SpeechGuideTitle(props: SpeechGuideTitleProps) {
-  const { isGuide, setIsGuide, setIsGuideOver } = props;
+  const moveToSpeechGuide = () => {
+    if (!speechGuide) {
+      router.push({
+        pathname: `/learn/${id}`,
+        query: { speechGuide: true },
+      });
+    }
+  };
 
   return (
-    <StSpeechGuideTitle isGuide={isGuide} onClick={() => !isGuide && setIsGuide((prev) => !prev)}>
+    <StSpeechGuideTitle isGuide={Boolean(speechGuide)} onClick={moveToSpeechGuide}>
       <p>스피치 가이드</p>
       <ImageDiv
         aria-describedby="guide-tooltip"
         className="guide-info"
         src={icSpeechGuideInfo}
         alt="스피치 가이드 설명"
-        onMouseOver={() => isGuide && setIsGuideOver(true)}
-        onMouseOut={() => isGuide && setIsGuideOver(false)}
+        onMouseOver={() => speechGuide && setIsGuideOver(true)}
+        onMouseOut={() => speechGuide && setIsGuideOver(false)}
       />
+      {isGuideOver && <SpeechGuideTooltip />}
     </StSpeechGuideTitle>
   );
 }

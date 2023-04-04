@@ -9,9 +9,8 @@ import { MemoState } from '@src/pages/learn/[id]';
 import ImageDiv from '@src/components/common/ImageDiv';
 import { icArrowUp } from 'public/assets/icons';
 import { MemoData } from '@src/services/api/types/learn-detail';
-import { useRecoilValue } from 'recoil';
-import { isGuideAtom } from '@src/stores/newsState';
 import { MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
+import { useRouter } from 'next/router';
 
 interface MemoProps {
   memoData: MemoData;
@@ -22,10 +21,10 @@ interface MemoProps {
 }
 
 function MemoItem(props: MemoProps) {
-  const isGuide = useRecoilValue(isGuideAtom);
   const { memoData, memoState, setMemoState, onMemoModal, updateMemoList } = props;
   const { id, keyword, content } = memoData;
   const [foldButton, setFoldButton] = useState(false);
+  const isGuide = useRouter().query.speechGuide;
 
   const showContent = () => {
     if (content && content.length > MEMO_CONTENT_MAX) {

@@ -17,8 +17,8 @@ export default SpeechGuideTooltip;
 
 const StGuideTooltip = styled.div`
   position: absolute;
-  left: 17.8rem;
-  top: 1.6rem;
+  left: 12rem;
+  top: 6.3rem;
 
   padding: 1.6rem;
   width: 46.3rem;
@@ -28,6 +28,7 @@ const StGuideTooltip = styled.div`
   background: rgba(22, 15, 53, 0.7);
   color: white;
   white-space: pre-line;
+  z-index: 100;
 
   & > p:first-child {
     ${FONT_STYLES.B_20_BODY}

@@ -1,20 +1,17 @@
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import { SetterOrUpdater } from 'recoil';
+import { useRouter } from 'next/router';
 import styled from 'styled-components';
 
-interface LearningButtonProps {
-  setIsGuide: SetterOrUpdater<boolean>;
-}
-
-function LearningButton(props: LearningButtonProps) {
-  const { setIsGuide } = props;
+function LearningButton() {
+  const router = useRouter();
+  const { id } = router.query;
 
   return (
     <StLearnButton
       onClick={() => {
-        setIsGuide((prev) => !prev);
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        router.push(`/learn/${id}`);
       }}>
       학습하러 가기
     </StLearnButton>

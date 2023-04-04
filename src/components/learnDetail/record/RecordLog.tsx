@@ -16,8 +16,7 @@ import EmptyRecord from './EmptyRecord';
 import RecordDotButton from './RecordDotButton';
 import { api } from '@src/services/api';
 import { useMutation, useQuery } from 'react-query';
-import { useRecoilValue } from 'recoil';
-import { isGuideAtom } from '@src/stores/newsState';
+import { useRouter } from 'next/router';
 
 interface RecordStatusBarProps {
   scriptId: number;
@@ -38,7 +37,7 @@ function RecordLog(props: RecordStatusBarProps) {
   const progressRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef(new Audio());
   const nameInputRef = useRef<HTMLInputElement>(null);
-  const isGuide = useRecoilValue(isGuideAtom);
+  const isGuide = useRouter().query.speechGuide;
 
   const { data } = useQuery(
     ['recordData', isRecordSaved, isDataChanged, scriptId],

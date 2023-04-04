@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { useMutation, useQuery } from 'react-query';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import YouTube from 'react-youtube';
@@ -20,7 +20,6 @@ import { api } from '@src/services/api';
 import { MemoData, Name, VideoData } from '@src/services/api/types/learn-detail';
 import { VideoData as simpleVideoData } from '@src/services/api/types/home';
 import { loginState } from '@src/stores/loginState';
-import { isGuideAtom } from '@src/stores/newsState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import {
@@ -42,7 +41,7 @@ import StudyLog from '@src/components/learnDetail/StudyLog';
 import useClickOutside from '@src/hooks/useClickOutside';
 import useUpdateMemoList from '@src/hooks/useUpdateMemoList';
 import useDeleteElement from '@src/hooks/useDeleteElement';
-import { LearningButton, SpeechGuideTitle, SpeechGuideTooltip } from '@src/components/learnDetail/speechGuide';
+import { LearningButton, SpeechGuideTitle } from '@src/components/learnDetail/speechGuide';
 
 export interface MemoState {
   newMemoId: number;
@@ -61,9 +60,7 @@ export interface MemoInfo {
 
 function LearnDetail() {
   const router = useRouter();
-  const detailId = router.query.id as string;
-  const [isGuide, setIsGuide] = useRecoilState(isGuideAtom);
-  const [isGuideOver, setIsGuideOver] = useState<boolean>(false);
+  const { id: detailId, speechGuide } = router.query;
   const isLoggedIn = useRecoilValue(loginState);
   const [videoData, setVideoData] = useState<VideoData>();
   const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
@@ -96,7 +93,7 @@ function LearnDetail() {
   const { setOrder, setText, setClickedDeleteType, nodeToText } = useDeleteElement({
     rightClickedElement,
     clickedTitleIndex,
-    detailId,
+    detailId: String(detailId),
     videoData,
     setVideoData,
     updateMemoList,
@@ -221,7 +218,7 @@ function LearnDetail() {
     (async () => {
       const id = Number(detailId);
       if (!id) return;
-      const data = isGuide
+      const data = speechGuide
         ? await api.learnDetailService.getSpeechGuideData(id)
         : isLoggedIn
         ? await api.learnDetailService.getPrivateVideoData(id, clickedTitleIndex)
@@ -231,7 +228,7 @@ function LearnDetail() {
       setMemoList(memos ?? []);
       setTitleList(names ?? []);
     })();
-  }, [isLoggedIn, detailId, isEditing, isGuide, clickedTitleIndex]);
+  }, [isLoggedIn, detailId, isEditing, speechGuide, clickedTitleIndex]);
 
   useEffect(() => {
     setClickedTitleIndex(0);
@@ -298,9 +295,7 @@ function LearnDetail() {
           alt="이전 페이지로 돌아가기"
         />
         <StScriptTitleContainer>
-          {videoData?.haveGuide && (
-            <SpeechGuideTitle isGuide={isGuide} setIsGuide={setIsGuide} setIsGuideOver={setIsGuideOver} />
-          )}
+          {videoData?.haveGuide && <SpeechGuideTitle />}
           {videoData?.names &&
             videoData.names.map(({ id, name }, i) => (
               <ScriptTitle
@@ -321,10 +316,10 @@ function LearnDetail() {
           )}
         </StScriptTitleContainer>
         {videoData && (
-          <StLearnBox isGuide={isGuide}>
+          <StLearnBox isGuide={Boolean(speechGuide)}>
             <VideoDetail {...videoData} setIsGuideModalOpen={setIsGuideModalOpen} />
             <main>
-              <StLearnSection isGuide={isGuide}>
+              <StLearnSection isGuide={Boolean(speechGuide)}>
                 <article>
                   <div ref={learnRef}>
                     {!isEditing &&
@@ -333,7 +328,7 @@ function LearnDetail() {
                           onContextMenu={(e) => {
                             e.preventDefault();
                             setOrder(i + 1);
-                            !isGuide && handleRightClick(e, videoData.scriptsId, order);
+                            !speechGuide && handleRightClick(e, videoData.scriptsId, order);
                           }}
                           key={id}
                           onClick={() => player?.seekTo(startTime, true)}
@@ -365,7 +360,7 @@ function LearnDetail() {
                     )}
                   </div>
                   <div>
-                    <StButtonContainer isGuide={isGuide}>
+                    <StButtonContainer isGuide={Boolean(speechGuide)}>
                       <RecordStatusBar
                         scriptId={videoData.scriptsId}
                         isRecordSaved={isRecordSaved}
@@ -418,11 +413,10 @@ function LearnDetail() {
                 />
               </aside>
             </main>
-            {isGuideOver && <SpeechGuideTooltip />}
-            {isGuide && <LearningButton setIsGuide={setIsGuide} />}
+            {speechGuide && <LearningButton />}
           </StLearnBox>
         )}
-        {!isGuide && videoData && (
+        {!speechGuide && videoData && (
           <StNews>
             <h2>비슷한 주제의 영상으로 계속 연습해보세요.</h2>
             {isLoading ? (

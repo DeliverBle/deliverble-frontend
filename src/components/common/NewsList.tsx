@@ -1,14 +1,13 @@
 import { useBodyScrollLock } from '@src/hooks/useBodyScrollLock';
 import { VideoData } from '@src/services/api/types/home';
 import { loginState } from '@src/stores/loginState';
-import { isGuideAtom } from '@src/stores/newsState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { icSpeechGuideLogo } from 'public/assets/icons';
 import { useState } from 'react';
-import { useSetRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import styled, { css } from 'styled-components';
 import ImageDiv from './ImageDiv';
 import Like from './Like';
@@ -24,7 +23,6 @@ function NewsList(props: NewsListProps) {
   const router = useRouter();
   const [isWebpError, setIsWebpError] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const setIsGuide = useSetRecoilState(isGuideAtom);
   const { lockScroll, unlockScroll } = useBodyScrollLock();
   const login = useRecoilValue(loginState);
   const LoginModal = dynamic(() => import('@src/components/login/LoginModal'), { ssr: false });
@@ -38,8 +36,10 @@ function NewsList(props: NewsListProps) {
             key={id}
             type={type}
             onClick={() => {
-              setIsGuide(type === 'guide');
-              router.push(`/learn/${id}`);
+              router.push({
+                pathname: `/learn/${id}`,
+                query: { speechGuide: true },
+              });
             }}>
             {type === 'guide' && (
               <StGuideTitle>
