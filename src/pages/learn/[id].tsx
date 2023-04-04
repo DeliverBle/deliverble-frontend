@@ -28,14 +28,13 @@ import {
   INITIAL_MEMO_STATE,
   DELETE_SCRIPT_CONFIRM_MODAL_TEXT,
   SCRIPT_MAX_COUNT,
-  SPEECH_GUIDE_TOOLTIP_TEXT,
   VIDEO_STATE_CUED,
   VIDEO_STATE_PAUSED,
   NEW_MEMO_CONFIRM_MODAL_TEXT,
   MemoConfirmModalTextByType,
 } from '@src/utils/constant';
 import { useBodyScrollLock } from '@src/hooks/useBodyScrollLock';
-import { icSpeechGuideInfo, icXButton } from 'public/assets/icons';
+import { icXButton } from 'public/assets/icons';
 import ScriptEditButtonContainer from '@src/components/learnDetail/ScriptEditButtonContainer';
 import { underlineMemo } from '@src/utils/underlineMemo';
 import useRightClickHandler from '@src/hooks/useRightClickHandler';
@@ -43,6 +42,7 @@ import StudyLog from '@src/components/learnDetail/StudyLog';
 import useClickOutside from '@src/hooks/useClickOutside';
 import useUpdateMemoList from '@src/hooks/useUpdateMemoList';
 import useDeleteElement from '@src/hooks/useDeleteElement';
+import { LearningButton, SpeechGuideTitle, SpeechGuideTooltip } from '@src/components/learnDetail/speechGuide';
 
 export interface MemoState {
   newMemoId: number;
@@ -63,6 +63,7 @@ function LearnDetail() {
   const router = useRouter();
   const detailId = router.query.id as string;
   const [isGuide, setIsGuide] = useRecoilState(isGuideAtom);
+  const [isGuideOver, setIsGuideOver] = useState<boolean>(false);
   const isLoggedIn = useRecoilValue(loginState);
   const [videoData, setVideoData] = useState<VideoData>();
   const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
@@ -79,7 +80,6 @@ function LearnDetail() {
   const getLoginStatus = () => localStorage.getItem('token') ?? '';
   const [prevLink, setPrevLink] = useState('');
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [isGuideOver, setIsGuideOver] = useState<boolean>(false);
   const [titleList, setTitleList] = useState<Name[]>([]);
   const [clickedTitleIndex, setClickedTitleIndex] = useState(0);
   const [isTitleInputVisible, setIsTitleInputVisible] = useState(false);
@@ -299,17 +299,7 @@ function LearnDetail() {
         />
         <StScriptTitleContainer>
           {videoData?.haveGuide && (
-            <StGuideTitle isGuide={isGuide} onClick={() => !isGuide && setIsGuide((prev) => !prev)}>
-              <p>스피치 가이드</p>
-              <ImageDiv
-                aria-describedby="guide-tooltip"
-                className="guide-info"
-                src={icSpeechGuideInfo}
-                alt="스피치 가이드 설명"
-                onMouseOver={() => isGuide && setIsGuideOver(true)}
-                onMouseOut={() => isGuide && setIsGuideOver(false)}
-              />
-            </StGuideTitle>
+            <SpeechGuideTitle isGuide={isGuide} setIsGuide={setIsGuide} setIsGuideOver={setIsGuideOver} />
           )}
           {videoData?.names &&
             videoData.names.map(({ id, name }, i) => (
@@ -428,21 +418,8 @@ function LearnDetail() {
                 />
               </aside>
             </main>
-            {isGuideOver && (
-              <StGuideTooltip id="guide-tooltip" role="tooltip">
-                <p>{SPEECH_GUIDE_TOOLTIP_TEXT.title}</p>
-                <p>{SPEECH_GUIDE_TOOLTIP_TEXT.description}</p>
-              </StGuideTooltip>
-            )}
-            {isGuide && (
-              <StLearnButton
-                onClick={() => {
-                  setIsGuide((prev) => !prev);
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}>
-                학습하러 가기
-              </StLearnButton>
-            )}
+            {isGuideOver && <SpeechGuideTooltip />}
+            {isGuide && <LearningButton setIsGuide={setIsGuide} />}
           </StLearnBox>
         )}
         {!isGuide && videoData && (
@@ -529,38 +506,6 @@ const StScriptTitleContainer = styled.div`
   gap: 0.8rem;
 `;
 
-const StGuideTitle = styled.div<{ isGuide: boolean }>`
-  display: flex;
-  align-items: center;
-  position: relative;
-
-  padding: 1rem 0 1rem 2.4rem;
-  width: 19.2rem;
-  height: 4.8rem;
-  border-radius: 1.6rem 1.6rem 0 0;
-  background-color: ${COLOR.MAIN_BLUE};
-
-  color: ${COLOR.WHITE};
-  ${FONT_STYLES.B_20_BODY};
-
-  ${({ isGuide }) =>
-    !isGuide &&
-    css`
-      opacity: 0.6;
-      cursor: pointer;
-
-      &: hover {
-        opacity: 0.8;
-      }
-    `}
-
-  & > .guide-info {
-    display: flex;
-    align-items: center;
-    padding-left: 1.2rem;
-  }
-`;
-
 const StScriptAddButton = styled.button`
   width: 4rem;
   height: 4rem;
@@ -602,57 +547,6 @@ const StLearnBox = styled.div<{ isGuide: boolean }>`
       `
     );
   }}
-`;
-
-const StGuideTooltip = styled.div`
-  position: absolute;
-  left: 17.8rem;
-  top: 1.6rem;
-
-  padding: 1.6rem;
-  width: 46.3rem;
-  height: 10.9rem;
-  border-radius: 0.6rem;
-
-  background: rgba(22, 15, 53, 0.7);
-  color: white;
-  white-space: pre-line;
-
-  & > p:first-child {
-    ${FONT_STYLES.B_20_BODY}
-  }
-
-  & > p:last-child {
-    ${FONT_STYLES.M_16_CAPTION}
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    left: 2.6rem;
-    bottom: 100%;
-
-    border: solid transparent;
-    border-width: 0.8rem;
-    border-bottom-color: rgba(22, 15, 53, 0.7);
-    pointer-events: none;
-  }
-`;
-
-const StLearnButton = styled.button`
-  position: absolute;
-  top: 80%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
-  width: 20.9rem;
-  height: 8.2rem;
-  border-radius: 4.8rem;
-
-  background-color: ${COLOR.MAIN_BLUE};
-  box-shadow: 0.4rem 0.4rem 2rem rgba(22, 15, 53, 0.15);
-  color: ${COLOR.WHITE};
-  ${FONT_STYLES.SB_24_HEADLINE}
 `;
 
 const StLearnSection = styled.section<{ isGuide: boolean }>`
