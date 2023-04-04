@@ -38,7 +38,7 @@ function NewsList(props: NewsListProps) {
             onClick={() => {
               router.push({
                 pathname: `/learn/${id}`,
-                query: { speechGuide: true },
+                query: type === 'guide' ? { speechGuide: true } : undefined,
               });
             }}>
             {type === 'guide' && (
