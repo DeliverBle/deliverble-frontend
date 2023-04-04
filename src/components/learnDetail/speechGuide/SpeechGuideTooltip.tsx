@@ -1,12 +1,14 @@
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import { SPEECH_GUIDE_TOOLTIP_TEXT } from '@src/utils/constant';
 import styled from 'styled-components';
 
 function SpeechGuideTooltip() {
   return (
     <StGuideTooltip id="guide-tooltip" role="tooltip">
-      <p>{SPEECH_GUIDE_TOOLTIP_TEXT.title}</p>
-      <p>{SPEECH_GUIDE_TOOLTIP_TEXT.description}</p>
+      <p>현재 화면은 스피치 가이드입니다!</p>
+      <p>
+        스피치 연습이 처음인 유저를 위해 가이드라인을 준비했어요. <br />
+        어디를 강조해야 하는지, 무엇을 유의하며 읽어야 하는지 파악해보세요.
+      </p>
     </StGuideTooltip>
   );
 }

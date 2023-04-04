@@ -33,12 +33,6 @@ export const DELETE_SCRIPT_CONFIRM_MODAL_TEXT = {
   rightButtonText: '삭제하기',
 };
 
-export const SPEECH_GUIDE_TOOLTIP_TEXT = {
-  title: '현재 화면은 스피치 가이드입니다!',
-  description: `스피치 연습이 처음인 유저를 위해 가이드라인을 준비했어요. 
-    어디를 강조해야 하는지, 무엇을 유의하며 읽어야 하는지 파악해보세요.`,
-};
-
 export const BANNER_TEXT_LIST = [
   {
     mainText: `우리는 말하는 법은 배웠지만,
