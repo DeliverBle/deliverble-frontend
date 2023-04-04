@@ -316,10 +316,10 @@ function LearnDetail() {
           )}
         </StScriptTitleContainer>
         {videoData && (
-          <StLearnBox isGuide={Boolean(speechGuide)}>
+          <StLearnBox isSpeechGuide={Boolean(speechGuide)}>
             <VideoDetail {...videoData} setIsGuideModalOpen={setIsGuideModalOpen} />
             <main>
-              <StLearnSection isGuide={Boolean(speechGuide)}>
+              <StLearnSection isSpeechGuide={Boolean(speechGuide)}>
                 <article>
                   <div ref={learnRef}>
                     {!isEditing &&
@@ -360,7 +360,7 @@ function LearnDetail() {
                     )}
                   </div>
                   <div>
-                    <StButtonContainer isGuide={Boolean(speechGuide)}>
+                    <StButtonContainer isSpeechGuide={Boolean(speechGuide)}>
                       <RecordStatusBar
                         scriptId={videoData.scriptsId}
                         isRecordSaved={isRecordSaved}
@@ -512,7 +512,7 @@ const StScriptAddButton = styled.button`
   }
 `;
 
-const StLearnBox = styled.div<{ isGuide: boolean }>`
+const StLearnBox = styled.div<{ isSpeechGuide: boolean }>`
   display: flex;
   flex-direction: column;
   position: relative;
@@ -533,9 +533,9 @@ const StLearnBox = styled.div<{ isGuide: boolean }>`
     }
   }
 
-  ${({ isGuide }) => {
+  ${({ isSpeechGuide }) => {
     return (
-      isGuide &&
+      isSpeechGuide &&
       css`
         outline: 0.6rem solid ${COLOR.MAIN_BLUE};
       `
@@ -543,7 +543,7 @@ const StLearnBox = styled.div<{ isGuide: boolean }>`
   }}
 `;
 
-const StLearnSection = styled.section<{ isGuide: boolean }>`
+const StLearnSection = styled.section<{ isSpeechGuide: boolean }>`
   display: flex;
   flex-direction: column;
   padding-bottom: 8rem;
@@ -594,7 +594,7 @@ const StLearnSection = styled.section<{ isGuide: boolean }>`
       justify-content: flex-end;
       padding-top: 1.8rem;
       margin-top: 2.4rem;
-      border-top: ${({ isGuide }) => !isGuide && `0.2rem solid ${COLOR.GRAY_10}`};
+      border-top: ${({ isSpeechGuide }) => !isSpeechGuide && `0.2rem solid ${COLOR.GRAY_10}`};
     }
   }
 `;
@@ -627,8 +627,8 @@ const StScriptText = styled.div<{ isActive: boolean; underline: string }>`
   }
 `;
 
-const StButtonContainer = styled.div<{ isGuide: boolean }>`
-  visibility: ${({ isGuide }) => (isGuide ? 'hidden' : 'visible')};
+const StButtonContainer = styled.div<{ isSpeechGuide: boolean }>`
+  visibility: ${({ isSpeechGuide }) => (isSpeechGuide ? 'hidden' : 'visible')};
   display: flex;
   gap: 0.8rem;
   position: relative;

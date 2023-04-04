@@ -10,7 +10,7 @@ import styled, { css } from 'styled-components';
 function SpeechGuideTitle() {
   const router = useRouter();
   const { id, speechGuide } = router.query;
-  const [isGuideOver, setIsGuideOver] = useState<boolean>(false);
+  const [isInfoHovered, setIsInfoHovered] = useState<boolean>(false);
 
   const moveToSpeechGuide = () => {
     if (!speechGuide) {
@@ -22,24 +22,24 @@ function SpeechGuideTitle() {
   };
 
   return (
-    <StSpeechGuideTitle isGuide={Boolean(speechGuide)} onClick={moveToSpeechGuide}>
+    <StSpeechGuideTitle isSpeechGuide={Boolean(speechGuide)} onClick={moveToSpeechGuide}>
       <p>스피치 가이드</p>
       <ImageDiv
         aria-describedby="guide-tooltip"
         className="guide-info"
         src={icSpeechGuideInfo}
         alt="스피치 가이드 설명"
-        onMouseOver={() => speechGuide && setIsGuideOver(true)}
-        onMouseOut={() => speechGuide && setIsGuideOver(false)}
+        onMouseOver={() => speechGuide && setIsInfoHovered(true)}
+        onMouseOut={() => speechGuide && setIsInfoHovered(false)}
       />
-      {isGuideOver && <SpeechGuideTooltip />}
+      {isInfoHovered && <SpeechGuideTooltip />}
     </StSpeechGuideTitle>
   );
 }
 
 export default SpeechGuideTitle;
 
-const StSpeechGuideTitle = styled.div<{ isGuide: boolean }>`
+const StSpeechGuideTitle = styled.div<{ isSpeechGuide: boolean }>`
   display: flex;
   align-items: center;
   position: relative;
@@ -53,8 +53,8 @@ const StSpeechGuideTitle = styled.div<{ isGuide: boolean }>`
   color: ${COLOR.WHITE};
   ${FONT_STYLES.B_20_BODY};
 
-  ${({ isGuide }) =>
-    !isGuide &&
+  ${({ isSpeechGuide }) =>
+    !isSpeechGuide &&
     css`
       opacity: 0.6;
       cursor: pointer;
