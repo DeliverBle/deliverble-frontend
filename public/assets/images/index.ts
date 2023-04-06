@@ -4,7 +4,7 @@ export { default as imgLandingBubble } from './img_landing_bubble.svg';
 export { default as imgLandingEar } from './img_landing_ear.svg';
 export { default as imgLandingFist } from './img_landing_fist.svg';
 export { default as imgLandingMic } from './img_landing_mic.svg';
-export { default as imgReviewEmpty } from './img_review_empty.svg';
+export { default as imgReviewEmpty } from './img_review_empty.webp';
 export { default as imgMemoEmpty } from './img_memo_empty.svg';
 export { default as imgMobileBgFirst } from './img_mobile_bg.webp';
 export { default as imgMobileBgLast } from './img_mobile_bg_last.webp';
