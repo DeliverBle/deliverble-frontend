@@ -93,7 +93,7 @@ function LearnDetail() {
   const { setOrder, setText, setClickedDeleteType, nodeToText } = useDeleteElement({
     rightClickedElement,
     clickedTitleIndex,
-    detailId: String(detailId),
+    detailId: Number(detailId),
     videoData,
     setVideoData,
     updateMemoList,

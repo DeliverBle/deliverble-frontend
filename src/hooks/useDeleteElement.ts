@@ -6,7 +6,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 interface useDeleteElementProps {
   rightClickedElement?: HTMLElement;
   clickedTitleIndex: number;
-  detailId: string;
+  detailId: number;
   videoData?: VideoData;
   setVideoData: Dispatch<SetStateAction<VideoData | undefined>>;
   updateMemoList: (type: MemoConfirmModalKey, content?: string) => void;
@@ -93,7 +93,7 @@ function useDeleteElement(props: useDeleteElementProps) {
       if (order !== -1 && text !== '' && order && text && videoData?.names) {
         const id = videoData?.names[clickedTitleIndex].id;
         await api.learnDetailService.postSentenceData({ order, text }, id, clickedTitleIndex);
-        const data = await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedTitleIndex);
+        const data = await api.learnDetailService.getPrivateVideoData(detailId, clickedTitleIndex);
         setVideoData(data);
         setText('');
         setOrder(-1);
