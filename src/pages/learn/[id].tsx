@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { useMutation, useQuery } from 'react-query';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import YouTube from 'react-youtube';
@@ -20,7 +20,6 @@ import { api } from '@src/services/api';
 import { MemoData, Name, VideoData } from '@src/services/api/types/learn-detail';
 import { VideoData as simpleVideoData } from '@src/services/api/types/home';
 import { loginState } from '@src/stores/loginState';
-import { isGuideAtom } from '@src/stores/newsState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import {
@@ -28,14 +27,13 @@ import {
   INITIAL_MEMO_STATE,
   DELETE_SCRIPT_CONFIRM_MODAL_TEXT,
   SCRIPT_MAX_COUNT,
-  SPEECH_GUIDE_TOOLTIP_TEXT,
   VIDEO_STATE_CUED,
   VIDEO_STATE_PAUSED,
   NEW_MEMO_CONFIRM_MODAL_TEXT,
   MemoConfirmModalTextByType,
 } from '@src/utils/constant';
 import { useBodyScrollLock } from '@src/hooks/useBodyScrollLock';
-import { icSpeechGuideInfo, icXButton } from 'public/assets/icons';
+import { icXButton } from 'public/assets/icons';
 import ScriptEditButtonContainer from '@src/components/learnDetail/ScriptEditButtonContainer';
 import { underlineMemo } from '@src/utils/underlineMemo';
 import useRightClickHandler from '@src/hooks/useRightClickHandler';
@@ -43,6 +41,7 @@ import StudyLog from '@src/components/learnDetail/StudyLog';
 import useClickOutside from '@src/hooks/useClickOutside';
 import useUpdateMemoList from '@src/hooks/useUpdateMemoList';
 import useDeleteElement from '@src/hooks/useDeleteElement';
+import { LearningButton, SpeechGuideTitle } from '@src/components/learnDetail/speechGuide';
 
 export interface MemoState {
   newMemoId: number;
@@ -61,8 +60,7 @@ export interface MemoInfo {
 
 function LearnDetail() {
   const router = useRouter();
-  const detailId = router.query.id as string;
-  const [isGuide, setIsGuide] = useRecoilState(isGuideAtom);
+  const { id: detailId, speechGuide } = router.query;
   const isLoggedIn = useRecoilValue(loginState);
   const [videoData, setVideoData] = useState<VideoData>();
   const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
@@ -79,7 +77,6 @@ function LearnDetail() {
   const getLoginStatus = () => localStorage.getItem('token') ?? '';
   const [prevLink, setPrevLink] = useState('');
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [isGuideOver, setIsGuideOver] = useState<boolean>(false);
   const [titleList, setTitleList] = useState<Name[]>([]);
   const [clickedTitleIndex, setClickedTitleIndex] = useState(0);
   const [isTitleInputVisible, setIsTitleInputVisible] = useState(false);
@@ -96,7 +93,7 @@ function LearnDetail() {
   const { setOrder, setText, setClickedDeleteType, nodeToText } = useDeleteElement({
     rightClickedElement,
     clickedTitleIndex,
-    detailId,
+    detailId: Number(detailId),
     videoData,
     setVideoData,
     updateMemoList,
@@ -221,7 +218,7 @@ function LearnDetail() {
     (async () => {
       const id = Number(detailId);
       if (!id) return;
-      const data = isGuide
+      const data = speechGuide
         ? await api.learnDetailService.getSpeechGuideData(id)
         : isLoggedIn
         ? await api.learnDetailService.getPrivateVideoData(id, clickedTitleIndex)
@@ -231,7 +228,7 @@ function LearnDetail() {
       setMemoList(memos ?? []);
       setTitleList(names ?? []);
     })();
-  }, [isLoggedIn, detailId, isEditing, isGuide, clickedTitleIndex]);
+  }, [isLoggedIn, detailId, isEditing, speechGuide, clickedTitleIndex]);
 
   useEffect(() => {
     setClickedTitleIndex(0);
@@ -298,19 +295,7 @@ function LearnDetail() {
           alt="이전 페이지로 돌아가기"
         />
         <StScriptTitleContainer>
-          {videoData?.haveGuide && (
-            <StGuideTitle isGuide={isGuide} onClick={() => !isGuide && setIsGuide((prev) => !prev)}>
-              <p>스피치 가이드</p>
-              <ImageDiv
-                aria-describedby="guide-tooltip"
-                className="guide-info"
-                src={icSpeechGuideInfo}
-                alt="스피치 가이드 설명"
-                onMouseOver={() => isGuide && setIsGuideOver(true)}
-                onMouseOut={() => isGuide && setIsGuideOver(false)}
-              />
-            </StGuideTitle>
-          )}
+          {videoData?.haveGuide && <SpeechGuideTitle />}
           {videoData?.names &&
             videoData.names.map(({ id, name }, i) => (
               <ScriptTitle
@@ -331,10 +316,10 @@ function LearnDetail() {
           )}
         </StScriptTitleContainer>
         {videoData && (
-          <StLearnBox isGuide={isGuide}>
+          <StLearnBox isSpeechGuide={Boolean(speechGuide)}>
             <VideoDetail {...videoData} setIsGuideModalOpen={setIsGuideModalOpen} />
             <main>
-              <StLearnSection isGuide={isGuide}>
+              <StLearnSection isSpeechGuide={Boolean(speechGuide)}>
                 <article>
                   <div ref={learnRef}>
                     {!isEditing &&
@@ -343,7 +328,7 @@ function LearnDetail() {
                           onContextMenu={(e) => {
                             e.preventDefault();
                             setOrder(i + 1);
-                            !isGuide && handleRightClick(e, videoData.scriptsId, order);
+                            !speechGuide && handleRightClick(e, videoData.scriptsId, order);
                           }}
                           key={id}
                           onClick={() => player?.seekTo(startTime, true)}
@@ -375,7 +360,7 @@ function LearnDetail() {
                     )}
                   </div>
                   <div>
-                    <StButtonContainer isGuide={isGuide}>
+                    <StButtonContainer isSpeechGuide={Boolean(speechGuide)}>
                       <RecordStatusBar
                         scriptId={videoData.scriptsId}
                         isRecordSaved={isRecordSaved}
@@ -428,24 +413,10 @@ function LearnDetail() {
                 />
               </aside>
             </main>
-            {isGuideOver && (
-              <StGuideTooltip id="guide-tooltip" role="tooltip">
-                <p>{SPEECH_GUIDE_TOOLTIP_TEXT.title}</p>
-                <p>{SPEECH_GUIDE_TOOLTIP_TEXT.description}</p>
-              </StGuideTooltip>
-            )}
-            {isGuide && (
-              <StLearnButton
-                onClick={() => {
-                  setIsGuide((prev) => !prev);
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}>
-                학습하러 가기
-              </StLearnButton>
-            )}
+            {speechGuide && <LearningButton />}
           </StLearnBox>
         )}
-        {!isGuide && videoData && (
+        {!speechGuide && videoData && (
           <StNews>
             <h2>비슷한 주제의 영상으로 계속 연습해보세요.</h2>
             {isLoading ? (
@@ -529,38 +500,6 @@ const StScriptTitleContainer = styled.div`
   gap: 0.8rem;
 `;
 
-const StGuideTitle = styled.div<{ isGuide: boolean }>`
-  display: flex;
-  align-items: center;
-  position: relative;
-
-  padding: 1rem 0 1rem 2.4rem;
-  width: 19.2rem;
-  height: 4.8rem;
-  border-radius: 1.6rem 1.6rem 0 0;
-  background-color: ${COLOR.MAIN_BLUE};
-
-  color: ${COLOR.WHITE};
-  ${FONT_STYLES.B_20_BODY};
-
-  ${({ isGuide }) =>
-    !isGuide &&
-    css`
-      opacity: 0.6;
-      cursor: pointer;
-
-      &: hover {
-        opacity: 0.8;
-      }
-    `}
-
-  & > .guide-info {
-    display: flex;
-    align-items: center;
-    padding-left: 1.2rem;
-  }
-`;
-
 const StScriptAddButton = styled.button`
   width: 4rem;
   height: 4rem;
@@ -573,7 +512,7 @@ const StScriptAddButton = styled.button`
   }
 `;
 
-const StLearnBox = styled.div<{ isGuide: boolean }>`
+const StLearnBox = styled.div<{ isSpeechGuide: boolean }>`
   display: flex;
   flex-direction: column;
   position: relative;
@@ -594,9 +533,9 @@ const StLearnBox = styled.div<{ isGuide: boolean }>`
     }
   }
 
-  ${({ isGuide }) => {
+  ${({ isSpeechGuide }) => {
     return (
-      isGuide &&
+      isSpeechGuide &&
       css`
         outline: 0.6rem solid ${COLOR.MAIN_BLUE};
       `
@@ -604,58 +543,7 @@ const StLearnBox = styled.div<{ isGuide: boolean }>`
   }}
 `;
 
-const StGuideTooltip = styled.div`
-  position: absolute;
-  left: 17.8rem;
-  top: 1.6rem;
-
-  padding: 1.6rem;
-  width: 46.3rem;
-  height: 10.9rem;
-  border-radius: 0.6rem;
-
-  background: rgba(22, 15, 53, 0.7);
-  color: white;
-  white-space: pre-line;
-
-  & > p:first-child {
-    ${FONT_STYLES.B_20_BODY}
-  }
-
-  & > p:last-child {
-    ${FONT_STYLES.M_16_CAPTION}
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    left: 2.6rem;
-    bottom: 100%;
-
-    border: solid transparent;
-    border-width: 0.8rem;
-    border-bottom-color: rgba(22, 15, 53, 0.7);
-    pointer-events: none;
-  }
-`;
-
-const StLearnButton = styled.button`
-  position: absolute;
-  top: 80%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
-  width: 20.9rem;
-  height: 8.2rem;
-  border-radius: 4.8rem;
-
-  background-color: ${COLOR.MAIN_BLUE};
-  box-shadow: 0.4rem 0.4rem 2rem rgba(22, 15, 53, 0.15);
-  color: ${COLOR.WHITE};
-  ${FONT_STYLES.SB_24_HEADLINE}
-`;
-
-const StLearnSection = styled.section<{ isGuide: boolean }>`
+const StLearnSection = styled.section<{ isSpeechGuide: boolean }>`
   display: flex;
   flex-direction: column;
   padding-bottom: 8rem;
@@ -706,7 +594,7 @@ const StLearnSection = styled.section<{ isGuide: boolean }>`
       justify-content: flex-end;
       padding-top: 1.8rem;
       margin-top: 2.4rem;
-      border-top: ${({ isGuide }) => !isGuide && `0.2rem solid ${COLOR.GRAY_10}`};
+      border-top: ${({ isSpeechGuide }) => !isSpeechGuide && `0.2rem solid ${COLOR.GRAY_10}`};
     }
   }
 `;
@@ -739,8 +627,8 @@ const StScriptText = styled.div<{ isActive: boolean; underline: string }>`
   }
 `;
 
-const StButtonContainer = styled.div<{ isGuide: boolean }>`
-  visibility: ${({ isGuide }) => (isGuide ? 'hidden' : 'visible')};
+const StButtonContainer = styled.div<{ isSpeechGuide: boolean }>`
+  visibility: ${({ isSpeechGuide }) => (isSpeechGuide ? 'hidden' : 'visible')};
   display: flex;
   gap: 0.8rem;
   position: relative;
