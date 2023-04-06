@@ -34,8 +34,8 @@ const StEmpty = styled.div`
 
   .empty {
     position: relative;
-    width: 38.8rem;
-    height: 28.8rem;
+    width: 32rem;
+    height: 32rem;
   }
 `;
 
