@@ -55,7 +55,7 @@ function Home() {
   );
 
   const handleClickLike = async (id: number) => {
-    const { id: likeId, isFavorite } = await api.likeService.postLikeData(id);
+    const { id: likeId, isFavorite } = await api.commonService.postLikeData(id);
     const setterList = [setNewsList, setSpeechGuideList];
     setterList.map((setter) =>
       setter((prev) => prev.map((news) => (news.id === likeId ? { ...news, isFavorite } : news))),

@@ -7,3 +7,8 @@ export const USER_DATA = {
   email: 'cuj10594@naver.com',
   gender: 'Female',
 };
+
+export const LIKE_DATA = {
+  id: 1,
+  isFavorite: true,
+};

@@ -49,7 +49,7 @@ function Review() {
 
   const { mutate: mutatePostLike } = useMutation(
     async (id: number) => {
-      return await api.likeService.postLikeData(id);
+      return await api.commonService.postLikeData(id);
     },
     {
       onSuccess: () => {
