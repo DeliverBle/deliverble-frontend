@@ -63,7 +63,7 @@ function Learn() {
   };
 
   const handleClickLike = async (id: number) => {
-    const { id: likeId, isFavorite } = await api.likeService.postLikeData(id);
+    const { id: likeId, isFavorite } = await api.commonService.postLikeData(id);
 
     setResultList((prev) => {
       return prev.map((news) => {

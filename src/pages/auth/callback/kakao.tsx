@@ -16,7 +16,7 @@ function OAuthRedirectHandler() {
   }, []);
 
   const code = router.query.code as string;
-  const { data } = useQuery(['accessToken'], () => api.loginUserService.requestLogin(code), {
+  const { data } = useQuery(['accessToken'], () => api.commonService.requestLogin(code), {
     onSuccess: () => {
       setIsLoggedIn(true);
       router.push(prevLink === '/' ? '/home' : prevLink);

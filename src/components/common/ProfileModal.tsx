@@ -13,7 +13,7 @@ function ProfileModal() {
   const router = useRouter();
   const setIsLoggedIn = useSetRecoilState(loginState);
   const accessToken = localStorage.getItem('token');
-  const { data } = useQuery(['userInfo'], () => api.loginUserService.getUserInfo(accessToken), {
+  const { data } = useQuery(['userInfo'], () => api.commonService.getUserInfo(accessToken), {
     onError: () => {
       console.error('유저 데이터 요청 에러 발생');
     },
