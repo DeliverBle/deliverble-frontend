@@ -1,5 +1,5 @@
 import { useBodyScrollLock } from '@src/hooks/common';
-import { Tag } from '@src/types/learn-detail';
+import { Tag } from '@src/types/learnDetail/remote';
 import { COLOR, FONT_STYLES } from '@src/styles';
 import styled from 'styled-components';
 

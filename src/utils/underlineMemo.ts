@@ -1,4 +1,4 @@
-import { MemoData } from '@src/types/learn-detail';
+import { MemoData } from '@src/types/learnDetail/remote';
 
 export const underlineMemo = (script: string, memoList: MemoData[]) => {
   const regexp = /<mark id=(.*?)>/g;

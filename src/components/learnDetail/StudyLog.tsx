@@ -1,9 +1,8 @@
 import { MemoLog } from '@src/components/learnDetail/memo';
-import { MemoConfirmModalKey } from '@src/components/learnDetail/modal/ConfirmModal';
 import { RecordLog } from '@src/components/learnDetail/record';
-import { MemoState } from '@src/pages/learn/[id]';
-import { MemoData } from '@src/types/learn-detail';
 import { COLOR, FONT_STYLES } from '@src/styles';
+import { MemoConfirmModalKey, MemoState } from '@src/types/learnDetail';
+import { MemoData } from '@src/types/learnDetail/remote';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import styled from 'styled-components';
 

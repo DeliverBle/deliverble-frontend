@@ -1,6 +1,6 @@
 import { BannerSlider, Footer, NavigationBar, NewsList, SEO, VideoListSkeleton } from '@src/components/common';
 import { api } from '@src/services/api';
-import { VideoData } from '@src/types/home';
+import { VideoData } from '@src/types/home/remote';
 import { loginState } from '@src/stores/loginState';
 import { COLOR, FONT_STYLES } from '@src/styles';
 import { useRouter } from 'next/router';

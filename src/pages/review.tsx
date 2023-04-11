@@ -1,7 +1,7 @@
 import { Footer, NavigationBar, SEO, VideoListSkeleton } from '@src/components/common';
 import { HeadlineContainer, VideoContainer } from '@src/components/review';
 import { api } from '@src/services/api';
-import { ReviewTab } from '@src/types/review';
+import { ReviewTab } from '@src/types/review/remote';
 import { loginState } from '@src/stores/loginState';
 import { LIST_SIZE } from '@src/utils/constant';
 import { useRouter } from 'next/router';

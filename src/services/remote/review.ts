@@ -1,5 +1,5 @@
 import { ReviewService } from '../api/review';
-import { PostReviewRequestBody, ReviewTab } from '@src/types/review';
+import { PostReviewRequestBody, ReviewTab } from '@src/types/review/remote';
 import { API } from './base';
 
 export function reviewDataRemote(): ReviewService {

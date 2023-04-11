@@ -1,5 +1,5 @@
-import { MemoInfo, MemoState } from '@src/pages/learn/[id]';
-import { MemoData } from '@src/types/learn-detail';
+import { MemoInfo, MemoState } from '@src/types/learnDetail';
+import { MemoData } from '@src/types/learnDetail/remote';
 import { INITIAL_MEMO, INITIAL_NUMBER } from '@src/utils/constant';
 import { useState } from 'react';
 

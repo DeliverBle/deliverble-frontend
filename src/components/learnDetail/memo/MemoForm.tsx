@@ -1,13 +1,12 @@
-import { MemoConfirmModalKey } from '@src/components/learnDetail/modal/ConfirmModal';
+import { ImageDiv } from '@src/components/common';
 import { useClickOutside } from '@src/hooks/common';
-import { MemoState } from '@src/pages/learn/[id]';
-import { MemoData } from '@src/types/learn-detail';
 import { COLOR, FONT_STYLES } from '@src/styles';
+import { MemoConfirmModalKey, MemoState } from '@src/types/learnDetail';
+import { MemoData } from '@src/types/learnDetail/remote';
 import { INITIAL_MEMO_STATE, INITIAL_NUMBER, MEMO_CONTENT_MAX_LENGTH } from '@src/utils/constant';
 import { icCheckButton, icInactiveCheckButton, icMemoXButton } from 'public/assets/icons';
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
-import ImageDiv from '../../common/ImageDiv';
 
 interface MemoFormProps {
   memoData: MemoData;

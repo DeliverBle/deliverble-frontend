@@ -1,7 +1,7 @@
 import { Portal } from '@src/components/common';
-import { MemoState } from '@src/pages/learn/[id]';
 import { COLOR } from '@src/styles';
 import { FONT_STYLES } from '@src/styles/fontStyle';
+import { ConfirmModalText, MemoConfirmModalKey, MemoState } from '@src/types/learnDetail';
 import {
   DELETE_MEMO_CONFIRM_MODAL_TEXT,
   DELETE_SCRIPT_CONFIRM_MODAL_TEXT,
@@ -10,15 +10,6 @@ import {
 } from '@src/utils/constant';
 import { Dispatch, SetStateAction, useEffect } from 'react';
 import styled from 'styled-components';
-
-export type MemoConfirmModalKey = 'new' | 'edit' | 'delete';
-
-export interface ConfirmModalText {
-  mainText: string;
-  subText?: string;
-  leftButtonText: string;
-  rightButtonText: string;
-}
 
 interface ConfirmModalProps {
   confirmModalText: ConfirmModalText;

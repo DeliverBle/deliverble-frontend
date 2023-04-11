@@ -8,7 +8,7 @@ import {
   GetRecordData,
   DeleteRecordData,
   ChangeRecordNameData,
-} from '@src/types/learn-detail';
+} from '@src/types/learnDetail/remote';
 import { API } from './base';
 import { InternalServerError } from '@src/types/error';
 import { STATUS_CODE } from '@src/utils/constant';

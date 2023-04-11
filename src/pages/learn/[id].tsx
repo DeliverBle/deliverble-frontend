@@ -1,16 +1,16 @@
 import { ImageDiv, Like, NavigationBar, NewsList, SEO, VideoListSkeleton } from '@src/components/common';
 import { ScriptTitle, StudyLog, VideoDetail } from '@src/components/learnDetail';
-import { ConfirmModalText, MemoConfirmModalKey } from '@src/components/learnDetail/modal/ConfirmModal';
 import { RecordStatusBar } from '@src/components/learnDetail/record';
 import { ScriptEdit, ScriptEditButtonContainer } from '@src/components/learnDetail/scriptEdit';
 import { LearningButton, SpeechGuideTitle } from '@src/components/learnDetail/speechGuide';
 import { useBodyScrollLock, useClickOutside } from '@src/hooks/common';
 import { useDeleteElement, useRightClickHandler, useUpdateMemoList } from '@src/hooks/learnDetail';
 import { api } from '@src/services/api';
-import { VideoData as simpleVideoData } from '@src/types/home';
-import { MemoData, Name, VideoData } from '@src/types/learn-detail';
 import { loginState } from '@src/stores/loginState';
 import { COLOR, FONT_STYLES } from '@src/styles';
+import { VideoData as simpleVideoData } from '@src/types/home/remote';
+import { ConfirmModalText, MemoConfirmModalKey, MemoState } from '@src/types/learnDetail';
+import { MemoData, Name, VideoData } from '@src/types/learnDetail/remote';
 import {
   DELETE_SCRIPT_CONFIRM_MODAL_TEXT,
   INITIAL_MEMO_STATE,
@@ -30,21 +30,6 @@ import { useMutation, useQuery } from 'react-query';
 import YouTube from 'react-youtube';
 import { useRecoilValue } from 'recoil';
 import styled, { css } from 'styled-components';
-
-export interface MemoState {
-  newMemoId: number;
-  editMemoId: number;
-  deleteMemoId: number;
-}
-export interface MemoInfo {
-  id: number;
-  scriptId: number;
-  order: number;
-  startIndex: number;
-  keyword: string;
-  highlightId: string;
-  content: string;
-}
 
 function LearnDetail() {
   const router = useRouter();
