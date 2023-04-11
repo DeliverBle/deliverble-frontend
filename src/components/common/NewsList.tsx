@@ -1,5 +1,5 @@
 import { useBodyScrollLock } from '@src/hooks/common';
-import { VideoData } from '@src/services/api/types/home';
+import { VideoData } from '@src/types/home';
 import { loginState } from '@src/stores/loginState';
 import { COLOR, FONT_STYLES } from '@src/styles';
 import dynamic from 'next/dynamic';

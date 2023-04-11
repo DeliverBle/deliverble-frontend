@@ -2,7 +2,7 @@ import { ImageDiv } from '@src/components/common';
 import { MemoConfirmModalKey } from '@src/components/learnDetail/modal/ConfirmModal';
 import { useClickOutside } from '@src/hooks/common';
 import { MemoState } from '@src/pages/learn/[id]';
-import { MemoData } from '@src/services/api/types/learn-detail';
+import { MemoData } from '@src/types/learn-detail';
 import dynamic from 'next/dynamic';
 import { icDotDefault, icDotHover } from 'public/assets/icons';
 import { Dispatch, SetStateAction, useRef, useState } from 'react';

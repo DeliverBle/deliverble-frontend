@@ -1,5 +1,5 @@
 import { HighlightModal } from '@src/components/learnDetail/modal';
-import { VideoData } from '@src/services/api/types/learn-detail';
+import { VideoData } from '@src/types/learn-detail';
 import { COLOR } from '@src/styles';
 import { Dispatch, MouseEvent, SetStateAction, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';

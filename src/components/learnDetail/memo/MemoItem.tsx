@@ -2,7 +2,7 @@ import { ImageDiv } from '@src/components/common';
 import { MemoDotButton, MemoForm } from '@src/components/learnDetail/memo';
 import { MemoConfirmModalKey } from '@src/components/learnDetail/modal/ConfirmModal';
 import { MemoState } from '@src/pages/learn/[id]';
-import { MemoData } from '@src/services/api/types/learn-detail';
+import { MemoData } from '@src/types/learn-detail';
 import { COLOR, FONT_STYLES } from '@src/styles';
 import { MEMO_CONTENT_MAX } from '@src/utils/constant';
 import { useRouter } from 'next/router';

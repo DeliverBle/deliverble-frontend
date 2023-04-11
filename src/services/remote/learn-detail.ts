@@ -8,9 +8,9 @@ import {
   GetRecordData,
   DeleteRecordData,
   ChangeRecordNameData,
-} from '../api/types/learn-detail';
+} from '@src/types/learn-detail';
 import { API } from './base';
-import { InternalServerError } from '../api/types/error';
+import { InternalServerError } from '@src/types/error';
 import { STATUS_CODE } from '@src/utils/constant';
 import { AxiosError } from 'axios';
 

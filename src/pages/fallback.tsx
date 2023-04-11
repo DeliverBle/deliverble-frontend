@@ -1,5 +1,5 @@
 import { ErrorContent, Footer, NavigationBar } from '@src/components/common';
-import { CustomError } from '@src/services/api/types/error';
+import { CustomError } from '@src/types/error';
 import { FallbackProps } from 'react-error-boundary';
 
 function Fallback(props: FallbackProps) {

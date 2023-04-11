@@ -1,7 +1,7 @@
 import { MemoConfirmModalKey } from '@src/components/learnDetail/modal/ConfirmModal';
 import { useClickOutside } from '@src/hooks/common';
 import { MemoState } from '@src/pages/learn/[id]';
-import { MemoData } from '@src/services/api/types/learn-detail';
+import { MemoData } from '@src/types/learn-detail';
 import { COLOR, FONT_STYLES } from '@src/styles';
 import { INITIAL_MEMO_STATE, INITIAL_NUMBER, MEMO_CONTENT_MAX_LENGTH } from '@src/utils/constant';
 import { icCheckButton, icInactiveCheckButton, icMemoXButton } from 'public/assets/icons';

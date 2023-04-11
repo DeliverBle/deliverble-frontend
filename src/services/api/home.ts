@@ -1,4 +1,4 @@
-import { VideoListData } from './types/home';
+import { VideoListData } from '@src/types/home';
 
 export interface HomeService {
   getVideoData(): Promise<VideoListData>;

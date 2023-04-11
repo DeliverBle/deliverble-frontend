@@ -7,8 +7,8 @@ import { LearningButton, SpeechGuideTitle } from '@src/components/learnDetail/sp
 import { useBodyScrollLock, useClickOutside } from '@src/hooks/common';
 import { useDeleteElement, useRightClickHandler, useUpdateMemoList } from '@src/hooks/learnDetail';
 import { api } from '@src/services/api';
-import { VideoData as simpleVideoData } from '@src/services/api/types/home';
-import { MemoData, Name, VideoData } from '@src/services/api/types/learn-detail';
+import { VideoData as simpleVideoData } from '@src/types/home';
+import { MemoData, Name, VideoData } from '@src/types/learn-detail';
 import { loginState } from '@src/stores/loginState';
 import { COLOR, FONT_STYLES } from '@src/styles';
 import {
