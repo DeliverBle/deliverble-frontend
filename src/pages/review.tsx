@@ -1,6 +1,5 @@
 import { Footer, NavigationBar, SEO, VideoListSkeleton } from '@src/components/common';
-import HeadlineContainer from '@src/components/review/HeadlineContainer';
-import VideoContainer from '@src/components/review/VideoContainer';
+import { HeadlineContainer, VideoContainer } from '@src/components/review';
 import { api } from '@src/services/api';
 import { ReviewTab } from '@src/services/api/types/review';
 import { loginState } from '@src/stores/loginState';
