@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { COLOR } from '@src/styles/color';
+import { COLOR } from '@src/styles';
 
 function SkeletonItem() {
   return (

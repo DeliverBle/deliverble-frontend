@@ -1,11 +1,8 @@
-import styled from 'styled-components';
-import { FONT_STYLES } from '@src/styles/fontStyle';
-import ImageDiv from '../common/ImageDiv';
-import Portal from '../common/Portal';
+import { ImageDiv, Portal } from '@src/components/common';
+import { COLOR, FONT_STYLES } from '@src/styles';
 import Link from 'next/link';
-import { icXButton, icKakao, icMicrophone } from 'public/assets/icons';
-import { icDeliverbleBlue } from 'public/assets/icons';
-import { COLOR } from '@src/styles/color';
+import { icDeliverbleBlue, icKakao, icMicrophone, icXButton } from 'public/assets/icons';
+import styled from 'styled-components';
 import { KAKAO_AUTH_URL } from './OAuth';
 
 interface LoginModalProps {

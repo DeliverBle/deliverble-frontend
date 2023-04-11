@@ -1,6 +1,6 @@
 import { Portal } from '@src/components/common';
 import { MemoState } from '@src/pages/learn/[id]';
-import { COLOR } from '@src/styles/color';
+import { COLOR } from '@src/styles';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import {
   DELETE_MEMO_CONFIRM_MODAL_TEXT,

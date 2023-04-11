@@ -1,8 +1,7 @@
 import styled from 'styled-components';
 import Lottie from 'lottie-light-react';
 import { step1Lottie, step2Lottie, step3Lottie } from 'public/assets/lottie';
-import { COLOR } from 'src/styles/color';
-import { FONT_STYLES } from 'src/styles/fontStyle';
+import { COLOR, FONT_STYLES } from '@src/styles';
 import { ImageDiv } from '@src/components/common';
 import { imgMobileBgFirst, imgMobileBgLast, imgMobileFist, imgMobileEar, imgMobileMic } from 'public/assets/images';
 

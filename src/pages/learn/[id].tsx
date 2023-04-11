@@ -13,8 +13,7 @@ import { api } from '@src/services/api';
 import { VideoData as simpleVideoData } from '@src/services/api/types/home';
 import { MemoData, Name, VideoData } from '@src/services/api/types/learn-detail';
 import { loginState } from '@src/stores/loginState';
-import { COLOR } from '@src/styles/color';
-import { FONT_STYLES } from '@src/styles/fontStyle';
+import { COLOR, FONT_STYLES } from '@src/styles';
 import {
   DELETE_SCRIPT_CONFIRM_MODAL_TEXT,
   INITIAL_MEMO_STATE,

@@ -1,8 +1,7 @@
 import { ImageDiv } from '@src/components/common';
 import { api } from '@src/services/api';
 import { loginState } from '@src/stores/loginState';
-import { COLOR } from '@src/styles/color';
-import { FONT_STYLES } from '@src/styles/fontStyle';
+import { COLOR, FONT_STYLES } from '@src/styles';
 import { icRecordMicActive, icRecordMicDefault, icRecordStart, icRecordStop } from 'public/assets/icons';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';

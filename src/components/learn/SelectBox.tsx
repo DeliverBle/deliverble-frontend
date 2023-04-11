@@ -1,11 +1,10 @@
+import { ImageDiv } from '@src/components/common';
+import useClickOutside from '@src/hooks/useClickOutside';
+import { COLOR, FONT_STYLES } from '@src/styles';
+import { ALL } from '@src/utils/constant';
+import { icArrow, icCheckedBox, icEmptyBox } from 'public/assets/icons';
 import { useEffect, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
-import ImageDiv from '../common/ImageDiv';
-import { COLOR } from '@src/styles/color';
-import { FONT_STYLES } from '@src/styles/fontStyle';
-import { icArrow, icCheckedBox, icEmptyBox } from 'public/assets/icons';
-import { ALL } from '@src/utils/constant';
-import useClickOutside from '@src/hooks/useClickOutside';
 
 interface SelectBoxProps {
   optionName: string;

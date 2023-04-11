@@ -1,6 +1,5 @@
 import { ImageDiv } from '@src/components/common';
-import { COLOR } from '@src/styles/color';
-import { FONT_STYLES } from '@src/styles/fontStyle';
+import { COLOR, FONT_STYLES } from '@src/styles';
 import { icAlert, icEmptyBox } from 'public/assets/icons';
 import styled from 'styled-components';
 

@@ -1,5 +1,4 @@
-import { COLOR } from '@src/styles/color';
-import { FONT_STYLES } from '@src/styles/fontStyle';
+import { COLOR, FONT_STYLES } from '@src/styles';
 import { SCRIPT_TITLE_MAX_LENGTH } from '@src/utils/constant';
 import { ChangeEvent, KeyboardEvent, useRef, useState } from 'react';
 import styled from 'styled-components';

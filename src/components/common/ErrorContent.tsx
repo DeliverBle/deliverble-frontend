@@ -1,5 +1,4 @@
-import { COLOR } from '@src/styles/color';
-import { FONT_STYLES } from '@src/styles/fontStyle';
+import { COLOR, FONT_STYLES } from '@src/styles';
 import { STATUS_CODE } from '@src/utils/constant';
 import Link from 'next/link';
 import { imgErrorBg } from 'public/assets/images';

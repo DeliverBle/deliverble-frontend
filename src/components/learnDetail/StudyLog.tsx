@@ -3,8 +3,7 @@ import { MemoConfirmModalKey } from '@src/components/learnDetail/modal/ConfirmMo
 import { RecordLog } from '@src/components/learnDetail/record';
 import { MemoState } from '@src/pages/learn/[id]';
 import { MemoData } from '@src/services/api/types/learn-detail';
-import { COLOR } from '@src/styles/color';
-import { FONT_STYLES } from '@src/styles/fontStyle';
+import { COLOR, FONT_STYLES } from '@src/styles';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import styled from 'styled-components';
 

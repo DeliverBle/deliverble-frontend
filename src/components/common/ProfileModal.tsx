@@ -1,7 +1,6 @@
 import { api } from '@src/services/api';
 import { loginState } from '@src/stores/loginState';
-import { COLOR } from '@src/styles/color';
-import { FONT_STYLES } from '@src/styles/fontStyle';
+import { COLOR, FONT_STYLES } from '@src/styles';
 import { useRouter } from 'next/router';
 import { icLogout, icMypageButton } from 'public/assets/icons';
 import { useQuery } from 'react-query';

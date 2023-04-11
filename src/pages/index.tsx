@@ -1,7 +1,7 @@
 import { ImageDiv, SEO } from '@src/components/common';
 import { Header, MobileContainer, ScrollControl, SliderContainer } from '@src/components/landing';
 import { useIsMobile } from '@src/hooks/useIsMobile';
-import { COLOR } from '@src/styles/color';
+import { COLOR } from '@src/styles';
 import { icMobileLogo, icMobileLogoWhite } from 'public/assets/icons';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';

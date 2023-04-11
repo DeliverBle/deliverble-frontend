@@ -8,8 +8,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useRecoilState } from 'recoil';
-import { COLOR } from 'src/styles/color';
-import { FONT_STYLES } from 'src/styles/fontStyle';
+import { COLOR, FONT_STYLES } from '@src/styles';
 import styled from 'styled-components';
 
 function Review() {

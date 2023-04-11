@@ -1,6 +1,5 @@
 import { ImageDiv } from '@src/components/common';
-import { COLOR } from '@src/styles/color';
-import { FONT_STYLES } from '@src/styles/fontStyle';
+import { COLOR, FONT_STYLES } from '@src/styles';
 import { imgMemoEmpty } from 'public/assets/images';
 import styled from 'styled-components';
 

@@ -2,8 +2,7 @@ import { MemoConfirmModalKey } from '@src/components/learnDetail/modal/ConfirmMo
 import useClickOutside from '@src/hooks/useClickOutside';
 import { MemoState } from '@src/pages/learn/[id]';
 import { MemoData } from '@src/services/api/types/learn-detail';
-import { COLOR } from '@src/styles/color';
-import { FONT_STYLES } from '@src/styles/fontStyle';
+import { COLOR, FONT_STYLES } from '@src/styles';
 import { INITIAL_MEMO_STATE, INITIAL_NUMBER, MEMO_CONTENT_MAX_LENGTH } from '@src/utils/constant';
 import { icCheckButton, icInactiveCheckButton, icMemoXButton } from 'public/assets/icons';
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';

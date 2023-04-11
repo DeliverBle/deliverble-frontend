@@ -1,6 +1,6 @@
 import { createGlobalStyle } from 'styled-components';
 import reset from 'styled-reset';
-import { COLOR } from './color';
+import { COLOR } from '@src/styles';
 
 const GlobalStyle = createGlobalStyle`
   ${reset};
