@@ -1,5 +1,5 @@
 import { ImageDiv } from '@src/components/common';
-import useClickOutside from '@src/hooks/useClickOutside';
+import { useClickOutside } from '@src/hooks/common';
 import { COLOR, FONT_STYLES } from '@src/styles';
 import { ALL } from '@src/utils/constant';
 import { icArrow, icCheckedBox, icEmptyBox } from 'public/assets/icons';

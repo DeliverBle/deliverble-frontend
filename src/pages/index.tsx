@@ -1,6 +1,6 @@
 import { ImageDiv, SEO } from '@src/components/common';
 import { Header, MobileContainer, ScrollControl, SliderContainer } from '@src/components/landing';
-import { useIsMobile } from '@src/hooks/useIsMobile';
+import { useIsMobile } from '@src/hooks/landing';
 import { COLOR } from '@src/styles';
 import { icMobileLogo, icMobileLogoWhite } from 'public/assets/icons';
 import { useEffect, useState } from 'react';

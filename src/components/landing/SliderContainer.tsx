@@ -13,7 +13,7 @@ import {
 } from 'public/assets/images/index';
 import { COLOR, FONT_STYLES } from '@src/styles';
 import ImageDiv from '../common/ImageDiv';
-import { useSlideObserver } from '@src/hooks/useSlideObserver';
+import { useSlideObserver } from '@src/hooks/landing';
 
 interface SliderContainerProps {
   slideNumber: number;

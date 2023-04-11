@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-export const useSlideObserver = (
+const useSlideObserver = (
   setState: (stateNumber: number) => void,
   stateNumber: number,
   stopObserve: boolean,
@@ -32,3 +32,5 @@ export const useSlideObserver = (
 
   return isRef;
 };
+
+export default useSlideObserver;

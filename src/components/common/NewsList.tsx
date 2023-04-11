@@ -1,4 +1,4 @@
-import { useBodyScrollLock } from '@src/hooks/useBodyScrollLock';
+import { useBodyScrollLock } from '@src/hooks/common';
 import { VideoData } from '@src/services/api/types/home';
 import { loginState } from '@src/stores/loginState';
 import { COLOR, FONT_STYLES } from '@src/styles';

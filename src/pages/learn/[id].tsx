@@ -4,11 +4,8 @@ import { ConfirmModalText, MemoConfirmModalKey } from '@src/components/learnDeta
 import { RecordStatusBar } from '@src/components/learnDetail/record';
 import { ScriptEdit, ScriptEditButtonContainer } from '@src/components/learnDetail/scriptEdit';
 import { LearningButton, SpeechGuideTitle } from '@src/components/learnDetail/speechGuide';
-import { useBodyScrollLock } from '@src/hooks/useBodyScrollLock';
-import useClickOutside from '@src/hooks/useClickOutside';
-import useDeleteElement from '@src/hooks/useDeleteElement';
-import useRightClickHandler from '@src/hooks/useRightClickHandler';
-import useUpdateMemoList from '@src/hooks/useUpdateMemoList';
+import { useBodyScrollLock, useClickOutside } from '@src/hooks/common';
+import { useDeleteElement, useRightClickHandler, useUpdateMemoList } from '@src/hooks/learnDetail';
 import { api } from '@src/services/api';
 import { VideoData as simpleVideoData } from '@src/services/api/types/home';
 import { MemoData, Name, VideoData } from '@src/services/api/types/learn-detail';

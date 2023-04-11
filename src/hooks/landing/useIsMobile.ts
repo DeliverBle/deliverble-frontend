@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 
-export function useIsMobile() {
+function useIsMobile() {
   const [isMobile, setIsMobile] = useState(true);
   const mobile = useMediaQuery({ query: '(max-width:767px)' });
 
@@ -11,3 +11,5 @@ export function useIsMobile() {
 
   return isMobile;
 }
+
+export default useIsMobile;

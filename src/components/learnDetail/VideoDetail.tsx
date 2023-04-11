@@ -1,4 +1,4 @@
-import { useBodyScrollLock } from '@src/hooks/useBodyScrollLock';
+import { useBodyScrollLock } from '@src/hooks/common';
 import { Tag } from '@src/services/api/types/learn-detail';
 import { COLOR, FONT_STYLES } from '@src/styles';
 import styled from 'styled-components';

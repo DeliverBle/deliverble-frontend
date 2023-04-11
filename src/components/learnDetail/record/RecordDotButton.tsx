@@ -1,5 +1,5 @@
 import { ImageDiv } from '@src/components/common';
-import useClickOutside from '@src/hooks/useClickOutside';
+import { useClickOutside } from '@src/hooks/common';
 import dynamic from 'next/dynamic';
 import { icDotDefault, icDotHover } from 'public/assets/icons';
 import { Dispatch, SetStateAction, useRef, useState } from 'react';
