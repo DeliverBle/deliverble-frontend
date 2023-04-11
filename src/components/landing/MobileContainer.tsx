@@ -3,7 +3,7 @@ import Lottie from 'lottie-light-react';
 import { step1Lottie, step2Lottie, step3Lottie } from 'public/assets/lottie';
 import { COLOR } from 'src/styles/color';
 import { FONT_STYLES } from 'src/styles/fontStyle';
-import ImageDiv from '@src/components/common/ImageDiv';
+import { ImageDiv } from '@src/components/common';
 import { imgMobileBgFirst, imgMobileBgLast, imgMobileFist, imgMobileEar, imgMobileMic } from 'public/assets/images';
 
 function MobileContainer() {

@@ -1,9 +1,4 @@
-import ImageDiv from '@src/components/common/ImageDiv';
-import Like from '@src/components/common/Like';
-import NavigationBar from '@src/components/common/NavigationBar';
-import NewsList from '@src/components/common/NewsList';
-import SEO from '@src/components/common/SEO';
-import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
+import { ImageDiv, Like, NavigationBar, NewsList, SEO, VideoListSkeleton } from '@src/components/common';
 import { ScriptTitle, StudyLog, VideoDetail } from '@src/components/learnDetail';
 import { ConfirmModalText, MemoConfirmModalKey } from '@src/components/learnDetail/modal/ConfirmModal';
 import { RecordStatusBar } from '@src/components/learnDetail/record';

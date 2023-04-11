@@ -1,9 +1,6 @@
-import NavigationBar from '@src/components/common/NavigationBar';
-import Footer from '@src/components/common/Footer';
-import SEO from '@src/components/common/SEO';
-import styled from 'styled-components';
-import ErrorContent from '@src/components/common/ErrorContent';
+import { ErrorContent, Footer, NavigationBar, SEO } from '@src/components/common';
 import { STATUS_CODE } from '@src/utils/constant';
+import styled from 'styled-components';
 
 function Custom404() {
   return (

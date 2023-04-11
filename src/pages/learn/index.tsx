@@ -1,10 +1,4 @@
-import NavigationBar from '@src/components/common/NavigationBar';
-import Footer from '@src/components/common/Footer';
-import ImageDiv from '@src/components/common/ImageDiv';
-import NewsList from '@src/components/common/NewsList';
-import Pagination from '@src/components/common/Pagination';
-import SEO from '@src/components/common/SEO';
-import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
+import { Footer, ImageDiv, NavigationBar, NewsList, Pagination, SEO, VideoListSkeleton } from '@src/components/common';
 import SelectBox from '@src/components/learn/SelectBox';
 import { api } from '@src/services/api';
 import { PostSearchConditionRequestBody, VideoData } from '@src/services/api/types/learn';
@@ -12,12 +6,12 @@ import { loginState } from '@src/stores/loginState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { BLOCK_SIZE, categoryList, channelList, LIST_SIZE, speakerList } from '@src/utils/constant';
+import { useRouter } from 'next/router';
 import { icSearch } from 'public/assets/icons';
 import { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
-import { useRouter } from 'next/router';
 
 function Learn() {
   const router = useRouter();

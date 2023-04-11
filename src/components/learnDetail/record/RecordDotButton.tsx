@@ -1,8 +1,8 @@
-import dynamic from 'next/dynamic';
-import ImageDiv from '@src/components/common/ImageDiv';
+import { ImageDiv } from '@src/components/common';
 import useClickOutside from '@src/hooks/useClickOutside';
+import dynamic from 'next/dynamic';
 import { icDotDefault, icDotHover } from 'public/assets/icons';
-import { useState, useRef, Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 interface RecordDotButtonProps {

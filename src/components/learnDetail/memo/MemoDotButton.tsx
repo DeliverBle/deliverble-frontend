@@ -1,4 +1,4 @@
-import ImageDiv from '@src/components/common/ImageDiv';
+import { ImageDiv } from '@src/components/common';
 import { MemoConfirmModalKey } from '@src/components/learnDetail/modal/ConfirmModal';
 import useClickOutside from '@src/hooks/useClickOutside';
 import { MemoState } from '@src/pages/learn/[id]';

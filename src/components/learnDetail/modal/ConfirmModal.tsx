@@ -1,4 +1,4 @@
-import Portal from '@src/components/common/Portal';
+import { Portal } from '@src/components/common';
 import { MemoState } from '@src/pages/learn/[id]';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';

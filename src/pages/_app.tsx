@@ -1,14 +1,14 @@
+import { CustomErrorBoundary } from '@src/components/common';
+import GlobalStyle from '@src/styles/globalStyle';
+import { HJID, HJSV } from '@src/utils/constant';
 import type { AppProps } from 'next/app';
-import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import Script from 'next/script';
+import { useEffect, useState } from 'react';
+import { hotjar } from 'react-hotjar';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { RecoilRoot } from 'recoil';
-import Script from 'next/script';
 import * as gtag from '../utils/gtag';
-import { hotjar } from 'react-hotjar';
-import { HJID, HJSV } from '@src/utils/constant';
-import GlobalStyle from '@src/styles/globalStyle';
-import CustomErrorBoundary from '@src/components/common/CustomErrorBoundary';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(

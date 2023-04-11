@@ -1,4 +1,4 @@
-import ImageDiv from '@src/components/common/ImageDiv';
+import { ImageDiv } from '@src/components/common';
 import { icLeftArrowWhite, icRightArrowWhite } from 'public/assets/icons';
 import { useEffect, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';

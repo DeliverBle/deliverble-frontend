@@ -1,4 +1,4 @@
-import ImageDiv from '@src/components/common/ImageDiv';
+import { ImageDiv } from '@src/components/common';
 import { MemoDotButton, MemoForm } from '@src/components/learnDetail/memo';
 import { MemoConfirmModalKey } from '@src/components/learnDetail/modal/ConfirmModal';
 import { MemoState } from '@src/pages/learn/[id]';

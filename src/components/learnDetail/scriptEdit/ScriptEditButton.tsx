@@ -1,4 +1,4 @@
-import ImageDiv from '@src/components/common/ImageDiv';
+import { ImageDiv } from '@src/components/common';
 import { loginState } from '@src/stores/loginState';
 import {
   icHighlighterClicked,
