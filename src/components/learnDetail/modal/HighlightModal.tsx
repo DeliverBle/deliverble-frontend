@@ -1,8 +1,8 @@
-import styled from 'styled-components';
-import ImageDiv from '../common/ImageDiv';
+import ImageDiv from '@src/components/common/ImageDiv';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { icAlert, icEmptyBox } from 'public/assets/icons';
+import styled from 'styled-components';
 
 interface HighlightModalProps {
   closeModal: () => void;

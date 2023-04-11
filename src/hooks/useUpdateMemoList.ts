@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
+import { MemoConfirmModalKey } from '@src/components/learnDetail/modal/ConfirmModal';
 import { MemoInfo, MemoState } from '@src/pages/learn/[id]';
 import { api } from '@src/services/api';
 import { MemoData } from '@src/services/api/types/learn-detail';

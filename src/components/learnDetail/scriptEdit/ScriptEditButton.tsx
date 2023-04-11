@@ -1,5 +1,5 @@
 import ImageDiv from '@src/components/common/ImageDiv';
-import styled from 'styled-components';
+import { loginState } from '@src/stores/loginState';
 import {
   icHighlighterClicked,
   icHighlighterDefault,
@@ -9,7 +9,7 @@ import {
   icSpacingHover,
 } from 'public/assets/icons';
 import { useRecoilValue } from 'recoil';
-import { loginState } from '@src/stores/loginState';
+import styled from 'styled-components';
 
 interface ScriptEditButtonProps {
   handleLoginModalOpen: () => void;

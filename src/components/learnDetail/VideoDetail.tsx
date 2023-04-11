@@ -1,8 +1,8 @@
+import { useBodyScrollLock } from '@src/hooks/useBodyScrollLock';
 import { Tag } from '@src/services/api/types/learn-detail';
-import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import { useBodyScrollLock } from '@src/hooks/useBodyScrollLock';
+import styled from 'styled-components';
 
 interface VideoDetailProps {
   channel: string;

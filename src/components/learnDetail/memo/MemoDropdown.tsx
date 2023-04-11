@@ -1,10 +1,10 @@
-import { COLOR } from '@src/styles/color';
-import { FONT_STYLES } from '@src/styles/fontStyle';
-import styled from 'styled-components';
-import { Dispatch, SetStateAction } from 'react';
+import { MemoConfirmModalKey } from '@src/components/learnDetail/modal/ConfirmModal';
 import { MemoState } from '@src/pages/learn/[id]';
 import { MemoData } from '@src/services/api/types/learn-detail';
-import { MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
+import { COLOR } from '@src/styles/color';
+import { FONT_STYLES } from '@src/styles/fontStyle';
+import { Dispatch, SetStateAction } from 'react';
+import styled from 'styled-components';
 
 interface MemoDropdownProps {
   memoData: MemoData;

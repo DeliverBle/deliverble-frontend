@@ -1,4 +1,4 @@
-import { ConfirmModalText, MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
+import { ConfirmModalText, MemoConfirmModalKey } from '@src/components/learnDetail/modal/ConfirmModal';
 
 export const NEW_MEMO_CONFIRM_MODAL_TEXT = {
   mainText: '메모 작성을 취소하시겠습니까?',

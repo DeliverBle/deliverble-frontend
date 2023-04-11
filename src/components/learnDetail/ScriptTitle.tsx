@@ -1,8 +1,8 @@
-import styled from 'styled-components';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import { ChangeEvent, KeyboardEvent, useRef, useState } from 'react';
 import { SCRIPT_TITLE_MAX_LENGTH } from '@src/utils/constant';
+import { ChangeEvent, KeyboardEvent, useRef, useState } from 'react';
+import styled from 'styled-components';
 
 interface ScriptTitleProps {
   name: string;

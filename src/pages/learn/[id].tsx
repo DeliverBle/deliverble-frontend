@@ -1,47 +1,44 @@
-import React, { useEffect, useRef, useState } from 'react';
-import styled, { css } from 'styled-components';
-import { useMutation, useQuery } from 'react-query';
-import { useRecoilValue } from 'recoil';
-import dynamic from 'next/dynamic';
-import { useRouter } from 'next/router';
-import YouTube from 'react-youtube';
-import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
-import NavigationBar from '@src/components/common/NavigationBar';
 import ImageDiv from '@src/components/common/ImageDiv';
 import Like from '@src/components/common/Like';
-import SEO from '@src/components/common/SEO';
+import NavigationBar from '@src/components/common/NavigationBar';
 import NewsList from '@src/components/common/NewsList';
-import { ConfirmModalText, MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
-import ScriptEdit from '@src/components/learnDetail/ScriptEdit';
-import VideoDetail from '@src/components/learnDetail/VideoDetail';
-import ScriptTitle from '@src/components/learnDetail/ScriptTitle';
-import RecordStatusBar from '@src/components/learnDetail/record/RecordStatusBar';
+import SEO from '@src/components/common/SEO';
+import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
+import { ScriptTitle, StudyLog, VideoDetail } from '@src/components/learnDetail';
+import { ConfirmModalText, MemoConfirmModalKey } from '@src/components/learnDetail/modal/ConfirmModal';
+import { RecordStatusBar } from '@src/components/learnDetail/record';
+import { ScriptEdit, ScriptEditButtonContainer } from '@src/components/learnDetail/scriptEdit';
+import { LearningButton, SpeechGuideTitle } from '@src/components/learnDetail/speechGuide';
+import { useBodyScrollLock } from '@src/hooks/useBodyScrollLock';
+import useClickOutside from '@src/hooks/useClickOutside';
+import useDeleteElement from '@src/hooks/useDeleteElement';
+import useRightClickHandler from '@src/hooks/useRightClickHandler';
+import useUpdateMemoList from '@src/hooks/useUpdateMemoList';
 import { api } from '@src/services/api';
-import { MemoData, Name, VideoData } from '@src/services/api/types/learn-detail';
 import { VideoData as simpleVideoData } from '@src/services/api/types/home';
+import { MemoData, Name, VideoData } from '@src/services/api/types/learn-detail';
 import { loginState } from '@src/stores/loginState';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import {
-  INITIAL_NUMBER,
-  INITIAL_MEMO_STATE,
   DELETE_SCRIPT_CONFIRM_MODAL_TEXT,
+  INITIAL_MEMO_STATE,
+  INITIAL_NUMBER,
+  MemoConfirmModalTextByType,
+  NEW_MEMO_CONFIRM_MODAL_TEXT,
   SCRIPT_MAX_COUNT,
   VIDEO_STATE_CUED,
   VIDEO_STATE_PAUSED,
-  NEW_MEMO_CONFIRM_MODAL_TEXT,
-  MemoConfirmModalTextByType,
 } from '@src/utils/constant';
-import { useBodyScrollLock } from '@src/hooks/useBodyScrollLock';
-import { icXButton } from 'public/assets/icons';
-import ScriptEditButtonContainer from '@src/components/learnDetail/ScriptEditButtonContainer';
 import { underlineMemo } from '@src/utils/underlineMemo';
-import useRightClickHandler from '@src/hooks/useRightClickHandler';
-import StudyLog from '@src/components/learnDetail/StudyLog';
-import useClickOutside from '@src/hooks/useClickOutside';
-import useUpdateMemoList from '@src/hooks/useUpdateMemoList';
-import useDeleteElement from '@src/hooks/useDeleteElement';
-import { LearningButton, SpeechGuideTitle } from '@src/components/learnDetail/speechGuide';
+import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
+import { icXButton } from 'public/assets/icons';
+import React, { useEffect, useRef, useState } from 'react';
+import { useMutation, useQuery } from 'react-query';
+import YouTube from 'react-youtube';
+import { useRecoilValue } from 'recoil';
+import styled, { css } from 'styled-components';
 
 export interface MemoState {
   newMemoId: number;
@@ -99,8 +96,8 @@ function LearnDetail() {
     updateMemoList,
   });
   const ContextMenu = dynamic(() => import('@src/components/learnDetail/ContextMenu'), { ssr: false });
-  const GuideModal = dynamic(() => import('@src/components/learnDetail/GuideModal'), { ssr: false });
-  const ConfirmModal = dynamic(() => import('@src/components/learnDetail/ConfirmModal'), { ssr: false });
+  const GuideModal = dynamic(() => import('@src/components/learnDetail/modal/GuideModal'), { ssr: false });
+  const ConfirmModal = dynamic(() => import('@src/components/learnDetail/modal/ConfirmModal'), { ssr: false });
   const LoginModal = dynamic(() => import('@src/components/login/LoginModal'), { ssr: false });
 
   useEffect(() => {

@@ -1,15 +1,15 @@
-import styled from 'styled-components';
+import Portal from '@src/components/common/Portal';
+import { MemoState } from '@src/pages/learn/[id]';
 import { COLOR } from '@src/styles/color';
 import { FONT_STYLES } from '@src/styles/fontStyle';
-import { Dispatch, SetStateAction, useEffect } from 'react';
-import Portal from '../common/Portal';
 import {
   DELETE_MEMO_CONFIRM_MODAL_TEXT,
   DELETE_SCRIPT_CONFIRM_MODAL_TEXT,
   INITIAL_MEMO_STATE,
   NEW_MEMO_CONFIRM_MODAL_TEXT,
 } from '@src/utils/constant';
-import { MemoState } from '@src/pages/learn/[id]';
+import { Dispatch, SetStateAction, useEffect } from 'react';
+import styled from 'styled-components';
 
 export type MemoConfirmModalKey = 'new' | 'edit' | 'delete';
 
