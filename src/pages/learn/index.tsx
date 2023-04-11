@@ -1,5 +1,5 @@
 import { Footer, ImageDiv, NavigationBar, NewsList, Pagination, SEO, VideoListSkeleton } from '@src/components/common';
-import SelectBox from '@src/components/learn/SelectBox';
+import { SelectBox } from '@src/components/learn';
 import { api } from '@src/services/api';
 import { PostSearchConditionRequestBody, VideoData } from '@src/services/api/types/learn';
 import { loginState } from '@src/stores/loginState';
