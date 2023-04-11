@@ -1,8 +1,5 @@
 import { ImageDiv, SEO } from '@src/components/common';
-import Header from '@src/components/landing/Header';
-import MobileContainer from '@src/components/landing/MobileContainer';
-import ScrollControl from '@src/components/landing/ScrollControl';
-import SliderContainer from '@src/components/landing/SliderContainer';
+import { Header, MobileContainer, ScrollControl, SliderContainer } from '@src/components/landing';
 import { useIsMobile } from '@src/hooks/useIsMobile';
 import { COLOR } from '@src/styles/color';
 import { icMobileLogo, icMobileLogoWhite } from 'public/assets/icons';
