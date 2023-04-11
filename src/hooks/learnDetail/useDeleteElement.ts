@@ -1,5 +1,5 @@
-import { MemoConfirmModalKey } from '@src/components/learnDetail/modal/ConfirmModal';
 import { api } from '@src/services/api';
+import { MemoConfirmModalKey } from '@src/types/learnDetail';
 import { VideoData } from '@src/types/learnDetail/remote';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
