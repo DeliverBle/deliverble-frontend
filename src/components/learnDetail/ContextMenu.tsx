@@ -1,5 +1,5 @@
+import { INITIAL } from '@src/constants/learnDetail/memo';
 import { COLOR, FONT_STYLES } from '@src/styles';
-import { INITIAL_NUMBER } from '@src/utils/constant';
 import { calcContextMenuPoint } from '@src/utils/contextMenu';
 import { forwardRef, Ref } from 'react';
 import styled, { css } from 'styled-components';
@@ -30,7 +30,7 @@ function ContextMenu(props: ContextMenuProps, ref: Ref<HTMLDivElement>) {
     <StContextMenu top={y} left={x} clickedTag={clickedTag} isEditing={isEditing} ref={ref}>
       {clickedTag === 'MARK' && !isEditing && (
         <button type="button" onClick={handleMemoState}>
-          {clickedMemoId !== INITIAL_NUMBER ? '메모 수정' : '메모 추가'}
+          {clickedMemoId !== INITIAL ? '메모 수정' : '메모 추가'}
         </button>
       )}
       <button type="button" onClick={(e) => handleContextMenu(e, clickedTag)}>

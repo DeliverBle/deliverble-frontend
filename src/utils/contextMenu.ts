@@ -1,4 +1,4 @@
-import { ABSOLUTE_RIGHT_LIMIT, CONTEXT_MENU_WIDTH } from '@src/utils/constant';
+import { ABSOLUTE_RIGHT_LIMIT, CONTEXT_MENU_WIDTH } from '@src/constants/learnDetail';
 
 export const calcContextMenuPoint = (target: HTMLElement) => {
   let x = 0,

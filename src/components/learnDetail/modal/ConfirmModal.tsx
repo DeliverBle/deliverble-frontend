@@ -1,13 +1,13 @@
 import { Portal } from '@src/components/common';
+import { INITIAL_MEMO_STATE } from '@src/constants/learnDetail/memo';
+import {
+  DELETE_MEMO_MODAL_TEXT,
+  DELETE_SCRIPT_MODAL_TEXT,
+  NEW_MEMO_MODAL_TEXT,
+} from '@src/constants/learnDetail/modal';
 import { COLOR } from '@src/styles';
 import { FONT_STYLES } from '@src/styles/fontStyle';
 import { ConfirmModalText, MemoConfirmModalKey, MemoState } from '@src/types/learnDetail';
-import {
-  DELETE_MEMO_CONFIRM_MODAL_TEXT,
-  DELETE_SCRIPT_CONFIRM_MODAL_TEXT,
-  INITIAL_MEMO_STATE,
-  NEW_MEMO_CONFIRM_MODAL_TEXT,
-} from '@src/utils/constant';
 import { Dispatch, SetStateAction, useEffect } from 'react';
 import styled from 'styled-components';
 
@@ -32,15 +32,15 @@ function ConfirmModal(props: ConfirmModalProps) {
   }, []);
 
   const handleButtonClick = () => {
-    if (mainText === DELETE_SCRIPT_CONFIRM_MODAL_TEXT.mainText) {
+    if (mainText === DELETE_SCRIPT_MODAL_TEXT.mainText) {
       onTitleDelete();
       return;
     }
-    if (mainText === DELETE_MEMO_CONFIRM_MODAL_TEXT.mainText) {
+    if (mainText === DELETE_MEMO_MODAL_TEXT.mainText) {
       updateMemoList('delete');
       return;
     }
-    if (mainText === NEW_MEMO_CONFIRM_MODAL_TEXT.mainText) {
+    if (mainText === NEW_MEMO_MODAL_TEXT.mainText) {
       cancelCreateMemo();
     }
     setMemoState(INITIAL_MEMO_STATE);

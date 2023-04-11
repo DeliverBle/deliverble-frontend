@@ -1,5 +1,5 @@
+import { STATUS_CODE } from '@src/constants/common';
 import { COLOR, FONT_STYLES } from '@src/styles';
-import { STATUS_CODE } from '@src/utils/constant';
 import Link from 'next/link';
 import { imgErrorBg } from 'public/assets/images';
 import styled from 'styled-components';

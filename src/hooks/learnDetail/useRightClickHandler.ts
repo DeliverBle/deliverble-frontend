@@ -1,6 +1,6 @@
+import { INITIAL, INITIAL_MEMO } from '@src/constants/learnDetail/memo';
 import { MemoInfo, MemoState } from '@src/types/learnDetail';
 import { MemoData } from '@src/types/learnDetail/remote';
-import { INITIAL_MEMO, INITIAL_NUMBER } from '@src/utils/constant';
 import { useState } from 'react';
 
 interface useRightClickHandlerProps {
@@ -28,14 +28,14 @@ function useRightClickHandler(props: useRightClickHandlerProps) {
 
   const handleRightClickOnMark = (highlight: HTMLElement, scriptId: number, order: number) => {
     const { newMemoId, editMemoId } = memoState;
-    if (newMemoId === INITIAL_NUMBER && editMemoId === INITIAL_NUMBER) {
+    if (newMemoId === INITIAL && editMemoId === INITIAL) {
       setIsContextMenuOpen(true);
 
       const startIndex = getHighlightIndex(highlight, highlight.id);
       if (startIndex) {
         const keyword = highlight.innerText.replace(/\//g, ' ');
         const highlightId = highlight.id;
-        const id = memoList.find((memo) => memo.highlightId === highlightId)?.id ?? INITIAL_NUMBER;
+        const id = memoList.find((memo) => memo.highlightId === highlightId)?.id ?? INITIAL;
         setMemoInfo((prev) => ({ ...prev, id, scriptId, order, startIndex, keyword, highlightId }));
       }
     }

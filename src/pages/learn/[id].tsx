@@ -3,6 +3,9 @@ import { ScriptTitle, StudyLog, VideoDetail } from '@src/components/learnDetail'
 import { RecordStatusBar } from '@src/components/learnDetail/record';
 import { ScriptEdit, ScriptEditButtonContainer } from '@src/components/learnDetail/scriptEdit';
 import { LearningButton, SpeechGuideTitle } from '@src/components/learnDetail/speechGuide';
+import { SCRIPT_MAX_COUNT, VIDEO_STATE_CUED, VIDEO_STATE_PAUSED } from '@src/constants/learnDetail';
+import { INITIAL, INITIAL_MEMO_STATE } from '@src/constants/learnDetail/memo';
+import { DELETE_SCRIPT_MODAL_TEXT, MEMO_MODAL_TEXT_TYPE, NEW_MEMO_MODAL_TEXT } from '@src/constants/learnDetail/modal';
 import { useBodyScrollLock, useClickOutside } from '@src/hooks/common';
 import { useDeleteElement, useRightClickHandler, useUpdateMemoList } from '@src/hooks/learnDetail';
 import { api } from '@src/services/api';
@@ -11,16 +14,6 @@ import { COLOR, FONT_STYLES } from '@src/styles';
 import { VideoData as simpleVideoData } from '@src/types/home/remote';
 import { ConfirmModalText, MemoConfirmModalKey, MemoState } from '@src/types/learnDetail';
 import { MemoData, Name, VideoData } from '@src/types/learnDetail/remote';
-import {
-  DELETE_SCRIPT_CONFIRM_MODAL_TEXT,
-  INITIAL_MEMO_STATE,
-  INITIAL_NUMBER,
-  MemoConfirmModalTextByType,
-  NEW_MEMO_CONFIRM_MODAL_TEXT,
-  SCRIPT_MAX_COUNT,
-  VIDEO_STATE_CUED,
-  VIDEO_STATE_PAUSED,
-} from '@src/utils/constant';
 import { underlineMemo } from '@src/utils/underlineMemo';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -39,12 +32,12 @@ function LearnDetail() {
   const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
   const { lockScroll, unlockScroll } = useBodyScrollLock();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  const [confirmModalText, setConfirmModalText] = useState<ConfirmModalText>(NEW_MEMO_CONFIRM_MODAL_TEXT);
+  const [confirmModalText, setConfirmModalText] = useState<ConfirmModalText>(NEW_MEMO_MODAL_TEXT);
   const [isHighlight, setIsHighlight] = useState(false);
   const [isSpacing, setIsSpacing] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [player, setPlayer] = useState<YT.Player | null>();
-  const [videoState, setVideoState] = useState(INITIAL_NUMBER);
+  const [videoState, setVideoState] = useState(INITIAL);
   const [currentTime, setCurrentTime] = useState(0);
   const learnRef = useRef<HTMLDivElement>(null);
   const getLoginStatus = () => localStorage.getItem('token') ?? '';
@@ -90,7 +83,7 @@ function LearnDetail() {
   };
 
   const handleScriptDelete = async () => {
-    const scriptId = videoData?.scriptsId ?? INITIAL_NUMBER;
+    const scriptId = videoData?.scriptsId ?? INITIAL;
     const response = await api.learnDetailService.deleteScriptData(scriptId);
     if (response.isSuccess && clickedTitleIndex) {
       setClickedTitleIndex(0);
@@ -109,12 +102,12 @@ function LearnDetail() {
   };
 
   const handleTitleDeleteModal = () => {
-    setConfirmModalText(DELETE_SCRIPT_CONFIRM_MODAL_TEXT);
+    setConfirmModalText(DELETE_SCRIPT_MODAL_TEXT);
     setIsConfirmOpen(true);
   };
 
   const renameScriptTitle = async (name: string) => {
-    const scriptId = videoData?.scriptsId ?? INITIAL_NUMBER;
+    const scriptId = videoData?.scriptsId ?? INITIAL;
     return await api.learnDetailService.updateScriptNameData(scriptId, name);
   };
 
@@ -159,7 +152,7 @@ function LearnDetail() {
 
   const handleMemoModal = (type: MemoConfirmModalKey) => {
     setIsConfirmOpen(true);
-    setConfirmModalText(MemoConfirmModalTextByType[type]);
+    setConfirmModalText(MEMO_MODAL_TEXT_TYPE[type]);
   };
 
   const handleMemoState = (e: React.MouseEvent) => {
@@ -167,7 +160,7 @@ function LearnDetail() {
     setIsContextMenuOpen(false);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { scriptId, ...memo } = memoInfo;
-    if (memo.id !== INITIAL_NUMBER) {
+    if (memo.id !== INITIAL) {
       setMemoState((prev: MemoState) => ({ ...prev, editMemoId: memo.id }));
       return;
     }

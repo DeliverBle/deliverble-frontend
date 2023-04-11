@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { INITIAL_MEMO_STATE } from '@src/constants/learnDetail/memo';
 import { api } from '@src/services/api';
-import { MemoState, MemoInfo, MemoConfirmModalKey } from '@src/types/learnDetail';
+import { MemoConfirmModalKey, MemoInfo, MemoState } from '@src/types/learnDetail';
 import { MemoData } from '@src/types/learnDetail/remote';
-import { INITIAL_MEMO_STATE } from '@src/utils/constant';
 
 interface useUpdateMemoListProps {
   memoState: MemoState;

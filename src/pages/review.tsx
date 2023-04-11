@@ -1,14 +1,14 @@
 import { Footer, NavigationBar, SEO, VideoListSkeleton } from '@src/components/common';
 import { HeadlineContainer, VideoContainer } from '@src/components/review';
+import { LIST_SIZE } from '@src/constants/common';
 import { api } from '@src/services/api';
-import { ReviewTab } from '@src/types/review/remote';
 import { loginState } from '@src/stores/loginState';
-import { LIST_SIZE } from '@src/utils/constant';
+import { COLOR, FONT_STYLES } from '@src/styles';
+import { ReviewTab } from '@src/types/review/remote';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useRecoilState } from 'recoil';
-import { COLOR, FONT_STYLES } from '@src/styles';
 import styled from 'styled-components';
 
 function Review() {
