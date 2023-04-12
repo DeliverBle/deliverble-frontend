@@ -1,8 +1,7 @@
 import styled from 'styled-components';
 import ImageDiv from '../common/ImageDiv';
 import { imgReviewEmpty } from 'public/assets/images';
-import { COLOR } from '@src/styles/color';
-import { FONT_STYLES } from '@src/styles/fontStyle';
+import { COLOR, FONT_STYLES } from '@src/styles';
 import Link from 'next/link';
 
 interface EmptyProps {

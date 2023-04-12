@@ -1,6 +1,5 @@
 import styled from 'styled-components';
-import { FONT_STYLES } from '@src/styles/fontStyle';
-import { COLOR } from '@src/styles/color';
+import { COLOR, FONT_STYLES } from '@src/styles';
 import { VideoData } from '@src/services/api/types/review';
 import NewsList from '../common/NewsList';
 import Pagination from '../common/Pagination';

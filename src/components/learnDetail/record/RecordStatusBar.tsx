@@ -1,12 +1,11 @@
-import ImageDiv from '@src/components/common/ImageDiv';
-import styled from 'styled-components';
-import { COLOR } from '@src/styles/color';
-import { icRecordMicDefault, icRecordMicActive, icRecordStart, icRecordStop } from 'public/assets/icons';
-import { FONT_STYLES } from '@src/styles/fontStyle';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { ImageDiv } from '@src/components/common';
 import { api } from '@src/services/api';
 import { loginState } from '@src/stores/loginState';
+import { COLOR, FONT_STYLES } from '@src/styles';
+import { icRecordMicActive, icRecordMicDefault, icRecordStart, icRecordStop } from 'public/assets/icons';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
+import styled from 'styled-components';
 
 interface RecordStatusBarProps {
   scriptId: number;

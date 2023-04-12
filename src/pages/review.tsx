@@ -1,20 +1,15 @@
-import NavigationBar from '@src/components/common/NavigationBar';
-import Footer from '@src/components/common/Footer';
-import SEO from '@src/components/common/SEO';
-import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
-import HeadlineContainer from '@src/components/review/HeadlineContainer';
-import VideoContainer from '@src/components/review/VideoContainer';
+import { Footer, NavigationBar, SEO, VideoListSkeleton } from '@src/components/common';
+import { HeadlineContainer, VideoContainer } from '@src/components/review';
 import { api } from '@src/services/api';
 import { ReviewTab } from '@src/services/api/types/review';
 import { loginState } from '@src/stores/loginState';
 import { LIST_SIZE } from '@src/utils/constant';
-import { useEffect, useState } from 'react';
-import { COLOR } from 'src/styles/color';
-import { FONT_STYLES } from 'src/styles/fontStyle';
-import styled from 'styled-components';
-import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useRecoilState } from 'recoil';
+import { COLOR, FONT_STYLES } from '@src/styles';
+import styled from 'styled-components';
 
 function Review() {
   const queryClient = useQueryClient();

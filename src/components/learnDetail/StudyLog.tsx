@@ -1,11 +1,10 @@
-import { MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
-import MemoLog from '@src/components/learnDetail/memo/MemoLog';
-import RecordLog from '@src/components/learnDetail/record/RecordLog';
+import { MemoLog } from '@src/components/learnDetail/memo';
+import { MemoConfirmModalKey } from '@src/components/learnDetail/modal/ConfirmModal';
+import { RecordLog } from '@src/components/learnDetail/record';
 import { MemoState } from '@src/pages/learn/[id]';
 import { MemoData } from '@src/services/api/types/learn-detail';
-import { COLOR } from '@src/styles/color';
-import { FONT_STYLES } from '@src/styles/fontStyle';
-import { useState, useEffect, Dispatch, SetStateAction } from 'react';
+import { COLOR, FONT_STYLES } from '@src/styles';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 interface StudyLogProps {

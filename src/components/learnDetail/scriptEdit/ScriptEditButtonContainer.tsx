@@ -1,6 +1,5 @@
-import ScriptEditButton from '@src/components/learnDetail/ScriptEditButton';
-import { COLOR } from '@src/styles/color';
-import { FONT_STYLES } from '@src/styles/fontStyle';
+import { ScriptEditButton } from '@src/components/learnDetail/scriptEdit';
+import { COLOR, FONT_STYLES } from '@src/styles';
 import { useState } from 'react';
 import styled, { css } from 'styled-components';
 

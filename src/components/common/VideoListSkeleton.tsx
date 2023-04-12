@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import VideoItemSkeleton from './VideoItemSkeleton';
-import { COLOR } from '@src/styles/color';
+import { COLOR } from '@src/styles';
 
 interface VideoListSkeleton {
   itemNumber: number;

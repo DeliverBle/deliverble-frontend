@@ -1,22 +1,21 @@
 import styled from 'styled-components';
-import ImageDiv from '@src/components/common/ImageDiv';
-import { FONT_STYLES } from '@src/styles/fontStyle';
-import { COLOR } from '@src/styles/color';
-import { useState, useRef, KeyboardEvent } from 'react';
+import { ImageDiv } from '@src/components/common';
+import { api } from '@src/services/api';
+import { COLOR, FONT_STYLES } from '@src/styles';
+import { useRouter } from 'next/router';
 import {
+  icCheckButton,
+  icMemoXButton,
+  icRecordPauseActive,
+  icRecordPauseDefault,
+  icRecordPlayActive,
   icRecordPlayDefault,
   icRecordPlayUnactivated,
-  icRecordPlayActive,
-  icRecordPauseDefault,
-  icRecordPauseActive,
-  icMemoXButton,
-  icCheckButton,
 } from 'public/assets/icons';
+import { KeyboardEvent, useRef, useState } from 'react';
+import { useMutation, useQuery } from 'react-query';
 import EmptyRecord from './EmptyRecord';
 import RecordDotButton from './RecordDotButton';
-import { api } from '@src/services/api';
-import { useMutation, useQuery } from 'react-query';
-import { useRouter } from 'next/router';
 
 interface RecordStatusBarProps {
   scriptId: number;

@@ -1,12 +1,12 @@
-import dynamic from 'next/dynamic';
-import ImageDiv from '@src/components/common/ImageDiv';
-import { icDotDefault, icDotHover } from 'public/assets/icons';
-import { useState, useRef, Dispatch, SetStateAction } from 'react';
-import styled from 'styled-components';
+import { ImageDiv } from '@src/components/common';
+import { MemoConfirmModalKey } from '@src/components/learnDetail/modal/ConfirmModal';
+import { useClickOutside } from '@src/hooks/common';
 import { MemoState } from '@src/pages/learn/[id]';
 import { MemoData } from '@src/services/api/types/learn-detail';
-import { MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
-import useClickOutside from '@src/hooks/useClickOutside';
+import dynamic from 'next/dynamic';
+import { icDotDefault, icDotHover } from 'public/assets/icons';
+import { Dispatch, SetStateAction, useRef, useState } from 'react';
+import styled from 'styled-components';
 
 interface MemoDotButtonProps {
   memoData: MemoData;

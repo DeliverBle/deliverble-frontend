@@ -1,14 +1,10 @@
+import { ImageDiv, SEO } from '@src/components/common';
+import { Header, MobileContainer, ScrollControl, SliderContainer } from '@src/components/landing';
+import { useIsMobile } from '@src/hooks/landing';
+import { COLOR } from '@src/styles';
+import { icMobileLogo, icMobileLogoWhite } from 'public/assets/icons';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import SEO from '@src/components/common/SEO';
-import Header from '@src/components/landing/Header';
-import ScrollControl from '@src/components/landing/ScrollControl';
-import SliderContainer from '@src/components/landing/SliderContainer';
-import { icMobileLogoWhite, icMobileLogo } from 'public/assets/icons';
-import MobileContainer from '@src/components/landing/MobileContainer';
-import ImageDiv from '@src/components/common/ImageDiv';
-import { COLOR } from '@src/styles/color';
-import { useIsMobile } from '@src/hooks/useIsMobile';
 
 function Landing() {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);

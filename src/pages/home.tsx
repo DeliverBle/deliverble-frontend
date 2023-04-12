@@ -1,20 +1,14 @@
-import NavigationBar from '@src/components/common/NavigationBar';
-import BannerSlider from '@src/components/common/BannerSlider';
-import Footer from '@src/components/common/Footer';
-import NewsList from '@src/components/common/NewsList';
-import SEO from '@src/components/common/SEO';
-import VideoListSkeleton from '@src/components/common/VideoListSkeleton';
+import { BannerSlider, Footer, NavigationBar, NewsList, SEO, VideoListSkeleton } from '@src/components/common';
 import { api } from '@src/services/api';
 import { VideoData } from '@src/services/api/types/home';
-import { COLOR } from '@src/styles/color';
-import { FONT_STYLES } from '@src/styles/fontStyle';
+import { loginState } from '@src/stores/loginState';
+import { COLOR, FONT_STYLES } from '@src/styles';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { useMediaQuery } from 'react-responsive';
-import styled from 'styled-components';
-import { loginState } from '@src/stores/loginState';
-import { useRouter } from 'next/router';
 import { useSetRecoilState } from 'recoil';
+import styled from 'styled-components';
 
 function Home() {
   const router = useRouter();

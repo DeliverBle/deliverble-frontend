@@ -1,9 +1,8 @@
-import { MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
-import EmptyMemo from '@src/components/learnDetail/memo/EmptyMemo';
-import MemoItem from '@src/components/learnDetail/memo/MemoItem';
+import { EmptyMemo, MemoItem } from '@src/components/learnDetail/memo';
+import { MemoConfirmModalKey } from '@src/components/learnDetail/modal/ConfirmModal';
 import { MemoState } from '@src/pages/learn/[id]';
 import { MemoData } from '@src/services/api/types/learn-detail';
-import { COLOR } from '@src/styles/color';
+import { COLOR } from '@src/styles';
 import { Dispatch, SetStateAction } from 'react';
 import styled from 'styled-components';
 

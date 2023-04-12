@@ -1,8 +1,5 @@
-import styled from 'styled-components';
-import ImageDiv from '../common/ImageDiv';
-import Portal from '../common/Portal';
-import { COLOR } from '@src/styles/color';
-import { FONT_STYLES } from '@src/styles/fontStyle';
+import { ImageDiv, Portal } from '@src/components/common';
+import { COLOR, FONT_STYLES } from '@src/styles';
 import {
   icGuideHighlight,
   icGuideMemo,
@@ -11,6 +8,7 @@ import {
   icGuideSpacing,
   icXButton,
 } from 'public/assets/icons';
+import styled from 'styled-components';
 
 interface GuideModalProps {
   closeModal: () => void;

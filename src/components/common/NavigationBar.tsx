@@ -1,8 +1,6 @@
-import { useBodyScrollLock } from '@src/hooks/useBodyScrollLock';
-import useClickOutside from '@src/hooks/useClickOutside';
+import { useBodyScrollLock, useClickOutside } from '@src/hooks/common';
 import { loginState } from '@src/stores/loginState';
-import { COLOR } from '@src/styles/color';
-import { FONT_STYLES } from '@src/styles/fontStyle';
+import { COLOR, FONT_STYLES } from '@src/styles';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';

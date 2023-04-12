@@ -1,7 +1,6 @@
-import ImageDiv from '@src/components/common/ImageDiv';
+import { ImageDiv } from '@src/components/common';
 import { SpeechGuideTooltip } from '@src/components/learnDetail/speechGuide';
-import { COLOR } from '@src/styles/color';
-import { FONT_STYLES } from '@src/styles/fontStyle';
+import { COLOR, FONT_STYLES } from '@src/styles';
 import { useRouter } from 'next/router';
 import { icSpeechGuideInfo } from 'public/assets/icons';
 import { useState } from 'react';

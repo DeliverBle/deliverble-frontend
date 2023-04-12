@@ -1,13 +1,12 @@
-import dynamic from 'next/dynamic';
-import styled from 'styled-components';
-import { useState } from 'react';
-import { icDeliverbleBlue, icDeliverbleWhite } from 'public/assets/icons';
-import { COLOR } from 'src/styles/color';
-import { FONT_STYLES } from 'src/styles/fontStyle';
-import ImageDiv from '../common/ImageDiv';
+import { useBodyScrollLock } from '@src/hooks/common';
 import { loginState } from '@src/stores/loginState';
+import { COLOR, FONT_STYLES } from '@src/styles';
+import dynamic from 'next/dynamic';
+import { icDeliverbleBlue, icDeliverbleWhite } from 'public/assets/icons';
+import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { useBodyScrollLock } from '@src/hooks/useBodyScrollLock';
+import styled from 'styled-components';
+import ImageDiv from '../common/ImageDiv';
 
 interface HeaderProps {
   isFirstScrolled?: boolean;

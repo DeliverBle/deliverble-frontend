@@ -1,9 +1,8 @@
-import ImageDiv from '@src/components/common/ImageDiv';
+import { ImageDiv } from '@src/components/common';
 import { icLeftArrowWhite, icRightArrowWhite } from 'public/assets/icons';
 import { useEffect, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
-import { COLOR } from '@src/styles/color';
-import { FONT_STYLES } from '@src/styles/fontStyle';
+import { COLOR, FONT_STYLES } from '@src/styles';
 import { Swiper, SwiperSlide, SwiperProps, SwiperRef } from 'swiper/react';
 import SwiperCore, { Navigation, Pagination, Autoplay } from 'swiper';
 import { BANNER_TEXT_LIST } from '@src/utils/constant';

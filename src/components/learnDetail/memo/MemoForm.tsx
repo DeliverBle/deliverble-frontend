@@ -1,12 +1,11 @@
-import { MemoConfirmModalKey } from '@src/components/learnDetail/ConfirmModal';
-import useClickOutside from '@src/hooks/useClickOutside';
+import { MemoConfirmModalKey } from '@src/components/learnDetail/modal/ConfirmModal';
+import { useClickOutside } from '@src/hooks/common';
 import { MemoState } from '@src/pages/learn/[id]';
 import { MemoData } from '@src/services/api/types/learn-detail';
-import { COLOR } from '@src/styles/color';
-import { FONT_STYLES } from '@src/styles/fontStyle';
+import { COLOR, FONT_STYLES } from '@src/styles';
 import { INITIAL_MEMO_STATE, INITIAL_NUMBER, MEMO_CONTENT_MAX_LENGTH } from '@src/utils/constant';
-import { icCheckButton, icMemoXButton, icInactiveCheckButton } from 'public/assets/icons';
-import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
+import { icCheckButton, icInactiveCheckButton, icMemoXButton } from 'public/assets/icons';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
 import ImageDiv from '../../common/ImageDiv';
 

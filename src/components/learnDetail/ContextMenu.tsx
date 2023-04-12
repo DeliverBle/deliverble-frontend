@@ -1,5 +1,4 @@
-import { COLOR } from '@src/styles/color';
-import { FONT_STYLES } from '@src/styles/fontStyle';
+import { COLOR, FONT_STYLES } from '@src/styles';
 import { INITIAL_NUMBER } from '@src/utils/constant';
 import { calcContextMenuPoint } from '@src/utils/contextMenu';
 import { forwardRef, Ref } from 'react';

@@ -1,8 +1,7 @@
-import { useBodyScrollLock } from '@src/hooks/useBodyScrollLock';
+import { useBodyScrollLock } from '@src/hooks/common';
 import { VideoData } from '@src/services/api/types/home';
 import { loginState } from '@src/stores/loginState';
-import { COLOR } from '@src/styles/color';
-import { FONT_STYLES } from '@src/styles/fontStyle';
+import { COLOR, FONT_STYLES } from '@src/styles';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { icSpeechGuideLogo } from 'public/assets/icons';

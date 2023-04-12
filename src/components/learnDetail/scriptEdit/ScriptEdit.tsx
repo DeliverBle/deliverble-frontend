@@ -1,8 +1,8 @@
-import { Dispatch, SetStateAction, useEffect, useRef, useState, MouseEvent } from 'react';
-import HighlightModal from './HighlightModal';
-import styled from 'styled-components';
-import { COLOR } from '@src/styles/color';
+import { HighlightModal } from '@src/components/learnDetail/modal';
 import { VideoData } from '@src/services/api/types/learn-detail';
+import { COLOR } from '@src/styles';
+import { Dispatch, MouseEvent, SetStateAction, useEffect, useRef, useState } from 'react';
+import styled from 'styled-components';
 
 interface ScriptEditProps {
   videoData: VideoData;

@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-export function useBodyScrollLock() {
+function useBodyScrollLock() {
   const lockScroll = useCallback(() => {
     document.body.style.overflow = 'hidden';
   }, []);
@@ -11,3 +11,5 @@ export function useBodyScrollLock() {
 
   return { lockScroll, unlockScroll };
 }
+
+export default useBodyScrollLock;

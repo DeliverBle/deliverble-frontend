@@ -1,5 +1,4 @@
-import { COLOR } from '@src/styles/color';
-import { FONT_STYLES } from '@src/styles/fontStyle';
+import { COLOR, FONT_STYLES } from '@src/styles';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 

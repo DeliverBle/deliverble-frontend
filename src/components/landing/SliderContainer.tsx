@@ -11,10 +11,9 @@ import {
   imgLandingFist,
   imgLandingBubble,
 } from 'public/assets/images/index';
-import { COLOR } from 'src/styles/color';
-import { FONT_STYLES } from 'src/styles/fontStyle';
+import { COLOR, FONT_STYLES } from '@src/styles';
 import ImageDiv from '../common/ImageDiv';
-import { useSlideObserver } from '@src/hooks/useSlideObserver';
+import { useSlideObserver } from '@src/hooks/landing';
 
 interface SliderContainerProps {
   slideNumber: number;
