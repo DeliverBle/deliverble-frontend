@@ -1,10 +1,9 @@
-import styled from 'styled-components';
+import { NewsList, Pagination } from '@src/components/common';
+import { Empty } from '@src/components/review';
+import { BLOCK_SIZE, LIST_SIZE } from '@src/constants/common';
 import { COLOR, FONT_STYLES } from '@src/styles';
-import { VideoData } from '@src/services/api/types/review';
-import NewsList from '../common/NewsList';
-import Pagination from '../common/Pagination';
-import Empty from './Empty';
-import { BLOCK_SIZE, LIST_SIZE } from '@src/utils/constant';
+import { VideoData } from '@src/types/review/remote';
+import styled from 'styled-components';
 
 interface VideoContainerProps {
   tab: string;

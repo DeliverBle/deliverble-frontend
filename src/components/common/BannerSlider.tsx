@@ -1,11 +1,11 @@
 import { ImageDiv } from '@src/components/common';
+import { COLOR, FONT_STYLES } from '@src/styles';
 import { icLeftArrowWhite, icRightArrowWhite } from 'public/assets/icons';
 import { useEffect, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
-import { COLOR, FONT_STYLES } from '@src/styles';
-import { Swiper, SwiperSlide, SwiperProps, SwiperRef } from 'swiper/react';
-import SwiperCore, { Navigation, Pagination, Autoplay } from 'swiper';
-import { BANNER_TEXT_LIST } from '@src/utils/constant';
+import SwiperCore, { Autoplay, Navigation, Pagination } from 'swiper';
+import { Swiper, SwiperProps, SwiperRef, SwiperSlide } from 'swiper/react';
+import { BANNER_TEXT_LIST } from '@src/constants/home';
 import 'swiper/css';
 
 function BannerSlider() {

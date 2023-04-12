@@ -1,6 +1,6 @@
 import { LearnService } from '../api/learn';
 import { API } from './base';
-import { PostSearchConditionRequestBody } from '../api/types/learn';
+import { PostSearchConditionRequestBody } from '@src/types/learn/remote';
 
 export function learnDataRemote(): LearnService {
   const postSearchCondition = async (body: PostSearchConditionRequestBody) => {

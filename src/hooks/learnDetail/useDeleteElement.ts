@@ -1,6 +1,6 @@
-import { MemoConfirmModalKey } from '@src/components/learnDetail/modal/ConfirmModal';
 import { api } from '@src/services/api';
-import { VideoData } from '@src/services/api/types/learn-detail';
+import { MemoConfirmModalKey } from '@src/types/learnDetail';
+import { VideoData } from '@src/types/learnDetail/remote';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 interface useDeleteElementProps {

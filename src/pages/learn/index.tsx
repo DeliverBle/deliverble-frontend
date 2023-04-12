@@ -1,10 +1,11 @@
 import { Footer, ImageDiv, NavigationBar, NewsList, Pagination, SEO, VideoListSkeleton } from '@src/components/common';
 import { SelectBox } from '@src/components/learn';
+import { BLOCK_SIZE, LIST_SIZE } from '@src/constants/common';
+import { categoryList, channelList, speakerList } from '@src/constants/learn';
 import { api } from '@src/services/api';
-import { PostSearchConditionRequestBody, VideoData } from '@src/services/api/types/learn';
 import { loginState } from '@src/stores/loginState';
 import { COLOR, FONT_STYLES } from '@src/styles';
-import { BLOCK_SIZE, categoryList, channelList, LIST_SIZE, speakerList } from '@src/utils/constant';
+import { PostSearchConditionRequestBody, VideoData } from '@src/types/learn/remote';
 import { useRouter } from 'next/router';
 import { icSearch } from 'public/assets/icons';
 import { useEffect, useState } from 'react';

@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-
-import { MemoConfirmModalKey } from '@src/components/learnDetail/modal/ConfirmModal';
-import { MemoInfo, MemoState } from '@src/pages/learn/[id]';
+import { INITIAL_MEMO_STATE } from '@src/constants/learnDetail/memo';
 import { api } from '@src/services/api';
-import { MemoData } from '@src/services/api/types/learn-detail';
-import { INITIAL_MEMO_STATE } from '@src/utils/constant';
+import { MemoConfirmModalKey, MemoInfo, MemoState } from '@src/types/learnDetail';
+import { MemoData } from '@src/types/learnDetail/remote';
 
 interface useUpdateMemoListProps {
   memoState: MemoState;

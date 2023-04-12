@@ -1,4 +1,4 @@
-import { UserData, LikeData } from './types/common';
+import { UserData, LikeData } from '@src/types/common/remote';
 
 export interface CommonService {
   requestLogin(code: string): Promise<string | undefined>;

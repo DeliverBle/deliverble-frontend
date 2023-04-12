@@ -1,13 +1,12 @@
-import { MemoConfirmModalKey } from '@src/components/learnDetail/modal/ConfirmModal';
+import { ImageDiv } from '@src/components/common';
+import { MEMO_CONTENT_MAX_LENGTH, INITIAL_MEMO_STATE, INITIAL } from '@src/constants/learnDetail/memo';
 import { useClickOutside } from '@src/hooks/common';
-import { MemoState } from '@src/pages/learn/[id]';
-import { MemoData } from '@src/services/api/types/learn-detail';
 import { COLOR, FONT_STYLES } from '@src/styles';
-import { INITIAL_MEMO_STATE, INITIAL_NUMBER, MEMO_CONTENT_MAX_LENGTH } from '@src/utils/constant';
+import { MemoConfirmModalKey, MemoState } from '@src/types/learnDetail';
+import { MemoData } from '@src/types/learnDetail/remote';
 import { icCheckButton, icInactiveCheckButton, icMemoXButton } from 'public/assets/icons';
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
-import ImageDiv from '../../common/ImageDiv';
 
 interface MemoFormProps {
   memoData: MemoData;
@@ -25,7 +24,7 @@ function MemoForm(props: MemoFormProps) {
   const [textLength, setTextLength] = useState(0);
 
   useClickOutside({
-    isEnabled: newMemoId !== INITIAL_NUMBER || editMemoId !== INITIAL_NUMBER,
+    isEnabled: newMemoId !== INITIAL || editMemoId !== INITIAL,
     handleClickOutside: (e: Event) => {
       const eventTarget = e.target as HTMLElement;
       const memo = eventTarget.closest('.memo');
@@ -56,8 +55,8 @@ function MemoForm(props: MemoFormProps) {
   };
 
   const handleModalOpen = () => {
-    newMemoId !== INITIAL_NUMBER && onMemoModal('new');
-    editMemoId !== INITIAL_NUMBER && onMemoModal('edit');
+    newMemoId !== INITIAL && onMemoModal('new');
+    editMemoId !== INITIAL && onMemoModal('edit');
   };
 
   const handleDone = (target?: HTMLElement) => {
@@ -66,20 +65,20 @@ function MemoForm(props: MemoFormProps) {
 
     const newContent = textarea.value;
     if (newContent) {
-      newMemoId !== INITIAL_NUMBER && updateMemoList('new', newContent);
-      editMemoId !== INITIAL_NUMBER && updateMemoList('edit', newContent);
+      newMemoId !== INITIAL && updateMemoList('new', newContent);
+      editMemoId !== INITIAL && updateMemoList('edit', newContent);
       return;
     }
 
     if (target) {
-      newMemoId !== INITIAL_NUMBER && handleModalOpen();
-      editMemoId !== INITIAL_NUMBER && setMemoState(INITIAL_MEMO_STATE);
+      newMemoId !== INITIAL && handleModalOpen();
+      editMemoId !== INITIAL && setMemoState(INITIAL_MEMO_STATE);
     }
   };
 
   const handleClickCancel = () => {
     const newContent = textareaRef.current?.value;
-    if (newMemoId !== INITIAL_NUMBER || (newContent && newContent !== content)) {
+    if (newMemoId !== INITIAL || (newContent && newContent !== content)) {
       handleModalOpen();
       return;
     }

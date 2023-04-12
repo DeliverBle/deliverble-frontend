@@ -1,18 +1,18 @@
-import { LearnDetailService } from '../api/learn-detail';
+import { STATUS_CODE } from '@src/constants/common';
+import { InternalServerError } from '@src/types/error';
 import {
-  Script,
-  SentenceData,
+  ChangeRecordNameData,
+  DeleteRecordData,
+  GetRecordData,
   MemoData,
   Name,
+  Script,
+  SentenceData,
   UploadRecordData,
-  GetRecordData,
-  DeleteRecordData,
-  ChangeRecordNameData,
-} from '../api/types/learn-detail';
-import { API } from './base';
-import { InternalServerError } from '../api/types/error';
-import { STATUS_CODE } from '@src/utils/constant';
+} from '@src/types/learnDetail/remote';
 import { AxiosError } from 'axios';
+import { LearnDetailService } from '../api/learn-detail';
+import { API } from './base';
 
 export function learnDetailDataRemote(): LearnDetailService {
   const getPrivateVideoData = async (videoId: number, index: number) => {

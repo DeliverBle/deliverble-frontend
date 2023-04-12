@@ -1,4 +1,4 @@
-import { VideoListData } from './types/home';
+import { VideoListData } from '@src/types/home/remote';
 import {
   SentenceData,
   VideoData,
@@ -10,7 +10,7 @@ import {
   DeleteRecordData,
   DeleteRecordResponse,
   ChangeRecordNameData,
-} from './types/learn-detail';
+} from '@src/types/learnDetail/remote';
 
 export interface LearnDetailService {
   getPrivateVideoData(videoId: number, index: number): Promise<VideoData>;
