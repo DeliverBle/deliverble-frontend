@@ -70,11 +70,13 @@
 ┃ ┃ ┗ 📂lottie
 ┣ 📂src
 ┃ ┣ 📂components
+┃ ┣ 📂constants
 ┃ ┣ 📂hooks
 ┃ ┣ 📂pages
 ┃ ┣ 📂services
 ┃ ┣ 📂stores
 ┃ ┣ 📂styles
+┃ ┣ 📂types
 ┃ ┗ 📂utils
 ┗ 📜etc (setting files)
 ```
