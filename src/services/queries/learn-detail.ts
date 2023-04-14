@@ -4,11 +4,13 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { useRecoilValue } from 'recoil';
 import { queryClient } from '../../pages/_app';
 
-export const useGetVideoData = (videoId: number, index?: number) => {
+export const useGetVideoData = (speechGuide: boolean, videoId: number, index?: number) => {
   const isLoggedIn = useRecoilValue(loginState);
   return useQuery(
-    ['getVideoData', videoId, index],
-    isLoggedIn
+    ['getVideoData', videoId, index, speechGuide],
+    speechGuide
+      ? () => api.learnDetailService.getSpeechGuideData(videoId)
+      : isLoggedIn
       ? () => api.learnDetailService.getPrivateVideoData(videoId, index as number)
       : () => api.learnDetailService.getPublicVideoData(videoId),
     {

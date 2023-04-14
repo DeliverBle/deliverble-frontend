@@ -54,7 +54,7 @@ function LearnDetail() {
   const [similarNewsList, setSimilarNewsList] = useState<simpleVideoData[]>([]);
   const [currentScriptId, setCurrentScriptId] = useState(0);
 
-  const { data: videoData } = useGetVideoData(Number(detailId), clickedTitleIndex);
+  const { data: videoData } = useGetVideoData(!!speechGuide, Number(detailId), clickedTitleIndex);
   const titleList = videoData?.names ?? [];
   const memoList = videoData?.memos ?? [];
 
@@ -164,22 +164,6 @@ function LearnDetail() {
       setText('');
     }
   }, [isEditing, isHighlight, isSpacing]);
-
-  // useEffect(() => {
-  //   (async () => {
-  //     const id = Number(detailId);
-  //     if (!id) return;
-  //     const data = speechGuide
-  //       ? await api.learnDetailService.getSpeechGuideData(id)
-  //       : isLoggedIn
-  //       ? await api.learnDetailService.getPrivateVideoData(id, clickedTitleIndex)
-  //       : await api.learnDetailService.getPublicVideoData(id);
-  //     setVideoData(data);
-  //     const { memos, names } = data;
-  //     setMemoList(memos ?? []);
-  //     setTitleList(names ?? []);
-  //   })();
-  // }, [isLoggedIn, detailId, isEditing, speechGuide, clickedTitleIndex]);
 
   useEffect(() => {
     setClickedTitleIndex(0);
