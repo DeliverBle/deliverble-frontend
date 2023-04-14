@@ -1,22 +1,20 @@
-import { api } from '@src/services/api';
+import { INITIAL } from '@src/constants/learnDetail/memo';
+import { usePostSentenceData } from '@src/services/queries/learn-detail';
 import { MemoConfirmModalKey } from '@src/types/learnDetail';
-import { VideoData } from '@src/types/learnDetail/remote';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface useDeleteElementProps {
   rightClickedElement?: HTMLElement;
-  clickedTitleIndex: number;
-  detailId: number;
-  videoData?: VideoData;
-  setVideoData: Dispatch<SetStateAction<VideoData | undefined>>;
+  scriptId?: number;
   updateMemoList: (type: MemoConfirmModalKey, content?: string) => void;
 }
 
 function useDeleteElement(props: useDeleteElementProps) {
-  const { rightClickedElement, clickedTitleIndex, detailId, videoData, setVideoData, updateMemoList } = props;
+  const { rightClickedElement, scriptId, updateMemoList } = props;
   const [clickedDeleteType, setClickedDeleteType] = useState<string>('');
   const [order, setOrder] = useState<number>();
   const [text, setText] = useState<string>();
+  const postSentenceData = usePostSentenceData();
 
   const nodeToText = (anchorNode: Node | null | undefined) => {
     let textValue = '';
@@ -90,13 +88,11 @@ function useDeleteElement(props: useDeleteElementProps) {
 
   useEffect(() => {
     (async () => {
-      if (order !== -1 && text !== '' && order && text && videoData?.names) {
-        const id = videoData?.names[clickedTitleIndex].id;
-        await api.learnDetailService.postSentenceData({ order, text }, id, clickedTitleIndex);
-        const data = await api.learnDetailService.getPrivateVideoData(detailId, clickedTitleIndex);
-        setVideoData(data);
+      if (order && order !== INITIAL && text && scriptId) {
+        const data = { sentenceData: { order, text }, scriptId };
+        postSentenceData.mutate(data);
         setText('');
-        setOrder(-1);
+        setOrder(INITIAL);
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps

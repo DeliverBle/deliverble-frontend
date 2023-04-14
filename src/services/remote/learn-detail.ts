@@ -6,7 +6,6 @@ import {
   GetRecordData,
   MemoData,
   Name,
-  Script,
   SentenceData,
   UploadRecordData,
 } from '@src/types/learnDetail/remote';
@@ -85,19 +84,9 @@ export function learnDetailDataRemote(): LearnDetailService {
     } else throw '서버 통신 실패';
   };
 
-  const postSentenceData = async (SentenceData: SentenceData, scriptsId: number, scriptIndex: number) => {
-    const response = await API.post({
-      url: `/script/sentence/update/${scriptsId}`,
-      data: SentenceData,
-    });
-    if (response.statusCode === 200) {
-      return response.data2[scriptIndex]?.sentences.map((sentence: Script) => ({
-        id: sentence.id,
-        text: sentence.text,
-        startTime: sentence.startTime,
-        endTime: sentence.endTime,
-      }));
-    } else throw '서버 통신 실패';
+  const postSentenceData = async ({ sentenceData, scriptId }: { sentenceData: SentenceData; scriptId: number }) => {
+    const response = await API.post({ url: `/script/sentence/update/${scriptId}`, data: sentenceData });
+    return response.data;
   };
 
   const postMemoData = async (memo: MemoData, scriptId: number) => {

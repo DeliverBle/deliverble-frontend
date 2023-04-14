@@ -15,6 +15,7 @@ export const useGetVideoData = (speechGuide: boolean, videoId: number, index?: n
       : () => api.learnDetailService.getPublicVideoData(videoId),
     {
       onError: (error: { message: string }) => console.log(error.message),
+      enabled: !!videoId,
     },
   );
 };
@@ -42,6 +43,14 @@ export const useUpdateScriptNameData = () => {
 
 export const useGetSimilarVideoData = (videoId: number) => {
   return useQuery(['getSimilarVideoList', videoId], () => api.learnDetailService.getSimilarVideoData(videoId), {
+    onError: (error: { message: string }) => console.log(error.message),
+    enabled: !!videoId,
+  });
+};
+
+export const usePostSentenceData = () => {
+  return useMutation(api.learnDetailService.postSentenceData, {
+    onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id], { refetchType: 'all' }),
     onError: (error: { message: string }) => console.log(error.message),
   });
 };

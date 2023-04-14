@@ -28,6 +28,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import YouTube from 'react-youtube';
 import styled, { css } from 'styled-components';
 
+const GuideModal = dynamic(() => import('@src/components/learnDetail/modal/GuideModal'), { ssr: false });
+const ConfirmModal = dynamic(() => import('@src/components/learnDetail/modal/ConfirmModal'), { ssr: false });
+const LoginModal = dynamic(() => import('@src/components/login/LoginModal'), { ssr: false });
+
 function LearnDetail() {
   const router = useRouter();
   const { id: detailId, speechGuide } = router.query;
@@ -51,32 +55,21 @@ function LearnDetail() {
   const [memoState, setMemoState] = useState<MemoState>(INITIAL_MEMO_STATE);
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const [isRecordSaved, setIsRecordSaved] = useState<boolean>(false);
-  const [currentScriptId, setCurrentScriptId] = useState(0);
 
   const { data: similarVideoData, isLoading } = useGetSimilarVideoData(Number(detailId));
   const { data: videoData } = useGetVideoData(!!speechGuide, Number(detailId), clickedTitleIndex);
   const titleList = videoData?.names ?? [];
   const memoList = videoData?.memos ?? [];
+  const scriptId = titleList[clickedTitleIndex]?.id ?? 0;
 
   const { rightClickedElement, isContextMenuOpen, setIsContextMenuOpen, memoInfo, handleRightClick } =
     useRightClickHandler({ memoList, memoState });
   const updateMemoList = useUpdateMemoList({ memoState, memoInfo, setMemoState });
   const { setOrder, setText, setClickedDeleteType, nodeToText } = useDeleteElement({
     rightClickedElement,
-    clickedTitleIndex,
-    detailId: Number(detailId),
-    videoData,
-    // setVideoData,
+    scriptId,
     updateMemoList,
   });
-
-  const GuideModal = dynamic(() => import('@src/components/learnDetail/modal/GuideModal'), { ssr: false });
-  const ConfirmModal = dynamic(() => import('@src/components/learnDetail/modal/ConfirmModal'), { ssr: false });
-  const LoginModal = dynamic(() => import('@src/components/login/LoginModal'), { ssr: false });
-
-  useEffect(() => {
-    videoData?.scriptsId && setCurrentScriptId(videoData?.scriptsId);
-  }, [videoData, currentScriptId]);
 
   const postNewScriptAdd = usePostNewScriptData();
   const handleScriptAdd = () => {
@@ -325,7 +318,7 @@ function LearnDetail() {
                   />
                 </StVideoWrapper>
                 <StudyLog
-                  currentScriptId={currentScriptId}
+                  currentScriptId={scriptId}
                   isRecordSaved={isRecordSaved}
                   memoList={memoList}
                   memoState={memoState}
