@@ -10,6 +10,7 @@
     "analyze": "cross-env ANALYZE=true next build"
   },
   "dependencies": {
+    "@tanstack/react-query": "^4.29.1",
     "axios": "^0.27.2",
     "lottie-light-react": "^2.4.0",
     "next": "12.2.1",
