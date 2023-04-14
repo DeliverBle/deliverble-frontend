@@ -7,54 +7,36 @@ import { icSearch } from 'public/assets/icons';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { usePostLikeData } from '@src/services/queries/common';
-import { usePostSearchCondition } from '@src/services/queries/learn';
+import { useGetSearchCondition, usePostSearchCondition } from '@src/services/queries/learn';
 
 function Learn() {
   const [selectedChannelList, setSelectedChannelList] = useState<string[]>([]);
   const [selectedCategoryList, setSelectedCategoryList] = useState<string[]>([]);
   const [selectedSpeakerList, setSelectedSpeakerList] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const searchCondition = {
+    channel: selectedChannelList,
+    category: selectedCategoryList,
+    announcerGender: selectedSpeakerList,
+    currentPage,
+    listSize: LIST_SIZE,
+  };
 
-  const { data, mutate, isLoading } = usePostSearchCondition();
+  const { data, isLoading } = useGetSearchCondition(searchCondition);
+  const { mutate } = usePostSearchCondition();
   const resultList = data?.videoList ?? [];
   const totalCount = data?.paging.totalCount ?? 0;
   const lastPage = data?.paging.lastPage ?? 1;
+  const postLikeData = usePostLikeData();
 
   const handlePageChange = (page: number) => {
     window.scrollTo(0, 0);
-    mutate({
-      channel: selectedChannelList,
-      category: selectedCategoryList,
-      announcerGender: selectedSpeakerList,
-      currentPage: page,
-      listSize: LIST_SIZE,
-    });
+    mutate({ ...searchCondition, currentPage: page });
     setCurrentPage(page);
   };
 
-  const postLikeData = usePostLikeData();
-  const handleClickLike = (id: number) => {
-    postLikeData.mutate(id, {
-      onSuccess: () => {
-        mutate({
-          channel: selectedChannelList,
-          category: selectedCategoryList,
-          announcerGender: selectedSpeakerList,
-          currentPage,
-          listSize: LIST_SIZE,
-        });
-      },
-    });
-  };
-
   useEffect(() => {
-    mutate({
-      channel: selectedChannelList,
-      category: selectedCategoryList,
-      announcerGender: selectedSpeakerList,
-      currentPage: 1,
-      listSize: LIST_SIZE,
-    });
+    mutate({ ...searchCondition, currentPage: 1 });
     setCurrentPage(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategoryList, selectedChannelList, selectedSpeakerList]);
@@ -84,7 +66,7 @@ function Learn() {
                 전체 <span>{totalCount}개 </span> 영상
               </h2>
             )}
-            <NewsList newsList={resultList} onClickLike={handleClickLike} type="normal" />
+            <NewsList newsList={resultList} onClickLike={postLikeData.mutate} type="normal" />
             <Pagination
               listSize={LIST_SIZE}
               blockSize={BLOCK_SIZE}

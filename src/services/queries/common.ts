@@ -10,6 +10,7 @@ export const usePostLikeData = () => {
       queryClient.invalidateQueries(['getVideoData', data.newsId], { refetchType: 'active' });
       queryClient.invalidateQueries(['getSimilarVideoList'], { refetchType: 'active' });
       queryClient.invalidateQueries(['postReviewList'], { refetchType: 'active' });
+      queryClient.invalidateQueries(['postSearchCondition'], { refetchType: 'active' });
     },
     onError: (error: { message: string }) => console.log(error.message),
   });
