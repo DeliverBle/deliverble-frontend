@@ -9,7 +9,7 @@ import { PostSearchConditionRequestBody, VideoData } from '@src/types/learn/remo
 import { useRouter } from 'next/router';
 import { icSearch } from 'public/assets/icons';
 import { useEffect, useState } from 'react';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 

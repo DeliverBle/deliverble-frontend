@@ -13,7 +13,7 @@ import {
   icRecordPlayUnactivated,
 } from 'public/assets/icons';
 import { KeyboardEvent, useRef, useState } from 'react';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import EmptyRecord from './EmptyRecord';
 import RecordDotButton from './RecordDotButton';
 

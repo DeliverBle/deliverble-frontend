@@ -7,7 +7,7 @@ import { COLOR, FONT_STYLES } from '@src/styles';
 import { ReviewTab } from '@src/types/review/remote';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 

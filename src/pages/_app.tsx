@@ -4,28 +4,20 @@ import GlobalStyle from '@src/styles/globalStyle';
 import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { hotjar } from 'react-hotjar';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RecoilRoot } from 'recoil';
 import * as gtag from '../utils/gtag';
 
-function MyApp({ Component, pageProps }: AppProps) {
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            useErrorBoundary: true,
-            retry: 0,
-          },
-          mutations: {
-            useErrorBoundary: true,
-          },
-        },
-      }),
-  );
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: { useErrorBoundary: true, retry: 0 },
+    mutations: { useErrorBoundary: true },
+  },
+});
 
+function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
   useEffect(() => storePathValues, [router.pathname]);
 

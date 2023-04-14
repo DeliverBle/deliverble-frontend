@@ -5,7 +5,7 @@ import { loginState } from '@src/stores/loginState';
 import { COLOR, FONT_STYLES } from '@src/styles';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useMediaQuery } from 'react-responsive';
 import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';

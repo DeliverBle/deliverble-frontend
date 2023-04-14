@@ -2,7 +2,7 @@ import { api } from '@src/services/api';
 import { loginState } from '@src/stores/loginState';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useSetRecoilState } from 'recoil';
 
 function OAuthRedirectHandler() {
