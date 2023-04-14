@@ -2,17 +2,17 @@ import { Footer, NavigationBar, SEO, VideoListSkeleton } from '@src/components/c
 import { HeadlineContainer, VideoContainer } from '@src/components/review';
 import { LIST_SIZE } from '@src/constants/common';
 import { api } from '@src/services/api';
+import { usePostLikeData } from '@src/services/queries/common';
 import { loginState } from '@src/stores/loginState';
 import { COLOR, FONT_STYLES } from '@src/styles';
 import { ReviewTab } from '@src/types/review/remote';
+import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 
 function Review() {
-  const queryClient = useQueryClient();
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(loginState);
   const [tab, setTab] = useState<ReviewTab>('favorite');
@@ -33,6 +33,7 @@ function Review() {
       },
     },
   );
+  const postLikeData = usePostLikeData();
 
   const videoList = postReviewListData?.videoList ?? [];
   const { lastPage, totalCount } = postReviewListData?.paging ?? { lastPage: 1, totalCount: 0 };
@@ -41,17 +42,6 @@ function Review() {
     window.scrollTo(0, 0);
     setCurrentPage(page);
   };
-
-  const { mutate: mutatePostLike } = useMutation(
-    async (id: number) => {
-      return await api.commonService.postLikeData(id);
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('postReviewList');
-      },
-    },
-  );
 
   useEffect(() => {
     isLoggedIn && setCurrentPage(1);
@@ -85,7 +75,7 @@ function Review() {
           <VideoContainer
             tab={tab}
             videoList={videoList}
-            onClickLike={mutatePostLike}
+            onClickLike={postLikeData.mutate}
             totalCount={totalCount}
             currentPage={currentPage}
             lastPage={lastPage}

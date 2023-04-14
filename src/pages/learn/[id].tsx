@@ -1,5 +1,6 @@
 import { ImageDiv, Like, NavigationBar, NewsList, SEO, VideoListSkeleton } from '@src/components/common';
 import { ScriptTitle, StudyLog, VideoDetail } from '@src/components/learnDetail';
+import ContextMenu from '@src/components/learnDetail/ContextMenu';
 import { RecordStatusBar } from '@src/components/learnDetail/record';
 import { ScriptEdit, ScriptEditButtonContainer } from '@src/components/learnDetail/scriptEdit';
 import { LearningButton, SpeechGuideTitle } from '@src/components/learnDetail/speechGuide';
@@ -8,7 +9,7 @@ import { INITIAL, INITIAL_MEMO_STATE } from '@src/constants/learnDetail/memo';
 import { DELETE_SCRIPT_MODAL_TEXT, MEMO_MODAL_TEXT_TYPE, NEW_MEMO_MODAL_TEXT } from '@src/constants/learnDetail/modal';
 import { useBodyScrollLock, useClickOutside } from '@src/hooks/common';
 import { useDeleteElement, useRightClickHandler, useUpdateMemoList } from '@src/hooks/learnDetail';
-import { api } from '@src/services/api';
+import { usePostLikeData } from '@src/services/queries/common';
 import {
   useDeleteScriptData,
   useGetSimilarVideoData,
@@ -26,7 +27,6 @@ import { icXButton } from 'public/assets/icons';
 import React, { useEffect, useRef, useState } from 'react';
 import YouTube from 'react-youtube';
 import styled, { css } from 'styled-components';
-import ContextMenu from '@src/components/learnDetail/ContextMenu';
 
 function LearnDetail() {
   const router = useRouter();
@@ -114,11 +114,7 @@ function LearnDetail() {
     setIsTitleInputVisible(true);
   };
 
-  const handleClickLike = async (id: number) => {
-    const { id: likeId, isFavorite } = await api.commonService.postLikeData(id);
-    setVideoData((prev) => prev && (prev.id === likeId ? { ...prev, isFavorite } : prev));
-    setSimilarNewsList((prev) => prev.map((news) => (news.id === likeId ? { ...news, isFavorite } : news)));
-  };
+  const postLikeData = usePostLikeData();
 
   const handleLoginModalOpen = () => {
     lockScroll();
@@ -309,7 +305,7 @@ function LearnDetail() {
                   <Like
                     isFromList={false}
                     isFavorite={videoData.isFavorite}
-                    toggleLike={() => (getLoginStatus() ? handleClickLike(videoData.id) : handleLoginModalOpen())}
+                    toggleLike={() => (getLoginStatus() ? postLikeData.mutate(videoData.id) : handleLoginModalOpen())}
                   />
                   <YouTube
                     videoId={videoData.link}
@@ -348,7 +344,9 @@ function LearnDetail() {
             {isLoading ? (
               <VideoListSkeleton itemNumber={4} />
             ) : (
-              similarVideoData && <NewsList onClickLike={handleClickLike} newsList={similarVideoData} type="normal" />
+              similarVideoData && (
+                <NewsList onClickLike={postLikeData.mutate} newsList={similarVideoData} type="normal" />
+              )
             )}
           </StNews>
         )}
