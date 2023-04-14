@@ -19,9 +19,9 @@ export interface LearnDetailService {
   postMemoData(memo: MemoData, scriptId: number): Promise<MemoData[]>;
   updateMemoData(memoId: number, content: string): Promise<MemoData[]>;
   deleteMemoData(memoId: number): Promise<MemoData[]>;
-  postNewScriptData(videoId: number): Promise<{ isSuccess: boolean }>;
-  deleteScriptData(scriptId: number): Promise<{ isSuccess: boolean }>;
-  updateScriptNameData(scriptId: number, name: string): Promise<Name>;
+  postNewScriptData(videoId: number): Promise<VideoData>;
+  deleteScriptData(scriptId: number): Promise<VideoData>;
+  updateScriptNameData(data: Name): Promise<VideoData>;
   getSpeechGuideData(videoId: number): Promise<VideoData>;
   uploadRecordData(body: UploadRecordData): Promise<UploadRecordResponse>;
   getRecordData(scriptId: number): Promise<GetRecordData[]>;

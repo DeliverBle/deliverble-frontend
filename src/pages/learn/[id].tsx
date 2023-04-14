@@ -9,26 +9,28 @@ import { DELETE_SCRIPT_MODAL_TEXT, MEMO_MODAL_TEXT_TYPE, NEW_MEMO_MODAL_TEXT } f
 import { useBodyScrollLock, useClickOutside } from '@src/hooks/common';
 import { useDeleteElement, useRightClickHandler, useUpdateMemoList } from '@src/hooks/learnDetail';
 import { api } from '@src/services/api';
-import { loginState } from '@src/stores/loginState';
+import {
+  useDeleteScriptData,
+  useGetVideoData,
+  usePostNewScriptData,
+  useUpdateScriptNameData,
+} from '@src/services/queries/learn-detail';
 import { COLOR, FONT_STYLES } from '@src/styles';
 import { VideoData as simpleVideoData } from '@src/types/home/remote';
 import { ConfirmModalText, MemoConfirmModalKey, MemoState } from '@src/types/learnDetail';
-import { MemoData, Name, VideoData } from '@src/types/learnDetail/remote';
+import { MemoData } from '@src/types/learnDetail/remote';
 import { underlineMemo } from '@src/utils/underlineMemo';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { icXButton } from 'public/assets/icons';
 import React, { useEffect, useRef, useState } from 'react';
-import { useMutation, useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import YouTube from 'react-youtube';
-import { useRecoilValue } from 'recoil';
 import styled, { css } from 'styled-components';
 
 function LearnDetail() {
   const router = useRouter();
   const { id: detailId, speechGuide } = router.query;
-  const isLoggedIn = useRecoilValue(loginState);
-  const [videoData, setVideoData] = useState<VideoData>();
   const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
   const { lockScroll, unlockScroll } = useBodyScrollLock();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
@@ -43,27 +45,31 @@ function LearnDetail() {
   const getLoginStatus = () => localStorage.getItem('token') ?? '';
   const [prevLink, setPrevLink] = useState('');
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [titleList, setTitleList] = useState<Name[]>([]);
   const [clickedTitleIndex, setClickedTitleIndex] = useState(0);
   const [isTitleInputVisible, setIsTitleInputVisible] = useState(false);
   const [titleInputIndex, setTitleInputIndex] = useState(-1);
-  const [memoList, setMemoList] = useState<MemoData[]>([]);
   const [memoState, setMemoState] = useState<MemoState>(INITIAL_MEMO_STATE);
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const [isRecordSaved, setIsRecordSaved] = useState<boolean>(false);
   const [similarNewsList, setSimilarNewsList] = useState<simpleVideoData[]>([]);
   const [currentScriptId, setCurrentScriptId] = useState(0);
+
+  const { data: videoData } = useGetVideoData(Number(detailId), clickedTitleIndex);
+  const titleList = videoData?.names ?? [];
+  const memoList = videoData?.memos ?? [];
+
   const { rightClickedElement, isContextMenuOpen, setIsContextMenuOpen, memoInfo, handleRightClick } =
     useRightClickHandler({ memoList, memoState });
-  const updateMemoList = useUpdateMemoList({ memoState, memoInfo, setMemoList, setMemoState });
+  const updateMemoList = useUpdateMemoList({ memoState, memoInfo, setMemoState });
   const { setOrder, setText, setClickedDeleteType, nodeToText } = useDeleteElement({
     rightClickedElement,
     clickedTitleIndex,
     detailId: Number(detailId),
     videoData,
-    setVideoData,
+    // setVideoData,
     updateMemoList,
   });
+
   const ContextMenu = dynamic(() => import('@src/components/learnDetail/ContextMenu'), { ssr: false });
   const GuideModal = dynamic(() => import('@src/components/learnDetail/modal/GuideModal'), { ssr: false });
   const ConfirmModal = dynamic(() => import('@src/components/learnDetail/modal/ConfirmModal'), { ssr: false });
@@ -73,32 +79,23 @@ function LearnDetail() {
     videoData?.scriptsId && setCurrentScriptId(videoData?.scriptsId);
   }, [videoData, currentScriptId]);
 
-  const handleScriptAdd = async () => {
-    const response = await api.learnDetailService.postNewScriptData(Number(detailId));
-    if (response.isSuccess) {
-      const newIndex = titleList.length;
-      setClickedTitleIndex(newIndex);
-      setTitleInputIndex(newIndex);
-    }
+  const postNewScriptAdd = usePostNewScriptData();
+  const handleScriptAdd = () => {
+    postNewScriptAdd.mutate(Number(detailId), {
+      onSuccess: () => {
+        const newIndex = titleList.length;
+        setClickedTitleIndex(newIndex);
+        setTitleInputIndex(newIndex);
+      },
+    });
   };
 
-  const handleScriptDelete = async () => {
+  const deleteScriptData = useDeleteScriptData();
+  const handleScriptDelete = () => {
     const scriptId = videoData?.scriptsId ?? INITIAL;
-    const response = await api.learnDetailService.deleteScriptData(scriptId);
-    if (response.isSuccess && clickedTitleIndex) {
-      setClickedTitleIndex(0);
-      return;
-    }
-    if (response.isSuccess && clickedTitleIndex === 0) {
-      const data = await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedTitleIndex);
-      setVideoData(data);
-      const { memos, names } = data;
-      if (memos && names) {
-        setMemoList(memos);
-        setTitleList(names);
-      }
-      return;
-    }
+    deleteScriptData.mutate(scriptId, {
+      onSuccess: () => clickedTitleIndex && setClickedTitleIndex(0),
+    });
   };
 
   const handleTitleDeleteModal = () => {
@@ -106,23 +103,11 @@ function LearnDetail() {
     setIsConfirmOpen(true);
   };
 
-  const renameScriptTitle = async (name: string) => {
-    const scriptId = videoData?.scriptsId ?? INITIAL;
-    return await api.learnDetailService.updateScriptNameData(scriptId, name);
+  const updateScriptNameData = useUpdateScriptNameData();
+  const handleTitleRename = (name: string) => {
+    const data = { id: videoData?.scriptsId ?? INITIAL, name };
+    updateScriptNameData.mutate(data);
   };
-
-  const { mutate: mutateRenameScript } = useMutation(renameScriptTitle, {
-    onSuccess: (data) => {
-      if (videoData?.names) {
-        const newNameList = videoData.names.slice();
-        newNameList[clickedTitleIndex] = data;
-        setVideoData({
-          ...videoData,
-          names: newNameList,
-        });
-      }
-    },
-  });
 
   const handleTitleChange = (index: number) => {
     setClickedTitleIndex(index);
@@ -180,21 +165,21 @@ function LearnDetail() {
     }
   }, [isEditing, isHighlight, isSpacing]);
 
-  useEffect(() => {
-    (async () => {
-      const id = Number(detailId);
-      if (!id) return;
-      const data = speechGuide
-        ? await api.learnDetailService.getSpeechGuideData(id)
-        : isLoggedIn
-        ? await api.learnDetailService.getPrivateVideoData(id, clickedTitleIndex)
-        : await api.learnDetailService.getPublicVideoData(id);
-      setVideoData(data);
-      const { memos, names } = data;
-      setMemoList(memos ?? []);
-      setTitleList(names ?? []);
-    })();
-  }, [isLoggedIn, detailId, isEditing, speechGuide, clickedTitleIndex]);
+  // useEffect(() => {
+  //   (async () => {
+  //     const id = Number(detailId);
+  //     if (!id) return;
+  //     const data = speechGuide
+  //       ? await api.learnDetailService.getSpeechGuideData(id)
+  //       : isLoggedIn
+  //       ? await api.learnDetailService.getPrivateVideoData(id, clickedTitleIndex)
+  //       : await api.learnDetailService.getPublicVideoData(id);
+  //     setVideoData(data);
+  //     const { memos, names } = data;
+  //     setMemoList(memos ?? []);
+  //     setTitleList(names ?? []);
+  //   })();
+  // }, [isLoggedIn, detailId, isEditing, speechGuide, clickedTitleIndex]);
 
   useEffect(() => {
     setClickedTitleIndex(0);
@@ -274,7 +259,7 @@ function LearnDetail() {
                 onTitleDelete={handleTitleDeleteModal}
                 onTitleChange={() => handleTitleChange(i)}
                 onTitleInputChange={() => setIsTitleInputVisible(false)}
-                onTitleRename={mutateRenameScript}
+                onTitleRename={handleTitleRename}
               />
             ))}
           {videoData?.names && titleList.length > 0 && titleList.length !== SCRIPT_MAX_COUNT && (

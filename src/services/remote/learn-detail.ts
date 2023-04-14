@@ -131,22 +131,17 @@ export function learnDetailDataRemote(): LearnDetailService {
 
   const postNewScriptData = async (videoId: number) => {
     const response = await API.post({ url: `/script/create/${videoId}` });
-    return { isSuccess: response.statusCode === 200 };
+    return response.data;
   };
 
   const deleteScriptData = async (scriptId: number) => {
     const response = await API.delete({ url: `/script/delete/${scriptId}` });
-    return { isSuccess: response.statusCode === 200 };
+    return response.data;
   };
 
-  const updateScriptNameData = async (scriptId: number, name: string) => {
-    const response = await API.patch({ url: `/script/name/${scriptId}`, data: { name } });
-    if (response.statusCode === 200) {
-      return {
-        id: response.data2.id,
-        name: response.data2.name,
-      };
-    } else throw '서버 통신 실패';
+  const updateScriptNameData = async ({ id, name }: Name) => {
+    const response = await API.patch({ url: `/script/name/${id}`, data: { name } });
+    return response.data;
   };
 
   const uploadRecordData = async (body: UploadRecordData) => {
