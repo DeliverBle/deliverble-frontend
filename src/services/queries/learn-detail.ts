@@ -54,3 +54,24 @@ export const usePostSentenceData = () => {
     onError: (error: { message: string }) => console.log(error.message),
   });
 };
+
+export const usePostMemoData = () => {
+  return useMutation(api.learnDetailService.postMemoData, {
+    onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id], { refetchType: 'all' }),
+    onError: (error: { message: string }) => console.log(error.message),
+  });
+};
+
+export const useUpdateMemoData = () => {
+  return useMutation(api.learnDetailService.updateMemoData, {
+    onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id], { refetchType: 'all' }),
+    onError: (error: { message: string }) => console.log(error.message),
+  });
+};
+
+export const useDeleteMemoData = () => {
+  return useMutation(api.learnDetailService.deleteMemoData, {
+    onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id], { refetchType: 'all' }),
+    onError: (error: { message: string }) => console.log(error.message),
+  });
+};

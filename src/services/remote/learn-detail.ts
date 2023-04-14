@@ -2,11 +2,12 @@ import { STATUS_CODE } from '@src/constants/common';
 import { InternalServerError } from '@src/types/error';
 import {
   ChangeRecordNameData,
+  CreateMemoRequest,
   DeleteRecordData,
   GetRecordData,
-  MemoData,
   Name,
-  SentenceData,
+  UpdateMemoRequest,
+  UpdateSentenceRequest,
   UploadRecordData,
 } from '@src/types/learnDetail/remote';
 import { AxiosError } from 'axios';
@@ -84,38 +85,24 @@ export function learnDetailDataRemote(): LearnDetailService {
     } else throw '서버 통신 실패';
   };
 
-  const postSentenceData = async ({ sentenceData, scriptId }: { sentenceData: SentenceData; scriptId: number }) => {
+  const postSentenceData = async ({ sentenceData, scriptId }: UpdateSentenceRequest) => {
     const response = await API.post({ url: `/script/sentence/update/${scriptId}`, data: sentenceData });
     return response.data;
   };
 
-  const postMemoData = async (memo: MemoData, scriptId: number) => {
-    const response = await API.post({
-      url: `/script/memo/create/${scriptId}`,
-      data: memo,
-    });
-    if (response.statusCode === 200) {
-      return response.data2?.memos;
-    } else throw '서버 통신 실패';
+  const postMemoData = async ({ memo, scriptId }: CreateMemoRequest) => {
+    const response = await API.post({ url: `/script/memo/create/${scriptId}`, data: memo });
+    return response.data;
   };
 
-  const updateMemoData = async (memoId: number, content: string) => {
-    const response = await API.patch({
-      url: `/script/memo/update/${memoId}`,
-      data: { content },
-    });
-    if (response.statusCode === 200) {
-      return response.data2?.memos;
-    } else throw '서버 통신 실패';
+  const updateMemoData = async ({ memoId, content }: UpdateMemoRequest) => {
+    const response = await API.patch({ url: `/script/memo/update/${memoId}`, data: { content } });
+    return response.data;
   };
 
   const deleteMemoData = async (memoId: number) => {
-    const response = await API.delete({
-      url: `/script/memo/delete/${memoId}`,
-    });
-    if (response.statusCode === 200) {
-      return response.data2?.memos;
-    } else throw '서버 통신 실패';
+    const response = await API.delete({ url: `/script/memo/delete/${memoId}` });
+    return response.data;
   };
 
   const postNewScriptData = async (videoId: number) => {

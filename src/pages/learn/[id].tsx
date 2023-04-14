@@ -19,7 +19,6 @@ import {
 } from '@src/services/queries/learn-detail';
 import { COLOR, FONT_STYLES } from '@src/styles';
 import { ConfirmModalText, MemoConfirmModalKey, MemoState } from '@src/types/learnDetail';
-import { MemoData } from '@src/types/learnDetail/remote';
 import { underlineMemo } from '@src/utils/underlineMemo';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -36,7 +35,6 @@ function LearnDetail() {
   const router = useRouter();
   const { id: detailId, speechGuide } = router.query;
   const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
-  const { lockScroll, unlockScroll } = useBodyScrollLock();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [confirmModalText, setConfirmModalText] = useState<ConfirmModalText>(NEW_MEMO_MODAL_TEXT);
   const [isHighlight, setIsHighlight] = useState(false);
@@ -45,22 +43,24 @@ function LearnDetail() {
   const [player, setPlayer] = useState<YT.Player | null>();
   const [videoState, setVideoState] = useState(INITIAL);
   const [currentTime, setCurrentTime] = useState(0);
-  const learnRef = useRef<HTMLDivElement>(null);
   const getLoginStatus = () => localStorage.getItem('token') ?? '';
   const [prevLink, setPrevLink] = useState('');
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [clickedTitleIndex, setClickedTitleIndex] = useState(0);
   const [isTitleInputVisible, setIsTitleInputVisible] = useState(false);
-  const [titleInputIndex, setTitleInputIndex] = useState(-1);
+  const [titleInputIndex, setTitleInputIndex] = useState(INITIAL);
   const [memoState, setMemoState] = useState<MemoState>(INITIAL_MEMO_STATE);
-  const contextMenuRef = useRef<HTMLDivElement>(null);
   const [isRecordSaved, setIsRecordSaved] = useState<boolean>(false);
+  const learnRef = useRef<HTMLDivElement>(null);
+  const contextMenuRef = useRef<HTMLDivElement>(null);
 
+  const { lockScroll, unlockScroll } = useBodyScrollLock();
   const { data: similarVideoData, isLoading } = useGetSimilarVideoData(Number(detailId));
-  const { data: videoData } = useGetVideoData(!!speechGuide, Number(detailId), clickedTitleIndex);
+  const { data: videoData, refetch } = useGetVideoData(!!speechGuide, Number(detailId), clickedTitleIndex);
   const titleList = videoData?.names ?? [];
   const memoList = videoData?.memos ?? [];
   const scriptId = titleList[clickedTitleIndex]?.id ?? 0;
+  const postLikeData = usePostLikeData();
 
   const { rightClickedElement, isContextMenuOpen, setIsContextMenuOpen, memoInfo, handleRightClick } =
     useRightClickHandler({ memoList, memoState });
@@ -107,8 +107,6 @@ function LearnDetail() {
     setIsTitleInputVisible(true);
   };
 
-  const postLikeData = usePostLikeData();
-
   const handleLoginModalOpen = () => {
     lockScroll();
     setIsLoginModalOpen(true);
@@ -117,10 +115,6 @@ function LearnDetail() {
   const handleLoginModalClose = () => {
     unlockScroll();
     setIsLoginModalOpen(false);
-  };
-
-  const cancelCreateMemo = () => {
-    setMemoList((prev: MemoData[]) => prev.filter(({ content }) => content !== ''));
   };
 
   const handleMemoModal = (type: MemoConfirmModalKey) => {
@@ -137,9 +131,9 @@ function LearnDetail() {
       setMemoState((prev: MemoState) => ({ ...prev, editMemoId: memo.id }));
       return;
     }
-    // 메모 추가하는 경우
     setMemoState((prev: MemoState) => ({ ...prev, newMemoId: 0 }));
-    setMemoList((prev: MemoData[]) => [...prev, memo].sort((a, b) => a.order - b.order || a.startIndex - b.startIndex));
+    memoList.push(memo);
+    memoList.sort((a, b) => a.order - b.order || a.startIndex - b.startIndex);
   };
 
   useEffect(() => {
@@ -149,7 +143,7 @@ function LearnDetail() {
       setIsEditing(false);
       setClickedDeleteType('');
       setIsContextMenuOpen(false);
-      setOrder(-1);
+      setOrder(INITIAL);
       setText('');
     }
   }, [isEditing, isHighlight, isSpacing]);
@@ -177,11 +171,7 @@ function LearnDetail() {
     isEnabled: isContextMenuOpen,
     handleClickOutside: (e: Event) => {
       const eventTarget = e.target as HTMLElement;
-      if (
-        isContextMenuOpen &&
-        contextMenuRef.current instanceof HTMLElement &&
-        !contextMenuRef.current.contains(eventTarget)
-      ) {
+      if (isContextMenuOpen && !contextMenuRef.current?.contains(eventTarget)) {
         setIsContextMenuOpen(false);
       }
     },
@@ -358,7 +348,7 @@ function LearnDetail() {
             setIsConfirmOpen={setIsConfirmOpen}
             setMemoState={setMemoState}
             onTitleDelete={handleScriptDelete}
-            cancelCreateMemo={cancelCreateMemo}
+            cancelCreateMemo={refetch}
           />
         )}
         {isLoginModalOpen && <LoginModal closeModal={handleLoginModalClose} />}
