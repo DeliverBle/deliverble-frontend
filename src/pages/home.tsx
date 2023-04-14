@@ -1,30 +1,21 @@
 import { BannerSlider, Footer, NavigationBar, NewsList, SEO, VideoListSkeleton } from '@src/components/common';
-import { api } from '@src/services/api';
+import { usePostLikeData } from '@src/services/queries/common';
+import { useGetRecommendVideoList, useGetSpeechGuideList } from '@src/services/queries/home';
 import { COLOR, FONT_STYLES } from '@src/styles';
 import { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import styled from 'styled-components';
-import { useGetRecommendVideoList, useGetSpeechGuideList } from '@src/services/queries/home';
 
 function Home() {
   const [mounted, setMounted] = useState(false);
-  const smallBanner = useMediaQuery({
-    query: '(max-width: 500px)',
-  });
+  const smallBanner = useMediaQuery({ query: '(max-width: 500px)' });
   const newsList = useGetRecommendVideoList();
   const speechGuideList = useGetSpeechGuideList();
+  const postLikeData = usePostLikeData();
 
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  const handleClickLike = async (id: number) => {
-    const { newsId: likeId, isFavorite } = await api.commonService.postLikeData(id);
-    const setterList = [setNewsList, setSpeechGuideList];
-    setterList.map((setter) =>
-      setter((prev) => prev.map((news) => (news.id === likeId ? { ...news, isFavorite } : news))),
-    );
-  };
 
   return (
     <StPageWrapper>
@@ -40,7 +31,7 @@ function Home() {
             ) : (
               speechGuideList.data && (
                 <div>
-                  <NewsList onClickLike={handleClickLike} newsList={speechGuideList.data} type="guide" />
+                  <NewsList onClickLike={postLikeData.mutate} newsList={speechGuideList.data} type="guide" />
                 </div>
               )
             )}
@@ -52,7 +43,7 @@ function Home() {
             ) : (
               newsList.data && (
                 <div>
-                  <NewsList onClickLike={handleClickLike} newsList={newsList.data} type="normal" />
+                  <NewsList onClickLike={postLikeData.mutate} newsList={newsList.data} type="normal" />
                 </div>
               )
             )}

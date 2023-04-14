@@ -41,7 +41,7 @@ export const useUpdateScriptNameData = () => {
 };
 
 export const useGetSimilarVideoData = (videoId: number) => {
-  return useQuery(['getSimilarNewsList', videoId], () => api.learnDetailService.getSimilarVideoData(videoId), {
+  return useQuery(['getSimilarVideoList', videoId], () => api.learnDetailService.getSimilarVideoData(videoId), {
     onError: (error: { message: string }) => console.log(error.message),
   });
 };
