@@ -1,52 +1,22 @@
 import { BannerSlider, Footer, NavigationBar, NewsList, SEO, VideoListSkeleton } from '@src/components/common';
 import { api } from '@src/services/api';
-import { VideoData } from '@src/types/home/remote';
-import { loginState } from '@src/stores/loginState';
 import { COLOR, FONT_STYLES } from '@src/styles';
-import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { useMediaQuery } from 'react-responsive';
-import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
+import { useGetRecommendVideoList, useGetSpeechGuideList } from '@src/services/queries/home';
 
 function Home() {
-  const router = useRouter();
-  const setIsLoggedIn = useSetRecoilState(loginState);
-  const [newsList, setNewsList] = useState<VideoData[]>([]);
-  const [speechGuideList, setSpeechGuideList] = useState<VideoData[]>([]);
   const [mounted, setMounted] = useState(false);
   const smallBanner = useMediaQuery({
     query: '(max-width: 500px)',
   });
+  const newsList = useGetRecommendVideoList();
+  const speechGuideList = useGetSpeechGuideList();
 
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  const { isLoading } = useQuery(
-    ['getNewsList'],
-    async () => {
-      return {
-        recommend: await api.homeService.getVideoData(),
-        speechGuide: await api.homeService.getSpeechGuideData(),
-      };
-    },
-    {
-      onSuccess: (data) => {
-        const { recommend, speechGuide } = data;
-        setNewsList(recommend.videoList);
-        setSpeechGuideList(speechGuide.videoList);
-      },
-      onError: () => {
-        localStorage.removeItem('token');
-        setIsLoggedIn(false);
-        router.reload();
-        return;
-      },
-      retry: 0,
-    },
-  );
 
   const handleClickLike = async (id: number) => {
     const { newsId: likeId, isFavorite } = await api.commonService.postLikeData(id);
@@ -65,22 +35,26 @@ function Home() {
         <main>
           <StNews type="guide">
             <h2>스스로 학습하기 전, {mounted && smallBanner && <br />}스피치 가이드를 살펴보세요.</h2>
-            {isLoading ? (
+            {speechGuideList.isLoading ? (
               <VideoListSkeleton itemNumber={4} />
             ) : (
-              <div>
-                <NewsList onClickLike={handleClickLike} newsList={speechGuideList} type="guide" />
-              </div>
+              speechGuideList.data && (
+                <div>
+                  <NewsList onClickLike={handleClickLike} newsList={speechGuideList.data} type="guide" />
+                </div>
+              )
             )}
           </StNews>
           <StNews type="normal">
             <h2>딜리버블의 추천 뉴스를 만나보세요.</h2>
-            {isLoading ? (
+            {newsList.isLoading ? (
               <VideoListSkeleton itemNumber={8} />
             ) : (
-              <div>
-                <NewsList onClickLike={handleClickLike} newsList={newsList} type="normal" />
-              </div>
+              newsList.data && (
+                <div>
+                  <NewsList onClickLike={handleClickLike} newsList={newsList.data} type="normal" />
+                </div>
+              )
             )}
           </StNews>
         </main>
