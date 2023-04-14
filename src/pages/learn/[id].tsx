@@ -11,12 +11,12 @@ import { useDeleteElement, useRightClickHandler, useUpdateMemoList } from '@src/
 import { api } from '@src/services/api';
 import {
   useDeleteScriptData,
+  useGetSimilarVideoData,
   useGetVideoData,
   usePostNewScriptData,
   useUpdateScriptNameData,
 } from '@src/services/queries/learn-detail';
 import { COLOR, FONT_STYLES } from '@src/styles';
-import { VideoData as simpleVideoData } from '@src/types/home/remote';
 import { ConfirmModalText, MemoConfirmModalKey, MemoState } from '@src/types/learnDetail';
 import { MemoData } from '@src/types/learnDetail/remote';
 import { underlineMemo } from '@src/utils/underlineMemo';
@@ -24,9 +24,9 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { icXButton } from 'public/assets/icons';
 import React, { useEffect, useRef, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import YouTube from 'react-youtube';
 import styled, { css } from 'styled-components';
+import ContextMenu from '@src/components/learnDetail/ContextMenu';
 
 function LearnDetail() {
   const router = useRouter();
@@ -51,9 +51,9 @@ function LearnDetail() {
   const [memoState, setMemoState] = useState<MemoState>(INITIAL_MEMO_STATE);
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const [isRecordSaved, setIsRecordSaved] = useState<boolean>(false);
-  const [similarNewsList, setSimilarNewsList] = useState<simpleVideoData[]>([]);
   const [currentScriptId, setCurrentScriptId] = useState(0);
 
+  const { data: similarVideoData, isLoading } = useGetSimilarVideoData(Number(detailId));
   const { data: videoData } = useGetVideoData(!!speechGuide, Number(detailId), clickedTitleIndex);
   const titleList = videoData?.names ?? [];
   const memoList = videoData?.memos ?? [];
@@ -70,7 +70,6 @@ function LearnDetail() {
     updateMemoList,
   });
 
-  const ContextMenu = dynamic(() => import('@src/components/learnDetail/ContextMenu'), { ssr: false });
   const GuideModal = dynamic(() => import('@src/components/learnDetail/modal/GuideModal'), { ssr: false });
   const ConfirmModal = dynamic(() => import('@src/components/learnDetail/modal/ConfirmModal'), { ssr: false });
   const LoginModal = dynamic(() => import('@src/components/login/LoginModal'), { ssr: false });
@@ -149,6 +148,7 @@ function LearnDetail() {
       setMemoState((prev: MemoState) => ({ ...prev, editMemoId: memo.id }));
       return;
     }
+    // 메모 추가하는 경우
     setMemoState((prev: MemoState) => ({ ...prev, newMemoId: 0 }));
     setMemoList((prev: MemoData[]) => [...prev, memo].sort((a, b) => a.order - b.order || a.startIndex - b.startIndex));
   };
@@ -207,15 +207,6 @@ function LearnDetail() {
       setPrevLink(prevPath || '/');
     }
   }, []);
-
-  const { isLoading } = useQuery(
-    ['getSimilarNewsList'],
-    async () => await api.learnDetailService.getSimilarVideoData(Number(detailId)),
-    {
-      onSuccess: (data) => setSimilarNewsList(data.videoList),
-      enabled: !!detailId,
-    },
-  );
 
   return (
     <StPageWrapper>
@@ -357,7 +348,7 @@ function LearnDetail() {
             {isLoading ? (
               <VideoListSkeleton itemNumber={4} />
             ) : (
-              <NewsList onClickLike={handleClickLike} newsList={similarNewsList} type="normal" />
+              similarVideoData && <NewsList onClickLike={handleClickLike} newsList={similarVideoData} type="normal" />
             )}
           </StNews>
         )}

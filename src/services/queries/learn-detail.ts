@@ -39,3 +39,9 @@ export const useUpdateScriptNameData = () => {
     onError: (error: { message: string }) => console.log(error.message),
   });
 };
+
+export const useGetSimilarVideoData = (videoId: number) => {
+  return useQuery(['getSimilarNewsList', videoId], () => api.learnDetailService.getSimilarVideoData(videoId), {
+    onError: (error: { message: string }) => console.log(error.message),
+  });
+};

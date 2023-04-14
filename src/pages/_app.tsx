@@ -7,6 +7,7 @@ import Script from 'next/script';
 import { useEffect } from 'react';
 import { hotjar } from 'react-hotjar';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { RecoilRoot } from 'recoil';
 import * as gtag from '../utils/gtag';
 
@@ -74,6 +75,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <CustomErrorBoundary>
           <Component {...pageProps} />
         </CustomErrorBoundary>
+        <ReactQueryDevtools initialIsOpen={false} />
       </RecoilRoot>
     </QueryClientProvider>
   );

@@ -1,4 +1,4 @@
-import { VideoListData } from '@src/types/home/remote';
+import { VideoData as SimpleVideoData } from '@src/types/home/remote';
 import {
   SentenceData,
   VideoData,
@@ -27,5 +27,5 @@ export interface LearnDetailService {
   getRecordData(scriptId: number): Promise<GetRecordData[]>;
   deleteRecordData(body: DeleteRecordData): Promise<DeleteRecordResponse>;
   changeRecordNameData(body: ChangeRecordNameData): Promise<ChangeRecordNameData>;
-  getSimilarVideoData(videoId: number): Promise<VideoListData>;
+  getSimilarVideoData(videoId: number): Promise<SimpleVideoData[]>;
 }

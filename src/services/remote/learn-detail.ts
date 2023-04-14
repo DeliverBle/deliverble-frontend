@@ -207,16 +207,12 @@ export function learnDetailDataRemote(): LearnDetailService {
   };
 
   const getSimilarVideoData = async (videoId: number) => {
-    const response = await API.get({
-      url: `/news/similar/${videoId}`,
-    }).catch((error: AxiosError<Error>) => {
+    const response = await API.get({ url: `/news/similar/${videoId}` }).catch((error: AxiosError<Error>) => {
       if (error.response?.status === STATUS_CODE.INTERNAL_SERVER_ERROR) {
         throw new InternalServerError(error.response?.data.message);
       }
     });
-    return {
-      videoList: response.data ? response.data.exploreNewsDtoCollection : [],
-    };
+    return response.data.exploreNewsDtoCollection;
   };
 
   return {
