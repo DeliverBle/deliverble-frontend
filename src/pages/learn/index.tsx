@@ -2,47 +2,23 @@ import { Footer, ImageDiv, NavigationBar, NewsList, Pagination, SEO, VideoListSk
 import { SelectBox } from '@src/components/learn';
 import { BLOCK_SIZE, LIST_SIZE } from '@src/constants/common';
 import { categoryList, channelList, speakerList } from '@src/constants/learn';
-import { api } from '@src/services/api';
-import { loginState } from '@src/stores/loginState';
 import { COLOR, FONT_STYLES } from '@src/styles';
-import { PostSearchConditionRequestBody, VideoData } from '@src/types/learn/remote';
-import { useRouter } from 'next/router';
 import { icSearch } from 'public/assets/icons';
 import { useEffect, useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
-import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
+import { usePostLikeData } from '@src/services/queries/common';
+import { usePostSearchCondition } from '@src/services/queries/learn';
 
 function Learn() {
-  const router = useRouter();
-  const setIsLoggedIn = useSetRecoilState(loginState);
   const [selectedChannelList, setSelectedChannelList] = useState<string[]>([]);
   const [selectedCategoryList, setSelectedCategoryList] = useState<string[]>([]);
   const [selectedSpeakerList, setSelectedSpeakerList] = useState<string[]>([]);
-  const [totalCount, setTotalCount] = useState(0);
-  const [lastPage, setLastPage] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
-  const [resultList, setResultList] = useState<VideoData[]>([]);
 
-  const { mutate, isLoading } = useMutation(
-    async (requestBody: PostSearchConditionRequestBody) => {
-      return await api.learnService.postSearchCondition(requestBody);
-    },
-    {
-      onSuccess: (data) => {
-        const { paging, videoList } = data;
-        setTotalCount(paging.totalCount);
-        setLastPage(paging.lastPage);
-        setResultList(videoList);
-      },
-      onError: () => {
-        localStorage.removeItem('token');
-        setIsLoggedIn(false);
-        router.reload();
-        return;
-      },
-    },
-  );
+  const { data, mutate, isLoading } = usePostSearchCondition();
+  const resultList = data?.videoList ?? [];
+  const totalCount = data?.paging.totalCount ?? 0;
+  const lastPage = data?.paging.lastPage ?? 1;
 
   const handlePageChange = (page: number) => {
     window.scrollTo(0, 0);
@@ -56,19 +32,18 @@ function Learn() {
     setCurrentPage(page);
   };
 
-  const handleClickLike = async (id: number) => {
-    const { id: likeId, isFavorite } = await api.commonService.postLikeData(id);
-
-    setResultList((prev) => {
-      return prev.map((news) => {
-        if (news.id === likeId) {
-          return {
-            ...news,
-            isFavorite,
-          };
-        }
-        return news;
-      });
+  const postLikeData = usePostLikeData();
+  const handleClickLike = (id: number) => {
+    postLikeData.mutate(id, {
+      onSuccess: () => {
+        mutate({
+          channel: selectedChannelList,
+          category: selectedCategoryList,
+          announcerGender: selectedSpeakerList,
+          currentPage,
+          listSize: LIST_SIZE,
+        });
+      },
     });
   };
 
@@ -81,7 +56,8 @@ function Learn() {
       listSize: LIST_SIZE,
     });
     setCurrentPage(1);
-  }, [mutate, selectedCategoryList, selectedChannelList, selectedSpeakerList]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCategoryList, selectedChannelList, selectedSpeakerList]);
 
   return (
     <StPageWrapper>
