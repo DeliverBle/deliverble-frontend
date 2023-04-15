@@ -4,14 +4,11 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { queryClient } from '../../pages/_app';
 
 export const useGetSearchCondition = (data: PostSearchConditionRequestBody) => {
-  return useQuery(['postSearchCondition', data], () => api.learnService.postSearchCondition(data), {
-    onError: (error: { message: string }) => console.log(error.message),
-  });
+  return useQuery(['postSearchCondition', data], () => api.learnService.postSearchCondition(data));
 };
 
 export const usePostSearchCondition = () => {
   return useMutation(api.learnService.postSearchCondition, {
     onSuccess: () => queryClient.invalidateQueries(['postSearchCondition'], { refetchType: 'active' }),
-    onError: (error: { message: string }) => console.log(error.message),
   });
 };

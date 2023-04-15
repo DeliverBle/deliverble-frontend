@@ -11,7 +11,6 @@ export const usePostReviewVideoList = (currentPage: number, tab: ReviewTab) => {
     ['postReviewList', currentPage, tab],
     () => api.reviewService.postReviewVideoList({ currentPage, listSize: LIST_SIZE }, tab),
     {
-      onError: (error: { message: string }) => console.log(error.message),
       enabled: isLoggedIn,
     },
   );

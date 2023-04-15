@@ -14,7 +14,6 @@ export const useGetVideoData = (speechGuide: boolean, videoId: number, index?: n
       ? () => api.learnDetailService.getPrivateVideoData(videoId, index as number)
       : () => api.learnDetailService.getPublicVideoData(videoId),
     {
-      onError: (error: { message: string }) => console.log(error.message),
       enabled: !!videoId,
     },
   );
@@ -23,27 +22,23 @@ export const useGetVideoData = (speechGuide: boolean, videoId: number, index?: n
 export const usePostNewScriptData = () => {
   return useMutation(api.learnDetailService.postNewScriptData, {
     onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id]),
-    onError: (error: { message: string }) => console.log(error.message),
   });
 };
 
 export const useDeleteScriptData = () => {
   return useMutation(api.learnDetailService.deleteScriptData, {
     onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id]),
-    onError: (error: { message: string }) => console.log(error.message),
   });
 };
 
 export const useUpdateScriptNameData = () => {
   return useMutation(api.learnDetailService.updateScriptNameData, {
     onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id], { refetchType: 'all' }),
-    onError: (error: { message: string }) => console.log(error.message),
   });
 };
 
 export const useGetSimilarVideoData = (videoId: number) => {
   return useQuery(['getSimilarVideoList', videoId], () => api.learnDetailService.getSimilarVideoData(videoId), {
-    onError: (error: { message: string }) => console.log(error.message),
     enabled: !!videoId,
   });
 };
@@ -51,27 +46,23 @@ export const useGetSimilarVideoData = (videoId: number) => {
 export const usePostSentenceData = () => {
   return useMutation(api.learnDetailService.postSentenceData, {
     onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id], { refetchType: 'all' }),
-    onError: (error: { message: string }) => console.log(error.message),
   });
 };
 
 export const usePostMemoData = () => {
   return useMutation(api.learnDetailService.postMemoData, {
     onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id], { refetchType: 'all' }),
-    onError: (error: { message: string }) => console.log(error.message),
   });
 };
 
 export const useUpdateMemoData = () => {
   return useMutation(api.learnDetailService.updateMemoData, {
     onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id], { refetchType: 'all' }),
-    onError: (error: { message: string }) => console.log(error.message),
   });
 };
 
 export const useDeleteMemoData = () => {
   return useMutation(api.learnDetailService.deleteMemoData, {
     onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id], { refetchType: 'all' }),
-    onError: (error: { message: string }) => console.log(error.message),
   });
 };

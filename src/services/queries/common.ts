@@ -12,6 +12,5 @@ export const usePostLikeData = () => {
       queryClient.invalidateQueries(['postReviewList'], { refetchType: 'active' });
       queryClient.invalidateQueries(['postSearchCondition'], { refetchType: 'active' });
     },
-    onError: (error: { message: string }) => console.log(error.message),
   });
 };
