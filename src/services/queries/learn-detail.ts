@@ -33,7 +33,7 @@ export const useDeleteScriptData = () => {
 
 export const useUpdateScriptNameData = () => {
   return useMutation(api.learnDetailService.updateScriptNameData, {
-    onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id], { refetchType: 'all' }),
+    onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id]),
   });
 };
 
@@ -45,24 +45,24 @@ export const useGetSimilarVideoData = (videoId: number) => {
 
 export const usePostSentenceData = () => {
   return useMutation(api.learnDetailService.postSentenceData, {
-    onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id], { refetchType: 'all' }),
+    onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id]),
   });
 };
 
 export const usePostMemoData = () => {
   return useMutation(api.learnDetailService.postMemoData, {
-    onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id], { refetchType: 'all' }),
+    onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id]),
   });
 };
 
 export const useUpdateMemoData = () => {
   return useMutation(api.learnDetailService.updateMemoData, {
-    onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id], { refetchType: 'all' }),
+    onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id]),
   });
 };
 
 export const useDeleteMemoData = () => {
   return useMutation(api.learnDetailService.deleteMemoData, {
-    onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id], { refetchType: 'all' }),
+    onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id]),
   });
 };

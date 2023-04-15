@@ -9,6 +9,6 @@ export const useGetSearchCondition = (data: PostSearchConditionRequestBody) => {
 
 export const usePostSearchCondition = () => {
   return useMutation(api.learnService.postSearchCondition, {
-    onSuccess: () => queryClient.invalidateQueries(['postSearchCondition'], { refetchType: 'active' }),
+    onSuccess: () => queryClient.invalidateQueries(['postSearchCondition']),
   });
 };

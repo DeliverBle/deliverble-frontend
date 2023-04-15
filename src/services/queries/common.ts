@@ -5,12 +5,12 @@ import { queryClient } from '../../pages/_app';
 export const usePostLikeData = () => {
   return useMutation(api.commonService.postLikeData, {
     onSuccess: (data) => {
-      queryClient.invalidateQueries(['getRecommendVideoList'], { refetchType: 'active' });
-      queryClient.invalidateQueries(['getSpeechGuideList'], { refetchType: 'active' });
-      queryClient.invalidateQueries(['getVideoData', data.newsId], { refetchType: 'active' });
-      queryClient.invalidateQueries(['getSimilarVideoList'], { refetchType: 'active' });
-      queryClient.invalidateQueries(['postReviewList'], { refetchType: 'active' });
-      queryClient.invalidateQueries(['postSearchCondition'], { refetchType: 'active' });
+      queryClient.invalidateQueries(['getRecommendVideoList']);
+      queryClient.invalidateQueries(['getSpeechGuideList']);
+      queryClient.invalidateQueries(['getVideoData', data.newsId]);
+      queryClient.invalidateQueries(['getSimilarVideoList']);
+      queryClient.invalidateQueries(['postReviewList']);
+      queryClient.invalidateQueries(['postSearchCondition']);
     },
   });
 };
