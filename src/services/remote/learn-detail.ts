@@ -1,5 +1,3 @@
-import { STATUS_CODE } from '@src/constants/common';
-import { InternalServerError } from '@src/types/error';
 import {
   ChangeRecordNameData,
   CreateMemoRequest,
@@ -10,79 +8,42 @@ import {
   UpdateSentenceRequest,
   UploadRecordData,
 } from '@src/types/learnDetail/remote';
-import { AxiosError } from 'axios';
 import { LearnDetailService } from '../api/learn-detail';
 import { API } from './base';
 
 export function learnDetailDataRemote(): LearnDetailService {
   const getPrivateVideoData = async (videoId: number, index: number) => {
     const response = await API.get({ url: `/news/detail/${videoId}` });
-    if (response.statusCode === 200) {
-      const scriptIndex = response.data2[index] ? index : 0;
-      return {
-        id: response.data.id,
-        title: response.data.title,
-        category: response.data.category,
-        channel: response.data.channel,
-        link: response.data.link,
-        reportDate: response.data.reportDate,
-        isFavorite: response.data.isFavorite,
-        haveGuide: response.data.haveGuide,
-        startTime: response.data.startTime,
-        endTime: response.data.endTime,
-        scriptsId: response.data2[scriptIndex].id,
-        tags: response.data.tagsForView,
-        scripts: response.data2[scriptIndex].sentences,
-        memos: response.data2[scriptIndex].memos,
-        names: response.data2.map((name: Name) => ({
-          id: name.id,
-          name: name.name,
-        })),
-      };
-    } else throw '서버 통신 실패';
+    const scriptIndex = response.data2[index] ? index : 0;
+    return {
+      ...response.data,
+      scriptsId: response.data2[scriptIndex].id,
+      tags: response.data.tagsForView,
+      scripts: response.data2[scriptIndex].sentences,
+      memos: response.data2[scriptIndex].memos,
+      names: response.data2.map(({ id, name }: Name) => ({ id, name })),
+    };
   };
 
   const getPublicVideoData = async (videoId: number) => {
     const response = await API.get({ url: `/news/detail/not-authentication/${videoId}` });
-    if (response.statusCode === 200) {
-      return {
-        id: response.data.id,
-        title: response.data.title,
-        category: response.data.category,
-        channel: response.data.channel,
-        link: response.data.link,
-        reportDate: response.data.reportDate,
-        isFavorite: response.data.isFavorite,
-        haveGuide: response.data.haveGuide,
-        startTime: response.data.startTime,
-        endTime: response.data.endTime,
-        scriptsId: response.data2[0].id,
-        tags: response.data.tagsForView,
-        scripts: response.data2[0].sentences,
-      };
-    } else throw '서버 통신 실패';
+    return {
+      ...response.data,
+      scriptsId: response.data2[0].id,
+      tags: response.data.tagsForView,
+      scripts: response.data2[0].sentences,
+    };
   };
 
   const getSpeechGuideData = async (videoId: number) => {
     const response = await API.get({ url: `/news/guide/detail/${videoId}` });
-    if (response.statusCode === 200) {
-      return {
-        id: response.data.id,
-        title: response.data.title,
-        category: response.data.category,
-        channel: response.data.channel,
-        link: response.data.link,
-        reportDate: response.data.reportDate,
-        isFavorite: response.data.isFavorite,
-        haveGuide: response.data.haveGuide,
-        startTime: response.data.startTime,
-        endTime: response.data.endTime,
-        scriptsId: response.data2[0].id,
-        tags: response.data.tagsForView,
-        scripts: response.data2[0].sentences,
-        memos: response.data2[0].memoGuides,
-      };
-    } else throw '서버 통신 실패';
+    return {
+      ...response.data,
+      scriptsId: response.data2[0].id,
+      tags: response.data.tagsForView,
+      scripts: response.data2[0].sentences,
+      memos: response.data2[0].memoGuides,
+    };
   };
 
   const postSentenceData = async ({ sentenceData, scriptId }: UpdateSentenceRequest) => {
@@ -183,11 +144,7 @@ export function learnDetailDataRemote(): LearnDetailService {
   };
 
   const getSimilarVideoData = async (videoId: number) => {
-    const response = await API.get({ url: `/news/similar/${videoId}` }).catch((error: AxiosError<Error>) => {
-      if (error.response?.status === STATUS_CODE.INTERNAL_SERVER_ERROR) {
-        throw new InternalServerError(error.response?.data.message);
-      }
-    });
+    const response = await API.get({ url: `/news/similar/${videoId}` });
     return response.data.exploreNewsDtoCollection;
   };
 
