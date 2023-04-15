@@ -46,7 +46,7 @@ function Review() {
             내 학습 기록
           </StTab>
         </StTabList>
-        {!data ? (
+        {!data && videoList.length ? (
           <VideoListSkeleton itemNumber={12} hasCountSection />
         ) : (
           <VideoContainer
