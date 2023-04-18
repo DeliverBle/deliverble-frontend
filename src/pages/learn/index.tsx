@@ -7,7 +7,7 @@ import { icSearch } from 'public/assets/icons';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { usePostLikeData } from '@src/services/queries/common';
-import { useGetSearchCondition, usePostSearchCondition } from '@src/services/queries/learn';
+import { usePostSearchCondition } from '@src/services/queries/learn';
 import { queryClient } from '@src/pages/_app';
 
 function Learn() {
@@ -23,26 +23,25 @@ function Learn() {
     listSize: LIST_SIZE,
   };
 
-  const { data, isLoading } = useGetSearchCondition(searchCondition);
-  const { mutate } = usePostSearchCondition();
+  const { data, isLoading, refetch } = usePostSearchCondition(searchCondition);
   const resultList = data?.videoList ?? [];
   const totalCount = data?.paging.totalCount ?? 0;
   const lastPage = data?.paging.lastPage ?? 1;
   const postLikeData = usePostLikeData();
   const hasCachedData = queryClient.getQueryData(['postSearchCondition', searchCondition]);
 
-  const mutateSearchCondition = (page: number) => {
-    mutate({ ...searchCondition, currentPage: page });
+  const refetchData = (page: number) => {
+    refetch();
     setCurrentPage(page);
   };
 
   const handlePageChange = (page: number) => {
     window.scrollTo(0, 0);
-    mutateSearchCondition(page);
+    !hasCachedData && refetchData(page);
   };
 
   useEffect(() => {
-    !hasCachedData && mutateSearchCondition(1);
+    !hasCachedData && refetchData(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategoryList, selectedChannelList, selectedSpeakerList]);
 
