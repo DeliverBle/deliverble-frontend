@@ -8,7 +8,6 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { usePostLikeData } from '@src/services/queries/common';
 import { usePostSearchCondition } from '@src/services/queries/learn';
-import { queryClient } from '@src/pages/_app';
 
 function Learn() {
   const [selectedChannelList, setSelectedChannelList] = useState<string[]>([]);
@@ -23,26 +22,19 @@ function Learn() {
     listSize: LIST_SIZE,
   };
 
-  const { data, isLoading, refetch } = usePostSearchCondition(searchCondition);
+  const { data, isLoading } = usePostSearchCondition(searchCondition);
   const resultList = data?.videoList ?? [];
   const totalCount = data?.paging.totalCount ?? 0;
   const lastPage = data?.paging.lastPage ?? 1;
   const postLikeData = usePostLikeData();
-  const hasCachedData = queryClient.getQueryData(['postSearchCondition', searchCondition]);
-
-  const refetchData = (page: number) => {
-    refetch();
-    setCurrentPage(page);
-  };
 
   const handlePageChange = (page: number) => {
     window.scrollTo(0, 0);
-    !hasCachedData && refetchData(page);
+    setCurrentPage(page);
   };
 
   useEffect(() => {
-    !hasCachedData && refetchData(1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setCurrentPage(1);
   }, [selectedCategoryList, selectedChannelList, selectedSpeakerList]);
 
   return (
