@@ -119,11 +119,18 @@ export type UpdateSentenceRequest = {
 export type CreateMemoRequest = {
   memo: MemoData;
   scriptId: number;
+  clickedTitleIndex: number;
 };
 
 export type UpdateMemoRequest = {
   memoId: number;
   content: string;
+  clickedTitleIndex: number;
+};
+
+export type DeleteMemoRequest = {
+  memoId: number;
+  clickedTitleIndex: number;
 };
 
 export type CreateScriptRequest = {

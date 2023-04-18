@@ -69,18 +69,24 @@ export const usePostSentenceData = () => {
 
 export const usePostMemoData = () => {
   return useMutation(api.learnDetailService.postMemoData, {
-    onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id]),
+    onSuccess: (data, { clickedTitleIndex }) => {
+      queryClient.setQueryData(['getVideoData', data.id, clickedTitleIndex, false], data);
+    },
   });
 };
 
 export const useUpdateMemoData = () => {
   return useMutation(api.learnDetailService.updateMemoData, {
-    onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id]),
+    onSuccess: (data, { clickedTitleIndex }) => {
+      queryClient.setQueryData(['getVideoData', data.id, clickedTitleIndex, false], data);
+    },
   });
 };
 
 export const useDeleteMemoData = () => {
   return useMutation(api.learnDetailService.deleteMemoData, {
-    onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id]),
+    onSuccess: (data, { clickedTitleIndex }) => {
+      queryClient.setQueryData(['getVideoData', data.id, clickedTitleIndex, false], data);
+    },
   });
 };

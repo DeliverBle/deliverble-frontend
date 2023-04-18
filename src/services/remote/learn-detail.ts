@@ -2,6 +2,7 @@ import {
   ChangeRecordNameData,
   CreateMemoRequest,
   CreateScriptRequest,
+  DeleteMemoRequest,
   DeleteRecordData,
   DeleteScriptRequest,
   GetRecordData,
@@ -56,17 +57,35 @@ export function learnDetailDataRemote(): LearnDetailService {
 
   const postMemoData = async ({ memo, scriptId }: CreateMemoRequest) => {
     const response = await API.post({ url: `/script/memo/create/${scriptId}`, data: memo });
-    return response.data;
+    return {
+      ...response.data2,
+      ...response.data,
+      tags: response.data.tagsForView,
+      scriptsId: response.data2.id,
+      scripts: response.data2.sentences,
+    };
   };
 
   const updateMemoData = async ({ memoId, content }: UpdateMemoRequest) => {
     const response = await API.patch({ url: `/script/memo/update/${memoId}`, data: { content } });
-    return response.data;
+    return {
+      ...response.data2,
+      ...response.data,
+      tags: response.data.tagsForView,
+      scriptsId: response.data2.id,
+      scripts: response.data2.sentences,
+    };
   };
 
-  const deleteMemoData = async (memoId: number) => {
+  const deleteMemoData = async ({ memoId }: DeleteMemoRequest) => {
     const response = await API.delete({ url: `/script/memo/delete/${memoId}` });
-    return response.data;
+    return {
+      ...response.data2,
+      ...response.data,
+      tags: response.data.tagsForView,
+      scriptsId: response.data2.id,
+      scripts: response.data2.sentences,
+    };
   };
 
   const postNewScriptData = async ({ videoId, clickedTitleIndex }: CreateScriptRequest) => {
@@ -77,7 +96,7 @@ export function learnDetailDataRemote(): LearnDetailService {
       tags: response.data.tagsForView,
       scriptsId: response.data2.returnScriptDtoCollection[clickedTitleIndex].id,
       scripts: response.data2.returnScriptDtoCollection[clickedTitleIndex].sentences,
-      memos: response.data2.returnScriptDtoCollection[0].memos,
+      memos: response.data2.returnScriptDtoCollection[clickedTitleIndex].memos,
       names: response.data2.returnScriptDtoCollection.map(({ id, name }: Name) => ({ id, name })),
     };
   };

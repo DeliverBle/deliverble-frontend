@@ -3,6 +3,7 @@ import {
   ChangeRecordNameData,
   CreateMemoRequest,
   CreateScriptRequest,
+  DeleteMemoRequest,
   DeleteRecordData,
   DeleteRecordResponse,
   DeleteScriptRequest,
@@ -21,7 +22,7 @@ export interface LearnDetailService {
   postSentenceData(data: UpdateSentenceRequest): Promise<VideoData>;
   postMemoData(data: CreateMemoRequest): Promise<VideoData>;
   updateMemoData(data: UpdateMemoRequest): Promise<VideoData>;
-  deleteMemoData(memoId: number): Promise<VideoData>;
+  deleteMemoData(data: DeleteMemoRequest): Promise<VideoData>;
   postNewScriptData(data: CreateScriptRequest): Promise<VideoData>;
   deleteScriptData(data: DeleteScriptRequest): Promise<VideoData>;
   updateScriptNameData(data: UpdateScriptNameRequest): Promise<VideoData>;

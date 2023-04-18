@@ -64,7 +64,7 @@ function LearnDetail() {
 
   const { rightClickedElement, isContextMenuOpen, setIsContextMenuOpen, memoInfo, handleRightClick } =
     useRightClickHandler({ memoList, memoState });
-  const updateMemoList = useUpdateMemoList({ memoState, memoInfo, setMemoState });
+  const updateMemoList = useUpdateMemoList({ memoState, memoInfo, clickedTitleIndex, setMemoState });
   const { setOrder, setText, setClickedDeleteType, nodeToText } = useDeleteElement({
     rightClickedElement,
     scriptId,
