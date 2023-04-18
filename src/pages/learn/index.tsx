@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { usePostLikeData } from '@src/services/queries/common';
 import { useGetSearchCondition, usePostSearchCondition } from '@src/services/queries/learn';
+import { queryClient } from '@src/pages/_app';
 
 function Learn() {
   const [selectedChannelList, setSelectedChannelList] = useState<string[]>([]);
@@ -28,16 +29,20 @@ function Learn() {
   const totalCount = data?.paging.totalCount ?? 0;
   const lastPage = data?.paging.lastPage ?? 1;
   const postLikeData = usePostLikeData();
+  const hasCachedData = queryClient.getQueryData(['postSearchCondition', searchCondition]);
 
-  const handlePageChange = (page: number) => {
-    window.scrollTo(0, 0);
+  const mutateSearchCondition = (page: number) => {
     mutate({ ...searchCondition, currentPage: page });
     setCurrentPage(page);
   };
 
+  const handlePageChange = (page: number) => {
+    window.scrollTo(0, 0);
+    mutateSearchCondition(page);
+  };
+
   useEffect(() => {
-    mutate({ ...searchCondition, currentPage: 1 });
-    setCurrentPage(1);
+    !hasCachedData && mutateSearchCondition(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategoryList, selectedChannelList, selectedSpeakerList]);
 
