@@ -25,7 +25,9 @@ export const useGetVideoData = (speechGuide: boolean, videoId: number, index?: n
 export const usePostNewScriptData = () => {
   return useMutation(api.learnDetailService.postNewScriptData, {
     onSuccess: (data, { clickedTitleIndex }) => {
-      queryClient.setQueryData(['getVideoData', data.id, clickedTitleIndex, false], data);
+      queryClient.setQueryData<VideoData>(['getVideoData', data.id, clickedTitleIndex, false], (oldData) => {
+        return { ...oldData, ...data };
+      });
     },
   });
 };
@@ -33,7 +35,9 @@ export const usePostNewScriptData = () => {
 export const useDeleteScriptData = () => {
   return useMutation(api.learnDetailService.deleteScriptData, {
     onSuccess: (data, { clickedTitleIndex }) => {
-      queryClient.setQueryData(['getVideoData', data.id, clickedTitleIndex, false], data);
+      queryClient.setQueryData<VideoData>(['getVideoData', data.id, clickedTitleIndex, false], (oldData) => {
+        return { ...oldData, ...data };
+      });
     },
   });
 };
@@ -74,7 +78,9 @@ export const usePostSentenceData = () => {
 export const usePostMemoData = () => {
   return useMutation(api.learnDetailService.postMemoData, {
     onSuccess: (data, { clickedTitleIndex }) => {
-      queryClient.setQueryData(['getVideoData', data.id, clickedTitleIndex, false], data);
+      queryClient.setQueryData<VideoData>(['getVideoData', data.id, clickedTitleIndex, false], (oldData) => {
+        return { ...oldData, ...data };
+      });
     },
   });
 };
@@ -82,7 +88,9 @@ export const usePostMemoData = () => {
 export const useUpdateMemoData = () => {
   return useMutation(api.learnDetailService.updateMemoData, {
     onSuccess: (data, { clickedTitleIndex }) => {
-      queryClient.setQueryData(['getVideoData', data.id, clickedTitleIndex, false], data);
+      queryClient.setQueryData<VideoData>(['getVideoData', data.id, clickedTitleIndex, false], (oldData) => {
+        return { ...oldData, ...data };
+      });
     },
   });
 };
@@ -90,7 +98,9 @@ export const useUpdateMemoData = () => {
 export const useDeleteMemoData = () => {
   return useMutation(api.learnDetailService.deleteMemoData, {
     onSuccess: (data, { clickedTitleIndex }) => {
-      queryClient.setQueryData(['getVideoData', data.id, clickedTitleIndex, false], data);
+      queryClient.setQueryData<VideoData>(['getVideoData', data.id, clickedTitleIndex, false], (oldData) => {
+        return { ...oldData, ...data };
+      });
     },
   });
 };
