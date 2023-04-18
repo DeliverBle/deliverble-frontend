@@ -114,6 +114,7 @@ export type ChangeRecordNameData = {
 export type UpdateSentenceRequest = {
   sentenceData: SentenceData;
   scriptId: number;
+  clickedTitleIndex: number;
 };
 
 export type CreateMemoRequest = {

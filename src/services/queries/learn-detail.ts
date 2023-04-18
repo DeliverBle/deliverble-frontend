@@ -63,7 +63,11 @@ export const useGetSimilarVideoData = (videoId: number) => {
 
 export const usePostSentenceData = () => {
   return useMutation(api.learnDetailService.postSentenceData, {
-    onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id]),
+    onSuccess: (data, { clickedTitleIndex }) => {
+      queryClient.setQueryData<VideoData>(['getVideoData', data.id, clickedTitleIndex, false], (oldData) => {
+        return { ...oldData, ...data };
+      });
+    },
   });
 };
 

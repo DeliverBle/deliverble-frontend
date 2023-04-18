@@ -67,6 +67,7 @@ function LearnDetail() {
   const updateMemoList = useUpdateMemoList({ memoState, memoInfo, clickedTitleIndex, setMemoState });
   const { setOrder, setText, setClickedDeleteType, nodeToText } = useDeleteElement({
     rightClickedElement,
+    clickedTitleIndex,
     scriptId,
     updateMemoList,
   });

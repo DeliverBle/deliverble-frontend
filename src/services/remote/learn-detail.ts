@@ -52,7 +52,13 @@ export function learnDetailDataRemote(): LearnDetailService {
 
   const postSentenceData = async ({ sentenceData, scriptId }: UpdateSentenceRequest) => {
     const response = await API.post({ url: `/script/sentence/update/${scriptId}`, data: sentenceData });
-    return response.data;
+    return {
+      ...response.data2,
+      ...response.data,
+      tags: response.data.tagsForView,
+      scriptsId: response.data2.id,
+      scripts: response.data2.sentences,
+    };
   };
 
   const postMemoData = async ({ memo, scriptId }: CreateMemoRequest) => {

@@ -5,12 +5,13 @@ import { useEffect, useState } from 'react';
 
 interface useDeleteElementProps {
   rightClickedElement?: HTMLElement;
+  clickedTitleIndex: number;
   scriptId?: number;
   updateMemoList: (type: MemoConfirmModalKey, content?: string) => void;
 }
 
 function useDeleteElement(props: useDeleteElementProps) {
-  const { rightClickedElement, scriptId, updateMemoList } = props;
+  const { rightClickedElement, clickedTitleIndex, scriptId, updateMemoList } = props;
   const [clickedDeleteType, setClickedDeleteType] = useState<string>('');
   const [order, setOrder] = useState<number>();
   const [text, setText] = useState<string>();
@@ -89,7 +90,7 @@ function useDeleteElement(props: useDeleteElementProps) {
   useEffect(() => {
     (async () => {
       if (order && order !== INITIAL && text && scriptId) {
-        const data = { sentenceData: { order, text }, scriptId };
+        const data = { sentenceData: { order, text }, scriptId, clickedTitleIndex };
         postSentenceData.mutate(data);
         setText('');
         setOrder(INITIAL);
