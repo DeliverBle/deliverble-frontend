@@ -1,6 +1,7 @@
 import { queryClient } from '@src/pages/_app';
 import { api } from '@src/services/api';
 import { loginState } from '@src/stores/loginState';
+import { VideoData } from '@src/types/learnDetail/remote';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useRecoilValue } from 'recoil';
 
@@ -23,19 +24,32 @@ export const useGetVideoData = (speechGuide: boolean, videoId: number, index?: n
 
 export const usePostNewScriptData = () => {
   return useMutation(api.learnDetailService.postNewScriptData, {
-    onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id]),
+    onSuccess: (data, { clickedTitleIndex }) => {
+      queryClient.setQueryData(['getVideoData', data.id, clickedTitleIndex, false], data);
+    },
   });
 };
 
 export const useDeleteScriptData = () => {
   return useMutation(api.learnDetailService.deleteScriptData, {
-    onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id]),
+    onSuccess: (data, { clickedTitleIndex }) => {
+      queryClient.setQueryData(['getVideoData', data.id, clickedTitleIndex, false], data);
+    },
   });
 };
 
 export const useUpdateScriptNameData = () => {
   return useMutation(api.learnDetailService.updateScriptNameData, {
-    onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id]),
+    onSuccess: (data, { clickedTitleIndex }) => {
+      queryClient.setQueryData<VideoData>(['getVideoData', data.id, clickedTitleIndex, false], (oldData) => {
+        if (oldData?.names && data.name) {
+          const names = [...oldData.names];
+          names[clickedTitleIndex].name = data.name;
+          return { ...oldData, names };
+        }
+        return oldData;
+      });
+    },
   });
 };
 

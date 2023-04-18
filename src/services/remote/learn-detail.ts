@@ -1,10 +1,13 @@
 import {
   ChangeRecordNameData,
   CreateMemoRequest,
+  CreateScriptRequest,
   DeleteRecordData,
+  DeleteScriptRequest,
   GetRecordData,
   Name,
   UpdateMemoRequest,
+  UpdateScriptNameRequest,
   UpdateSentenceRequest,
   UploadRecordData,
 } from '@src/types/learnDetail/remote';
@@ -66,19 +69,41 @@ export function learnDetailDataRemote(): LearnDetailService {
     return response.data;
   };
 
-  const postNewScriptData = async (videoId: number) => {
+  const postNewScriptData = async ({ videoId, clickedTitleIndex }: CreateScriptRequest) => {
     const response = await API.post({ url: `/script/create/${videoId}` });
-    return response.data;
+    return {
+      ...response.data2.returnScriptDtoCollection,
+      ...response.data,
+      tags: response.data.tagsForView,
+      scriptsId: response.data2.returnScriptDtoCollection[clickedTitleIndex].id,
+      scripts: response.data2.returnScriptDtoCollection[clickedTitleIndex].sentences,
+      memos: response.data2.returnScriptDtoCollection[0].memos,
+      names: response.data2.returnScriptDtoCollection.map(({ id, name }: Name) => ({ id, name })),
+    };
   };
 
-  const deleteScriptData = async (scriptId: number) => {
+  const deleteScriptData = async ({ scriptId }: DeleteScriptRequest) => {
     const response = await API.delete({ url: `/script/delete/${scriptId}` });
-    return response.data;
+    return {
+      ...response.data2.returnScriptDtoCollection,
+      ...response.data,
+      tags: response.data.tagsForView,
+      scriptsId: response.data2.returnScriptDtoCollection[0].id,
+      scripts: response.data2.returnScriptDtoCollection[0].sentences,
+      memos: response.data2.returnScriptDtoCollection[0].memos,
+      names: response.data2.returnScriptDtoCollection.map(({ id, name }: Name) => ({ id, name })),
+    };
   };
 
-  const updateScriptNameData = async ({ id, name }: Name) => {
+  const updateScriptNameData = async ({ id, name }: UpdateScriptNameRequest) => {
     const response = await API.patch({ url: `/script/name/${id}`, data: { name } });
-    return response.data;
+    return {
+      ...response.data2,
+      ...response.data,
+      tags: response.data.tagsForView,
+      scriptsId: response.data2.id,
+      scripts: response.data2.sentences,
+    };
   };
 
   const uploadRecordData = async (body: UploadRecordData) => {

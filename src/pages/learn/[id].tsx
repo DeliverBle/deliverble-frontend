@@ -73,7 +73,8 @@ function LearnDetail() {
 
   const postNewScriptAdd = usePostNewScriptData();
   const handleScriptAdd = () => {
-    postNewScriptAdd.mutate(Number(detailId), {
+    const data = { videoId: Number(detailId), clickedTitleIndex };
+    postNewScriptAdd.mutate(data, {
       onSuccess: () => {
         const newIndex = titleList.length;
         setClickedTitleIndex(newIndex);
@@ -84,8 +85,8 @@ function LearnDetail() {
 
   const deleteScriptData = useDeleteScriptData();
   const handleScriptDelete = () => {
-    const scriptId = videoData?.scriptsId ?? INITIAL;
-    deleteScriptData.mutate(scriptId, {
+    const data = { scriptId: videoData?.scriptsId ?? INITIAL, clickedTitleIndex };
+    deleteScriptData.mutate(data, {
       onSuccess: () => clickedTitleIndex && setClickedTitleIndex(0),
     });
   };
@@ -97,7 +98,7 @@ function LearnDetail() {
 
   const updateScriptNameData = useUpdateScriptNameData();
   const handleTitleRename = (name: string) => {
-    const data = { id: videoData?.scriptsId ?? INITIAL, name };
+    const data = { id: videoData?.scriptsId ?? INITIAL, name, clickedTitleIndex };
     updateScriptNameData.mutate(data);
   };
 

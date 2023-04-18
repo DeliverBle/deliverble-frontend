@@ -125,3 +125,19 @@ export type UpdateMemoRequest = {
   memoId: number;
   content: string;
 };
+
+export type CreateScriptRequest = {
+  videoId: number;
+  clickedTitleIndex: number;
+};
+
+export type UpdateScriptNameRequest = {
+  id: number;
+  name: string;
+  clickedTitleIndex: number;
+};
+
+export type DeleteScriptRequest = {
+  scriptId: number;
+  clickedTitleIndex: number;
+};

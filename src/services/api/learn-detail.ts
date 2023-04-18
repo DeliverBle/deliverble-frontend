@@ -2,11 +2,13 @@ import { VideoData as SimpleVideoData } from '@src/types/home/remote';
 import {
   ChangeRecordNameData,
   CreateMemoRequest,
+  CreateScriptRequest,
   DeleteRecordData,
   DeleteRecordResponse,
+  DeleteScriptRequest,
   GetRecordData,
-  Name,
   UpdateMemoRequest,
+  UpdateScriptNameRequest,
   UpdateSentenceRequest,
   UploadRecordData,
   UploadRecordResponse,
@@ -20,9 +22,9 @@ export interface LearnDetailService {
   postMemoData(data: CreateMemoRequest): Promise<VideoData>;
   updateMemoData(data: UpdateMemoRequest): Promise<VideoData>;
   deleteMemoData(memoId: number): Promise<VideoData>;
-  postNewScriptData(videoId: number): Promise<VideoData>;
-  deleteScriptData(scriptId: number): Promise<VideoData>;
-  updateScriptNameData(data: Name): Promise<VideoData>;
+  postNewScriptData(data: CreateScriptRequest): Promise<VideoData>;
+  deleteScriptData(data: DeleteScriptRequest): Promise<VideoData>;
+  updateScriptNameData(data: UpdateScriptNameRequest): Promise<VideoData>;
   getSpeechGuideData(videoId: number): Promise<VideoData>;
   uploadRecordData(body: UploadRecordData): Promise<UploadRecordResponse>;
   getRecordData(scriptId: number): Promise<GetRecordData[]>;
