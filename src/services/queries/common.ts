@@ -1,6 +1,6 @@
+import { queryClient } from '@src/pages/_app';
 import { api } from '@src/services/api';
 import { useMutation } from '@tanstack/react-query';
-import { queryClient } from '../../pages/_app';
 
 export const usePostLikeData = () => {
   return useMutation(api.commonService.postLikeData, {

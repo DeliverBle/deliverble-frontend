@@ -1,8 +1,8 @@
+import { queryClient } from '@src/pages/_app';
 import { api } from '@src/services/api';
 import { loginState } from '@src/stores/loginState';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useRecoilValue } from 'recoil';
-import { queryClient } from '../../pages/_app';
 
 export const useGetVideoData = (speechGuide: boolean, videoId: number, index?: number) => {
   const isLoggedIn = useRecoilValue(loginState);
