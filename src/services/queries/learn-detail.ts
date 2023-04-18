@@ -15,6 +15,8 @@ export const useGetVideoData = (speechGuide: boolean, videoId: number, index?: n
       : () => api.learnDetailService.getPublicVideoData(videoId),
     {
       enabled: !!videoId,
+      cacheTime: speechGuide || !isLoggedIn ? Infinity : 300000,
+      staleTime: speechGuide || !isLoggedIn ? Infinity : 0,
     },
   );
 };
@@ -40,6 +42,8 @@ export const useUpdateScriptNameData = () => {
 export const useGetSimilarVideoData = (videoId: number) => {
   return useQuery(['getSimilarVideoList', videoId], () => api.learnDetailService.getSimilarVideoData(videoId), {
     enabled: !!videoId,
+    cacheTime: Infinity,
+    staleTime: Infinity,
   });
 };
 
