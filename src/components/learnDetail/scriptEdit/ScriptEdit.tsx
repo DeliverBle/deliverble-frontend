@@ -141,11 +141,11 @@ function ScriptEdit(props: ScriptEditProps) {
         onPaste={(e) => e.preventDefault()}
         onKeyDown={(e) => e.preventDefault()}
         ref={learnRef}>
-        {videoData?.scripts.map(({ id, text, order }, i) => (
+        {videoData?.sentences.map(({ id, text, order }, i) => (
           <StScriptText
             onContextMenu={(e) => {
               e.preventDefault();
-              handleRightClick(e, videoData.scriptsId, order);
+              handleRightClick(e, videoData.scriptId, order);
               setOrder(i + 1);
             }}
             key={id}

@@ -8,12 +8,12 @@ interface VideoDetailProps {
   category: string;
   reportDate: string;
   title: string;
-  tags: Tag[];
+  tagsForView: Tag[];
   setIsGuideModalOpen: (isOpen: boolean) => void;
 }
 
 function VideoDetail(props: VideoDetailProps) {
-  const { channel, category, reportDate, title, tags, setIsGuideModalOpen } = props;
+  const { channel, category, reportDate, title, tagsForView, setIsGuideModalOpen } = props;
   const { lockScroll } = useBodyScrollLock();
 
   const handleGuideModalOpen = () => {
@@ -29,7 +29,7 @@ function VideoDetail(props: VideoDetailProps) {
         </div>
         <h1>{title}</h1>
         <StTagContainer>
-          {tags.map(({ id, name }) => (
+          {tagsForView.map(({ id, name }) => (
             <span key={id}>{name}</span>
           ))}
         </StTagContainer>

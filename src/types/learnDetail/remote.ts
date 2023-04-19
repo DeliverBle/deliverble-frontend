@@ -27,9 +27,9 @@ export type VideoData = {
   haveGuide: boolean;
   startTime: number;
   endTime: number;
-  scriptsId: number;
-  tags: Tag[];
-  scripts: Script[];
+  scriptId: number;
+  tagsForView: Tag[];
+  sentences: Script[];
   memos?: MemoData[];
   names?: Name[];
   name?: string;

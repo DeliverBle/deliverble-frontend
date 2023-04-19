@@ -19,56 +19,46 @@ export function learnDetailDataRemote(): LearnDetailService {
   const getPrivateVideoData = async (videoId: number, index: number) => {
     const response = await API.get({ url: `/news/detail/${videoId}` });
     const { data: video, data2: scriptList } = response;
-    return {
-      ...scriptList[index],
-      ...video,
-      tags: video.tagsForView,
-      scriptsId: scriptList[index].id,
-      scripts: scriptList[index].sentences,
-      names: scriptList.map((name: Name) => name),
-    };
+    const script = scriptList[index];
+    return { ...script, ...video, scriptId: script.id, names: scriptList.map((name: Name) => name) };
   };
 
   const getPublicVideoData = async (videoId: number) => {
     const response = await API.get({ url: `/news/detail/not-authentication/${videoId}` });
     const { data: video, data2: scriptList } = response;
-    return { ...video, tags: video.tagsForView, scriptsId: scriptList[0].id, scripts: scriptList[0].sentences };
+    const script = scriptList[0];
+    return { ...script, ...video, scriptId: script.id };
   };
 
   const getSpeechGuideData = async (videoId: number) => {
     const response = await API.get({ url: `/news/guide/detail/${videoId}` });
     const { data: video, data2: scriptList } = response;
-    return {
-      ...video,
-      tags: video.tagsForView,
-      scriptsId: scriptList[0].id,
-      scripts: scriptList[0].sentences,
-      memos: scriptList[0].memoGuides,
-    };
+    const script = scriptList[0];
+    return { ...script, ...video, scriptId: script.id, memos: script.memoGuides };
   };
 
   const postSentenceData = async ({ sentenceData, scriptId }: UpdateSentenceRequest) => {
     const response = await API.post({ url: `/script/sentence/update/${scriptId}`, data: sentenceData });
     const { data: video, data2: script } = response;
-    return { ...script, ...video, tags: video.tagsForView, scriptsId: script.id, scripts: script.sentences };
+    return { ...script, ...video, scriptId: script.id };
   };
 
   const postMemoData = async ({ memo, scriptId }: CreateMemoRequest) => {
     const response = await API.post({ url: `/script/memo/create/${scriptId}`, data: memo });
     const { data: video, data2: script } = response;
-    return { ...script, ...video, tags: video.tagsForView, scriptsId: script.id, scripts: script.sentences };
+    return { ...script, ...video, scriptId: script.id };
   };
 
   const updateMemoData = async ({ memoId, content }: UpdateMemoRequest) => {
     const response = await API.patch({ url: `/script/memo/update/${memoId}`, data: { content } });
     const { data: video, data2: script } = response;
-    return { ...script, ...video, tags: video.tagsForView, scriptsId: script.id, scripts: script.sentences };
+    return { ...script, ...video, scriptId: script.id };
   };
 
   const deleteMemoData = async ({ memoId }: DeleteMemoRequest) => {
     const response = await API.delete({ url: `/script/memo/delete/${memoId}` });
     const { data: video, data2: script } = response;
-    return { ...script, ...video, tags: video.tagsForView, scriptsId: script.id, scripts: script.sentences };
+    return { ...script, ...video, scriptId: script.id };
   };
 
   const postNewScriptData = async ({ videoId, clickedTitleIndex: index }: CreateScriptRequest) => {
@@ -77,14 +67,8 @@ export function learnDetailDataRemote(): LearnDetailService {
       data: video,
       data2: { returnScriptDtoCollection: scriptList },
     } = response;
-    return {
-      ...scriptList[index],
-      ...video,
-      tags: video.tagsForView,
-      scriptsId: scriptList[index].id,
-      scripts: scriptList[index].sentences,
-      names: scriptList.map((name: Name) => name),
-    };
+    const script = scriptList[index];
+    return { ...script, ...video, scriptId: script.id, names: scriptList.map((name: Name) => name) };
   };
 
   const deleteScriptData = async ({ scriptId }: DeleteScriptRequest) => {
@@ -93,20 +77,14 @@ export function learnDetailDataRemote(): LearnDetailService {
       data: video,
       data2: { returnScriptDtoCollection: scriptList },
     } = response;
-    return {
-      ...scriptList[0],
-      ...video,
-      tags: video.tagsForView,
-      scriptsId: scriptList[0].id,
-      scripts: scriptList[0].sentences,
-      names: scriptList.map((name: Name) => name),
-    };
+    const script = scriptList[0];
+    return { ...script, ...video, scriptId: script.id, names: scriptList.map((name: Name) => name) };
   };
 
   const updateScriptNameData = async ({ id, name }: UpdateScriptNameRequest) => {
     const response = await API.patch({ url: `/script/name/${id}`, data: { name } });
     const { data: video, data2: script } = response;
-    return { ...script, ...video, tags: video.tagsForView, scriptsId: script.id, scripts: script.sentences };
+    return { ...script, ...video, scriptId: script.id };
   };
 
   const uploadRecordData = async (body: UploadRecordData) => {
