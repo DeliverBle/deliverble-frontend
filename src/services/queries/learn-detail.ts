@@ -22,23 +22,21 @@ export const useGetVideoData = (speechGuide: boolean, videoId: number, index?: n
   );
 };
 
+const updateVideoData = (data: VideoData, clickedTitleIndex: number) => {
+  queryClient.setQueryData<VideoData>(['getVideoData', data.id, clickedTitleIndex, false], (oldData) => {
+    return { ...oldData, ...data };
+  });
+};
+
 export const usePostNewScriptData = () => {
   return useMutation(api.learnDetailService.postNewScriptData, {
-    onSuccess: (data, { clickedTitleIndex }) => {
-      queryClient.setQueryData<VideoData>(['getVideoData', data.id, clickedTitleIndex, false], (oldData) => {
-        return { ...oldData, ...data };
-      });
-    },
+    onSuccess: (data, { clickedTitleIndex }) => updateVideoData(data, clickedTitleIndex),
   });
 };
 
 export const useDeleteScriptData = () => {
   return useMutation(api.learnDetailService.deleteScriptData, {
-    onSuccess: (data, { clickedTitleIndex }) => {
-      queryClient.setQueryData<VideoData>(['getVideoData', data.id, clickedTitleIndex, false], (oldData) => {
-        return { ...oldData, ...data };
-      });
-    },
+    onSuccess: (data, { clickedTitleIndex }) => updateVideoData(data, clickedTitleIndex),
   });
 };
 
@@ -67,40 +65,24 @@ export const useGetSimilarVideoData = (videoId: number) => {
 
 export const usePostSentenceData = () => {
   return useMutation(api.learnDetailService.postSentenceData, {
-    onSuccess: (data, { clickedTitleIndex }) => {
-      queryClient.setQueryData<VideoData>(['getVideoData', data.id, clickedTitleIndex, false], (oldData) => {
-        return { ...oldData, ...data };
-      });
-    },
+    onSuccess: (data, { clickedTitleIndex }) => updateVideoData(data, clickedTitleIndex),
   });
 };
 
 export const usePostMemoData = () => {
   return useMutation(api.learnDetailService.postMemoData, {
-    onSuccess: (data, { clickedTitleIndex }) => {
-      queryClient.setQueryData<VideoData>(['getVideoData', data.id, clickedTitleIndex, false], (oldData) => {
-        return { ...oldData, ...data };
-      });
-    },
+    onSuccess: (data, { clickedTitleIndex }) => updateVideoData(data, clickedTitleIndex),
   });
 };
 
 export const useUpdateMemoData = () => {
   return useMutation(api.learnDetailService.updateMemoData, {
-    onSuccess: (data, { clickedTitleIndex }) => {
-      queryClient.setQueryData<VideoData>(['getVideoData', data.id, clickedTitleIndex, false], (oldData) => {
-        return { ...oldData, ...data };
-      });
-    },
+    onSuccess: (data, { clickedTitleIndex }) => updateVideoData(data, clickedTitleIndex),
   });
 };
 
 export const useDeleteMemoData = () => {
   return useMutation(api.learnDetailService.deleteMemoData, {
-    onSuccess: (data, { clickedTitleIndex }) => {
-      queryClient.setQueryData<VideoData>(['getVideoData', data.id, clickedTitleIndex, false], (oldData) => {
-        return { ...oldData, ...data };
-      });
-    },
+    onSuccess: (data, { clickedTitleIndex }) => updateVideoData(data, clickedTitleIndex),
   });
 };
