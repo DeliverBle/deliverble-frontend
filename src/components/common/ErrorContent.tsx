@@ -1,7 +1,11 @@
+import { Footer, NavigationBar } from '@src/components/common';
 import { STATUS_CODE } from '@src/constants/common';
+import { loginState } from '@src/stores/loginState';
 import { COLOR, FONT_STYLES } from '@src/styles';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { imgErrorBg } from 'public/assets/images';
+import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 
 interface ErrorContentProps {
@@ -11,20 +15,34 @@ interface ErrorContentProps {
 
 function ErrorContent(props: ErrorContentProps) {
   const { statusCode, errorMessage } = props;
+  const router = useRouter();
+  const setIsLoggedIn = useSetRecoilState(loginState);
+
+  if (statusCode === 401) {
+    localStorage.removeItem('token');
+    setIsLoggedIn(false);
+    router.reload();
+    return <></>;
+  }
+
   return (
-    <StErrorContent>
-      <h1>{statusCode}</h1>
-      <h2>{errorMessage}</h2>
-      {statusCode === STATUS_CODE.NOT_FOUND ? (
-        <Link href="/home">
-          <a>홈으로 돌아가기</a>
-        </Link>
-      ) : (
-        <a target="_blank" href="https://forms.gle/BGQGeGBLXTM6RBCR7" rel="noreferrer noopener">
-          에러 제보하기
-        </a>
-      )}
-    </StErrorContent>
+    <>
+      <NavigationBar />
+      <StErrorContent>
+        <h1>{statusCode}</h1>
+        <h2>{errorMessage}</h2>
+        {statusCode === STATUS_CODE.NOT_FOUND ? (
+          <Link href="/home">
+            <a>홈으로 돌아가기</a>
+          </Link>
+        ) : (
+          <a target="_blank" href="https://forms.gle/BGQGeGBLXTM6RBCR7" rel="noreferrer noopener">
+            에러 제보하기
+          </a>
+        )}
+      </StErrorContent>
+      <Footer />
+    </>
   );
 }
 
