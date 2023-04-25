@@ -1,5 +1,5 @@
 import { STATUS_CODE } from '@src/constants/common';
-import { InternalServerError } from '@src/types/error';
+import { InternalServerError, UnauthorizedError } from '@src/types/error';
 import axios, { AxiosError } from 'axios';
 
 const BASEURL = 'https://deliverble.online';
@@ -31,27 +31,27 @@ interface RequestWithData extends Request {
   type?: 'json' | 'multipart';
 }
 
+const handleError = (error: AxiosError<Error>) => {
+  if (error.response?.status === STATUS_CODE.INTERNAL_SERVER_ERROR) {
+    throw new InternalServerError(error.response?.data.message);
+  } else if (error.response?.status === STATUS_CODE.UNAUTHORIZED) {
+    throw new UnauthorizedError(error.response?.data.message);
+  }
+};
+
 const sendRequest = ({ url, params, headers }: Omit<RequestWithParams, 'method'>) => {
   const baseHeaders = getBaseHeaders();
   return axios
     .get(BASEURL + url, { headers: { ...baseHeaders, ...headers }, params })
     .then((response) => ({ ...response.data, axiosStatus: response.status }))
-    .catch((error: AxiosError<Error>) => {
-      if (error.response?.status === STATUS_CODE.INTERNAL_SERVER_ERROR) {
-        throw new InternalServerError(error.response?.data.message);
-      }
-    });
+    .catch((error: AxiosError<Error>) => handleError(error));
 };
 
 const sendRequestForData = ({ url, data, method, headers, type }: RequestWithData) => {
   const baseHeaders = type === 'json' ? getBaseHeaders() : getBasePrivateMultipartHeaders();
   return axios[method](BASEURL + url, data, { headers: { ...baseHeaders, ...headers } })
     .then((response) => response.data)
-    .catch((error: AxiosError<Error>) => {
-      if (error.response?.status === STATUS_CODE.INTERNAL_SERVER_ERROR) {
-        throw new InternalServerError(error.response?.data.message);
-      }
-    });
+    .catch((error: AxiosError<Error>) => handleError(error));
 };
 
 const sendRequestForDelete = ({ url, data, headers }: Omit<RequestWithData, 'method'>) => {
@@ -59,11 +59,7 @@ const sendRequestForDelete = ({ url, data, headers }: Omit<RequestWithData, 'met
   return axios
     .delete(BASEURL + url, { headers: { ...baseHeaders, ...headers }, data: data })
     .then((response) => response.data)
-    .catch((error: AxiosError<Error>) => {
-      if (error.response?.status === STATUS_CODE.INTERNAL_SERVER_ERROR) {
-        throw new InternalServerError(error.response?.data.message);
-      }
-    });
+    .catch((error: AxiosError<Error>) => handleError(error));
 };
 
 export const API = {
