@@ -9,6 +9,6 @@ export const USER_DATA = {
 };
 
 export const LIKE_DATA = {
-  id: 1,
+  newsId: 1,
   isFavorite: true,
 };

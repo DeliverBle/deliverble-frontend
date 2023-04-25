@@ -4,6 +4,6 @@ export interface UserData {
 }
 
 export type LikeData = {
-  id: number;
+  newsId: number;
   isFavorite: boolean;
 };

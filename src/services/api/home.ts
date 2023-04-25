@@ -1,6 +1,6 @@
-import { VideoListData } from '@src/types/home/remote';
+import { VideoData } from '@src/types/home/remote';
 
 export interface HomeService {
-  getVideoData(): Promise<VideoListData>;
-  getSpeechGuideData(): Promise<VideoListData>;
+  getVideoData(): Promise<VideoData[]>;
+  getSpeechGuideData(): Promise<VideoData[]>;
 }

@@ -1,61 +1,28 @@
 import { Footer, NavigationBar, SEO, VideoListSkeleton } from '@src/components/common';
 import { HeadlineContainer, VideoContainer } from '@src/components/review';
-import { LIST_SIZE } from '@src/constants/common';
-import { api } from '@src/services/api';
-import { loginState } from '@src/stores/loginState';
+import { usePostLikeData } from '@src/services/queries/common';
+import { usePostReviewVideoList } from '@src/services/queries/review';
 import { COLOR, FONT_STYLES } from '@src/styles';
 import { ReviewTab } from '@src/types/review/remote';
-import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 
 function Review() {
-  const queryClient = useQueryClient();
-  const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useRecoilState(loginState);
   const [tab, setTab] = useState<ReviewTab>('favorite');
   const [currentPage, setCurrentPage] = useState(1);
-
-  const { data: postReviewListData, isLoading } = useQuery(
-    ['postReviewList', currentPage, tab],
-    async () => {
-      if (isLoggedIn) {
-        return await api.reviewService.postReviewVideoList({ currentPage, listSize: LIST_SIZE }, tab);
-      }
-    },
-    {
-      onError: () => {
-        localStorage.removeItem('token');
-        setIsLoggedIn(false);
-        router.reload();
-      },
-    },
-  );
-
-  const videoList = postReviewListData?.videoList ?? [];
-  const { lastPage, totalCount } = postReviewListData?.paging ?? { lastPage: 1, totalCount: 0 };
+  const { data } = usePostReviewVideoList(currentPage, tab);
+  const postLikeData = usePostLikeData();
+  const videoList = data?.videoList ?? [];
+  const { lastPage, totalCount } = data?.paging ?? { lastPage: 1, totalCount: 0 };
 
   const handlePageChange = (page: number) => {
     window.scrollTo(0, 0);
     setCurrentPage(page);
   };
 
-  const { mutate: mutatePostLike } = useMutation(
-    async (id: number) => {
-      return await api.commonService.postLikeData(id);
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('postReviewList');
-      },
-    },
-  );
-
   useEffect(() => {
-    isLoggedIn && setCurrentPage(1);
-  }, [tab, isLoggedIn]);
+    setCurrentPage(1);
+  }, [tab]);
 
   return (
     <StPageWrapper>
@@ -79,13 +46,13 @@ function Review() {
             내 학습 기록
           </StTab>
         </StTabList>
-        {isLoading ? (
+        {!data && videoList.length ? (
           <VideoListSkeleton itemNumber={12} hasCountSection />
         ) : (
           <VideoContainer
             tab={tab}
             videoList={videoList}
-            onClickLike={mutatePostLike}
+            onClickLike={postLikeData.mutate}
             totalCount={totalCount}
             currentPage={currentPage}
             lastPage={lastPage}

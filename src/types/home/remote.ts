@@ -8,7 +8,3 @@ export type VideoData = {
   isFavorite?: boolean;
   haveGuide: boolean;
 };
-
-export type VideoListData = {
-  videoList: VideoData[];
-};

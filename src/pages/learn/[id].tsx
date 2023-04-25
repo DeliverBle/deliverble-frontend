@@ -1,5 +1,6 @@
 import { ImageDiv, Like, NavigationBar, NewsList, SEO, VideoListSkeleton } from '@src/components/common';
 import { ScriptTitle, StudyLog, VideoDetail } from '@src/components/learnDetail';
+import ContextMenu from '@src/components/learnDetail/ContextMenu';
 import { RecordStatusBar } from '@src/components/learnDetail/record';
 import { ScriptEdit, ScriptEditButtonContainer } from '@src/components/learnDetail/scriptEdit';
 import { LearningButton, SpeechGuideTitle } from '@src/components/learnDetail/speechGuide';
@@ -8,29 +9,32 @@ import { INITIAL, INITIAL_MEMO_STATE } from '@src/constants/learnDetail/memo';
 import { DELETE_SCRIPT_MODAL_TEXT, MEMO_MODAL_TEXT_TYPE, NEW_MEMO_MODAL_TEXT } from '@src/constants/learnDetail/modal';
 import { useBodyScrollLock, useClickOutside } from '@src/hooks/common';
 import { useDeleteElement, useRightClickHandler, useUpdateMemoList } from '@src/hooks/learnDetail';
-import { api } from '@src/services/api';
-import { loginState } from '@src/stores/loginState';
+import { usePostLikeData } from '@src/services/queries/common';
+import {
+  useDeleteScriptData,
+  useGetSimilarVideoData,
+  useGetVideoData,
+  usePostNewScriptData,
+  useUpdateScriptNameData,
+} from '@src/services/queries/learn-detail';
 import { COLOR, FONT_STYLES } from '@src/styles';
-import { VideoData as simpleVideoData } from '@src/types/home/remote';
 import { ConfirmModalText, MemoConfirmModalKey, MemoState } from '@src/types/learnDetail';
-import { MemoData, Name, VideoData } from '@src/types/learnDetail/remote';
 import { underlineMemo } from '@src/utils/underlineMemo';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { icXButton } from 'public/assets/icons';
 import React, { useEffect, useRef, useState } from 'react';
-import { useMutation, useQuery } from 'react-query';
 import YouTube from 'react-youtube';
-import { useRecoilValue } from 'recoil';
 import styled, { css } from 'styled-components';
+
+const GuideModal = dynamic(() => import('@src/components/learnDetail/modal/GuideModal'), { ssr: false });
+const ConfirmModal = dynamic(() => import('@src/components/learnDetail/modal/ConfirmModal'), { ssr: false });
+const LoginModal = dynamic(() => import('@src/components/login/LoginModal'), { ssr: false });
 
 function LearnDetail() {
   const router = useRouter();
   const { id: detailId, speechGuide } = router.query;
-  const isLoggedIn = useRecoilValue(loginState);
-  const [videoData, setVideoData] = useState<VideoData>();
   const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
-  const { lockScroll, unlockScroll } = useBodyScrollLock();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [confirmModalText, setConfirmModalText] = useState<ConfirmModalText>(NEW_MEMO_MODAL_TEXT);
   const [isHighlight, setIsHighlight] = useState(false);
@@ -39,66 +43,51 @@ function LearnDetail() {
   const [player, setPlayer] = useState<YT.Player | null>();
   const [videoState, setVideoState] = useState(INITIAL);
   const [currentTime, setCurrentTime] = useState(0);
-  const learnRef = useRef<HTMLDivElement>(null);
   const getLoginStatus = () => localStorage.getItem('token') ?? '';
   const [prevLink, setPrevLink] = useState('');
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [titleList, setTitleList] = useState<Name[]>([]);
   const [clickedTitleIndex, setClickedTitleIndex] = useState(0);
   const [isTitleInputVisible, setIsTitleInputVisible] = useState(false);
-  const [titleInputIndex, setTitleInputIndex] = useState(-1);
-  const [memoList, setMemoList] = useState<MemoData[]>([]);
+  const [titleInputIndex, setTitleInputIndex] = useState(INITIAL);
   const [memoState, setMemoState] = useState<MemoState>(INITIAL_MEMO_STATE);
-  const contextMenuRef = useRef<HTMLDivElement>(null);
   const [isRecordSaved, setIsRecordSaved] = useState<boolean>(false);
-  const [similarNewsList, setSimilarNewsList] = useState<simpleVideoData[]>([]);
-  const [currentScriptId, setCurrentScriptId] = useState(0);
+  const learnRef = useRef<HTMLDivElement>(null);
+  const contextMenuRef = useRef<HTMLDivElement>(null);
+
+  const { lockScroll, unlockScroll } = useBodyScrollLock();
+  const { data: similarVideoData, isLoading } = useGetSimilarVideoData(Number(detailId));
+  const { data: videoData, refetch } = useGetVideoData(!!speechGuide, Number(detailId), clickedTitleIndex);
+  const titleList = videoData?.names ?? [];
+  const memoList = videoData?.memos ?? [];
+  const scriptId = titleList[clickedTitleIndex]?.id ?? 0;
+  const postLikeData = usePostLikeData();
+
   const { rightClickedElement, isContextMenuOpen, setIsContextMenuOpen, memoInfo, handleRightClick } =
     useRightClickHandler({ memoList, memoState });
-  const updateMemoList = useUpdateMemoList({ memoState, memoInfo, setMemoList, setMemoState });
+  const updateMemoList = useUpdateMemoList({ memoState, memoInfo, setMemoState });
   const { setOrder, setText, setClickedDeleteType, nodeToText } = useDeleteElement({
     rightClickedElement,
-    clickedTitleIndex,
-    detailId: Number(detailId),
-    videoData,
-    setVideoData,
+    scriptId,
     updateMemoList,
   });
-  const ContextMenu = dynamic(() => import('@src/components/learnDetail/ContextMenu'), { ssr: false });
-  const GuideModal = dynamic(() => import('@src/components/learnDetail/modal/GuideModal'), { ssr: false });
-  const ConfirmModal = dynamic(() => import('@src/components/learnDetail/modal/ConfirmModal'), { ssr: false });
-  const LoginModal = dynamic(() => import('@src/components/login/LoginModal'), { ssr: false });
 
-  useEffect(() => {
-    videoData?.scriptsId && setCurrentScriptId(videoData?.scriptsId);
-  }, [videoData, currentScriptId]);
-
-  const handleScriptAdd = async () => {
-    const response = await api.learnDetailService.postNewScriptData(Number(detailId));
-    if (response.isSuccess) {
-      const newIndex = titleList.length;
-      setClickedTitleIndex(newIndex);
-      setTitleInputIndex(newIndex);
-    }
+  const postNewScriptAdd = usePostNewScriptData();
+  const handleScriptAdd = () => {
+    postNewScriptAdd.mutate(Number(detailId), {
+      onSuccess: () => {
+        const newIndex = titleList.length;
+        setClickedTitleIndex(newIndex);
+        setTitleInputIndex(newIndex);
+      },
+    });
   };
 
-  const handleScriptDelete = async () => {
+  const deleteScriptData = useDeleteScriptData();
+  const handleScriptDelete = () => {
     const scriptId = videoData?.scriptsId ?? INITIAL;
-    const response = await api.learnDetailService.deleteScriptData(scriptId);
-    if (response.isSuccess && clickedTitleIndex) {
-      setClickedTitleIndex(0);
-      return;
-    }
-    if (response.isSuccess && clickedTitleIndex === 0) {
-      const data = await api.learnDetailService.getPrivateVideoData(Number(detailId), clickedTitleIndex);
-      setVideoData(data);
-      const { memos, names } = data;
-      if (memos && names) {
-        setMemoList(memos);
-        setTitleList(names);
-      }
-      return;
-    }
+    deleteScriptData.mutate(scriptId, {
+      onSuccess: () => clickedTitleIndex && setClickedTitleIndex(0),
+    });
   };
 
   const handleTitleDeleteModal = () => {
@@ -106,34 +95,16 @@ function LearnDetail() {
     setIsConfirmOpen(true);
   };
 
-  const renameScriptTitle = async (name: string) => {
-    const scriptId = videoData?.scriptsId ?? INITIAL;
-    return await api.learnDetailService.updateScriptNameData(scriptId, name);
+  const updateScriptNameData = useUpdateScriptNameData();
+  const handleTitleRename = (name: string) => {
+    const data = { id: videoData?.scriptsId ?? INITIAL, name };
+    updateScriptNameData.mutate(data);
   };
-
-  const { mutate: mutateRenameScript } = useMutation(renameScriptTitle, {
-    onSuccess: (data) => {
-      if (videoData?.names) {
-        const newNameList = videoData.names.slice();
-        newNameList[clickedTitleIndex] = data;
-        setVideoData({
-          ...videoData,
-          names: newNameList,
-        });
-      }
-    },
-  });
 
   const handleTitleChange = (index: number) => {
     setClickedTitleIndex(index);
     setTitleInputIndex(index);
     setIsTitleInputVisible(true);
-  };
-
-  const handleClickLike = async (id: number) => {
-    const { id: likeId, isFavorite } = await api.commonService.postLikeData(id);
-    setVideoData((prev) => prev && (prev.id === likeId ? { ...prev, isFavorite } : prev));
-    setSimilarNewsList((prev) => prev.map((news) => (news.id === likeId ? { ...news, isFavorite } : news)));
   };
 
   const handleLoginModalOpen = () => {
@@ -144,10 +115,6 @@ function LearnDetail() {
   const handleLoginModalClose = () => {
     unlockScroll();
     setIsLoginModalOpen(false);
-  };
-
-  const cancelCreateMemo = () => {
-    setMemoList((prev: MemoData[]) => prev.filter(({ content }) => content !== ''));
   };
 
   const handleMemoModal = (type: MemoConfirmModalKey) => {
@@ -165,7 +132,8 @@ function LearnDetail() {
       return;
     }
     setMemoState((prev: MemoState) => ({ ...prev, newMemoId: 0 }));
-    setMemoList((prev: MemoData[]) => [...prev, memo].sort((a, b) => a.order - b.order || a.startIndex - b.startIndex));
+    memoList.push(memo);
+    memoList.sort((a, b) => a.order - b.order || a.startIndex - b.startIndex);
   };
 
   useEffect(() => {
@@ -175,26 +143,10 @@ function LearnDetail() {
       setIsEditing(false);
       setClickedDeleteType('');
       setIsContextMenuOpen(false);
-      setOrder(-1);
+      setOrder(INITIAL);
       setText('');
     }
   }, [isEditing, isHighlight, isSpacing]);
-
-  useEffect(() => {
-    (async () => {
-      const id = Number(detailId);
-      if (!id) return;
-      const data = speechGuide
-        ? await api.learnDetailService.getSpeechGuideData(id)
-        : isLoggedIn
-        ? await api.learnDetailService.getPrivateVideoData(id, clickedTitleIndex)
-        : await api.learnDetailService.getPublicVideoData(id);
-      setVideoData(data);
-      const { memos, names } = data;
-      setMemoList(memos ?? []);
-      setTitleList(names ?? []);
-    })();
-  }, [isLoggedIn, detailId, isEditing, speechGuide, clickedTitleIndex]);
 
   useEffect(() => {
     setClickedTitleIndex(0);
@@ -219,11 +171,7 @@ function LearnDetail() {
     isEnabled: isContextMenuOpen,
     handleClickOutside: (e: Event) => {
       const eventTarget = e.target as HTMLElement;
-      if (
-        isContextMenuOpen &&
-        contextMenuRef.current instanceof HTMLElement &&
-        !contextMenuRef.current.contains(eventTarget)
-      ) {
+      if (isContextMenuOpen && !contextMenuRef.current?.contains(eventTarget)) {
         setIsContextMenuOpen(false);
       }
     },
@@ -238,15 +186,6 @@ function LearnDetail() {
       setPrevLink(prevPath || '/');
     }
   }, []);
-
-  const { isLoading } = useQuery(
-    ['getSimilarNewsList'],
-    async () => await api.learnDetailService.getSimilarVideoData(Number(detailId)),
-    {
-      onSuccess: (data) => setSimilarNewsList(data.videoList),
-      enabled: !!detailId,
-    },
-  );
 
   return (
     <StPageWrapper>
@@ -274,7 +213,7 @@ function LearnDetail() {
                 onTitleDelete={handleTitleDeleteModal}
                 onTitleChange={() => handleTitleChange(i)}
                 onTitleInputChange={() => setIsTitleInputVisible(false)}
-                onTitleRename={mutateRenameScript}
+                onTitleRename={handleTitleRename}
               />
             ))}
           {videoData?.names && titleList.length > 0 && titleList.length !== SCRIPT_MAX_COUNT && (
@@ -349,7 +288,7 @@ function LearnDetail() {
                   <Like
                     isFromList={false}
                     isFavorite={videoData.isFavorite}
-                    toggleLike={() => (getLoginStatus() ? handleClickLike(videoData.id) : handleLoginModalOpen())}
+                    toggleLike={() => (getLoginStatus() ? postLikeData.mutate(videoData.id) : handleLoginModalOpen())}
                   />
                   <YouTube
                     videoId={videoData.link}
@@ -369,7 +308,7 @@ function LearnDetail() {
                   />
                 </StVideoWrapper>
                 <StudyLog
-                  currentScriptId={currentScriptId}
+                  currentScriptId={scriptId}
                   isRecordSaved={isRecordSaved}
                   memoList={memoList}
                   memoState={memoState}
@@ -388,7 +327,9 @@ function LearnDetail() {
             {isLoading ? (
               <VideoListSkeleton itemNumber={4} />
             ) : (
-              <NewsList onClickLike={handleClickLike} newsList={similarNewsList} type="normal" />
+              similarVideoData && (
+                <NewsList onClickLike={postLikeData.mutate} newsList={similarVideoData} type="normal" />
+              )
             )}
           </StNews>
         )}
@@ -407,7 +348,7 @@ function LearnDetail() {
             setIsConfirmOpen={setIsConfirmOpen}
             setMemoState={setMemoState}
             onTitleDelete={handleScriptDelete}
-            cancelCreateMemo={cancelCreateMemo}
+            cancelCreateMemo={refetch}
           />
         )}
         {isLoginModalOpen && <LoginModal closeModal={handleLoginModalClose} />}

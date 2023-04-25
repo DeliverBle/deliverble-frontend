@@ -20,32 +20,32 @@ export function learnDetailDataMock(): LearnDetailService {
 
   const postMemoData = async () => {
     await wait(500);
-    return LEARN_DETAIL_DATA.MEMO_LIST_DATA;
+    return LEARN_DETAIL_DATA.VIDEO_DATA;
   };
 
   const updateMemoData = async () => {
     await wait(500);
-    return LEARN_DETAIL_DATA.MEMO_LIST_DATA;
+    return LEARN_DETAIL_DATA.VIDEO_DATA;
   };
 
   const deleteMemoData = async () => {
     await wait(500);
-    return LEARN_DETAIL_DATA.MEMO_LIST_DATA;
+    return LEARN_DETAIL_DATA.VIDEO_DATA;
   };
 
   const postNewScriptData = async () => {
     await wait(500);
-    return { isSuccess: true };
+    return LEARN_DETAIL_DATA.VIDEO_DATA;
   };
 
   const deleteScriptData = async () => {
     await wait(500);
-    return { isSuccess: true };
+    return LEARN_DETAIL_DATA.VIDEO_DATA;
   };
 
   const updateScriptNameData = async () => {
     await wait(500);
-    return LEARN_DETAIL_DATA.NAME_DATA;
+    return LEARN_DETAIL_DATA.VIDEO_DATA;
   };
 
   const getSpeechGuideData = async () => {

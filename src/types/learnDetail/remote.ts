@@ -110,3 +110,18 @@ export type ChangeRecordNameData = {
   link: string;
   newName: string;
 };
+
+export type UpdateSentenceRequest = {
+  sentenceData: SentenceData;
+  scriptId: number;
+};
+
+export type CreateMemoRequest = {
+  memo: MemoData;
+  scriptId: number;
+};
+
+export type UpdateMemoRequest = {
+  memoId: number;
+  content: string;
+};

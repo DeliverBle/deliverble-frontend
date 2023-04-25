@@ -1,29 +1,20 @@
-import axios from 'axios';
+import { STATUS_CODE } from '@src/constants/common';
+import { InternalServerError, UnauthorizedError } from '@src/types/error';
+import axios, { AxiosError } from 'axios';
 
 const BASEURL = 'https://deliverble.online';
 const getAccessToken = () => localStorage.getItem('token') ?? '';
 
 const getBaseHeaders = () => {
   const accessToken = getAccessToken();
-  const headers = {
-    Accept: `*/*`,
-    'Content-Type': `application/json`,
-  };
-
-  if (accessToken) {
-    return {
-      ...headers,
-      Authorization: `Bearer ${accessToken}`,
-    };
-  }
-  return headers;
+  const headers = { Accept: `*/*`, 'Content-Type': `application/json` };
+  return accessToken ? { ...headers, Authorization: `Bearer ${accessToken}` } : headers;
 };
 
-const getBasePrivateMultipartHeaders = () => ({
-  Accept: `*/*`,
-  'Content-Type': `multipart/form-data`,
-  Authorization: `Bearer ${getAccessToken()}`,
-});
+const getBasePrivateMultipartHeaders = () => {
+  const headers = { Accept: `*/*`, 'Content-Type': `multipart/form-data`, Authorization: `Bearer ${getAccessToken()}` };
+  return headers;
+};
 
 interface Request {
   url: string;
@@ -40,60 +31,42 @@ interface RequestWithData extends Request {
   type?: 'json' | 'multipart';
 }
 
-const sendRequest = ({ url, params, method, headers }: RequestWithParams) => {
+const handleError = (error: AxiosError<Error>) => {
+  if (error.response?.status === STATUS_CODE.INTERNAL_SERVER_ERROR) {
+    throw new InternalServerError(error.response?.data.message);
+  } else if (error.response?.status === STATUS_CODE.UNAUTHORIZED) {
+    throw new UnauthorizedError(error.response?.data.message);
+  }
+};
+
+const sendRequest = ({ url, params, headers }: Omit<RequestWithParams, 'method'>) => {
   const baseHeaders = getBaseHeaders();
-  return axios[method](BASEURL + url, {
-    headers: { ...baseHeaders, ...headers },
-    params,
-  }).then((response) => {
-    return { ...response.data, axiosStatus: response.status };
-  });
+  return axios
+    .get(BASEURL + url, { headers: { ...baseHeaders, ...headers }, params })
+    .then((response) => ({ ...response.data, axiosStatus: response.status }))
+    .catch((error: AxiosError<Error>) => handleError(error));
 };
 
 const sendRequestForData = ({ url, data, method, headers, type }: RequestWithData) => {
   const baseHeaders = type === 'json' ? getBaseHeaders() : getBasePrivateMultipartHeaders();
-  return axios[method](BASEURL + url, data, {
-    headers: { ...baseHeaders, ...headers },
-  }).then((response) => {
-    return response.data;
-  });
+  return axios[method](BASEURL + url, data, { headers: { ...baseHeaders, ...headers } })
+    .then((response) => response.data)
+    .catch((error: AxiosError<Error>) => handleError(error));
 };
 
 const sendRequestForDelete = ({ url, data, headers }: Omit<RequestWithData, 'method'>) => {
   const baseHeaders = getBaseHeaders();
   return axios
-    .delete(BASEURL + url, {
-      headers: { ...baseHeaders, ...headers },
-      data: data,
-    })
-    .then((response) => {
-      return response.data;
-    });
+    .delete(BASEURL + url, { headers: { ...baseHeaders, ...headers }, data: data })
+    .then((response) => response.data)
+    .catch((error: AxiosError<Error>) => handleError(error));
 };
 
 export const API = {
-  get: ({ url, params, headers }: Omit<RequestWithParams, 'method'>) =>
-    sendRequest({ url, params, method: 'get', headers }),
+  get: ({ url, params, headers }: Omit<RequestWithParams, 'method'>) => sendRequest({ url, params, headers }),
   post: ({ url, data, headers, type }: Omit<RequestWithData, 'method'>) =>
-    sendRequestForData({
-      url,
-      data,
-      method: 'post',
-      headers,
-      type: type ?? 'json',
-    }),
+    sendRequestForData({ url, data, method: 'post', headers, type: type ?? 'json' }),
   patch: ({ url, data, headers, type }: Omit<RequestWithData, 'method'>) =>
-    sendRequestForData({
-      url,
-      data,
-      method: 'patch',
-      headers,
-      type: type ?? 'json',
-    }),
-  delete: ({ url, data, headers }: Omit<RequestWithData, 'method'>) =>
-    sendRequestForDelete({
-      url,
-      data,
-      headers,
-    }),
+    sendRequestForData({ url, data, method: 'patch', headers, type: type ?? 'json' }),
+  delete: ({ url, data, headers }: Omit<RequestWithData, 'method'>) => sendRequestForDelete({ url, data, headers }),
 };

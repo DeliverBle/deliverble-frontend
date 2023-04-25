@@ -3,7 +3,7 @@ import { loginState } from '@src/stores/loginState';
 import { COLOR, FONT_STYLES } from '@src/styles';
 import { useRouter } from 'next/router';
 import { icLogout, icMypageButton } from 'public/assets/icons';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import ImageDiv from '../common/ImageDiv';

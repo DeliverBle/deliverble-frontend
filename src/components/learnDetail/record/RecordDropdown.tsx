@@ -1,7 +1,7 @@
 import { api } from '@src/services/api';
 import { COLOR, FONT_STYLES } from '@src/styles';
 import styled from 'styled-components';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import { Dispatch, SetStateAction } from 'react';
 
 interface RecordDropdownProps {

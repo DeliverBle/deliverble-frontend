@@ -2,86 +2,44 @@ import { Footer, ImageDiv, NavigationBar, NewsList, Pagination, SEO, VideoListSk
 import { SelectBox } from '@src/components/learn';
 import { BLOCK_SIZE, LIST_SIZE } from '@src/constants/common';
 import { categoryList, channelList, speakerList } from '@src/constants/learn';
-import { api } from '@src/services/api';
-import { loginState } from '@src/stores/loginState';
 import { COLOR, FONT_STYLES } from '@src/styles';
-import { PostSearchConditionRequestBody, VideoData } from '@src/types/learn/remote';
-import { useRouter } from 'next/router';
 import { icSearch } from 'public/assets/icons';
 import { useEffect, useState } from 'react';
-import { useMutation } from 'react-query';
-import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
+import { usePostLikeData } from '@src/services/queries/common';
+import { useGetSearchCondition, usePostSearchCondition } from '@src/services/queries/learn';
 
 function Learn() {
-  const router = useRouter();
-  const setIsLoggedIn = useSetRecoilState(loginState);
   const [selectedChannelList, setSelectedChannelList] = useState<string[]>([]);
   const [selectedCategoryList, setSelectedCategoryList] = useState<string[]>([]);
   const [selectedSpeakerList, setSelectedSpeakerList] = useState<string[]>([]);
-  const [totalCount, setTotalCount] = useState(0);
-  const [lastPage, setLastPage] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
-  const [resultList, setResultList] = useState<VideoData[]>([]);
+  const searchCondition = {
+    channel: selectedChannelList,
+    category: selectedCategoryList,
+    announcerGender: selectedSpeakerList,
+    currentPage,
+    listSize: LIST_SIZE,
+  };
 
-  const { mutate, isLoading } = useMutation(
-    async (requestBody: PostSearchConditionRequestBody) => {
-      return await api.learnService.postSearchCondition(requestBody);
-    },
-    {
-      onSuccess: (data) => {
-        const { paging, videoList } = data;
-        setTotalCount(paging.totalCount);
-        setLastPage(paging.lastPage);
-        setResultList(videoList);
-      },
-      onError: () => {
-        localStorage.removeItem('token');
-        setIsLoggedIn(false);
-        router.reload();
-        return;
-      },
-    },
-  );
+  const { data, isLoading } = useGetSearchCondition(searchCondition);
+  const { mutate } = usePostSearchCondition();
+  const resultList = data?.videoList ?? [];
+  const totalCount = data?.paging.totalCount ?? 0;
+  const lastPage = data?.paging.lastPage ?? 1;
+  const postLikeData = usePostLikeData();
 
   const handlePageChange = (page: number) => {
     window.scrollTo(0, 0);
-    mutate({
-      channel: selectedChannelList,
-      category: selectedCategoryList,
-      announcerGender: selectedSpeakerList,
-      currentPage: page,
-      listSize: LIST_SIZE,
-    });
+    mutate({ ...searchCondition, currentPage: page });
     setCurrentPage(page);
   };
 
-  const handleClickLike = async (id: number) => {
-    const { id: likeId, isFavorite } = await api.commonService.postLikeData(id);
-
-    setResultList((prev) => {
-      return prev.map((news) => {
-        if (news.id === likeId) {
-          return {
-            ...news,
-            isFavorite,
-          };
-        }
-        return news;
-      });
-    });
-  };
-
   useEffect(() => {
-    mutate({
-      channel: selectedChannelList,
-      category: selectedCategoryList,
-      announcerGender: selectedSpeakerList,
-      currentPage: 1,
-      listSize: LIST_SIZE,
-    });
+    mutate({ ...searchCondition, currentPage: 1 });
     setCurrentPage(1);
-  }, [mutate, selectedCategoryList, selectedChannelList, selectedSpeakerList]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCategoryList, selectedChannelList, selectedSpeakerList]);
 
   return (
     <StPageWrapper>
@@ -108,7 +66,7 @@ function Learn() {
                 전체 <span>{totalCount}개 </span> 영상
               </h2>
             )}
-            <NewsList newsList={resultList} onClickLike={handleClickLike} type="normal" />
+            <NewsList newsList={resultList} onClickLike={postLikeData.mutate} type="normal" />
             <Pagination
               listSize={LIST_SIZE}
               blockSize={BLOCK_SIZE}
