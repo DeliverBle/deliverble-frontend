@@ -1,6 +1,6 @@
 import { STATUS_CODE } from '@src/constants/common';
-import { InternalServerError, UnauthorizedError } from '@src/types/error';
-import axios, { AxiosError } from 'axios';
+import { BadRequestError, ForbiddenError, InternalServerError, UnauthorizedError } from '@src/types/error';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 
 const BASEURL = 'https://deliverble.online';
 const getAccessToken = () => localStorage.getItem('token') ?? '';
@@ -32,10 +32,20 @@ interface RequestWithData extends Request {
 }
 
 const handleError = (error: AxiosError<Error>) => {
-  if (error.response?.status === STATUS_CODE.INTERNAL_SERVER_ERROR) {
-    throw new InternalServerError(error.response?.data.message);
-  } else if (error.response?.status === STATUS_CODE.UNAUTHORIZED) {
-    throw new UnauthorizedError(error.response?.data.message);
+  const {
+    status,
+    data: { message },
+  } = error.response as AxiosResponse<Error>;
+
+  switch (status) {
+    case STATUS_CODE.INTERNAL_SERVER_ERROR:
+      throw new InternalServerError(message);
+    case STATUS_CODE.UNAUTHORIZED:
+      throw new UnauthorizedError(message);
+    case STATUS_CODE.BAD_REQUEST:
+      throw new BadRequestError(message);
+    case STATUS_CODE.FORBIDDEN:
+      throw new ForbiddenError(message);
   }
 };
 
