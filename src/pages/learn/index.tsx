@@ -7,7 +7,7 @@ import { icSearch } from 'public/assets/icons';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { usePostLikeData } from '@src/services/queries/common';
-import { useGetSearchCondition, usePostSearchCondition } from '@src/services/queries/learn';
+import { usePostSearchCondition } from '@src/services/queries/learn';
 
 function Learn() {
   const [selectedChannelList, setSelectedChannelList] = useState<string[]>([]);
@@ -22,8 +22,7 @@ function Learn() {
     listSize: LIST_SIZE,
   };
 
-  const { data, isLoading } = useGetSearchCondition(searchCondition);
-  const { mutate } = usePostSearchCondition();
+  const { data, isLoading } = usePostSearchCondition(searchCondition);
   const resultList = data?.videoList ?? [];
   const totalCount = data?.paging.totalCount ?? 0;
   const lastPage = data?.paging.lastPage ?? 1;
@@ -31,14 +30,11 @@ function Learn() {
 
   const handlePageChange = (page: number) => {
     window.scrollTo(0, 0);
-    mutate({ ...searchCondition, currentPage: page });
     setCurrentPage(page);
   };
 
   useEffect(() => {
-    mutate({ ...searchCondition, currentPage: 1 });
     setCurrentPage(1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategoryList, selectedChannelList, selectedSpeakerList]);
 
   return (

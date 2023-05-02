@@ -9,9 +9,9 @@ export const LEARN_DETAIL_DATA = {
     isFavorite: true,
     startTime: 0,
     endTime: 27.16,
-    scriptsId: 22,
+    scriptId: 22,
     haveGuide: false,
-    tags: [
+    tagsForView: [
       {
         name: '범죄',
         id: 56,
@@ -25,7 +25,7 @@ export const LEARN_DETAIL_DATA = {
         id: 259,
       },
     ],
-    scripts: [
+    sentences: [
       {
         id: 6,
         order: 1,

@@ -1,8 +1,9 @@
+import { queryClient } from '@src/pages/_app';
 import { api } from '@src/services/api';
 import { loginState } from '@src/stores/loginState';
+import { VideoData } from '@src/types/learnDetail/remote';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useRecoilValue } from 'recoil';
-import { queryClient } from '../../pages/_app';
 
 export const useGetVideoData = (speechGuide: boolean, videoId: number, index?: number) => {
   const isLoggedIn = useRecoilValue(loginState);
@@ -15,54 +16,73 @@ export const useGetVideoData = (speechGuide: boolean, videoId: number, index?: n
       : () => api.learnDetailService.getPublicVideoData(videoId),
     {
       enabled: !!videoId,
+      cacheTime: speechGuide || !isLoggedIn ? Infinity : 300000,
+      staleTime: speechGuide || !isLoggedIn ? Infinity : 0,
     },
   );
 };
 
+const updateVideoData = (data: VideoData, clickedTitleIndex: number) => {
+  queryClient.setQueryData<VideoData>(['getVideoData', data.id, clickedTitleIndex, false], (oldData) => {
+    return { ...oldData, ...data };
+  });
+};
+
 export const usePostNewScriptData = () => {
   return useMutation(api.learnDetailService.postNewScriptData, {
-    onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id]),
+    onSuccess: (data, { clickedTitleIndex }) => updateVideoData(data, clickedTitleIndex),
   });
 };
 
 export const useDeleteScriptData = () => {
   return useMutation(api.learnDetailService.deleteScriptData, {
-    onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id]),
+    onSuccess: (data, { clickedTitleIndex }) => updateVideoData(data, clickedTitleIndex),
   });
 };
 
 export const useUpdateScriptNameData = () => {
   return useMutation(api.learnDetailService.updateScriptNameData, {
-    onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id]),
+    onSuccess: (data, { clickedTitleIndex }) => {
+      queryClient.setQueryData<VideoData>(['getVideoData', data.id, clickedTitleIndex, false], (oldData) => {
+        if (oldData?.names && data.name) {
+          const names = [...oldData.names];
+          names[clickedTitleIndex].name = data.name;
+          return { ...oldData, names };
+        }
+        return oldData;
+      });
+    },
   });
 };
 
 export const useGetSimilarVideoData = (videoId: number) => {
   return useQuery(['getSimilarVideoList', videoId], () => api.learnDetailService.getSimilarVideoData(videoId), {
     enabled: !!videoId,
+    cacheTime: Infinity,
+    staleTime: Infinity,
   });
 };
 
 export const usePostSentenceData = () => {
   return useMutation(api.learnDetailService.postSentenceData, {
-    onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id]),
+    onSuccess: (data, { clickedTitleIndex }) => updateVideoData(data, clickedTitleIndex),
   });
 };
 
 export const usePostMemoData = () => {
   return useMutation(api.learnDetailService.postMemoData, {
-    onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id]),
+    onSuccess: (data, { clickedTitleIndex }) => updateVideoData(data, clickedTitleIndex),
   });
 };
 
 export const useUpdateMemoData = () => {
   return useMutation(api.learnDetailService.updateMemoData, {
-    onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id]),
+    onSuccess: (data, { clickedTitleIndex }) => updateVideoData(data, clickedTitleIndex),
   });
 };
 
 export const useDeleteMemoData = () => {
   return useMutation(api.learnDetailService.deleteMemoData, {
-    onSuccess: (data) => queryClient.invalidateQueries(['getVideoData', data.id]),
+    onSuccess: (data, { clickedTitleIndex }) => updateVideoData(data, clickedTitleIndex),
   });
 };

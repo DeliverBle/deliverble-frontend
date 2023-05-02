@@ -27,9 +27,9 @@ export type VideoData = {
   haveGuide: boolean;
   startTime: number;
   endTime: number;
-  scriptsId: number;
-  tags: Tag[];
-  scripts: Script[];
+  scriptId: number;
+  tagsForView: Tag[];
+  sentences: Script[];
   memos?: MemoData[];
   names?: Name[];
   name?: string;
@@ -114,14 +114,38 @@ export type ChangeRecordNameData = {
 export type UpdateSentenceRequest = {
   sentenceData: SentenceData;
   scriptId: number;
+  clickedTitleIndex: number;
 };
 
 export type CreateMemoRequest = {
   memo: MemoData;
   scriptId: number;
+  clickedTitleIndex: number;
 };
 
 export type UpdateMemoRequest = {
   memoId: number;
   content: string;
+  clickedTitleIndex: number;
+};
+
+export type DeleteMemoRequest = {
+  memoId: number;
+  clickedTitleIndex: number;
+};
+
+export type CreateScriptRequest = {
+  videoId: number;
+  clickedTitleIndex: number;
+};
+
+export type UpdateScriptNameRequest = {
+  id: number;
+  name: string;
+  clickedTitleIndex: number;
+};
+
+export type DeleteScriptRequest = {
+  scriptId: number;
+  clickedTitleIndex: number;
 };

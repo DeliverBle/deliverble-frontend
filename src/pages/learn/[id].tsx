@@ -64,16 +64,18 @@ function LearnDetail() {
 
   const { rightClickedElement, isContextMenuOpen, setIsContextMenuOpen, memoInfo, handleRightClick } =
     useRightClickHandler({ memoList, memoState });
-  const updateMemoList = useUpdateMemoList({ memoState, memoInfo, setMemoState });
+  const updateMemoList = useUpdateMemoList({ memoState, memoInfo, clickedTitleIndex, setMemoState });
   const { setOrder, setText, setClickedDeleteType, nodeToText } = useDeleteElement({
     rightClickedElement,
+    clickedTitleIndex,
     scriptId,
     updateMemoList,
   });
 
   const postNewScriptAdd = usePostNewScriptData();
   const handleScriptAdd = () => {
-    postNewScriptAdd.mutate(Number(detailId), {
+    const data = { videoId: Number(detailId), clickedTitleIndex };
+    postNewScriptAdd.mutate(data, {
       onSuccess: () => {
         const newIndex = titleList.length;
         setClickedTitleIndex(newIndex);
@@ -84,8 +86,8 @@ function LearnDetail() {
 
   const deleteScriptData = useDeleteScriptData();
   const handleScriptDelete = () => {
-    const scriptId = videoData?.scriptsId ?? INITIAL;
-    deleteScriptData.mutate(scriptId, {
+    const data = { scriptId: videoData?.scriptId ?? INITIAL, clickedTitleIndex };
+    deleteScriptData.mutate(data, {
       onSuccess: () => clickedTitleIndex && setClickedTitleIndex(0),
     });
   };
@@ -97,7 +99,7 @@ function LearnDetail() {
 
   const updateScriptNameData = useUpdateScriptNameData();
   const handleTitleRename = (name: string) => {
-    const data = { id: videoData?.scriptsId ?? INITIAL, name };
+    const data = { id: videoData?.scriptId ?? INITIAL, name, clickedTitleIndex };
     updateScriptNameData.mutate(data);
   };
 
@@ -228,12 +230,12 @@ function LearnDetail() {
                 <article>
                   <div ref={learnRef}>
                     {!isEditing &&
-                      videoData.scripts.map(({ id, order, text, startTime, endTime }, i) => (
+                      videoData.sentences.map(({ id, order, text, startTime, endTime }, i) => (
                         <StScriptText
                           onContextMenu={(e) => {
                             e.preventDefault();
                             setOrder(i + 1);
-                            !speechGuide && handleRightClick(e, videoData.scriptsId, order);
+                            !speechGuide && handleRightClick(e, videoData.scriptId, order);
                           }}
                           key={id}
                           onClick={() => player?.seekTo(startTime, true)}
@@ -267,7 +269,7 @@ function LearnDetail() {
                   <div>
                     <StButtonContainer isSpeechGuide={Boolean(speechGuide)}>
                       <RecordStatusBar
-                        scriptId={videoData.scriptsId}
+                        scriptId={videoData.scriptId}
                         isRecordSaved={isRecordSaved}
                         setIsRecordSaved={setIsRecordSaved}
                         onLoginModalOpen={handleLoginModalOpen}

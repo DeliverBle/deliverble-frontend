@@ -61,7 +61,10 @@ function ScriptTitle(props: ScriptTitleProps) {
       isEditing={isEditing}
       onClick={onTitleClick}
       onDoubleClick={onTitleChange}
-      onContextMenu={onTitleChange}>
+      onContextMenu={(e) => {
+        e.preventDefault();
+        onTitleChange();
+      }}>
       {isEditing ? (
         <input
           ref={scriptTitleInputRef}
