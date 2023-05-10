@@ -32,7 +32,7 @@ function BannerSlider() {
         loop: true,
         pagination: { el: pageRef.current, type: 'fraction' as 'bullets' | 'fraction' },
         touchRatio: 0,
-        autoplay: { delay: 10000000, disableOnInteraction: false },
+        autoplay: { delay: 5000, disableOnInteraction: false },
         spaceBetween: 30,
         modules: [Autoplay, Navigation, Pagination],
       };
