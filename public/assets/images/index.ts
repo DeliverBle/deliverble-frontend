@@ -12,3 +12,4 @@ export { default as imgMobileEar } from './img_mobile_ear.svg';
 export { default as imgMobileFist } from './img_mobile_fist.svg';
 export { default as imgMobileMic } from './img_mobile_mic.svg';
 export { default as imgErrorBg } from './img_error_bg.webp';
+export { default as imgBannerVer1Deco2 } from './img_banner_ver1_deco2.webp';

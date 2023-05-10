@@ -1,11 +1,12 @@
 import { ImageDiv } from '@src/components/common';
+import { BANNER_TEXT_LIST } from '@src/constants/home';
 import { COLOR, FONT_STYLES } from '@src/styles';
 import { icLeftArrowWhite, icRightArrowWhite } from 'public/assets/icons';
+import { imgBannerVer1Deco2 } from 'public/assets/images';
 import { useEffect, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
 import SwiperCore, { Autoplay, Navigation, Pagination } from 'swiper';
 import { Swiper, SwiperProps, SwiperRef, SwiperSlide } from 'swiper/react';
-import { BANNER_TEXT_LIST } from '@src/constants/home';
 import 'swiper/css';
 
 function BannerSlider() {
@@ -18,10 +19,7 @@ function BannerSlider() {
   useEffect(() => {
     if (!swiperSetting) {
       const settings = {
-        navigation: {
-          prevEl: prevRef.current,
-          nextEl: nextRef.current,
-        },
+        navigation: { prevEl: prevRef.current, nextEl: nextRef.current },
         onBeforeInit: (swiper: SwiperCore) => {
           if (typeof swiper.params.navigation !== 'boolean') {
             if (swiper.params.navigation) {
@@ -32,15 +30,9 @@ function BannerSlider() {
           swiper.navigation.update();
         },
         loop: true,
-        pagination: {
-          el: pageRef.current,
-          type: 'fraction' as 'bullets' | 'fraction',
-        },
+        pagination: { el: pageRef.current, type: 'fraction' as 'bullets' | 'fraction' },
         touchRatio: 0,
-        autoplay: {
-          delay: 5000,
-          disableOnInteraction: false,
-        },
+        autoplay: { delay: 10000000, disableOnInteraction: false },
         spaceBetween: 30,
         modules: [Autoplay, Navigation, Pagination],
       };
@@ -52,27 +44,29 @@ function BannerSlider() {
     <StBannerSlider>
       {swiperSetting && (
         <Swiper {...swiperSetting} ref={swiperRef}>
-          {BANNER_TEXT_LIST.map(({ mainText, subText }, i) => (
-            <SwiperSlide key={mainText}>
-              <StBanner
-                ver={i + 1}
-                onMouseEnter={() => swiperRef.current?.swiper.autoplay.stop()}
-                onMouseLeave={() => swiperRef.current?.swiper.autoplay.start()}>
-                <StBannerText ver={i + 1}>
-                  <h1>{mainText}</h1>
-                  <p>{subText}</p>
-                </StBannerText>
-                {!i && (
+          {BANNER_TEXT_LIST.map(({ mainText, subText }, i) => {
+            return (
+              <SwiperSlide key={mainText}>
+                <StBanner
+                  ver={i + 1}
+                  onMouseEnter={() => swiperRef.current?.swiper.autoplay.stop()}
+                  onMouseLeave={() => swiperRef.current?.swiper.autoplay.start()}>
+                  <StBannerText ver={i + 1}>
+                    <h1>{mainText}</h1>
+                    <p>{subText}</p>
+                  </StBannerText>
                   <ImageDiv
-                    className="banner_ver1_deco"
-                    src="/assets/images/img_banner_ver1_deco1.webp"
+                    className={`banner_ver${i + 1}_deco`}
+                    src={`/assets/images/img_banner_ver${i + 1}_deco.webp`}
                     alt=""
                     layout="fill"
+                    priority
                   />
-                )}
-              </StBanner>
-            </SwiperSlide>
-          ))}
+                  {!i && <ImageDiv className="banner_ver1_deco2" src={imgBannerVer1Deco2} alt="" layout="fill" />}
+                </StBanner>
+              </SwiperSlide>
+            );
+          })}
         </Swiper>
       )}
       <StSlideButton swiperSet={swiperSetting}>
@@ -94,16 +88,6 @@ const StBannerSlider = styled.div`
   height: 88rem;
 `;
 
-const defaultBefore = css`
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  transition: opacity 0.2s ease-in;
-`;
-
 const StBanner = styled.div<{ ver: number }>`
   display: flex;
   justify-content: space-between;
@@ -113,6 +97,7 @@ const StBanner = styled.div<{ ver: number }>`
   margin: 13.6rem 0 14.4rem 0;
   width: 100%;
   height: 60rem;
+  overflow: ${({ ver }) => ver !== 1 && 'hidden'};
 
   ${({ ver }) =>
     ver === 1 &&
@@ -126,25 +111,30 @@ const StBanner = styled.div<{ ver: number }>`
         height: 68.8rem;
       }
 
+      .banner_ver1_deco2 {
+        position: absolute;
+        right: 10rem;
+        width: 96rem;
+        height: 60rem;
+        opacity: 0;
+      }
+
+      .banner_ver1_deco,
+      .banner_ver1_deco2 {
+        transition: opacity 0.2s ease-in;
+      }
+
       @media (max-width: 960px) {
         .banner_ver1_deco {
           opacity: 0;
         }
-
-        &::before {
-          ${defaultBefore}
-          background: url('/assets/images/img_banner_ver1_deco2.webp') no-repeat center / 96rem;
-        }
-      }
-
-      @media (min-width: 501px) {
-        .banner_ver1_deco {
-          transition: opacity 0.2s ease-in;
+        .banner_ver1_deco2 {
+          opacity: 1;
         }
       }
 
       @media (max-width: 500px) {
-        &::before {
+        .banner_ver1_deco2 {
           opacity: 0;
         }
       }
@@ -153,17 +143,18 @@ const StBanner = styled.div<{ ver: number }>`
   ${({ ver }) =>
     ver !== 1 &&
     css`
-      & {
-        background-color: ${ver === 2 ? COLOR.BACKGROUND_PURPLE : COLOR.BACKGROUND_BLUE};
-      }
+      background-color: ${ver === 2 ? COLOR.BACKGROUND_PURPLE : COLOR.BACKGROUND_BLUE};
 
-      &::before {
-        ${defaultBefore}
-        background: url('/assets/images/img_banner_ver${ver}_deco.webp') no-repeat right / auto;
+      .banner_ver${ver}_deco {
+        position: absolute;
+        right: 0;
+        width: ${ver === 2 ? '96rem' : '165rem'};
+        height: 60rem;
       }
 
       @media (max-width: 960px) {
-        &::before {
+        .banner_ver${ver}_deco {
+          transition: opacity 0.2s ease-in;
           opacity: ${ver === 2 ? 0.2 : 0.15};
         }
       }
