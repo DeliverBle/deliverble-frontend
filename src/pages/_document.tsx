@@ -34,10 +34,10 @@ export default class MyDocument extends Document {
           <link rel="icon" type="image/png" href="/assets/favicon/fav_32.png" sizes="32x32" />
           <link rel="icon" type="image/png" href="/assets/favicon/fav_64.png" sizes="64x64" />
           <link
-            rel="stylesheet"
+            rel="stylesheet preload"
             as="style"
             crossOrigin=""
-            href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.4/dist/web/static/pretendard-dynamic-subset.css?display=swap"
+            href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.6/dist/web/variable/pretendardvariable-dynamic-subset.css"
           />
         </Head>
         <body>

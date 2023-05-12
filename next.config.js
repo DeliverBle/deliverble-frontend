@@ -10,6 +10,7 @@ const nextConfig = {
   swcMinify: true,
   images: {
     domains: ['img.youtube.com'],
+    formats: ['image/avif', 'image/webp'],
   },
   i18n: {
     locales: ['ko'],
