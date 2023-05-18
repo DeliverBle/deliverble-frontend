@@ -1,3 +1,4 @@
+export const VIDEO_STATE_PLAYING = 1;
 export const VIDEO_STATE_PAUSED = 2;
 export const VIDEO_STATE_CUED = 5;
 export const SCRIPT_MAX_COUNT = 3;

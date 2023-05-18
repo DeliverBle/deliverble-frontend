@@ -4,7 +4,12 @@ import ContextMenu from '@src/components/learnDetail/ContextMenu';
 import { RecordStatusBar } from '@src/components/learnDetail/record';
 import { ScriptEdit, ScriptEditButtonContainer } from '@src/components/learnDetail/scriptEdit';
 import { LearningButton, SpeechGuideTitle } from '@src/components/learnDetail/speechGuide';
-import { SCRIPT_MAX_COUNT, VIDEO_STATE_CUED, VIDEO_STATE_PAUSED } from '@src/constants/learnDetail';
+import {
+  SCRIPT_MAX_COUNT,
+  VIDEO_STATE_CUED,
+  VIDEO_STATE_PAUSED,
+  VIDEO_STATE_PLAYING,
+} from '@src/constants/learnDetail';
 import { INITIAL, INITIAL_MEMO_STATE } from '@src/constants/learnDetail/memo';
 import { DELETE_SCRIPT_MODAL_TEXT, MEMO_MODAL_TEXT_TYPE, NEW_MEMO_MODAL_TEXT } from '@src/constants/learnDetail/modal';
 import { useBodyScrollLock, useClickOutside } from '@src/hooks/common';
@@ -42,7 +47,7 @@ function LearnDetail() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [player, setPlayer] = useState<YT.Player | null>();
   const [videoState, setVideoState] = useState(INITIAL);
-  const [currentTime, setCurrentTime] = useState(0);
+  const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
   const getLoginStatus = () => localStorage.getItem('token') ?? '';
   const [prevLink, setPrevLink] = useState('');
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -53,7 +58,6 @@ function LearnDetail() {
   const [isRecordSaved, setIsRecordSaved] = useState<boolean>(false);
   const learnRef = useRef<HTMLDivElement>(null);
   const contextMenuRef = useRef<HTMLDivElement>(null);
-
   const { lockScroll, unlockScroll } = useBodyScrollLock();
   const { data: similarVideoData, isLoading } = useGetSimilarVideoData(Number(detailId));
   const { data: videoData, refetch } = useGetVideoData(!!speechGuide, Number(detailId), clickedTitleIndex);
@@ -155,19 +159,23 @@ function LearnDetail() {
   }, [detailId]);
 
   useEffect(() => {
-    if (!player) return;
+    if (!videoData) return;
+    const { sentences } = videoData;
+    if (currentSentenceIndex >= sentences.length) {
+      setCurrentSentenceIndex(0);
+      return;
+    }
 
-    const interval =
-      player &&
-      setInterval(() => {
-        setCurrentTime(player.getCurrentTime());
-      }, 100);
+    const delay = (sentences[currentSentenceIndex].endTime - sentences[currentSentenceIndex].startTime) * 1000;
+    const timeoutId = setTimeout(() => {
+      videoState === VIDEO_STATE_PLAYING && setCurrentSentenceIndex((prev) => prev + 1);
+    }, delay);
 
     if (videoState === VIDEO_STATE_PAUSED || videoState === VIDEO_STATE_CUED) {
-      interval && clearInterval(interval);
+      timeoutId && clearTimeout(timeoutId);
     }
-    return () => interval && clearInterval(interval);
-  }, [player, videoState]);
+    return () => timeoutId && clearTimeout(timeoutId);
+  }, [currentSentenceIndex, videoData, videoState]);
 
   useClickOutside({
     isEnabled: isContextMenuOpen,
@@ -230,7 +238,7 @@ function LearnDetail() {
                 <article>
                   <div ref={learnRef}>
                     {!isEditing &&
-                      videoData.sentences.map(({ id, order, text, startTime, endTime }, i) => (
+                      videoData.sentences.map(({ id, order, text, startTime }, i) => (
                         <StScriptText
                           onContextMenu={(e) => {
                             e.preventDefault();
@@ -238,9 +246,12 @@ function LearnDetail() {
                             !speechGuide && handleRightClick(e, videoData.scriptId, order);
                           }}
                           key={id}
-                          onClick={() => player?.seekTo(startTime, true)}
+                          onClick={() => {
+                            player?.seekTo(startTime, true);
+                            setCurrentSentenceIndex(i);
+                          }}
                           underline={underlineMemo(text, memoList)}
-                          isActive={startTime <= currentTime && currentTime < endTime}>
+                          isActive={i === currentSentenceIndex}>
                           <div id={id.toString()} dangerouslySetInnerHTML={{ __html: text }}></div>
                         </StScriptText>
                       ))}
