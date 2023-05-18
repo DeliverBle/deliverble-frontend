@@ -4,12 +4,7 @@ import ContextMenu from '@src/components/learnDetail/ContextMenu';
 import { RecordStatusBar } from '@src/components/learnDetail/record';
 import { ScriptEdit, ScriptEditButtonContainer } from '@src/components/learnDetail/scriptEdit';
 import { LearningButton, SpeechGuideTitle } from '@src/components/learnDetail/speechGuide';
-import {
-  SCRIPT_MAX_COUNT,
-  VIDEO_STATE_CUED,
-  VIDEO_STATE_PAUSED,
-  VIDEO_STATE_PLAYING,
-} from '@src/constants/learnDetail';
+import { SCRIPT_MAX_COUNT, VIDEO_STATE_PLAYING } from '@src/constants/learnDetail';
 import { INITIAL, INITIAL_MEMO_STATE } from '@src/constants/learnDetail/memo';
 import { DELETE_SCRIPT_MODAL_TEXT, MEMO_MODAL_TEXT_TYPE, NEW_MEMO_MODAL_TEXT } from '@src/constants/learnDetail/modal';
 import { useBodyScrollLock, useClickOutside } from '@src/hooks/common';
@@ -160,21 +155,16 @@ function LearnDetail() {
 
   useEffect(() => {
     if (!videoData) return;
-    const { sentences } = videoData;
-    if (currentSentenceIndex >= sentences.length) {
+    if (currentSentenceIndex >= videoData.sentences.length) {
       setCurrentSentenceIndex(0);
       return;
     }
-
-    const delay = (sentences[currentSentenceIndex].endTime - sentences[currentSentenceIndex].startTime) * 1000;
-    const timeoutId = setTimeout(() => {
-      videoState === VIDEO_STATE_PLAYING && setCurrentSentenceIndex((prev) => prev + 1);
-    }, delay);
-
-    if (videoState === VIDEO_STATE_PAUSED || videoState === VIDEO_STATE_CUED) {
-      timeoutId && clearTimeout(timeoutId);
+    if (videoState === VIDEO_STATE_PLAYING) {
+      const currentSentence = videoData.sentences[currentSentenceIndex];
+      const delay = (currentSentence.endTime - currentSentence.startTime) * 1000;
+      const timeoutId = setTimeout(() => setCurrentSentenceIndex((prev) => prev + 1), delay);
+      return () => timeoutId && clearTimeout(timeoutId);
     }
-    return () => timeoutId && clearTimeout(timeoutId);
   }, [currentSentenceIndex, videoData, videoState]);
 
   useClickOutside({
