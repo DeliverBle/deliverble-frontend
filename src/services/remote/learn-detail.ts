@@ -5,7 +5,6 @@ import {
   DeleteMemoRequest,
   DeleteRecordData,
   DeleteScriptRequest,
-  GetRecordData,
   Name,
   UpdateMemoRequest,
   UpdateScriptNameRequest,
@@ -104,21 +103,8 @@ export function learnDetailDataRemote(): LearnDetailService {
   };
 
   const getRecordData = async (scriptId: number) => {
-    try {
-      const response = await API.get({
-        url: `/script/recording/find?scriptId=${scriptId}`,
-      });
-      return response.data[0].map((record: GetRecordData) => ({
-        name: record.name,
-        link: record.link,
-        endTime: record.endTime,
-        isDeleted: record.isDeleted,
-        date: record.date,
-        scriptId: record.scriptId,
-      }));
-    } catch {
-      return undefined;
-    }
+    const response = await API.get({ url: `/script/recording/find?scriptId=${scriptId}` });
+    return response ? response.data[0] : [];
   };
 
   const deleteRecordData = async (body: DeleteRecordData) => {
