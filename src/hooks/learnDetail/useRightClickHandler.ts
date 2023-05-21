@@ -32,7 +32,7 @@ function useRightClickHandler(props: useRightClickHandlerProps) {
       setIsContextMenuOpen(true);
 
       const startIndex = getHighlightIndex(highlight, highlight.id);
-      if (startIndex) {
+      if (startIndex !== undefined) {
         const keyword = highlight.innerText.replace(/\//g, ' ');
         const highlightId = highlight.id;
         const id = memoList.find((memo) => memo.highlightId === highlightId)?.id ?? INITIAL;

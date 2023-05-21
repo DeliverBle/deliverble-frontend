@@ -173,7 +173,7 @@ function RecordLog(props: RecordStatusBarProps) {
 
   return (
     <StRecordLogContainer>
-      {!data ? (
+      {!data?.length ? (
         <EmptyRecord />
       ) : (
         <>

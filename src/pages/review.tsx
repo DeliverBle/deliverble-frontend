@@ -2,12 +2,16 @@ import { Footer, NavigationBar, SEO, VideoListSkeleton } from '@src/components/c
 import { HeadlineContainer, VideoContainer } from '@src/components/review';
 import { usePostLikeData } from '@src/services/queries/common';
 import { usePostReviewVideoList } from '@src/services/queries/review';
+import { loginState } from '@src/stores/loginState';
 import { COLOR, FONT_STYLES } from '@src/styles';
 import { ReviewTab } from '@src/types/review/remote';
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 
 function Review() {
+  const isLoggedIn = useRecoilValue(loginState);
+  const [showSkeleton, setShowSkeleton] = useState(false);
   const [tab, setTab] = useState<ReviewTab>('favorite');
   const [currentPage, setCurrentPage] = useState(1);
   const { data } = usePostReviewVideoList(currentPage, tab);
@@ -23,6 +27,10 @@ function Review() {
   useEffect(() => {
     setCurrentPage(1);
   }, [tab]);
+
+  useEffect(() => {
+    setShowSkeleton(isLoggedIn && !data);
+  }, [data, isLoggedIn]);
 
   return (
     <StPageWrapper>
@@ -46,7 +54,7 @@ function Review() {
             내 학습 기록
           </StTab>
         </StTabList>
-        {!data && videoList.length ? (
+        {showSkeleton ? (
           <VideoListSkeleton itemNumber={12} hasCountSection />
         ) : (
           <VideoContainer
