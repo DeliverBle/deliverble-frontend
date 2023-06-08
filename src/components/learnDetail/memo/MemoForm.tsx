@@ -100,10 +100,15 @@ function MemoForm(props: MemoFormProps) {
       />
       <StTextCounter>{textLength}/70</StTextCounter>
       <StButtonContainer>
-        <button type="button" onClick={handleClickCancel}>
+        <button aria-label="취소" type="button" onClick={handleClickCancel}>
           <ImageDiv src={icMemoXButton} alt="취소" />
         </button>
-        <StDoneButton type="button" onClick={() => handleDone()} textLength={textLength}>
+        <StDoneButton
+          aria-label="완료"
+          type="button"
+          onClick={() => handleDone()}
+          textLength={textLength}
+          disabled={!textLength}>
           <ImageDiv src={textLength ? icCheckButton : icInactiveCheckButton} alt="완료" />
         </StDoneButton>
       </StButtonContainer>
@@ -167,6 +172,5 @@ const StDoneButton = styled.button<{ textLength: number }>`
     !textLength &&
     css`
       cursor: url('/assets/icons/ic_not_allowed_cursor.svg'), not-allowed;
-      disabled: true;
     `}
 `;
