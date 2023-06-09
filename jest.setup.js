@@ -19,4 +19,9 @@ afterEach(() => server.resetHandlers());
 // Clean up after the tests are finished.
 afterAll(() => server.close());
 
-export {};
+const portalRoot = document.createElement('div');
+portalRoot.setAttribute('id', 'portal');
+document.body.appendChild(portalRoot);
+
+// JSDOM does not implement global "scrollTo" function
+window.scrollTo = jest.fn();
