@@ -1,24 +1,7 @@
 import { MemoForm } from '@src/components/learnDetail/memo';
 import { INITIAL } from '@src/constants/learnDetail/memo';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
-import { RecoilRoot } from 'recoil';
 import userEvent from '@testing-library/user-event';
-
-const createWrapper = () => {
-  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-  return ({ children }: { children: React.ReactNode }) => (
-    <QueryClientProvider client={queryClient}>
-      <RecoilRoot>{children}</RecoilRoot>
-    </QueryClientProvider>
-  );
-};
-
-jest.mock('next/router', () => ({
-  useRouter() {
-    return { pathname: '/learn/1' };
-  },
-}));
 
 describe('메모 추가', () => {
   const setup = () => {
@@ -36,7 +19,6 @@ describe('메모 추가', () => {
         setMemoState={setMemoState}
         updateMemoList={updateMemoList}
       />,
-      { wrapper: createWrapper() },
     );
 
     const memoTextarea = getByRole('textbox');
