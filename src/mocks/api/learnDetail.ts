@@ -1,4 +1,4 @@
-import { similarVideoData, videoData, createMemo } from '@src/mocks/api/data/learnDetailData';
+import { similarVideoData, videoData, createMemo, updateMemo } from '@src/mocks/api/data/learnDetailData';
 import { rest } from 'msw';
 
 const handlers = [
@@ -20,6 +20,11 @@ const handlers = [
   rest.post(`https://deliverble.online/script/memo/create/197`, (_, res, ctx) => {
     console.log('메모 추가 mock API 호출');
     return res(ctx.status(200), ctx.json(createMemo));
+  }),
+
+  rest.patch(`https://deliverble.online/script/memo/update/3`, (_, res, ctx) => {
+    console.log('메모 수정 mock API 호출');
+    return res(ctx.status(200), ctx.json(updateMemo));
   }),
 ];
 
