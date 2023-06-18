@@ -1,8 +1,8 @@
-import { queryClient } from '@src/pages/_app';
 import { api } from '@src/services/api';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export const usePostLikeData = () => {
+  const queryClient = useQueryClient();
   return useMutation(api.commonService.postLikeData, {
     onSuccess: (data) => {
       queryClient.invalidateQueries(['getRecommendVideoList']);
