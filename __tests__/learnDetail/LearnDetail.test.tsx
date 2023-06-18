@@ -1,6 +1,7 @@
 import LearnDetail from '@src/pages/learn/[id]';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { RecoilRoot } from 'recoil';
 
 const createWrapper = () => {
@@ -35,5 +36,34 @@ describe('학습 상세 페이지 목 API 호출 테스트', () => {
 
     expect(queryByText(NEWS_TITLE)).toBeNull();
     expect(await findByText(NEWS_TITLE)).toBeInTheDocument();
+  });
+});
+
+describe('메모 통합 테스트', () => {
+  it('메모 추가 테스트', async () => {
+    const { getByText, getByRole, queryByText, queryByRole, findByText, findByRole } = render(<LearnDetail />, {
+      wrapper: createWrapper(),
+    });
+
+    const NEWS_TITLE = '북, 최근 임진강 상류 황강댐 수문 개방';
+    expect(await findByText(NEWS_TITLE)).toBeInTheDocument();
+
+    const highlight = getByText('군남댐');
+    await userEvent.pointer([{ target: highlight }, { keys: '[MouseRight]', target: highlight }]);
+    expect(await findByText('메모 추가')).toBeInTheDocument();
+
+    const addMemoButton = getByText('메모 추가');
+    await userEvent.click(addMemoButton);
+    expect(await findByRole('heading', { name: '군남댐' })).toBeInTheDocument();
+
+    const memoTextarea = getByRole('textbox', { name: '메모 입력창' });
+    const submitButton = getByRole('button', { name: '완료' });
+    expect(submitButton).toBeDisabled();
+
+    await userEvent.type(memoTextarea, '발음 주의');
+    expect(submitButton).toBeEnabled();
+    await userEvent.click(submitButton);
+    expect(queryByRole('textbox', { name: '메모 입력창' })).toBeNull();
+    expect(queryByText('발음 주의')).toBeInTheDocument();
   });
 });
