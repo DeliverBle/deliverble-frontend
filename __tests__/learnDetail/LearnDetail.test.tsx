@@ -1,4 +1,4 @@
-import { NEW_MEMO_MODAL_TEXT } from '@src/constants/learnDetail/modal';
+import { EDIT_MEMO_MODAL_TEXT, NEW_MEMO_MODAL_TEXT } from '@src/constants/learnDetail/modal';
 import LearnDetail from '@src/pages/learn/[id]';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
@@ -119,26 +119,52 @@ describe('메모 수정 통합 테스트', () => {
   const OLD_MEMO_CONTENT = '숨을 크게 들이마시고';
   const NEW_MEMO_CONTENT = '숨을 작게 들이마시고';
 
-  it('메모 수정 테스트', async () => {
-    const { getByText, getAllByText, getByRole, queryByText, findByText, findByRole } = setup();
+  const setup = async () => {
+    render(<LearnDetail />, { wrapper: createWrapper() });
 
-    expect(await findByText(NEWS_TITLE)).toBeInTheDocument();
-    expect(getByText(OLD_MEMO_CONTENT)).toBeInTheDocument();
+    expect(await screen.findByText(NEWS_TITLE)).toBeInTheDocument();
+    expect(screen.getByText(OLD_MEMO_CONTENT)).toBeInTheDocument();
 
-    const highlight = getAllByText(MEMO_KEYWORD)[0];
+    const highlight = screen.getAllByText(MEMO_KEYWORD)[0];
     await userEvent.pointer([{ target: highlight }, { keys: '[MouseRight]', target: highlight }]);
-    expect(await findByText(EDIT_MEMO_BUTTON)).toBeInTheDocument();
+    expect(await screen.findByText(EDIT_MEMO_BUTTON)).toBeInTheDocument();
 
-    const addMemoButton = getByText(EDIT_MEMO_BUTTON);
+    const addMemoButton = screen.getByText(EDIT_MEMO_BUTTON);
     await userEvent.click(addMemoButton);
-    expect(await findByRole('heading', { name: MEMO_KEYWORD })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: MEMO_KEYWORD })).toBeInTheDocument();
 
-    const memoTextarea = getByRole('textbox', { name: MEMO_FORM });
-    const submitButton = getByRole('button', { name: SUBMIT });
+    const memoTextarea = screen.getByRole('textbox', { name: MEMO_FORM });
+    const submitButton = screen.getByRole('button', { name: SUBMIT });
+    const cancelButton = screen.getByRole('button', { name: CANCEL });
 
     await userEvent.type(memoTextarea, NEW_MEMO_CONTENT);
 
+    return { submitButton, cancelButton };
+  };
+
+  it('메모 수정 후 작성 완료 버튼 클릭하여 메모 저장', async () => {
+    const { submitButton } = await setup();
+
     await userEvent.click(submitButton);
-    expect(queryByText(NEW_MEMO_CONTENT)).toBeInTheDocument();
+    expect(screen.queryByText(NEW_MEMO_CONTENT)).toBeInTheDocument();
+  });
+
+  it('메모 수정 후 외부 클릭하여 메모 저장', async () => {
+    await setup();
+
+    await userEvent.click(document.body);
+    expect(screen.queryByText(NEW_MEMO_CONTENT)).toBeInTheDocument();
+  });
+
+  it('메모 수정 후 취소 버튼 클릭하면 열리는 확인 모달에서 수정 취소 클릭', async () => {
+    const { cancelButton } = await setup();
+
+    await userEvent.click(cancelButton);
+    expect(await screen.findByText(EDIT_MEMO_MODAL_TEXT.mainText)).toBeInTheDocument();
+
+    const cancelEditButton = screen.getByRole('button', { name: EDIT_MEMO_MODAL_TEXT.rightButtonText });
+    await userEvent.click(cancelEditButton);
+    expect(screen.queryByRole('textbox', { name: MEMO_FORM })).toBeNull();
+    expect(screen.queryByText(NEW_MEMO_CONTENT)).toBeNull();
   });
 });
