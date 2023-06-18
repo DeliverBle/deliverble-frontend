@@ -1,6 +1,7 @@
+import { NEW_MEMO_MODAL_TEXT } from '@src/constants/learnDetail/modal';
 import LearnDetail from '@src/pages/learn/[id]';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { RecoilRoot } from 'recoil';
 
@@ -22,11 +23,14 @@ jest.mock('next/router', () => ({
 localStorage.setItem('recoil-persist', '{ "loginState": true }');
 
 const setup = () => {
-  const { getByText, getAllByText, getByRole, queryByText, findByText, findByRole } = render(<LearnDetail />, {
-    wrapper: createWrapper(),
-  });
+  const { getByText, getAllByText, getByRole, queryByText, queryByRole, findByText, findByRole } = render(
+    <LearnDetail />,
+    {
+      wrapper: createWrapper(),
+    },
+  );
 
-  return { getByText, getAllByText, getByRole, queryByText, findByText, findByRole };
+  return { getByText, getAllByText, getByRole, queryByText, queryByRole, findByText, findByRole };
 };
 
 const SIMILAR_NEWS_TITLE = "우크라이나 재건회의 '루가노 선언' 채택";
@@ -57,28 +61,55 @@ describe('메모 추가 통합 테스트', () => {
   const MEMO_KEYWORD = '군남댐';
   const MEMO_CONTENT = '발음 주의';
 
-  it('메모 추가 테스트', async () => {
-    const { getByText, getByRole, queryByText, findByText, findByRole } = setup();
+  const setup = async () => {
+    render(<LearnDetail />, { wrapper: createWrapper() });
 
-    expect(await findByText(NEWS_TITLE)).toBeInTheDocument();
+    expect(await screen.findByText(NEWS_TITLE)).toBeInTheDocument();
 
-    const highlight = getByText(MEMO_KEYWORD);
+    const highlight = screen.getByText(MEMO_KEYWORD);
     await userEvent.pointer([{ target: highlight }, { keys: '[MouseRight]', target: highlight }]);
-    expect(await findByText(ADD_MEMO_BUTTON)).toBeInTheDocument();
+    expect(await screen.findByText(ADD_MEMO_BUTTON)).toBeInTheDocument();
 
-    const addMemoButton = getByText(ADD_MEMO_BUTTON);
-    await userEvent.click(addMemoButton);
-    expect(await findByRole('heading', { name: MEMO_KEYWORD })).toBeInTheDocument();
+    await userEvent.click(screen.getByText(ADD_MEMO_BUTTON));
+    expect(await screen.findByRole('heading', { name: MEMO_KEYWORD })).toBeInTheDocument();
 
-    const memoTextarea = getByRole('textbox', { name: MEMO_FORM });
-    const submitButton = getByRole('button', { name: SUBMIT });
+    const memoTextarea = screen.getByRole('textbox', { name: MEMO_FORM });
+    const submitButton = screen.getByRole('button', { name: SUBMIT });
+    const cancelButton = screen.getByRole('button', { name: CANCEL });
 
     expect(submitButton).toBeDisabled();
     await userEvent.type(memoTextarea, MEMO_CONTENT);
     expect(submitButton).toBeEnabled();
 
+    return { submitButton, cancelButton };
+  };
+
+  it('메모 입력 후 완료 버튼 클릭하여 메모 저장', async () => {
+    const { submitButton } = await setup();
+
     await userEvent.click(submitButton);
-    expect(queryByText(MEMO_CONTENT)).toBeInTheDocument();
+    expect(screen.queryByRole('textbox', { name: MEMO_FORM })).toBeNull();
+    expect(screen.queryByText(MEMO_CONTENT)).toBeInTheDocument();
+  });
+
+  it('메모 입력 후 외부 클릭하여 메모 저장', async () => {
+    await setup();
+
+    await userEvent.click(document.body);
+    expect(screen.queryByRole('textbox', { name: MEMO_FORM })).toBeNull();
+    expect(screen.queryByText(MEMO_CONTENT)).toBeInTheDocument();
+  });
+
+  it('메모 작성 취소 버튼 클릭하면 뜨는 확인 모달에서 작성 취소 클릭', async () => {
+    const { cancelButton } = await setup();
+
+    await userEvent.click(cancelButton);
+    expect(await screen.findByText(NEW_MEMO_MODAL_TEXT.mainText)).toBeInTheDocument();
+
+    const cancelCreateButton = screen.getByRole('button', { name: NEW_MEMO_MODAL_TEXT.rightButtonText });
+    await userEvent.click(cancelCreateButton);
+    expect(screen.queryByRole('textbox', { name: MEMO_FORM })).toBeNull();
+    expect(screen.queryByText(MEMO_CONTENT)).toBeNull();
   });
 });
 
