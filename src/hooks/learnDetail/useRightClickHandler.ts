@@ -33,7 +33,7 @@ function useRightClickHandler(props: useRightClickHandlerProps) {
 
       const startIndex = getHighlightIndex(highlight, highlight.id);
       if (startIndex !== undefined) {
-        const keyword = highlight.innerText.replace(/\//g, ' ');
+        const keyword = highlight.textContent!.replace(/\//g, ' ');
         const highlightId = highlight.id;
         const id = memoList.find((memo) => memo.highlightId === highlightId)?.id ?? INITIAL;
         setMemoInfo((prev) => ({ ...prev, id, scriptId, order, startIndex, keyword, highlightId }));
