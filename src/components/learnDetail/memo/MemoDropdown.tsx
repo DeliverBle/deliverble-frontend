@@ -26,10 +26,10 @@ function MemoDropdown(props: MemoDropdownProps) {
 
   return (
     <StMemoDropdown>
-      <button type="button" onClick={handleClickEdit}>
+      <button aria-label="메모 수정" type="button" onClick={handleClickEdit}>
         메모 수정
       </button>
-      <button type="button" onClick={handleClickDelete}>
+      <button aria-label="메모 삭제" type="button" onClick={handleClickDelete}>
         메모 삭제
       </button>
     </StMemoDropdown>
