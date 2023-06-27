@@ -92,6 +92,7 @@ function MemoForm(props: MemoFormProps) {
   return (
     <StMemoForm>
       <StForm
+        aria-label="메모 입력창"
         ref={textareaRef}
         rows={content ? Math.ceil(content.length / 30) : 1}
         autoFocus={content ? false : true}
