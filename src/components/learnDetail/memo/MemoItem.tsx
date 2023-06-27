@@ -21,7 +21,7 @@ function MemoItem(props: MemoProps) {
   const { memoData, memoState, setMemoState, onMemoModal, updateMemoList } = props;
   const { id, keyword, content } = memoData;
   const [foldButton, setFoldButton] = useState(false);
-  const isSpeechGuide = useRouter().query.speechGuide;
+  const isSpeechGuide = useRouter().query?.speechGuide;
 
   const showContent = () => {
     if (content && content.length > MEMO_CONTENT_MAX) {
