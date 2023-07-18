@@ -1,8 +1,7 @@
-import { STATUS_CODE } from '@src/constants/common';
+import { BASE_URL, STATUS_CODE } from '@src/constants/common';
 import { BadRequestError, ForbiddenError, InternalServerError, UnauthorizedError } from '@src/types/error';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 
-const BASEURL = 'https://deliverble.online';
 const getAccessToken = () => localStorage.getItem('token') ?? '';
 
 const getBaseHeaders = () => {
@@ -52,14 +51,14 @@ const handleError = (error: AxiosError<Error>) => {
 const sendRequest = ({ url, params, headers }: Omit<RequestWithParams, 'method'>) => {
   const baseHeaders = getBaseHeaders();
   return axios
-    .get(BASEURL + url, { headers: { ...baseHeaders, ...headers }, params })
+    .get(BASE_URL + url, { headers: { ...baseHeaders, ...headers }, params })
     .then((response) => ({ ...response.data, axiosStatus: response.status }))
     .catch((error: AxiosError<Error>) => handleError(error));
 };
 
 const sendRequestForData = ({ url, data, method, headers, type }: RequestWithData) => {
   const baseHeaders = type === 'json' ? getBaseHeaders() : getBasePrivateMultipartHeaders();
-  return axios[method](BASEURL + url, data, { headers: { ...baseHeaders, ...headers } })
+  return axios[method](BASE_URL + url, data, { headers: { ...baseHeaders, ...headers } })
     .then((response) => response.data)
     .catch((error: AxiosError<Error>) => handleError(error));
 };
@@ -67,7 +66,7 @@ const sendRequestForData = ({ url, data, method, headers, type }: RequestWithDat
 const sendRequestForDelete = ({ url, data, headers }: Omit<RequestWithData, 'method'>) => {
   const baseHeaders = getBaseHeaders();
   return axios
-    .delete(BASEURL + url, { headers: { ...baseHeaders, ...headers }, data: data })
+    .delete(BASE_URL + url, { headers: { ...baseHeaders, ...headers }, data: data })
     .then((response) => response.data)
     .catch((error: AxiosError<Error>) => handleError(error));
 };
