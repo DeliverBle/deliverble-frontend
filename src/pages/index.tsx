@@ -1,19 +1,18 @@
 import { ImageDiv, SEO } from '@src/components/common';
 import { Header, MobileContainer, ScrollControl, SliderContainer } from '@src/components/landing';
-import { useIsMobile } from '@src/hooks/landing';
 import { COLOR } from '@src/styles';
+import { DeviceType } from '@src/types/landing';
+import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { icMobileLogo, icMobileLogoWhite } from 'public/assets/icons';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-function Landing() {
+function Landing({ deviceType }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const [isFirstScrolled, setIsFirstScrolled] = useState<boolean>(false);
   const [isSecondScrolled, setIsSecondScrolled] = useState<boolean>(false);
   const [slideNumber, setSlideNumber] = useState<number>(1);
   const [stopObserve, setStopObserve] = useState<boolean>(false);
-  const [deviceType, setDeviceType] = useState<string>('');
-  const isMobile = useIsMobile();
 
   const scrollListener = () => {
     setIsScrolled(window.scrollY > 0);
@@ -27,11 +26,6 @@ function Landing() {
       window.removeEventListener('scroll', scrollListener);
     };
   }, []);
-
-  useEffect(() => {
-    isMobile && setDeviceType('mobile');
-    !isMobile && setDeviceType('desktop');
-  }, [isMobile]);
 
   return (
     <div>
@@ -59,6 +53,13 @@ function Landing() {
     </div>
   );
 }
+
+export const getServerSideProps: GetServerSideProps<DeviceType> = async ({ req }) => {
+  const userAgent = req.headers['user-agent'] ?? '';
+  const isMobile = Boolean(userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i));
+
+  return { props: { deviceType: isMobile ? 'mobile' : 'desktop' } };
+};
 
 export default Landing;
 
