@@ -3,10 +3,12 @@ import { loginState } from '@src/stores/loginState';
 import { COLOR, FONT_STYLES } from '@src/styles';
 import dynamic from 'next/dynamic';
 import { icDeliverbleBlue, icDeliverbleWhite } from 'public/assets/icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import ImageDiv from '../common/ImageDiv';
+
+const LoginModal = dynamic(() => import('@src/components/login/LoginModal'), { ssr: false });
 
 interface HeaderProps {
   isFirstScrolled?: boolean;
@@ -15,10 +17,14 @@ interface HeaderProps {
 
 function Header(props: HeaderProps) {
   const { isFirstScrolled = false, isSecondScrolled = false } = props;
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const isLoggedIn = useRecoilValue(loginState);
   const { lockScroll, unlockScroll } = useBodyScrollLock();
-  const LoginModal = dynamic(() => import('@src/components/login/LoginModal'), { ssr: false });
+  const loginValue = useRecoilValue(loginState);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setIsLoggedIn(loginValue);
+  }, []);
 
   return (
     <>
