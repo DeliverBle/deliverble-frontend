@@ -13,18 +13,10 @@ export function commonDataRemote(): CommonService {
     }
   };
 
-  const getUserInfo = async (accessToken: string | null) => {
-    try {
-      const response = await axios.get(`${BASE_URL}/user`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-      return {
-        nickname: response.data.data.nickname,
-        email: response.data.data.email,
-      };
-    } catch {
-      throw '유저 데이터 요청 에러 발생';
-    }
+  const getUserInfo = async () => {
+    const response = await API.get({ url: `/user` });
+    const { nickname, email } = response.data;
+    return { nickname, email };
   };
 
   const postLikeData = async (newsId: number) => {

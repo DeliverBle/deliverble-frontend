@@ -1,19 +1,29 @@
 import { BannerSlider, Footer, NavigationBar, NewsList, SEO, VideoListSkeleton } from '@src/components/common';
+import { api } from '@src/services/api';
 import { usePostLikeData } from '@src/services/queries/common';
 import { useGetRecommendVideoList, useGetSpeechGuideList } from '@src/services/queries/home';
+import { loginState } from '@src/stores/loginState';
 import { COLOR, FONT_STYLES } from '@src/styles';
+import type { NewsListType } from '@src/types/home';
+import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
+import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 
-function Home() {
+function Home({ initialRecommendNewsList, initialSpeechGuideList }: InferGetStaticPropsType<typeof getStaticProps>) {
   const [mounted, setMounted] = useState(false);
   const smallBanner = useMediaQuery({ query: '(max-width: 500px)' });
-  const newsList = useGetRecommendVideoList();
-  const speechGuideList = useGetSpeechGuideList();
+  const isLoggedIn = useRecoilValue(loginState);
+  const newsList = useGetRecommendVideoList(initialRecommendNewsList);
+  const speechGuideList = useGetSpeechGuideList(initialSpeechGuideList);
   const postLikeData = usePostLikeData();
 
   useEffect(() => {
+    if (isLoggedIn) {
+      newsList.refetch();
+      speechGuideList.refetch();
+    }
     setMounted(true);
   }, []);
 
@@ -23,37 +33,26 @@ function Home() {
       <NavigationBar />
       <StHome>
         <BannerSlider />
-        <main>
-          <StNews type="guide">
-            <h2>스스로 학습하기 전, {mounted && smallBanner && <br />}스피치 가이드를 살펴보세요.</h2>
-            {speechGuideList.isLoading ? (
-              <VideoListSkeleton itemNumber={4} />
-            ) : (
-              speechGuideList.data && (
-                <div>
-                  <NewsList onClickLike={postLikeData.mutate} newsList={speechGuideList.data} type="guide" />
-                </div>
-              )
-            )}
-          </StNews>
-          <StNews type="normal">
-            <h2>딜리버블의 추천 뉴스를 만나보세요.</h2>
-            {newsList.isLoading ? (
-              <VideoListSkeleton itemNumber={8} />
-            ) : (
-              newsList.data && (
-                <div>
-                  <NewsList onClickLike={postLikeData.mutate} newsList={newsList.data} type="normal" />
-                </div>
-              )
-            )}
-          </StNews>
-        </main>
+        <StNews type="guide">
+          <h2>스스로 학습하기 전, {mounted && smallBanner && <br />}스피치 가이드를 살펴보세요.</h2>
+          <NewsList onClickLike={postLikeData.mutate} newsList={speechGuideList.data} type="guide" />
+        </StNews>
+        <StNews type="normal">
+          <h2>딜리버블의 추천 뉴스를 만나보세요.</h2>
+          <NewsList onClickLike={postLikeData.mutate} newsList={newsList.data} type="normal" />
+        </StNews>
       </StHome>
       <Footer />
     </StPageWrapper>
   );
 }
+
+export const getStaticProps: GetStaticProps<NewsListType> = async () => {
+  const initialRecommendNewsList = await api.homeService.getVideoData();
+  const initialSpeechGuideList = await api.homeService.getSpeechGuideData();
+
+  return { props: { initialRecommendNewsList, initialSpeechGuideList } };
+};
 
 export default Home;
 
@@ -63,7 +62,7 @@ const StPageWrapper = styled.div`
   height: 100%;
 `;
 
-const StHome = styled.div`
+const StHome = styled.main`
   position: relative;
   flex: 1;
   padding-top: 8.8rem;
@@ -73,7 +72,7 @@ const StNews = styled.div<{ type: string }>`
   padding-left: 16rem;
   padding-bottom: ${({ type }) => (type === 'guide' ? '20rem' : '30rem')};
 
-  & > div {
+  & > section {
     margin: 0 auto;
     padding-right: 16rem;
   }
@@ -89,7 +88,7 @@ const StNews = styled.div<{ type: string }>`
   @media (max-width: 960px) {
     padding-left: 8.6rem;
 
-    & > div {
+    & > section {
       padding-right: 8.6rem;
     }
   }
@@ -97,7 +96,7 @@ const StNews = styled.div<{ type: string }>`
   @media (max-width: 500px) {
     padding-left: 2.4rem;
 
-    & > div {
+    & > section {
       padding-right: 2.4rem;
     }
 
