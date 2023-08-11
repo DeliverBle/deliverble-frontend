@@ -2,7 +2,13 @@ import { BASE_URL, STATUS_CODE } from '@src/constants/common';
 import { BadRequestError, ForbiddenError, InternalServerError, UnauthorizedError } from '@src/types/error';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 
-const getAccessToken = () => localStorage.getItem('token') ?? '';
+export const getAccessToken = () => {
+  let accessToken = '';
+  if (typeof window !== 'undefined') {
+    accessToken = localStorage.getItem('token') ?? '';
+  }
+  return accessToken;
+};
 
 const getBaseHeaders = () => {
   const accessToken = getAccessToken();
