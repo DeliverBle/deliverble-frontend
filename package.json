@@ -9,7 +9,8 @@
     "lint": "next lint",
     "analyze": "cross-env ANALYZE=true next build",
     "test": "jest --watch --transformIgnorePatterns \"node_modules/(?!swiper)/\"",
-    "test:ci": "jest --ci"
+    "test:ci": "jest --ci",
+    "postbuild": "next-sitemap"
   },
   "dependencies": {
     "@tanstack/react-query": "^4.29.1",
@@ -58,6 +59,7 @@
     "jest-environment-jsdom": "^29.5.0",
     "jest-localstorage-mock": "^2.4.26",
     "msw": "^1.2.1",
+    "next-sitemap": "^4.2.2",
     "prettier": "^2.7.1",
     "typescript": "4.7.4"
   }

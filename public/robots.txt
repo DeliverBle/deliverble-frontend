@@ -1,0 +1,11 @@
+# *
+User-agent: *
+Allow: /
+Disallow: /auth/*
+Disallow: /fallback
+
+# Host
+Host: https://deliverble.kr
+
+# Sitemaps
+Sitemap: https://deliverble.kr/sitemap.xml
